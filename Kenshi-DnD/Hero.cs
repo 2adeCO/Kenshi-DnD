@@ -15,8 +15,8 @@ namespace Kenshi_DnD
         //Offensive stats
         //Brute Force is associated with Sheks, skeletons and Hive Soldiers
         //Skill is associated with Humans(All types), Hive Princes and Hive Workers 
-        int bruteForce;
-        int skill;
+        Stat bruteForce;
+        Stat skill;
 
         //Defensive stats
         //Health points
@@ -25,10 +25,9 @@ namespace Kenshi_DnD
         int hp;
         //Resistance is defense against Brute Force
         //Perception is defense against Skill
-        int resistance;
-        int perception;
+        Stat resistance;
         //Agility determines how fast the hero interacts with the enemies
-        int agility;
+        Stat agility;
         //Race is a key component in the world building of this game. The races are: Human, Shek, Skeleton and Hive
         Race race;
         //Subrace specifies the exact type of race that the character is. The subraces are:
@@ -51,8 +50,8 @@ namespace Kenshi_DnD
         int experience;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
-        public Hero(string name, string title, int bruteForce, int skill, int toughness, int hp, 
-            int resistance, int perception, int agility, string backgroundStory, DateTime recruitmentDate, int level, int experience, Race race, Subrace subrace, Limb[] limbs)
+        public Hero(string name, string title, Stat bruteForce, Stat skill, int toughness, int hp, 
+            Stat resistance, Stat agility, string backgroundStory, int level, int experience, Race race, Subrace subrace, Limb[] limbs)
         {
             this.name = name;
             this.title = title;
@@ -61,7 +60,6 @@ namespace Kenshi_DnD
             this.toughness = toughness;
             this.hp = hp;
             this.resistance = resistance;
-            this.perception = perception;
             this.agility = agility;
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
@@ -71,8 +69,8 @@ namespace Kenshi_DnD
             this.subrace = subrace;
             this.limbs = limbs;
         }
-        public Hero(string name, string title, int bruteForce, int skill, int toughness,
-            int resistance, int perception, int agility,Race race, Subrace subrace, Limb[] limbs)
+        public Hero(string name, string title, Stat bruteForce, Stat skill, int toughness,
+            Stat resistance, Stat agility,Race race, Subrace subrace, Limb[] limbs)
         {
             this.name = name;
             this.title = title;
@@ -81,7 +79,6 @@ namespace Kenshi_DnD
             this.toughness = toughness;
             this.hp = toughness;
             this.resistance = resistance;
-            this.perception = perception;
             this.agility = agility;
             this.level = 1;
             this.backgroundStory = "";
@@ -99,11 +96,11 @@ namespace Kenshi_DnD
         {
             return title;
         }
-        public int GetBruteForce()
+        public Stat GetBruteForce()
         {
             return bruteForce;
         }
-        public int GetSkill()
+        public Stat GetSkill()
         {
             return skill;
         }
@@ -115,15 +112,11 @@ namespace Kenshi_DnD
         {
             return hp;
         }
-        public int GetResistance()
+        public Stat GetResistance()
         {
             return resistance;
         }
-        public int GetPerception()
-        {
-            return perception;
-        }
-        public int GetAgility()
+        public Stat GetAgility()
         {
             return agility;
         }
@@ -151,11 +144,11 @@ namespace Kenshi_DnD
         {
             this.title = title;
         }
-        public void SetBruteForce(int bruteForce)
+        public void SetBruteForce(Stat bruteForce)
         {
             this.bruteForce = bruteForce;
         }
-        public void SetSkill(int skill)
+        public void SetSkill(Stat skill)
         {
             this.skill = skill;
         }
@@ -167,15 +160,11 @@ namespace Kenshi_DnD
         {
             this.hp = hp;
         }
-        public void SetResistance(int resistance)
+        public void SetResistance(Stat resistance)
         {
             this.resistance = resistance;
         }
-        public void SetPerception(int perception)
-        {
-            this.perception = perception;
-        }
-        public void SetAgility(int agility)
+        public void SetAgility(Stat agility)
         {
             this.agility = agility;
         }
@@ -214,8 +203,8 @@ namespace Kenshi_DnD
         public override string ToString()
         {
             return $"{name}, {title} - " +
-                $"Fuerza bruta: {bruteForce}, Habilidad: {skill}, Dureza: {toughness}, HP: {hp}," +
-                $" Resistencia: {resistance}, Percepción: {perception}, Agilidad: {agility}, Nivel: {level}";
+                $"{bruteForce.ToString()}, {skill.ToString}, {toughness.ToString()}, HP: {hp}," +
+                $" {resistance.ToString()}, {agility.ToString()}, Nivel: {level}";
         }
     }
 }

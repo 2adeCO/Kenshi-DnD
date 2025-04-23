@@ -13,6 +13,9 @@ namespace Kenshi_DnD
         protected int resellValue;
         protected int limbsNeeded;
         protected bool alreadyUsed;
+        protected int buff;
+        //0 is hp, 1 is brute force, 2 is skill, 3 is resistance, 4 is agility
+        protected int statToModify;
 
         public Item(string name, int value, int resellValue, int limbsNeeded)
         {

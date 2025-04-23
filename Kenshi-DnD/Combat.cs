@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    internal class Combat
+    class Combat
     {
     }
 }

@@ -8,9 +8,6 @@ namespace Kenshi_DnD
 {
     class RangedItem : Item
     {
-        protected int buff;
-        //0 is hp, 1 is brute force, 2 is skill, 3 is resistance, 4 is agility
-        protected int statToModify;
         protected int difficulty;
         public RangedItem(int buff, int statToModify, int difficulty, string name, int value, int resellValue, int limbsNeeded)
             : base(name, value, resellValue, limbsNeeded)
@@ -32,7 +29,7 @@ namespace Kenshi_DnD
         {
             // Implement the logic to check if the hero can use the ranged item
             // For example, check if the hero has enough limbs and meets the difficulty requirement
-            return base.CanUseItem(hero) && hero.GetSkill() >= difficulty;
+            return base.CanUseItem(hero);
         }
     }
 }

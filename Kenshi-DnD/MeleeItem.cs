@@ -8,9 +8,7 @@ namespace Kenshi_DnD
 {
     internal class MeleeItem : Item
     {
-        protected int buff;
-        //0 is hp, 1 is brute force, 2 is skill, 3 is resistance, 4 is agility
-        protected int statToModify;
+        
         protected bool breaksOnUse;
         
         public MeleeItem(int buff, int statToModify, bool breaksOnUse, string name, int value, int resellValue, int limbsNeeded)
