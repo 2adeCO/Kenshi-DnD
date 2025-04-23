@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class Monster
+    class Monster : ITurnable
     {
         string name;
         int resistance;
@@ -16,8 +16,8 @@ namespace Kenshi_DnD
         int cats;
         int xpDrop;
         //Value of 0 is no immunity
-        //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to skill
-        //Value of -1 is resistance to skill, -2 is immunity to skill, -3 is immunity to skill and resistance to brute force
+        //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to dexterity
+        //Value of -1 is resistance to dexterity, -2 is immunity to dexterity, -3 is immunity to dexterity and resistance to brute force
         int immunity;
         public Monster(string name, int resistance, int strength, int hp, int agility, int cats, int xpDrop, int immunity)
         {
@@ -38,7 +38,11 @@ namespace Kenshi_DnD
         {
             this.name = name;
         }
-        public int GetResistance()
+		public bool IsAlive()
+		{
+			return (this.hp > 0);
+		}
+		public int GetResistance()
         {
             return resistance;
         }

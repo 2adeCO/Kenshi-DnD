@@ -6,27 +6,35 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    internal class MeleeItem : Item
+    class MeleeItem : Item
     {
-        
+        protected bool canRevive;
         protected bool breaksOnUse;
-        
-        public MeleeItem(int buff, int statToModify, bool breaksOnUse, string name, int value, int resellValue, int limbsNeeded)
-            : base(name, value, resellValue, limbsNeeded)
+        public MeleeItem(string name, int value, int resellValue, int limbsNeeded, bool canRevive, StatModifier statToModify, bool breaksOnUse, bool isRare)
+            : base(name, value, resellValue, limbsNeeded, statToModify, isRare)
         {
-            this.buff = buff;
-            this.statToModify = statToModify;
+            this.canRevive = canRevive;
             this.breaksOnUse = breaksOnUse;
         }
-        public override void UseItem(Hero hero)
+        public override StatModifier UseItem(Hero hero)
         {
-            // Implement the logic for using the melee item
+            
+            if (CanUseItem(hero))
+            {
+                alreadyUsed = true;
+                return statToModify;
+            }
+            return null;
         }
-        public override bool CanUseItem(Hero hero)
+        public bool BreaksOnUse()
         {
-            // Implement the logic to check if the hero can use the melee item
-            return base.CanUseItem(hero);
+            return breaksOnUse;
+        }
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                   (canRevive ? "Puede revivir en uso\n" : "") +
+                   "Duradera: " + (breaksOnUse ? "Sí" : "No") + "\n";
         }
     }
-    
 }

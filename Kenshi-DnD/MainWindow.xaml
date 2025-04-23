@@ -37,7 +37,7 @@
             ></Label>
         <Button
             Grid.Column="1" Grid.Row="4"
-            Click="CombatPlay"
+            Click="NextTurnTest"
             Content="Avanzar jugada"
             >
         </Button>

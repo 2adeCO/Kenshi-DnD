@@ -9,10 +9,20 @@ namespace Kenshi_DnD
     class Limb : StatModifier
     {
         string name;
-        public Limb(string name, int bruteForce, int skill, int toughness, int hp, int resistance, int agility) 
-            : base(bruteForce, skill, toughness, hp, resistance, agility)
+        bool beingUsed;
+        public Limb(string name, int bruteForce, int dexterity, int toughness, int hp, int resistance, int agility) 
+            : base(bruteForce, dexterity, hp, resistance, agility)
         {
             this.name = name;
+			this.beingUsed = false;
+		}
+        public string GetName()
+		{
+			return name;
+		}
+        public bool GetBeingUsed()
+        {
+            return beingUsed;
         }
-    }
+	}
 }

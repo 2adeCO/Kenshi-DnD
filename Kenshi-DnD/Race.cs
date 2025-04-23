@@ -9,12 +9,13 @@ namespace Kenshi_DnD
     class Race : StatModifier
     {
         string name;
-
-        public Race(string name, int bruteForce, int skill, int toughness, int hp, int resistance, int agility) 
-            : base(bruteForce, skill, toughness, hp, resistance, agility)
+        int toughness;
+        public Race(string name, int bruteForce, int dexterity, int toughness, int hp, int resistance, int agility) 
+            : base(bruteForce, dexterity, hp, resistance, agility)
         {
             this.name = name;
-        }
+			this.toughness = toughness;
+		}
         public string GetName()
         {
             return name;

@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Kenshi_DnD
+{
+    class Turn
+    {
+        ITurnable fighter;
+        int attackProgress;
+        const int ATTACK_GOAL = 10;
+
+        public Turn(ITurnable fighter)
+        {
+            this.fighter = fighter;
+            attackProgress = fighter.GetAgility();
+        }
+        public void SetFighter(ITurnable fighter)
+        {
+            this.fighter = fighter;
+        }
+        public void AdvanceTurn()
+        {
+            attackProgress += fighter.GetAgility();
+            
+        }
+        public bool IsTurnComplete()
+        {
+            if (attackProgress >= ATTACK_GOAL)
+            {
+                attackProgress -= ATTACK_GOAL;
+                return true;
+            }
+            return false;
+        }
+        public ITurnable GetFighter()
+        {
+            return fighter;
+        }
+    }
+}

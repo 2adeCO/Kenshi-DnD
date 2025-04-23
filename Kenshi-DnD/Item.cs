@@ -12,25 +12,56 @@ namespace Kenshi_DnD
         protected int value;
         protected int resellValue;
         protected int limbsNeeded;
+        protected bool isRare;
         protected bool alreadyUsed;
-        protected int buff;
-        //0 is hp, 1 is brute force, 2 is skill, 3 is resistance, 4 is agility
-        protected int statToModify;
+        protected StatModifier statToModify;
 
-        public Item(string name, int value, int resellValue, int limbsNeeded)
+        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify,bool isRare)
         {
             this.name = name;
             this.value = value;
             this.resellValue = resellValue;
             this.limbsNeeded = limbsNeeded;
             alreadyUsed = false;
+            this.statToModify = statToModify;
+            this.isRare = isRare;
         }
 
-        public abstract void UseItem(Hero hero);
-        public virtual bool CanUseItem(Hero hero)
+        public abstract StatModifier UseItem(Hero hero);
+        public override string ToString()
         {
-            // Check if the hero has enough limbs to use the item
-            return hero.GetLimbs().Length >= limbsNeeded;
+            return "Nombre: " + name + "\n" +
+                   "Valor: " + value + "\n" +
+                   "Valor de reventa: " + resellValue + "\n" +
+                   "Peso (Cantidad de miembros necesitados): " + limbsNeeded + "\n" +
+                   (isRare?("Objeto raro"):(""));
+        }
+        public void UnUse()
+        {
+            this.alreadyUsed = false;
+        }
+        public bool CanUseItem(Hero hero)
+        {
+            if(!alreadyUsed)
+            {
+                int limbsAvailable = 0;
+                for(int i = 0; i < hero.GetLimbs().Length; i += 1)
+                {
+                    if (!hero.GetLimbs()[i].GetBeingUsed())
+                    {
+                        limbsAvailable += 1;
+                    }
+                }
+                if (limbsAvailable >= limbsNeeded)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool IsRare()
+        {
+            return isRare;
         }
         public string GetName()
         {
@@ -59,6 +90,10 @@ namespace Kenshi_DnD
         public int GetLimbsNeeded()
         {
             return limbsNeeded;
+        }
+        public bool GetAlreadyUsed()
+        {
+            return alreadyUsed;
         }
 
     }

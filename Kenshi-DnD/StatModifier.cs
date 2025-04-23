@@ -6,39 +6,43 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    abstract class StatModifier
+    class StatModifier
     {
-        //All of these are buffs and debuffs to the stats of the hero
-        //Offensive stats
+        //All of these are buffs and debuffs to the ints of the hero
+        //Offensive ints
         //Brute Force is associated with Sheks, skeletons and Hive Soldiers
-        //Skill is associated with Humans(All types), Hive Princes and Hive Workers 
+        //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
         int bruteForce;
-        int skill;
+        int dexterity;
 
-        //Defensive stats
+        //Defensive ints
         //Health points
         //Toughness is max health points
-        int toughness;
         int hp;
 
         //Resistance is defense against Brute Force
-        //Perception is defense against Skill
         int resistance;
 
         //Agility determines how fast the hero interacts with the enemies
         int agility;
 
+
+        public StatModifier(int bruteForce, int dexterity, int hp, int resistance, int agility)
+        {
+            this.bruteForce = bruteForce;
+            this.dexterity = dexterity;
+
+            this.hp = hp;
+            this.resistance = resistance;
+            this.agility = agility;
+        }
         public int GetBruteForce()
         {
             return bruteForce;
         }
-        public int GetSkill()
+        public int GetDexterity()
         {
-            return skill;
-        }
-        public int GetToughness()
-        {
-            return toughness;
+            return dexterity;
         }
         public int GetHp()
         {
@@ -57,14 +61,11 @@ namespace Kenshi_DnD
         {
             this.bruteForce = bruteForce;
         }
-        public void SetSkill(int skill)
+        public void SetDexterity(int dexterity)
         {
-            this.skill = skill;
+            this.dexterity = dexterity;
         }
-        public void SetToughness(int toughness)
-        {
-            this.toughness = toughness;
-        }
+
         public void SetHp(int hp)
         {
             this.hp = hp;
@@ -73,18 +74,6 @@ namespace Kenshi_DnD
         {
             this.resistance = resistance;
         }
-        public void SetAgility(int agility)
-        {
-            this.agility = agility;
-        }
-        public StatModifier(int bruteForce, int skill, int toughness, int hp, int resistance, int agility)
-        {
-            this.bruteForce = bruteForce;
-            this.skill = skill;
-            this.toughness = toughness;
-            this.hp = hp;
-            this.resistance = resistance;
-            this.agility = agility;
-        }
+
     }
 }

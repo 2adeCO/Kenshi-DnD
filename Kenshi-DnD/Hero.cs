@@ -6,35 +6,31 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class Hero
+    class Hero : ITurnable
     {
         //Name and title, example: "Carlos, the database scholar"
         string name;
         string title;
 
-        //Offensive stats
+        //Offensive ints
         //Brute Force is associated with Sheks, skeletons and Hive Soldiers
-        //Skill is associated with Humans(All types), Hive Princes and Hive Workers 
-        Stat bruteForce;
-        Stat skill;
+        //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
 
-        //Defensive stats
+        StatModifier heroStats;
+        //Defensive ints
         //Health points
         //Toughness is max health points
         int toughness;
-        int hp;
         //Resistance is defense against Brute Force
-        //Perception is defense against Skill
-        Stat resistance;
+        //Perception is defense against Dexterity
         //Agility determines how fast the hero interacts with the enemies
-        Stat agility;
         //Race is a key component in the world building of this game. The races are: Human, Shek, Skeleton and Hive
         Race race;
-        //Subrace specifies the exact type of race that the character is. The subraces are:
+        //Race specifies the exact type of race that the character is. The subraces are:
         //Human: Greenlander, scorchlander
         //Hive: Hive Prince, Hive Worker, Hive Soldier
         //The other races don't have subrace
-        Subrace subrace;
+        Race subrace;
         //Inventory
 
         //Background story is a semi randomly asigned tale to give the hero a bit of depth. Depending on their circunstances, these will vary.
@@ -44,23 +40,19 @@ namespace Kenshi_DnD
 
         //Recruitment date is the date when the hero was recruited.
         DateTime recruitmentDate;
-        //Level determines roughly how strong the hero is. However, this is not a direct correlation, as the hero's stats are built upon leveling up.
+        //Level determines roughly how strong the hero is. However, this is not a direct correlation, as the hero's ints are built upon leveling up.
         int level;
         //Experience is the amount of experience the hero has. It determines how much the hero has leveled up.
         int experience;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
-        public Hero(string name, string title, Stat bruteForce, Stat skill, int toughness, int hp, 
-            Stat resistance, Stat agility, string backgroundStory, int level, int experience, Race race, Subrace subrace, Limb[] limbs)
+        public Hero(string name, string title, int bruteForce, int dexterity, int toughness, int hp, 
+            int resistance, int agility, string backgroundStory, int level, int experience, Race race, Race subrace, Limb[] limbs)
         {
+            heroStats = new StatModifier(bruteForce, dexterity, resistance, hp, agility);
             this.name = name;
             this.title = title;
-            this.bruteForce = bruteForce;
-            this.skill = skill;
             this.toughness = toughness;
-            this.hp = hp;
-            this.resistance = resistance;
-            this.agility = agility;
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
             this.level = level;
@@ -69,17 +61,14 @@ namespace Kenshi_DnD
             this.subrace = subrace;
             this.limbs = limbs;
         }
-        public Hero(string name, string title, Stat bruteForce, Stat skill, int toughness,
-            Stat resistance, Stat agility,Race race, Subrace subrace, Limb[] limbs)
+        public Hero(string name, string title, int bruteForce, int dexterity, int toughness,
+            int resistance, int agility,Race race, Race subrace, Limb[] limbs)
         {
             this.name = name;
             this.title = title;
-            this.bruteForce = bruteForce;
-            this.skill = skill;
+            heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             this.toughness = toughness;
-            this.hp = toughness;
-            this.resistance = resistance;
-            this.agility = agility;
+
             this.level = 1;
             this.backgroundStory = "";
             this.recruitmentDate = DateTime.Now;
@@ -96,13 +85,13 @@ namespace Kenshi_DnD
         {
             return title;
         }
-        public Stat GetBruteForce()
+        public int GetBruteForce()
         {
-            return bruteForce;
+            return heroStats.GetBruteForce();
         }
-        public Stat GetSkill()
+        public int GetDexterity()
         {
-            return skill;
+            return heroStats.GetDexterity();
         }
         public int GetToughness()
         {
@@ -110,15 +99,19 @@ namespace Kenshi_DnD
         }
         public int GetHp()
         {
-            return hp;
+            return heroStats.GetHp();
         }
-        public Stat GetResistance()
+        public bool IsAlive()
         {
-            return resistance;
+            return (this.heroStats.GetHp() > 0);
         }
-        public Stat GetAgility()
+        public int GetResistance()
         {
-            return agility;
+            return heroStats.GetResistance();
+        }
+        public int GetAgility()
+        {
+            return heroStats.GetAgility();
         }
         public string GetBackgroundStory()
         {
@@ -144,29 +137,13 @@ namespace Kenshi_DnD
         {
             this.title = title;
         }
-        public void SetBruteForce(Stat bruteForce)
-        {
-            this.bruteForce = bruteForce;
-        }
-        public void SetSkill(Stat skill)
-        {
-            this.skill = skill;
-        }
         public void SetToughness(int toughness)
         {
             this.toughness = toughness;
         }
         public void SetHp(int hp)
         {
-            this.hp = hp;
-        }
-        public void SetResistance(Stat resistance)
-        {
-            this.resistance = resistance;
-        }
-        public void SetAgility(Stat agility)
-        {
-            this.agility = agility;
+            this.heroStats.SetHp(hp);
         }
         public void SetBackgroundStory(string backgroundStory)
         {
@@ -202,9 +179,7 @@ namespace Kenshi_DnD
 
         public override string ToString()
         {
-            return $"{name}, {title} - " +
-                $"{bruteForce.ToString()}, {skill.ToString}, {toughness.ToString()}, HP: {hp}," +
-                $" {resistance.ToString()}, {agility.ToString()}, Nivel: {level}";
+            return $"{name}, {title} - ";
         }
     }
 }
