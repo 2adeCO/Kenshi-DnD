@@ -79,181 +79,309 @@ namespace Kenshi_DnD
         {
             for (int i = 0; i < items.Count; i++)
             {
-                if (items[i].GetAlreadyUsed())
+                if (items[i].IsUsed())
                 {
                     items[i].UnUse();
                 }
             }
             Debug.WriteLine("All items are available");
         }
-        public Item[] GetConsumables(bool unused)
+        //0 is all, 1 is unused, 2 is used
+        public Item[] GetConsumables(int returnSelect)
         {
+            Item[] itemsToReturn;
             int count = 0;
 
-            for (int i = 0; i < items.Count; i++)
+            switch (returnSelect)
             {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                case 0:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            count += 1;
+                            if (items[i] is MeleeItem)
+                            {
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i] is MeleeItem)
+                            {
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is MeleeItem)
+                case 1:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            count += 1;
+                            if (!items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (!items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-            }
-            Item[] itemsToReturn = new Item[count];
-            count = 0;
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                case 2:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            itemsToReturn[count] = meleeItem;
-                            count += 1;
+                            if (items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                MeleeItem meleeItem = (MeleeItem)items[i];
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is MeleeItem)
+                default:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
-                        {
-                            itemsToReturn[count] = meleeItem;
-                            count += 1;
-                        }
+                        Debug.WriteLine("Which items to return not specified");
+                        return null;
                     }
-                }
             }
             return itemsToReturn;
-
-
         }
-        public Item[] GetRanged(bool unused)
+        public Item[] GetRanged(int returnSelect)
         {
+            Item[] itemsToReturn;
             int count = 0;
 
-            for (int i = 0; i < items.Count; i++)
+            switch (returnSelect)
             {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is RangedItem)
+                case 0:
                     {
-                        count += 1;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i] is RangedItem)
+                            {
+                                count += 1;
+                            }
+                        }
 
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i] is RangedItem)
+                            {
+                                itemsToReturn[count] = items[i];
+                                count += 1;
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is RangedItem)
+                case 1:
                     {
-                        count += 1;
-                    }
-                }
-            }
-            Item[] itemsToReturn = new Item[count];
-            count = 0;
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is RangedItem)
-                    {
-                        itemsToReturn[count] = items[i];
-                        count += 1;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (!items[i].IsUsed() && items[i] is RangedItem)
+                            {
+                                count += 1;
 
+                            }
+                        }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (!items[i].IsUsed() && items[i] is RangedItem)
+                            {
+                                itemsToReturn[count] = items[i];
+                                count += 1;
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is RangedItem)
+                case 2:
                     {
-                        itemsToReturn[count] = items[i];
-                        count += 1;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i].IsUsed() && items[i] is RangedItem)
+                            {
+                                count += 1;
+
+                            }
+                        }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i].IsUsed() && items[i] is RangedItem)
+                            {
+                                itemsToReturn[count] = items[i];
+                                count += 1;
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        Debug.WriteLine("Which items to return not specified");
+                        return null;
                     }
                 }
-            }
             return itemsToReturn;
-
         }
-        public Item[] GetMelee(bool unused)
+
+        
+        public Item[] GetMelee(int returnSelect)
         {
+            Item[] itemsToReturn;
             int count = 0;
 
-            for (int i = 0; i < items.Count; i++)
+            switch (returnSelect)
             {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                case 0:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            count += 1;
+                            if (items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is MeleeItem)
+                case 1:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            count += 1;
+                            if (!items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (!items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-            }
-            Item[] itemsToReturn = new Item[count];
-            count = 0;
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (unused)
-                {
-                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                case 2:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (!meleeItem.BreaksOnUse())
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            itemsToReturn[count] = meleeItem;
-                            count += 1;
+                            if (items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    count += 1;
+                                }
+                            }
                         }
+
+                        itemsToReturn = new Item[count];
+                        count = 0;
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            if (items[i].IsUsed() && items[i] is MeleeItem)
+                            {
+                                if (!IsItemConsumible(items[i]))
+                                {
+                                    itemsToReturn[count] = items[i];
+                                    count += 1;
+                                }
+                            }
+                        }
+                        break;
                     }
-                }
-                else
-                {
-                    if (items[i] is MeleeItem)
+                default:
                     {
-                        MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (!meleeItem.BreaksOnUse())
-                        {
-                            itemsToReturn[count] = meleeItem;
-                            count += 1;
-                        }
+                        Debug.WriteLine("Which items to return not specified");
+                        return null;
                     }
-                }
             }
             return itemsToReturn;
+        }
+        private bool IsItemConsumible(Item item)
+        {
+            if(item is MeleeItem)
+            {
+                MeleeItem meleeItem = (MeleeItem)item;
+                if (meleeItem.BreaksOnUse())
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

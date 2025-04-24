@@ -40,10 +40,11 @@ namespace Kenshi_DnD
         }
         private void UpdateItemGrids(Inventory myInventory)
         {
-            //for (int i = 0; i < myInventory; i++)
-            //{
+            Item[] rangedArray = myInventory.GetRanged(false);
+            Item[] meleeArray = myInventory.GetMelee(false);
+            Item[] consumableArray = myInventory.GetConsumables(false);
 
-            //}
+            unuse
         }
     }
 }

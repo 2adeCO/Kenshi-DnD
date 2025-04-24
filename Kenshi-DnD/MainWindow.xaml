@@ -42,9 +42,9 @@
             Content="Avanzar jugada"
             >
         </Button>
-        <Grid Grid.Column="0" Grid.Row="6" x:Name="SelectedItemsGrid">
-        </Grid>
-        <Grid Grid.Column="2" Grid.Row="6" x:Name="UnSelectedItemsGrid">
-        </Grid>
+        <TreeView Grid.Column="0" Grid.Row="6" x:Name="SelectedItemsGrid">
+        </TreeView>
+        <TreeView Grid.Column="2" Grid.Row="6" x:Name="UnSelectedItemsGrid">
+        </TreeView>
     </Grid>
 </Window>

@@ -91,7 +91,7 @@ namespace Kenshi_DnD
         {
             return limbsNeeded;
         }
-        public bool GetAlreadyUsed()
+        public bool IsUsed()
         {
             return alreadyUsed;
         }
