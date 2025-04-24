@@ -22,7 +22,7 @@ namespace Kenshi_DnD
         }
         public int SellItem(Item item)
         {
-            for(int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].Equals(item))
                 {
@@ -35,13 +35,13 @@ namespace Kenshi_DnD
         }
         public StatModifier UseItem(Item item, Hero hero)
         {
-            for(int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].Equals(item))
                 {
                     if (item.CanUseItem(hero))
                     {
-                        
+
                         StatModifier stat = item.UseItem(hero);
                         if (item is MeleeItem)
                         {
@@ -57,7 +57,7 @@ namespace Kenshi_DnD
                             Debug.WriteLine("Item is ranged item");
                         }
 
-                            return stat;
+                        return stat;
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace Kenshi_DnD
         }
         public void AllItemsDisponible()
         {
-            for(int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].GetAlreadyUsed())
                 {
@@ -99,7 +99,7 @@ namespace Kenshi_DnD
                         MeleeItem meleeItem = (MeleeItem)items[i];
                         if (meleeItem.BreaksOnUse())
                         {
-                            count+=1;
+                            count += 1;
                         }
                     }
                 }
@@ -113,7 +113,7 @@ namespace Kenshi_DnD
                             count += 1;
                         }
                     }
-                }                
+                }
             }
             Item[] itemsToReturn = new Item[count];
             count = 0;
@@ -158,7 +158,54 @@ namespace Kenshi_DnD
                 {
                     if (!items[i].GetAlreadyUsed() && items[i] is RangedItem)
                     {
-                        RangedItem rangedItem = (RangedItem)items[i];
+                        count += 1;
+
+                    }
+                }
+                else
+                {
+                    if (items[i] is RangedItem)
+                    {
+                        count += 1;
+                    }
+                }
+            }
+            Item[] itemsToReturn = new Item[count];
+            count = 0;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is RangedItem)
+                    {
+                        itemsToReturn[count] = items[i];
+                        count += 1;
+
+                    }
+                }
+                else
+                {
+                    if (items[i] is RangedItem)
+                    {
+                        itemsToReturn[count] = items[i];
+                        count += 1;
+                    }
+                }
+            }
+            return itemsToReturn;
+
+        }
+        public Item[] GetMelee(bool unused)
+        {
+            int count = 0;
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
                         if (meleeItem.BreaksOnUse())
                         {
                             count += 1;
@@ -186,7 +233,7 @@ namespace Kenshi_DnD
                     if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
                     {
                         MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        if (!meleeItem.BreaksOnUse())
                         {
                             itemsToReturn[count] = meleeItem;
                             count += 1;
@@ -198,7 +245,7 @@ namespace Kenshi_DnD
                     if (items[i] is MeleeItem)
                     {
                         MeleeItem meleeItem = (MeleeItem)items[i];
-                        if (meleeItem.BreaksOnUse())
+                        if (!meleeItem.BreaksOnUse())
                         {
                             itemsToReturn[count] = meleeItem;
                             count += 1;
@@ -207,12 +254,7 @@ namespace Kenshi_DnD
                 }
             }
             return itemsToReturn;
-
-        }
-        public Item[] GetMelee(bool unused)
-        {
-            int count = 0;
-
         }
     }
 }
+ 

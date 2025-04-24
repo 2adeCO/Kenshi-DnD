@@ -24,5 +24,13 @@ namespace Kenshi_DnD
         {
             this.name = name;
         }
+        public void SetToughness(int toughness)
+        {
+            this.toughness = toughness;
+        }
+        public int GetToughness()
+        {
+            return toughness;
+        }
     }
 }
