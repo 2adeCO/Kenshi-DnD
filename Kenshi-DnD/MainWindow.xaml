@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Label 
@@ -41,5 +42,9 @@
             Content="Avanzar jugada"
             >
         </Button>
+        <Grid Grid.Column="0" Grid.Row="6" x:Name="SelectedItemsGrid">
+        </Grid>
+        <Grid Grid.Column="2" Grid.Row="6" x:Name="UnSelectedItemsGrid">
+        </Grid>
     </Grid>
 </Window>

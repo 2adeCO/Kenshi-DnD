@@ -86,5 +86,133 @@ namespace Kenshi_DnD
             }
             Debug.WriteLine("All items are available");
         }
+        public Item[] GetConsumables(bool unused)
+        {
+            int count = 0;
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            count+=1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            count += 1;
+                        }
+                    }
+                }                
+            }
+            Item[] itemsToReturn = new Item[count];
+            count = 0;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            itemsToReturn[count] = meleeItem;
+                            count += 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            itemsToReturn[count] = meleeItem;
+                            count += 1;
+                        }
+                    }
+                }
+            }
+            return itemsToReturn;
+
+
+        }
+        public Item[] GetRanged(bool unused)
+        {
+            int count = 0;
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is RangedItem)
+                    {
+                        RangedItem rangedItem = (RangedItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            count += 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            count += 1;
+                        }
+                    }
+                }
+            }
+            Item[] itemsToReturn = new Item[count];
+            count = 0;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (unused)
+                {
+                    if (!items[i].GetAlreadyUsed() && items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            itemsToReturn[count] = meleeItem;
+                            count += 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (items[i] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[i];
+                        if (meleeItem.BreaksOnUse())
+                        {
+                            itemsToReturn[count] = meleeItem;
+                            count += 1;
+                        }
+                    }
+                }
+            }
+            return itemsToReturn;
+
+        }
+        public Item[] GetMelee(bool unused)
+        {
+            int count = 0;
+
+        }
     }
 }

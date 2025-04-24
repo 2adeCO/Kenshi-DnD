@@ -45,11 +45,17 @@ namespace Kenshi_DnD
                     }
                 }
             }
-            DecideFirstTurn();
+            DecideNextNTurns(24,true);
         }
-        public void DecideFirstTurn()
+       
+        public void DecideNextNTurns(int numOfTurns, bool isNewList)
         {
-            turnOrder = new List<ITurnable>();
+            if (isNewList)
+            {
+                turnOrder = new List<ITurnable>();
+            }
+
+            int currentSize = turnOrder.Count;
             do
             {
                 for (int i = 0; i < everyTurn.Count; i++)
@@ -63,10 +69,12 @@ namespace Kenshi_DnD
                         turnOrder.Add(everyTurn[i].GetFighter());
                     }
                 }
+                //If numOfTurns is 3, and in the same AdvanceTurn, more than 3 complete the attack
+                //Every one will pass
+            } while (turnOrder.Count >= currentSize + numOfTurns);
 
-            } while (turnOrder.Count< 10);
-            
         }
+        
         public void NextTurn()
         {
             ITurnable attacker = turnOrder[turnIndex];
@@ -80,6 +88,10 @@ namespace Kenshi_DnD
                 MonsterAttacks((Monster)attacker, heroes[rnd.Next(0,heroes.Length)]);
             }
             turnIndex += 1;
+            if(turnOrder.Count - turnIndex < 6)
+            {
+                DecideNextNTurns(12,false);
+            }
         }
         public void MonsterAttacks(Monster attacker, Hero defender) 
         {
