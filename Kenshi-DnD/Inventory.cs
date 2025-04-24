@@ -91,11 +91,12 @@ namespace Kenshi_DnD
         {
             Item[] itemsToReturn;
             int count = 0;
-
+            Debug.Write("Consumibles - ");
             switch (returnSelect)
             {
                 case 0:
                     {
+                        Debug.WriteLine("All");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i] is MeleeItem)
@@ -124,6 +125,7 @@ namespace Kenshi_DnD
                     }
                 case 1:
                     {
+                        Debug.WriteLine("Unused");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
@@ -152,6 +154,7 @@ namespace Kenshi_DnD
                     }
                 case 2:
                     {
+                        Debug.WriteLine("Used");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
@@ -191,11 +194,12 @@ namespace Kenshi_DnD
         {
             Item[] itemsToReturn;
             int count = 0;
-
+            Debug.Write("Ranged - ");
             switch (returnSelect)
             {
                 case 0:
                     {
+                        Debug.WriteLine("All");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i] is RangedItem)
@@ -218,6 +222,7 @@ namespace Kenshi_DnD
                     }
                 case 1:
                     {
+                        Debug.WriteLine("Unused");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (!items[i].IsUsed() && items[i] is RangedItem)
@@ -241,6 +246,7 @@ namespace Kenshi_DnD
                     }
                 case 2:
                     {
+                        Debug.WriteLine("Used");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i].IsUsed() && items[i] is RangedItem)
@@ -276,11 +282,12 @@ namespace Kenshi_DnD
         {
             Item[] itemsToReturn;
             int count = 0;
-
+            Debug.Write("Melee - ");
             switch (returnSelect)
             {
                 case 0:
                     {
+                        Debug.WriteLine("All");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i] is MeleeItem)
@@ -309,6 +316,7 @@ namespace Kenshi_DnD
                     }
                 case 1:
                     {
+                        Debug.WriteLine("Unused");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
@@ -337,6 +345,7 @@ namespace Kenshi_DnD
                     }
                 case 2:
                     {
+                        Debug.WriteLine("Used");
                         for (int i = 0; i < items.Count; i++)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
