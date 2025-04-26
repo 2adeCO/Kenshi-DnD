@@ -38,7 +38,7 @@
             ></Label>
         <Button
             Grid.Column="1" Grid.Row="4"
-            Click="TestRemoveItem"
+            Click="UseItem"
             Content="Avanzar jugada"
             >
         </Button>

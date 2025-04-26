@@ -19,6 +19,7 @@ namespace Kenshi_DnD
     {
         Combat myCombat;
         Inventory myInventory;
+        ITurnable currentAttacker;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,29 +44,35 @@ namespace Kenshi_DnD
 
             myCombat = new Combat(heroes, monsters, myDice, myInventory);
             
-            myCombat.NextTurn();
+            currentAttacker = myCombat.GetCurrentAttacker();
         }
         private void NextTurnTest(object sender, RoutedEventArgs e)
         {
             //myCombat.NextTurn();
             myCombat.NextTurn();
+            currentAttacker = myCombat.GetCurrentAttacker();
         }
         private void LoadTreeView(Inventory myInventory)
         {
 
             TreeViewItem root = new TreeViewItem();
+            root.IsExpanded = true;
             root.Header = "Inventario";
 
             TreeViewItem ranged = new TreeViewItem();
+            ranged.IsExpanded = true;
             ranged.Header = "Objetos a distancia";
 
             TreeViewItem melee = new TreeViewItem();
+            melee.IsExpanded = true;
             melee.Header = "Objetos melee";
 
             TreeViewItem consumable = new TreeViewItem();
+            consumable.IsExpanded = true;
             consumable.Header = "Consumibles";
 
             TreeViewItem notConsumable = new TreeViewItem();
+            notConsumable.IsExpanded = true;
             notConsumable.Header = "No consumibles";
 
             root.Items.Add(ranged);
@@ -84,6 +91,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < rangedArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = rangedArray[i].GetName();
                 item.Tag = rangedArray[i];
                 ranged.Items.Add(item);
@@ -91,6 +100,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < notConsumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = notConsumableArray[i].GetName();
                 item.Tag = notConsumableArray[i];
                 notConsumable.Items.Add(item);
@@ -98,23 +109,32 @@ namespace Kenshi_DnD
             for (int i = 0; i < consumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = consumableArray[i].GetName();
                 item.Tag = consumableArray[i];
                 consumable.Items.Add(item);
             }
             UnSelectedItemsGrid.Items.Add(root);
-
         }
-        public void TestRemoveItem(object sender, RoutedEventArgs e)
+        public void UseItem(object sender, RoutedEventArgs e)
         {
-            TreeViewItem selectedItem = (TreeViewItem)UnSelectedItemsGrid.SelectedItem;
+            TreeViewItem selectedItem = (TreeViewItem)sender;
             if (selectedItem != null && selectedItem.Tag is Item item)
             {
-                // Remove the item from the inventory
-                myInventory.SellItem(item);
-                // Update the TreeView
-                UpdateItemGrids(myInventory);
+                if(currentAttacker is Hero)
+                {
+                    Hero currentHero = (Hero)currentAttacker;
+                    if (item.CanUseItem(currentHero))
+                    {
+                        AddItemToHero(currentHero, item);
+                    }
+                }
             }
+        }
+        private void AddItemToHero(Hero hero, Item item)
+        {
+            hero.AddItemToInventory(item);
         }
         private void UpdateItemGrids(Inventory myInventory)
         {
@@ -136,6 +156,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < rangedArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = rangedArray[i].GetName();
                 item.Tag = rangedArray[i];
                 ranged.Items.Add(item);
@@ -143,6 +165,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < notConsumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = notConsumableArray[i].GetName();
                 item.Tag = notConsumableArray[i];
                 notConsumable.Items.Add(item);
@@ -150,6 +174,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < consumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = consumableArray[i].GetName();
                 item.Tag = consumableArray[i];
                 consumable.Items.Add(item);
@@ -162,6 +188,12 @@ namespace Kenshi_DnD
             consumable = (TreeViewItem)melee.Items.GetItemAt(1);
             notConsumable = (TreeViewItem)melee.Items.GetItemAt(0);
 
+            if(currentAttacker is Monster)
+            {
+                return;
+            }
+            Hero currentHero = (Hero)currentAttacker;
+
             rangedArray = myInventory.GetRanged(2);
             consumableArray = myInventory.GetMelee(2);
             notConsumableArray = myInventory.GetConsumables(2);
@@ -173,6 +205,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < rangedArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = rangedArray[i].GetName();
                 item.Tag = rangedArray[i];
                 ranged.Items.Add(item);
@@ -180,6 +214,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < notConsumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = notConsumableArray[i].GetName();
                 item.Tag = notConsumableArray[i];
                 notConsumable.Items.Add(item);
@@ -187,6 +223,8 @@ namespace Kenshi_DnD
             for (int i = 0; i < consumableArray.Length; i++)
             {
                 TreeViewItem item = new TreeViewItem();
+                item.MouseLeftButtonUp
+                    += UseItem;
                 item.Header = consumableArray[i].GetName();
                 item.Tag = consumableArray[i];
                 consumable.Items.Add(item);

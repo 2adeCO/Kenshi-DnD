@@ -47,7 +47,11 @@ namespace Kenshi_DnD
             }
             DecideNextNTurns(24,true);
         }
-       
+        public ITurnable GetCurrentAttacker()
+        {
+            return turnOrder[turnIndex];
+        }
+
         public void DecideNextNTurns(int numOfTurns, bool isNewList)
         {
             if (isNewList)
@@ -95,12 +99,21 @@ namespace Kenshi_DnD
         }
         public void MonsterAttacks(Monster attacker, Hero defender) 
         {
+            List<Item> heroInventory = defender.GetInventory();
             Debug.WriteLine("Monster attacks");
             int attackerStat;
             int defenderStat;
 
             attackerStat = attacker.GetStrength();
+
             defenderStat = defender.GetResistance();
+            for(int i = 0; i < heroInventory.Count; i++)
+            {
+                if (heroInventory[i].GetStatToModify().GetResistance() > 0)
+                {
+                    defenderStat += heroInventory[i].GetStatToModify().GetResistance();
+                }
+            }
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
             Debug.WriteLine("Hits: " + hits);
@@ -118,12 +131,21 @@ namespace Kenshi_DnD
         }
         public void HeroAttacks(Hero attacker, Monster defender)
         {
+            List<Item> heroInventory = attacker.GetInventory();
             Debug.WriteLine("Hero attacks");
             int attackerStat;
             int defenderStat;
             int defenderHealth;
 
             attackerStat= attacker.GetBruteForce();
+            for (int i = 0; i < heroInventory.Count; i++)
+            {
+                if (heroInventory[i].GetStatToModify().GetBruteForce() > 0)
+                {
+                    attackerStat += heroInventory[i].GetStatToModify().GetBruteForce();
+                }
+            }
+
             defenderStat = defender.GetResistance();
             defenderHealth = defender.GetHp();
             Debug.WriteLine("Dices to attack: " + (attackerStat - defenderStat));

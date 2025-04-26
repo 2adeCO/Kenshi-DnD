@@ -33,6 +33,32 @@ namespace Kenshi_DnD
             }
             return 0;
         }
+        public bool ContainsItem(Item item)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(item))
+                {
+                    Debug.WriteLine("Item found");
+                    return true;
+                }
+            }
+            Debug.WriteLine("Item not found");
+            return false;
+        }
+        public void RemoveItem(Item item)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(item))
+                {
+                    items.RemoveAt(i);
+                    Debug.WriteLine("Item removed");
+                    return;
+                }
+            }
+            Debug.WriteLine("Item not found");
+        }
         public StatModifier UseItem(Item item, Hero hero)
         {
             for (int i = 0; i < items.Count; i++)
@@ -276,8 +302,6 @@ namespace Kenshi_DnD
                 }
             return itemsToReturn;
         }
-
-        
         public Item[] GetMelee(int returnSelect)
         {
             Item[] itemsToReturn;

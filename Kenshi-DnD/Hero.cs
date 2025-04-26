@@ -15,7 +15,7 @@ namespace Kenshi_DnD
         //Offensive ints
         //Brute Force is associated with Sheks, skeletons and Hive Soldiers
         //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
-
+        Inventory personalInventory;
         StatModifier heroStats;
         //Defensive ints
         //Health points
@@ -60,6 +60,7 @@ namespace Kenshi_DnD
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
+            personalInventory = new Inventory();
         }
         public Hero(string name, string title, int bruteForce, int dexterity, int toughness,
             int resistance, int agility,Race race, Race subrace, Limb[] limbs)
@@ -75,6 +76,7 @@ namespace Kenshi_DnD
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
+            personalInventory = new Inventory();
         }
         
         public string GetName()
@@ -164,6 +166,25 @@ namespace Kenshi_DnD
         public Limb[] GetLimbs()
         {
             return limbs;
+        }
+        public Inventory GetInventory()
+        {
+            return personalInventory;
+        }
+        public void AddItemToInventory(Item item)
+        {
+            if (item.CanUseItem(this))
+            {
+                personalInventory.AddItem(item);
+            }
+        }
+        public bool IsInInventory(Item item)
+        {
+            return personalInventory.ContainsItem(item);
+        }
+        public void RemoveItemFromInventory(Item item)
+        {
+            personalInventory.RemoveItem(item);
         }
         public void PutLimb(Limb newLimb)
         {

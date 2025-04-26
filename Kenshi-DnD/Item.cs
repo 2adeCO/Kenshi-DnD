@@ -87,6 +87,10 @@ namespace Kenshi_DnD
         {
             this.resellValue = resellValue;
         }
+        public StatModifier GetStatToModify()
+        {
+            return statToModify;
+        }
         public int GetLimbsNeeded()
         {
             return limbsNeeded;
