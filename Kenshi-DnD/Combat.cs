@@ -99,7 +99,7 @@ namespace Kenshi_DnD
         }
         public void MonsterAttacks(Monster attacker, Hero defender) 
         {
-            List<Item> heroInventory = defender.GetInventory();
+            HeroInventory heroInventory = defender.GetInventory();
             Debug.WriteLine("Monster attacks");
             int attackerStat;
             int defenderStat;
@@ -107,13 +107,7 @@ namespace Kenshi_DnD
             attackerStat = attacker.GetStrength();
 
             defenderStat = defender.GetResistance();
-            for(int i = 0; i < heroInventory.Count; i++)
-            {
-                if (heroInventory[i].GetStatToModify().GetResistance() > 0)
-                {
-                    defenderStat += heroInventory[i].GetStatToModify().GetResistance();
-                }
-            }
+            defenderStat += heroInventory.GetStat(4);
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
             Debug.WriteLine("Hits: " + hits);
@@ -131,20 +125,14 @@ namespace Kenshi_DnD
         }
         public void HeroAttacks(Hero attacker, Monster defender)
         {
-            List<Item> heroInventory = attacker.GetInventory();
+            HeroInventory heroInventory = attacker.GetInventory();
             Debug.WriteLine("Hero attacks");
             int attackerStat;
             int defenderStat;
             int defenderHealth;
 
-            attackerStat= attacker.GetBruteForce();
-            for (int i = 0; i < heroInventory.Count; i++)
-            {
-                if (heroInventory[i].GetStatToModify().GetBruteForce() > 0)
-                {
-                    attackerStat += heroInventory[i].GetStatToModify().GetBruteForce();
-                }
-            }
+            attackerStat= attacker.GetStat(1);
+            attackerStat += heroInventory.GetStat(1);
 
             defenderStat = defender.GetResistance();
             defenderHealth = defender.GetHp();

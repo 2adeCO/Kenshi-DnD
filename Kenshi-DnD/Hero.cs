@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Kenshi_DnD
 {
@@ -15,7 +11,7 @@ namespace Kenshi_DnD
         //Offensive ints
         //Brute Force is associated with Sheks, skeletons and Hive Soldiers
         //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
-        Inventory personalInventory;
+        HeroInventory personalInventory;
         StatModifier heroStats;
         //Defensive ints
         //Health points
@@ -46,13 +42,13 @@ namespace Kenshi_DnD
         int experience;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
-        public Hero(string name, string title, int bruteForce, int dexterity, int toughness, int hp, 
+        public Hero(string name, string title, int bruteForce, int dexterity, int toughness, int hp,
             int resistance, int agility, string backgroundStory, int level, int experience, Race race, Race subrace, Limb[] limbs)
         {
             heroStats = new StatModifier(bruteForce, dexterity, resistance, hp, agility);
             this.name = name;
             this.title = title;
-            this.toughness = toughness;
+            this.toughness = toughness + race.GetToughness() + subrace.GetToughness();
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
             this.level = level;
@@ -60,15 +56,15 @@ namespace Kenshi_DnD
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
-            personalInventory = new Inventory();
+            personalInventory = new HeroInventory();
         }
         public Hero(string name, string title, int bruteForce, int dexterity, int toughness,
-            int resistance, int agility,Race race, Race subrace, Limb[] limbs)
+            int resistance, int agility, Race race, Race subrace, Limb[] limbs)
         {
             this.name = name;
             this.title = title;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
-            this.toughness = toughness;
+            this.toughness = toughness + race.GetToughness() + subrace.GetToughness();
 
             this.level = 1;
             this.backgroundStory = "";
@@ -76,9 +72,96 @@ namespace Kenshi_DnD
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
-            personalInventory = new Inventory();
+            personalInventory = new HeroInventory();
         }
-        
+        // 1 = Brute Force, 2 = Dexterity, 3 = HP, 4 = Resistance, 5 = Agility
+        public int GetStat(int opt)
+        {
+            int stat = 0;
+            switch (opt)
+            {
+                case 1:
+                    {
+                        for (int i = 0; i < limbs.Length; i++)
+                        {
+                            if (limbs[i] != null)
+                            {
+                                stat += limbs[i].GetBruteForce();
+                            }
+                        }
+                        stat = heroStats.GetBruteForce() + race.GetBruteForce() + subrace.GetBruteForce();
+                        break;
+                    }
+                case 2:
+                    {
+                        for (int i = 0; i < limbs.Length; i++)
+                        {
+                            if (limbs[i] != null)
+                            {
+                                stat += limbs[i].GetDexterity();
+                            }
+                        }
+                        stat = heroStats.GetDexterity() + race.GetDexterity() + subrace.GetDexterity();
+                        break;
+                    }
+                case 3:
+                    {
+                        for (int i = 0; i < limbs.Length; i++)
+                        {
+                            if (limbs[i] != null)
+                            {
+                                stat += limbs[i].GetHp();
+                            }
+                        }
+                        stat = heroStats.GetHp() + race.GetHp() + subrace.GetHp();
+                        break;
+                    }
+                case 4:
+                    {
+                        for (int i = 0; i < limbs.Length; i++)
+                        {
+                            if (limbs[i] != null)
+                            {
+                                stat += limbs[i].GetResistance();
+                            }
+                        }
+                        stat = heroStats.GetResistance() + race.GetResistance() + subrace.GetResistance();
+                        break;
+                    }
+                case 5:
+                    {
+                        for (int i = 0; i < limbs.Length; i++)
+                        {
+                            if (limbs[i] != null)
+                            {
+                                stat += limbs[i].GetAgility();
+                            }
+                        }
+                        stat = heroStats.GetAgility() + race.GetAgility() + subrace.GetAgility();
+                        break;
+                    }
+            }
+            return stat;
+        }
+        public StatModifier GetAllStats()
+        {
+            StatModifier allStats;
+            int bruteForce = 0;
+            int dexterity = 0;
+            int hp = 0;
+            int resistance = 0;
+            int agility = 0;
+
+            bruteForce += this.GetStat(1);
+            dexterity += this.GetStat(2);
+            hp += this.GetStat(3);
+            resistance += this.GetStat(4);
+            agility += this.GetStat(5);
+
+            allStats = new StatModifier(bruteForce, dexterity, resistance, hp, agility);
+            return allStats;
+
+        }
         public string GetName()
         {
             return name;
@@ -167,7 +250,7 @@ namespace Kenshi_DnD
         {
             return limbs;
         }
-        public Inventory GetInventory()
+        public HeroInventory GetInventory()
         {
             return personalInventory;
         }
@@ -175,7 +258,68 @@ namespace Kenshi_DnD
         {
             if (item.CanUseItem(this))
             {
+                Debug.WriteLine(this.name + " can use " + item.GetName());
+                item.SetAlreadyUsed(true);
+                UseLimbs( item.GetLimbsNeeded());
                 personalInventory.AddItem(item);
+            }
+            else
+            {
+                Debug.WriteLine(this.name + " can't use " + item.GetName());
+            }
+        }
+        private void FreeLimbs(int num)
+        {
+            int iterator = 0;
+            while (num > 0)
+            {
+                Debug.WriteLine("Trying limb " + iterator);
+                Debug.WriteLine("Limbs to free now: " + num);
+                if (limbs[iterator] != null)
+                {
+                    if (limbs[iterator].GetBeingUsed())
+                    {
+                        Debug.WriteLine("Limb found");
+                        limbs[iterator].SetBeingUsed(false);
+                        num -= 1;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Limb already free");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Limb is missing...");
+                }
+                iterator += 1;
+            }
+        }
+        private void UseLimbs(int num)
+        {
+            int iterator = 0;
+            while(num > 0)
+            {
+                Debug.WriteLine("Trying limb " + iterator);
+                Debug.WriteLine("Limbs needed now: " + num);
+                if (limbs[iterator] != null)
+                {
+                    if (!limbs[iterator].GetBeingUsed())
+                    {
+                        Debug.WriteLine("Limb found");
+                        limbs[iterator].SetBeingUsed(true);
+                        num -= 1;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Limb already used");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Limb is missing...");
+                }
+                    iterator += 1;
             }
         }
         public bool IsInInventory(Item item)
@@ -184,11 +328,13 @@ namespace Kenshi_DnD
         }
         public void RemoveItemFromInventory(Item item)
         {
+            item.SetAlreadyUsed(false);
+            FreeLimbs(item.GetLimbsNeeded());
             personalInventory.RemoveItem(item);
         }
         public void PutLimb(Limb newLimb)
         {
-            for(int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < limbs.Length; i++)
             {
                 if (limbs[i] == null)
                 {

@@ -16,15 +16,9 @@ namespace Kenshi_DnD
             this.canRevive = canRevive;
             this.breaksOnUse = breaksOnUse;
         }
-        public override StatModifier UseItem(Hero hero)
+       public override string AnnounceUse()
         {
-            
-            if (CanUseItem(hero))
-            {
-                alreadyUsed = true;
-                return statToModify;
-            }
-            return null;
+            return "¡El héroe usa " + base.name + "!";
         }
         public bool BreaksOnUse()
         {

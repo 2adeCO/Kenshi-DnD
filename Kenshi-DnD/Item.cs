@@ -27,7 +27,7 @@ namespace Kenshi_DnD
             this.isRare = isRare;
         }
 
-        public abstract StatModifier UseItem(Hero hero);
+        public abstract string AnnounceUse();
         public override string ToString()
         {
             return "Nombre: " + name + "\n" +
@@ -40,23 +40,26 @@ namespace Kenshi_DnD
         {
             this.alreadyUsed = false;
         }
+        public void SetAlreadyUsed(bool alreadyUsed)
+        {
+            this.alreadyUsed = alreadyUsed;
+        }
         public bool CanUseItem(Hero hero)
         {
-            if(!alreadyUsed)
+            
+            int limbsAvailable = 0;
+            for(int i = 0; i < hero.GetLimbs().Length; i += 1)
             {
-                int limbsAvailable = 0;
-                for(int i = 0; i < hero.GetLimbs().Length; i += 1)
+                if (!hero.GetLimbs()[i].GetBeingUsed())
                 {
-                    if (!hero.GetLimbs()[i].GetBeingUsed())
-                    {
-                        limbsAvailable += 1;
-                    }
-                }
-                if (limbsAvailable >= limbsNeeded)
-                {
-                    return true;
+                    limbsAvailable += 1;
                 }
             }
+            if (limbsAvailable >= limbsNeeded)
+            {
+                return true;
+            }
+        
             return false;
         }
         public bool IsRare()

@@ -19,17 +19,11 @@ namespace Kenshi_DnD
         {
             this.difficulty = difficulty;
         }
-        public override StatModifier UseItem(Hero hero)
+        public override string AnnounceUse()
         {
-            
-            if (CanUseItem(hero))
-            {
-                alreadyUsed = true;
-                return statToModify;
-            }
-            return null;
+            return "¡El héroe coge distancia... y usa " + base.name + "!";
         }
-        
+
         public override string ToString()
         {
             return base.ToString() + "\n" +
