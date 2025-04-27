@@ -13,7 +13,9 @@ namespace Kenshi_DnD
         Hero[] heroes;
         Monster[] enemies;
         Dice myDice;
+        //Keeps track of every turn progress
         List<Turn> everyTurn;
+        //Generates a list of fighters in the order they must attack
         List<ITurnable> turnOrder;
         Random rnd;
         int turnIndex;
