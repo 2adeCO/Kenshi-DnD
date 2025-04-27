@@ -74,6 +74,13 @@ namespace Kenshi_DnD
         {
             this.resistance = resistance;
         }
-
+        public override string ToString()
+        {
+            return (bruteForce != 0 ? "Fuerza bruta: " + bruteForce + "\n" : "") +
+                (dexterity != 0 ? "Destreza: " + dexterity + "\n" : "") +
+                (hp != 0 ? "Puntos de vida: " + hp + "\n" : "") +
+                (resistance != 0 ? "Resistencia: " + resistance + "\n" : "") +
+                (agility != 0 ? "Agilidad: " + agility : "");
+        }
     }
 }

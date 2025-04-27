@@ -35,7 +35,7 @@ namespace Kenshi_DnD
             int totalWins = 0;
             if(numOfRolls <= 0)
             {
-                Debug.WriteLine(">0 number of rolls");
+                Debug.WriteLine("<0 number of rolls");
                 return 0;
             }
             for (int i = 0; i < numOfRolls; i++)

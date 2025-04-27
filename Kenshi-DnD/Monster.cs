@@ -19,16 +19,16 @@ namespace Kenshi_DnD
         //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to dexterity
         //Value of -1 is resistance to dexterity, -2 is immunity to dexterity, -3 is immunity to dexterity and resistance to brute force
         int immunity;
-        public Monster(string name, int resistance, int strength, int hp, int agility, int cats, int xpDrop, int immunity)
+        public Monster(string name, int hp, int strength, int resistance, int agility, int immunity, int cats, int xpDrop)
         {
             this.name = name;
-            this.resistance = resistance;
-            this.strength = strength;
             this.hp = hp;
+            this.strength = strength;
+            this.resistance = resistance;
             this.agility = agility;
+            this.immunity = immunity;
             this.cats = cats;
             this.xpDrop = xpDrop;
-            this.immunity = immunity;
         }
         public string GetName()
         {
@@ -98,5 +98,32 @@ namespace Kenshi_DnD
         {
             this.immunity = immunity;
         }
+        public override string ToString()
+        {
+            return
+                (name != "" ? "Nombre: " + name + "\n" : "") +
+                (hp != 0 ? "Puntos de vida: " + hp + "\n" : "Cadáver") +
+                "Fuerza bruta: " + strength + "\n" +
+                "Resistencia: " + resistance + "\n" +
+                "Agilidad: " + agility + "\n" +
+                (cats != 0 ? "Cats: " + cats + "\n" : "Muerto de hambre \n") +
+                "Experiencia: " + xpDrop + "\n" +
+                "Inmunidad: " + GetImmunityDescription() + "\n";
+        }
+
+        private string GetImmunityDescription()
+        {
+            switch (immunity)
+            {
+                case 1: return "Resistencia a Fuerza Bruta";
+                case 2: return "Inmunidad a Fuerza Bruta";
+                case 3: return "Inmunidad a Fuerza Bruta y Resistencia a Destreza";
+                case -1: return "Resistencia a Destreza";
+                case -2: return "Inmunidad a Destreza";
+                case -3: return "Inmunidad a Destreza y Resistencia a Fuerza Bruta";
+                default: return "Sin inmunidad";
+            }
+        }
+
     }
 }

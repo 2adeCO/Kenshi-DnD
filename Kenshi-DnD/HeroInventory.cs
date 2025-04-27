@@ -84,5 +84,27 @@ namespace Kenshi_DnD
             }
             return stat;
         }
+        public bool AreRangedItems()
+        {
+            for(int i=0; i < items.Count; i++)
+            {
+                if (items[i] is RangedItem )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool AreMeleeItems()
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] is MeleeItem)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

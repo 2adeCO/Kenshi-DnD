@@ -10,5 +10,6 @@ namespace Kenshi_DnD
     {
         public int GetAgility();
         public bool IsAlive();
+        public string GetName();
     }
 }
