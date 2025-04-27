@@ -103,12 +103,28 @@ namespace Kenshi_DnD
             AllMonsters.Children.Clear();
             AllHeroes.RowDefinitions.Clear();
             AllMonsters.RowDefinitions.Clear();
+            AllHeroes.ColumnDefinitions.Clear();
+            AllMonsters.ColumnDefinitions.Clear();
 
+            
+            for (int i = 0; i < 2; i++)
+            {
+                ColumnDefinition column = new ColumnDefinition();
+                column.Width = i == 0 ? GridLength.Auto : new GridLength(1,GridUnitType.Star);
+                AllHeroes.ColumnDefinitions.Add(column);
+            }
             for (int i = 0; i < heroes.Length; i++)
             {
                 RowDefinition row = new RowDefinition();
                 row.Height = GridLength.Auto;
                 AllHeroes.RowDefinitions.Add(row);
+            }
+
+            for(int i = 0; i < 2; i++)
+            {
+                ColumnDefinition column = new ColumnDefinition();
+                column.Width = i == 0 ? new GridLength(1, GridUnitType.Star) : GridLength.Auto;
+                AllMonsters.ColumnDefinitions.Add(column);
             }
             for(int i = 0; i < monsters.Length; i++)
             {
@@ -139,6 +155,7 @@ namespace Kenshi_DnD
                 button.ToolTip = heroes[i].ToString();
                 button.HorizontalAlignment = HorizontalAlignment.Left;
                 Grid.SetRow(button, i);
+                Grid.SetColumn(button, 0);
                 AllHeroes.Children.Add(button);
             }
             for (int i = 0; i < monsters.Length; i++)
@@ -167,6 +184,7 @@ namespace Kenshi_DnD
                     button.ToolTip = monsters[i].ToString();
                 button.HorizontalAlignment = HorizontalAlignment.Right;
                 Grid.SetRow(button, i);
+                Grid.SetColumn(button, 1);
                 AllMonsters.Children.Add(button);
             }
 

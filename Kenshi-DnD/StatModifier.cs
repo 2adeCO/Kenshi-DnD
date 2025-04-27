@@ -76,9 +76,10 @@ namespace Kenshi_DnD
         }
         public override string ToString()
         {
-            return (bruteForce != 0 ? "Fuerza bruta: " + bruteForce + "\n" : "") +
-                (dexterity != 0 ? "Destreza: " + dexterity + "\n" : "") +
+            return 
                 (hp != 0 ? "Puntos de vida: " + hp + "\n" : "") +
+                (bruteForce != 0 ? "Fuerza bruta: " + bruteForce + "\n" : "") +
+                (dexterity != 0 ? "Destreza: " + dexterity + "\n" : "") +
                 (resistance != 0 ? "Resistencia: " + resistance + "\n" : "") +
                 (agility != 0 ? "Agilidad: " + agility : "");
         }

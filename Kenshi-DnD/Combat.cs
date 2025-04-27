@@ -105,6 +105,7 @@ namespace Kenshi_DnD
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
             Debug.WriteLine("Hits: " + hits);
+            Debug.WriteLine(defender.GetHp() + "  " + hits + "   " + (defender.GetHp() - hits));
             defender.SetHp(defender.GetHp() - hits);
             Debug.WriteLine("Defender health: " + defender.GetHp());
             if (defender.GetHp() <= 0)
@@ -119,7 +120,10 @@ namespace Kenshi_DnD
         }
         public void HeroAttacks(Hero attacker, Monster defender)
         {
+            if (attacker.AreConsumableItems())
+            {
 
+            }
             if (attacker.AreRangedItems())
             {
                 RangeAttack(attacker, defender);
@@ -134,6 +138,25 @@ namespace Kenshi_DnD
             }
 
 
+        }
+        private void ConsumableAction(Hero user)
+        {
+
+            Item[] uncastedConsumableItems = user.GetInventory().GetConsumables(2);
+
+            MeleeItem[] consumableItems= new MeleeItem[uncastedConsumableItems.Length];
+
+            int hpBoost = 0;
+
+            for (int i = 0; i < consumableItems.Length; i++) 
+            {
+                if (consumableItems[i] != null)
+                {
+                    hpBoost += consumableItems[i].GetStatToModify().GetHp();
+                }
+            }
+            user.Heal(hpBoost);
+            
         }
         private void MeleeAttack(Hero attacker, Monster defender)
         {

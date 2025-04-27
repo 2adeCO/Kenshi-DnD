@@ -101,7 +101,26 @@ namespace Kenshi_DnD
             {
                 if (items[i] is MeleeItem)
                 {
-                    return true;
+                    MeleeItem item = (MeleeItem)items[i];
+                    if (!item.BreaksOnUse())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool AreConsumableItems()
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] is MeleeItem)
+                {
+                    MeleeItem item = (MeleeItem)items[i];
+                    if (item.BreaksOnUse())
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

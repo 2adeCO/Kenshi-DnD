@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography.Pkcs;
 
 namespace Kenshi_DnD
 {
@@ -16,6 +17,7 @@ namespace Kenshi_DnD
         //Defensive ints
         //Health points
         //Toughness is max health points
+        int hp;
         int toughness;
         //Resistance is defense against Brute Force
         //Perception is defense against Dexterity
@@ -48,7 +50,7 @@ namespace Kenshi_DnD
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             this.name = name;
             this.title = title;
-            this.toughness = toughness + race.GetToughness() + subrace.GetToughness();
+            SetToughnessAtConstructor(toughness, race, subrace, limbs);
             this.SetHp(toughness);
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
@@ -65,7 +67,7 @@ namespace Kenshi_DnD
             this.name = name;
             this.title = title;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
-            this.toughness = toughness + race.GetToughness() + subrace.GetToughness();
+            SetToughnessAtConstructor(toughness, race, subrace, limbs);
             this.SetHp(toughness);
             this.level = 1;
             this.backgroundStory = "";
@@ -107,14 +109,7 @@ namespace Kenshi_DnD
                     }
                 case 3:
                     {
-                        for (int i = 0; i < limbs.Length; i++)
-                        {
-                            if (limbs[i] != null)
-                            {
-                                stat += limbs[i].GetHp();
-                            }
-                        }
-                        stat = heroStats.GetHp() + race.GetHp() + subrace.GetHp() + personalInventory.GetStat(opt);
+                        stat = this.GetToughness();
                         break;
                     }
                 case 4:
@@ -144,6 +139,18 @@ namespace Kenshi_DnD
             }
             return stat;
         }
+        private void SetToughnessAtConstructor(int toughness,Race race, Race subrace, Limb[] limbs)
+        {
+            int stat = 0;
+            for (int i = 0; i < limbs.Length; i++)
+            {
+                if (limbs[i] != null)
+                {
+                    stat += limbs[i].GetHp();
+                }
+            }
+            SetToughness(toughness + race.GetHp() + subrace.GetHp() + stat);
+        }
         public StatModifier GetAllStats()
         {
             StatModifier allStats;
@@ -155,11 +162,11 @@ namespace Kenshi_DnD
 
             bruteForce += this.GetStat(1);
             dexterity += this.GetStat(2);
-            hp += this.GetStat(3);
+            hp += GetHp();
             resistance += this.GetStat(4);
             agility += this.GetStat(5);
 
-            allStats = new StatModifier(bruteForce, dexterity, resistance, hp, agility);
+            allStats = new StatModifier(bruteForce, dexterity, hp,resistance, agility);
             return allStats;
 
         }
@@ -173,11 +180,11 @@ namespace Kenshi_DnD
         }
         public int GetBruteForce()
         {
-            return heroStats.GetBruteForce();
+            return GetStat(1);
         }
         public int GetDexterity()
         {
-            return heroStats.GetDexterity();
+            return GetStat(2);
         }
         public int GetToughness()
         {
@@ -185,19 +192,27 @@ namespace Kenshi_DnD
         }
         public int GetHp()
         {
-            return heroStats.GetHp();
+            return this.hp;
         }
         public bool IsAlive()
         {
-            return (this.heroStats.GetHp() > 0);
+            return (this.GetHp() > 0);
+        }
+        public int StyleHealth()
+        {
+            if (this.hp < 0)
+            {
+                return -1;
+            }
+            return GetToughness() / GetHp() ;
         }
         public int GetResistance()
         {
-            return heroStats.GetResistance();
+            return GetStat(4);
         }
         public int GetAgility()
         {
-            return heroStats.GetAgility();
+            return GetStat(5);
         }
         public string GetBackgroundStory()
         {
@@ -225,11 +240,12 @@ namespace Kenshi_DnD
         }
         public void SetToughness(int toughness)
         {
+            Debug.WriteLine(toughness);
             this.toughness = toughness;
         }
         public void SetHp(int hp)
         {
-            this.heroStats.SetHp(hp);
+            this.hp = hp;
         }
         public void SetBackgroundStory(string backgroundStory)
         {
@@ -323,6 +339,10 @@ namespace Kenshi_DnD
                     iterator += 1;
             }
         }
+        public void Heal(int healHp)
+        {
+            this.SetHp(GetHp() + healHp);
+        }
         public bool IsInInventory(Item item)
         {
             return personalInventory.ContainsItem(item);
@@ -332,6 +352,10 @@ namespace Kenshi_DnD
             item.SetAlreadyUsed(false);
             FreeLimbs(item.GetLimbsNeeded());
             personalInventory.RemoveItem(item);
+        }
+        public bool AreConsumableItems()
+        {
+            return personalInventory.AreConsumableItems();
         }
         public bool AreRangedItems()
         {
