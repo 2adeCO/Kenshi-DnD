@@ -24,5 +24,9 @@ namespace Kenshi_DnD
         {
             return beingUsed;
         }
-	}
+        public void SetBeingUsed(bool isUsed)
+        {
+            beingUsed = isUsed;
+        }
+    }
 }

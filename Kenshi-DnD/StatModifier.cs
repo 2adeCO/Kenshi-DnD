@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class StatModifier
+    public class StatModifier
     {
         //All of these are buffs and debuffs to the ints of the hero
         //Offensive ints
@@ -74,6 +74,13 @@ namespace Kenshi_DnD
         {
             this.resistance = resistance;
         }
-
+        public override string ToString()
+        {
+            return (bruteForce != 0 ? "Fuerza bruta: " + bruteForce + "\n" : "") +
+                (dexterity != 0 ? "Destreza: " + dexterity + "\n" : "") +
+                (hp != 0 ? "Puntos de vida: " + hp + "\n" : "") +
+                (resistance != 0 ? "Resistencia: " + resistance + "\n" : "") +
+                (agility != 0 ? "Agilidad: " + agility : "");
+        }
     }
 }

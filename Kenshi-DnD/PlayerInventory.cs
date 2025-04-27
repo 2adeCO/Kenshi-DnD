@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    interface ITurnable
+    class PlayerInventory : Inventory
     {
-        public int GetAgility();
-        public bool IsAlive();
-        public string GetName();
+        public PlayerInventory()
+        {
+            base.items = new List<Item>();
+        }
     }
 }

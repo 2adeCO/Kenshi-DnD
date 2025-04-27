@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kenshi_DnD"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="800" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -22,15 +22,28 @@
         </Grid.RowDefinitions>
 
         <Label 
-            Grid.Column="1" Grid.Row="0"
+            Grid.Column="0" Grid.Row="0"
             Content="Combate:"></Label>
-        <Label 
-            Grid.Column="1" Grid.Row="1"
-            x:Name="HeroTest" Content="---"></Label>
         <Label
-            Grid.Column="1" Grid.Row="2"
-            x:Name="MonsterTest"
-            Content="---"></Label>
+            Grid.Column="1" Grid.Row="0"
+            x:Name="TimerUI"
+            ></Label>
+        <Label 
+            Grid.Column="0" Grid.Row="1"
+            x:Name="HeroTest" Content="Héroes"></Label>
+        <Label 
+            Grid.Column="2" Grid.Row="1"
+            x:Name="MonsterTest" Content="Enemigos" HorizontalAlignment="Right"></Label>
+        <Grid
+            Grid.Column="0" Grid.Row="2" Grid.RowSpan="2"
+            x:Name="AllHeroes">
+
+        </Grid>
+        <Grid
+            Grid.Column="2" Grid.Row="2" Grid.RowSpan="2"
+            x:Name="AllMonsters">
+            
+        </Grid>
         <Label
             Grid.Column="1" Grid.Row="3"
             x:Name="CombatTest"
@@ -42,9 +55,9 @@
             Content="Avanzar jugada"
             >
         </Button>
-        <TreeView Grid.Column="0" Grid.Row="6" x:Name="SelectedItemsGrid">
+        <TreeView Grid.Column="0" Grid.Row="6" x:Name="HeroItems">
         </TreeView>
-        <TreeView Grid.Column="2" Grid.Row="6" x:Name="UnSelectedItemsGrid">
+        <TreeView Grid.Column="2" Grid.Row="6" x:Name="UnselectedItems">
         </TreeView>
     </Grid>
 </Window>
