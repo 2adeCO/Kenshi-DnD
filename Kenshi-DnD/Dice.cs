@@ -18,7 +18,7 @@ namespace Kenshi_DnD
             this.minWin = minWin;
             random = new Random();
         }
-        public int Roll()
+        private int Roll()
         {
             return random.Next(1, sides + 1);
         }

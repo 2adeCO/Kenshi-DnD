@@ -225,20 +225,25 @@ namespace Kenshi_DnD
                     {
                         emptyAmmoWeapons += 1;
                         Debug.WriteLine(rangedItems[i].GetName() + " is out of ammo");
-                    }
-                    int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defender.GetAgility()/2)));
-                    if (diceNum >= rangedItems[i].GetDifficulty())
-                    {
-                        Debug.WriteLine("Hit!");
-                        damage += rangedItems[i].GetStatToModify().GetBruteForce();
-                        rangedItems[i].ShootAmmo();
+
                     }
                     else
                     {
-                        Debug.WriteLine("Missed!");
-                        misses += 1;
-                        rangedItems[i].ShootAmmo();
+                        int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defender.GetAgility() / 2)));
+                        if (diceNum >= rangedItems[i].GetDifficulty())
+                        {
+                            Debug.WriteLine("Hit!");
+                            damage += rangedItems[i].GetStatToModify().GetBruteForce();
+                            rangedItems[i].ShootAmmo();
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Missed!");
+                            misses += 1;
+                            rangedItems[i].ShootAmmo();
+                        }
                     }
+                    
                 }
             } while (misses <= permittedMisses && emptyAmmoWeapons != rangedItems.Length);
 
