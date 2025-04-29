@@ -13,51 +13,10 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <Label 
-            Grid.Column="0" Grid.Row="0"
-            Content="Combate:"></Label>
-        <Label
-            Grid.Column="1" Grid.Row="0"
-            x:Name="TimerUI"
-            ></Label>
-        <Label 
-            Grid.Column="0" Grid.Row="1"
-            x:Name="HeroTest" Content="Héroes"></Label>
-        <Label 
-            Grid.Column="2" Grid.Row="1"
-            x:Name="MonsterTest" Content="Enemigos" HorizontalAlignment="Right"></Label>
-        <Grid
-            Grid.Column="0" Grid.Row="2" Grid.RowSpan="2"
-            x:Name="AllHeroes">
-
-        </Grid>
-        <Grid
-            Grid.Column="2" Grid.Row="2" Grid.RowSpan="2"
-            x:Name="AllMonsters">
-            
-        </Grid>
-        <Label
-            Grid.Column="1" Grid.Row="3"
-            x:Name="CombatTest"
-            Content="-   -"
-            ></Label>
-        <Button
-            Grid.Column="1" Grid.Row="4"
-            Click="NextTurnTest"
-            Content="Avanzar jugada"
-            >
-        </Button>
-        <TreeView Grid.Column="0" Grid.Row="6" x:Name="HeroItems">
-        </TreeView>
-        <TreeView Grid.Column="2" Grid.Row="6" x:Name="UnselectedItems">
-        </TreeView>
+        <Button Content="Combate" Width="400" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" Click="GoToCombat" Grid.Column="1" Grid.Row="1"/>
     </Grid>
 </Window>

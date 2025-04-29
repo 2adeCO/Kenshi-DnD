@@ -16,7 +16,7 @@ namespace Kenshi_DnD
         public Turn(ITurnable fighter)
         {
             this.fighter = fighter;
-            attackProgress = fighter.GetAgility();
+            attackProgress = 0;
         }
         public void SetFighter(ITurnable fighter)
         {

@@ -53,27 +53,37 @@ namespace Kenshi_DnD
 
             int currentSize = turnOrder.Count;
             int numOfAddedTurns = 0;
+            int debugCounter = 0;
+            List<ITurnable> tempList;
             do
             {
+                debugCounter += 1;
+                tempList = new List<ITurnable>();
                 for (int i = 0; i < everyTurn.Count; i++)
                 {
                     everyTurn[i].AdvanceTurn();
                 }
                 for (int i = 0; i < everyTurn.Count; i++)
                 {
-                    if (everyTurn[i].IsTurnComplete())
+                    while (everyTurn[i].IsTurnComplete())
                     {
-                        turnOrder.Add(everyTurn[i].GetFighter());
+                        tempList.Add(everyTurn[i].GetFighter());
                         numOfAddedTurns += 1;
                     }
+                }
+                tempList = SortByAgility(tempList);
+                for(int i = 0; i < tempList.Count; i++)
+                {
+                    Debug.WriteLine("Added to turnorder: " + tempList[i].GetName() + debugCounter);
+                     turnOrder.Add(tempList[i]);
                 }
                 //If numOfTurns is 3, and in the same AdvanceTurn, more than 3 complete the attack
                 //Every one will pass
             } while (numOfAddedTurns <= numOfTurns);
-            Debug.WriteLine("Turn order decided for " + numOfTurns + " turns");
+            Debug.WriteLine("Turn order decided for " + numOfAddedTurns + " turns");
         }
 
-        public void NextTurn(Monster monsterTarget)
+        public void NextTurn(Monster monsterTarget, Action<string> DamageLog)
         {
             ITurnable attacker = turnOrder[turnIndex];
             if (attacker is Hero)
@@ -83,7 +93,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                MonsterAttacks((Monster)attacker, heroes[rnd.Next(0, heroes.Length)]);
+                MonsterAttacks((Monster)attacker, heroes[rnd.Next(0, heroes.Length)],DamageLog);
             }
             turnIndex += 1;
             if (turnOrder.Count - turnIndex < 6)
@@ -91,7 +101,7 @@ namespace Kenshi_DnD
                 DecideNextNTurns(12, false);
             }
         }
-        public void MonsterAttacks(Monster attacker, Hero defender)
+        public void MonsterAttacks(Monster attacker, Hero defender, Action<string> DamageLog)
         {
 
             Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
@@ -116,6 +126,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("Not killed");
             }
+            DamageLog(attacker.GetName() + " attacks " + defender.GetName() + " and deals " + hits + " damage");
 
         }
         public void HeroAttacks(Hero attacker, Monster defender)
@@ -195,7 +206,7 @@ namespace Kenshi_DnD
         }
         private void RangeAttack(Hero attacker, Monster defender)
         {
-            Debug.WriteLine(attacker.GetName() + " attacks" + defender.GetName());
+            Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
             int attackerStat;
             int defenderStat;
             int defenderHealth;
@@ -277,5 +288,25 @@ namespace Kenshi_DnD
                 Debug.WriteLine("Not killed");
             }
         }
+        private List<ITurnable> SortByAgility(List<ITurnable> list)
+        {
+            bool errorFound = true;
+            do
+            {
+                errorFound = false;
+                for (int i = 0; i < list.Count - 1; i++)
+                {
+                    if (list[i].GetAgility() < list[i + 1].GetAgility())
+                    {
+                        ITurnable temp = list[i];
+                        list[i] = list[i + 1];
+                        list[i + 1] = temp;
+                        errorFound = true;
+                    }
+                }
+            } while (errorFound);
+            return list;
+        }
     }
+   
 }
