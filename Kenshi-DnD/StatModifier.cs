@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     public class StatModifier
     {
@@ -76,7 +70,7 @@ namespace Kenshi_DnD
         }
         public override string ToString()
         {
-            return 
+            return
                 (hp != 0 ? "Puntos de vida: " + hp + "\n" : "") +
                 (bruteForce != 0 ? "Fuerza bruta: " + bruteForce + "\n" : "") +
                 (dexterity != 0 ? "Destreza: " + dexterity + "\n" : "") +

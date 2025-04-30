@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Documents;
+﻿using System.Diagnostics;
 
 namespace Kenshi_DnD
 {
     class Combat
     {
+        CombatWindow window;
         Hero[] heroes;
         Monster[] enemies;
         Dice myDice;
@@ -19,9 +13,12 @@ namespace Kenshi_DnD
         //Generates a list of fighters in the order they must attack
         List<ITurnable> turnOrder;
         Random rnd;
+        int combatState;
         int turnIndex;
-        public Combat(Hero[] newHeroes, Monster[] newEnemies, Dice myDice, Inventory myInventory)
+        public Combat(Hero[] newHeroes, Monster[] newEnemies, Dice myDice, Inventory myInventory, CombatWindow window)
         {
+            this.window = window;
+            combatState = 0;
             rnd = new Random();
             turnIndex = 0;
             this.heroes = newHeroes;
@@ -38,6 +35,7 @@ namespace Kenshi_DnD
             }
 
             DecideNextNTurns(24, true);
+            this.window = window;
         }
         public ITurnable GetCurrentAttacker()
         {
@@ -61,7 +59,10 @@ namespace Kenshi_DnD
                 tempList = new List<ITurnable>();
                 for (int i = 0; i < everyTurn.Count; i++)
                 {
-                    everyTurn[i].AdvanceTurn();
+                    if (everyTurn[i].GetFighter().IsAlive())
+                    {
+                        everyTurn[i].AdvanceTurn();
+                    }
                 }
                 for (int i = 0; i < everyTurn.Count; i++)
                 {
@@ -72,10 +73,10 @@ namespace Kenshi_DnD
                     }
                 }
                 tempList = SortByAgility(tempList);
-                for(int i = 0; i < tempList.Count; i++)
+                for (int i = 0; i < tempList.Count; i++)
                 {
                     Debug.WriteLine("Added to turnorder: " + tempList[i].GetName() + debugCounter);
-                     turnOrder.Add(tempList[i]);
+                    turnOrder.Add(tempList[i]);
                 }
                 //If numOfTurns is 3, and in the same AdvanceTurn, more than 3 complete the attack
                 //Every one will pass
@@ -83,25 +84,38 @@ namespace Kenshi_DnD
             Debug.WriteLine("Turn order decided for " + numOfAddedTurns + " turns");
         }
 
-        public void NextTurn(Monster monsterTarget, Action<string> DamageLog)
+        public void NextTurn(Monster monsterTarget)
         {
             ITurnable attacker = turnOrder[turnIndex];
             if (attacker is Hero)
             {
-
                 HeroAttacks((Hero)attacker, monsterTarget);
             }
             else
             {
-                MonsterAttacks((Monster)attacker, heroes[rnd.Next(0, heroes.Length)],DamageLog);
+                MonsterAttacks((Monster)attacker, DecideVictim());
             }
+            UpdateGameState();
+            if (GetGameState() != 0)
+            {
+                return;
+            }
+            turnIndex += 1;
+            AdvanceTurnIfItsDead();
+            if (turnOrder.Count - turnIndex < 6)
+            {
+                DecideNextNTurns(12, false);
+            }
+        }
+        public void AdvanceIndex()
+        {
             turnIndex += 1;
             if (turnOrder.Count - turnIndex < 6)
             {
                 DecideNextNTurns(12, false);
             }
         }
-        public void MonsterAttacks(Monster attacker, Hero defender, Action<string> DamageLog)
+        public void MonsterAttacks(Monster attacker, Hero defender)
         {
 
             Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
@@ -109,14 +123,13 @@ namespace Kenshi_DnD
             int defenderStat;
 
             attackerStat = attacker.GetStrength();
-
             defenderStat = defender.GetStat(4);
 
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
             Debug.WriteLine("Hits: " + hits);
-            Debug.WriteLine(defender.GetHp() + "  " + hits + "   " + (defender.GetHp() - hits));
-            defender.SetHp(defender.GetHp() - hits);
+            defender.Hurt(hits);
+
             Debug.WriteLine("Defender health: " + defender.GetHp());
             if (defender.GetHp() <= 0)
             {
@@ -126,7 +139,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("Not killed");
             }
-            DamageLog(attacker.GetName() + " attacks " + defender.GetName() + " and deals " + hits + " damage");
+            DamageLog(attacker.GetName() + " ataca a " + defender.GetName() + " y le hace " + hits + " puntos de daño");
 
         }
         public void HeroAttacks(Hero attacker, Monster defender)
@@ -137,12 +150,14 @@ namespace Kenshi_DnD
             }
             if (attacker.AreRangedItems())
             {
+                DamageLog(attacker.GetName() + " coge distancia... y apunta a " + defender.GetName());
                 RangeAttack(attacker, defender);
             }
             else
             {
                 if (attacker.AreMeleeItems())
                 {
+                    DamageLog(attacker.GetName() + " arremete contra " + defender.GetName());
                     MeleeAttack(attacker, defender);
                 }
                 //Add martial arts
@@ -155,11 +170,11 @@ namespace Kenshi_DnD
 
             Item[] uncastedConsumableItems = user.GetInventory().GetConsumables(2);
 
-            MeleeItem[] consumableItems= new MeleeItem[uncastedConsumableItems.Length];
+            MeleeItem[] consumableItems = new MeleeItem[uncastedConsumableItems.Length];
 
             int hpBoost = 0;
 
-            for (int i = 0; i < consumableItems.Length; i++) 
+            for (int i = 0; i < consumableItems.Length; i++)
             {
                 if (consumableItems[i] != null)
                 {
@@ -167,7 +182,7 @@ namespace Kenshi_DnD
                 }
             }
             user.Heal(hpBoost);
-            
+
         }
         private void MeleeAttack(Hero attacker, Monster defender)
         {
@@ -216,7 +231,7 @@ namespace Kenshi_DnD
 
             RangedItem[] rangedItems = new RangedItem[uncastedRangedItems.Length];
 
-            for(int i = 0; i < uncastedRangedItems.Length; i++)
+            for (int i = 0; i < uncastedRangedItems.Length; i++)
             {
                 rangedItems[i] = (RangedItem)uncastedRangedItems[i];
             }
@@ -232,7 +247,7 @@ namespace Kenshi_DnD
                 emptyAmmoWeapons = 0;
                 for (int i = 0; i < rangedItems.Length; i++)
                 {
-                    if(rangedItems[i].GetAmmo() <= 0)
+                    if (rangedItems[i].GetAmmo() <= 0)
                     {
                         emptyAmmoWeapons += 1;
                         Debug.WriteLine(rangedItems[i].GetName() + " is out of ammo");
@@ -254,7 +269,7 @@ namespace Kenshi_DnD
                             rangedItems[i].ShootAmmo();
                         }
                     }
-                    
+
                 }
             } while (misses <= permittedMisses && emptyAmmoWeapons != rangedItems.Length);
 
@@ -266,7 +281,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                if(defender.GetImmunity() == -1 || defender.GetImmunity() == 3)
+                if (defender.GetImmunity() == -1 || defender.GetImmunity() == 3)
                 {
                     Debug.WriteLine("Defender is resistant to ranged attacks");
                     damage /= 2;
@@ -274,7 +289,7 @@ namespace Kenshi_DnD
             }
 
             defenderStat = defender.GetResistance();
-            
+
             defenderHealth = defender.GetHp();
 
 
@@ -287,6 +302,89 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("Not killed");
             }
+        }
+        private void DamageLog(string message)
+        {
+            window.UpdateLogUI(message);
+        }
+        private void AdvanceTurnIfItsDead()
+        {
+            if (!turnOrder[turnIndex].IsAlive())
+            {
+                Debug.WriteLine("Someone is not alive");
+                do
+                {
+                    Debug.WriteLine("Checking next..");
+                    AdvanceIndex();
+                } while (!turnOrder[turnIndex].IsAlive());
+            }
+        }
+        private Hero DecideVictim()
+        {
+            int count = 0;
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i].IsAlive())
+                {
+                    Debug.WriteLine("Victim counted " + i);
+                    count++;
+                }
+            }
+            Hero[] heroesToAttack = new Hero[count];
+            count = 0;
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i].IsAlive())
+                {
+                    Debug.WriteLine("People alive:" + i);
+                    heroesToAttack[count] = heroes[i];
+                    count += 1;
+                }
+            }
+
+            return heroesToAttack[rnd.Next(0, count)];
+        }
+        public int GetGameState()
+        {
+            Debug.WriteLine("Combat state is " + combatState);
+            return combatState;
+        }
+        private void UpdateGameState()
+        {
+            bool lost = true;
+            bool won = true;
+
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i].IsAlive())
+                {
+                    lost = false;
+                }
+            }
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                if (enemies[i].IsAlive())
+                {
+                    won = false;
+                }
+            }
+
+            if (!lost && !won)
+            {
+                combatState = 0;
+            }
+            else
+            {
+                if (won)
+                {
+                    combatState = 1;
+                }
+                else
+                {
+                    combatState = -1;
+                }
+            }
+
         }
         private List<ITurnable> SortByAgility(List<ITurnable> list)
         {
@@ -308,5 +406,5 @@ namespace Kenshi_DnD
             return list;
         }
     }
-   
+
 }

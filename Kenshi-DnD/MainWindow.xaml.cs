@@ -1,17 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using Microsoft.VisualBasic;
+﻿using System.Windows;
 namespace Kenshi_DnD
 {
     /// <summary>
@@ -22,13 +9,12 @@ namespace Kenshi_DnD
         public MainWindow()
         {
             InitializeComponent();
+            PageController.Content = new Menu(PageController);
         }
         public void GoToCombat(object sender, EventArgs e)
         {
-            CombatWindow cw = new CombatWindow(this);
-            cw.Show();
+            PageController.Content = new CombatWindow();
 
-            this.Hide();
         }
     }
 }

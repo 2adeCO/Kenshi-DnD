@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Kenshi_DnD
 {
@@ -33,7 +28,7 @@ namespace Kenshi_DnD
         public int PlayDice(int numOfRolls)
         {
             int totalWins = 0;
-            if(numOfRolls <= 0)
+            if (numOfRolls <= 0)
             {
                 Debug.WriteLine("<0 number of rolls");
                 return 0;

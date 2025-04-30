@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     class Monster : ITurnable
     {
@@ -20,7 +14,7 @@ namespace Kenshi_DnD
         //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to dexterity
         //Value of -1 is resistance to dexterity, -2 is immunity to dexterity, -3 is immunity to dexterity and resistance to brute force
         int immunity;
-        public Monster(string name, int hp,Faction faction ,int strength, int resistance, int agility, int immunity, int cats, int xpDrop)
+        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, int immunity, int cats, int xpDrop)
         {
             this.name = name;
             this.hp = hp;
@@ -49,10 +43,10 @@ namespace Kenshi_DnD
             this.faction = faction;
         }
         public bool IsAlive()
-		{
-			return (this.hp > 0);
-		}
-		public int GetResistance()
+        {
+            return (this.hp > 0);
+        }
+        public int GetResistance()
         {
             return resistance;
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Kenshi_DnD
 {
@@ -86,9 +81,9 @@ namespace Kenshi_DnD
         }
         public bool AreRangedItems()
         {
-            for(int i=0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                if (items[i] is RangedItem )
+                if (items[i] is RangedItem)
                 {
                     return true;
                 }

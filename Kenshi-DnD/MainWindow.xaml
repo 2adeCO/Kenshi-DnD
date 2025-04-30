@@ -9,14 +9,13 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Content="Combate" Width="400" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" Click="GoToCombat" Grid.Column="1" Grid.Row="1"/>
+        <ContentControl 
+            Grid.Row="0"
+            Grid.Column="0"
+            x:Name="PageController"></ContentControl>
     </Grid>
 </Window>

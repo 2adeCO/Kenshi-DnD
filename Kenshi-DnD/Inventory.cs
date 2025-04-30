@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     class Inventory
     {

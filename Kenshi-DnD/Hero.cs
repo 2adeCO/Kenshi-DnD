@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Security.Cryptography.Pkcs;
 
 namespace Kenshi_DnD
 {
@@ -139,7 +138,7 @@ namespace Kenshi_DnD
             }
             return stat;
         }
-        private void SetToughnessAtConstructor(int toughness,Race race, Race subrace, Limb[] limbs)
+        private void SetToughnessAtConstructor(int toughness, Race race, Race subrace, Limb[] limbs)
         {
             int stat = 0;
             for (int i = 0; i < limbs.Length; i++)
@@ -166,7 +165,7 @@ namespace Kenshi_DnD
             resistance += this.GetStat(4);
             agility += this.GetStat(5);
 
-            allStats = new StatModifier(bruteForce, dexterity, hp,resistance, agility);
+            allStats = new StatModifier(bruteForce, dexterity, hp, resistance, agility);
             return allStats;
 
         }
@@ -204,7 +203,7 @@ namespace Kenshi_DnD
             {
                 return -1;
             }
-            return GetToughness() / GetHp() ;
+            return GetToughness() / GetHp();
         }
         public int GetResistance()
         {
@@ -277,7 +276,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine(this.name + " can use " + item.GetName());
                 item.SetAlreadyUsed(true);
-                UseLimbs( item.GetLimbsNeeded());
+                UseLimbs(item.GetLimbsNeeded());
                 personalInventory.AddItem(item);
             }
             else
@@ -315,7 +314,7 @@ namespace Kenshi_DnD
         private void UseLimbs(int num)
         {
             int iterator = 0;
-            while(num > 0)
+            while (num > 0)
             {
                 Debug.WriteLine("Trying limb " + iterator);
                 Debug.WriteLine("Limbs needed now: " + num);
@@ -336,12 +335,28 @@ namespace Kenshi_DnD
                 {
                     Debug.WriteLine("Limb is missing...");
                 }
-                    iterator += 1;
+                iterator += 1;
             }
+        }
+        public int GetMartialArtStat()
+        {
+            int martialArtPower = 0;
+            for (int i = 0; i < limbs.Length; i++)
+            {
+                if (limbs[i] != null)
+                {
+                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + this.GetAgility() / 2;
+                }
+            }
+            return martialArtPower;
         }
         public void Heal(int healHp)
         {
             this.SetHp(GetHp() + healHp);
+        }
+        public void Hurt(int hurtHp)
+        {
+            this.SetHp(GetHp() - hurtHp);
         }
         public bool IsInInventory(Item item)
         {

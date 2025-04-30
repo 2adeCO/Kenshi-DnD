@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     abstract class Item
     {
@@ -16,7 +10,7 @@ namespace Kenshi_DnD
         protected bool alreadyUsed;
         protected StatModifier statToModify;
 
-        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify,bool isRare)
+        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify, bool isRare)
         {
             this.name = name;
             this.value = value;
@@ -34,7 +28,7 @@ namespace Kenshi_DnD
                    "Valor: " + value + "\n" +
                    "Valor de reventa: " + resellValue + "\n" +
                    "Peso (Cantidad de miembros necesitados): " + limbsNeeded + "\n" +
-                   (isRare?("Objeto raro"):(""));
+                   (isRare ? ("Objeto raro") : (""));
         }
         public void UnUse()
         {
@@ -46,9 +40,9 @@ namespace Kenshi_DnD
         }
         public bool CanUseItem(Hero hero)
         {
-            
+
             int limbsAvailable = 0;
-            for(int i = 0; i < hero.GetLimbs().Length; i += 1)
+            for (int i = 0; i < hero.GetLimbs().Length; i += 1)
             {
                 if (!hero.GetLimbs()[i].GetBeingUsed())
                 {
@@ -59,7 +53,7 @@ namespace Kenshi_DnD
             {
                 return true;
             }
-        
+
             return false;
         }
         public bool IsRare()

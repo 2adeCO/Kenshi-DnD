@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     class MeleeItem : Item
     {
@@ -16,7 +10,7 @@ namespace Kenshi_DnD
             this.canRevive = canRevive;
             this.breaksOnUse = breaksOnUse;
         }
-       public override string AnnounceUse()
+        public override string AnnounceUse()
         {
             return "¡El héroe usa " + base.name + "!";
         }

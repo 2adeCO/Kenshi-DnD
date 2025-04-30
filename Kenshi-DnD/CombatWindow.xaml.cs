@@ -7,9 +7,9 @@ using System.Windows.Threading;
 namespace Kenshi_DnD
 {
     /// <summary>
-    /// Lógica de interacción para CombatWindow.xaml
+    /// Lógica de interacción para UserControl.xaml
     /// </summary>
-    public partial class CombatWindow : Window
+    public partial class CombatWindow : UserControl
     {
         MainWindow mainWindow;
         DispatcherTimer timer;
@@ -20,10 +20,9 @@ namespace Kenshi_DnD
         Hero[] heroes;
         Monster[] monsters;
         ITurnable currentAttacker;
-        public CombatWindow(MainWindow mainWindow)
+        public CombatWindow()
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
             //Starts a timer
             seconds = 0;
             timer = new DispatcherTimer();
@@ -46,9 +45,9 @@ namespace Kenshi_DnD
             Dice myDice = new Dice(6, 5);
             Race human = new Race("Humano", -1, 1, 0, 0, -1, 1);
 
-            Hero hero1 = new Hero("Isaac", "El Sagaal", 10, 4, 1, 4, 5, human, human, limbs);
-            Hero hero2 = new Hero("David", "Mantequilla", 8, 2, 2, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Ikran", 3, faction1, 10, 3, 30, -1, 100, 0);
+            Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
+            Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
+            Monster monster1 = new Monster("Monstruo genérico", 3, faction1, 10, 3, 30, -1, 100, 0);
             StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
             StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
             myInventory = new PlayerInventory();
@@ -58,11 +57,12 @@ namespace Kenshi_DnD
 
             heroes = new Hero[] { hero1, hero2 };
             monsters = new Monster[] { monster1 };
-            myCombat = new Combat(heroes, monsters, myDice, myInventory);
+            myCombat = new Combat(heroes, monsters, myDice, myInventory, this);
 
             currentAttacker = myCombat.GetCurrentAttacker();
 
             FillItemTrees();
+            UpdateGameStateUI();
             UpdateFightersGrid();
 
 
@@ -78,16 +78,28 @@ namespace Kenshi_DnD
         }
         private void NextTurn(object sender, RoutedEventArgs e)
         {
-            //myCombat.NextTurn();
+            if (myCombat.GetGameState() != 0)
+            {
+                UpdateGameStateUI();
+                MessageBox.Show("Ya terminó el combate");
+                return;
+            }
             if (currentAttacker is Hero && monsterTarget == null)
             {
                 MessageBox.Show("Selecciona un monstruo para atacar");
                 return;
             }
-            myCombat.NextTurn(monsterTarget, UpdateLogUI);
+            myCombat.NextTurn(monsterTarget);
             currentAttacker = myCombat.GetCurrentAttacker();
+
             UpdateFightersGrid();
             FillItemTrees();
+            if (myCombat.GetGameState() != 0)
+            {
+                UpdateGameStateUI();
+                MessageBox.Show("Ya terminó el combate");
+                return;
+            }
             if (currentAttacker is Monster)
             {
                 DispatcherTimer timeToAttack = new DispatcherTimer();
@@ -372,6 +384,12 @@ namespace Kenshi_DnD
         {
             DispatcherTimer timer = (DispatcherTimer)sender;
             timer.Stop();
+            if (myCombat.GetGameState() != 0)
+            {
+                MessageBox.Show("Ya terminó el combate");
+                UpdateGameStateUI();
+                return;
+            }
             NextTurn(null, null);
         }
         private void SelectMonster(object sender, RoutedEventArgs e)
@@ -407,6 +425,32 @@ namespace Kenshi_DnD
         {
             CombatTest.Content = message;
             InfoLog.Text += message + "\n";
+        }
+        private void UpdateGameStateUI()
+        {
+            int gameState = myCombat.GetGameState();
+
+            switch (gameState)
+            {
+
+                case 0:
+                    {
+                        GameStateUI.Content = "En combate";
+                        break;
+                    }
+                case 1:
+                    {
+                        GameStateUI.Content = "¡Combate ganado!";
+                        timer.Stop();
+                        break;
+                    }
+                case -1:
+                    {
+                        GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
+                        timer.Stop();
+                        break;
+                    }
+            }
         }
         private TreeViewItem CloneTreeViewItem(TreeViewItem original)
         {
