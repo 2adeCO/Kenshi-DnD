@@ -1,17 +1,29 @@
-﻿namespace Kenshi_DnD
+﻿using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+
+namespace Kenshi_DnD
 {
     class Faction
     {
         int factionId;
         string factionName;
         string factionDescription;
+        BitmapImage factionImage;
 
-        public Faction(int factionId, string factionName, string factionDescription)
+        public Faction(int factionId, string factionName, string factionDescription) 
+        { 
+            this.factionId = factionId;
+            this.factionName = factionName;
+            this.factionDescription = factionDescription;
+            this.factionImage = new BitmapImage();
+        }
+        public Faction(int factionId, string factionName, string factionDescription, string factionImageSource)
         {
             this.factionId = factionId;
             this.factionName = factionName;
-
             this.factionDescription = factionDescription;
+            this.factionImage = new BitmapImage();
+            factionImage.UriSource = new Uri(factionImageSource, UriKind.RelativeOrAbsolute);
         }
 
         public void SetFactionId(int factionId)
@@ -37,6 +49,15 @@
         public string GetFactionDescription()
         {
             return factionDescription;
+        }
+        public void SetFactionImage(string factionImageSource)
+        {
+            this.factionImage = new BitmapImage();
+            factionImage.UriSource = new Uri(factionImageSource, UriKind.RelativeOrAbsolute);
+        }
+        public BitmapImage GetFactionImage()
+        {
+            return factionImage;
         }
     }
 }

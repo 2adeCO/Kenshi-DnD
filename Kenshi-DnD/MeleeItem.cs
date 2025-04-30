@@ -22,7 +22,7 @@
         {
             return base.ToString() + "\n" +
                    (canRevive ? "Puede revivir en uso\n" : "") +
-                   "Duradera: " + (breaksOnUse ? "Sí" : "No") + "\n";
+                   "De un solo uso: " + (breaksOnUse ? "Sí" : "No") + "\n";
         }
     }
 }

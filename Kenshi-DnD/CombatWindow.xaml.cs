@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace Kenshi_DnD
@@ -119,10 +122,10 @@ namespace Kenshi_DnD
             AllMonsters.ColumnDefinitions.Clear();
 
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 ColumnDefinition column = new ColumnDefinition();
-                column.Width = i == 0 ? GridLength.Auto : new GridLength(1, GridUnitType.Star);
+                column.Width = new GridLength(1, GridUnitType.Star);
                 AllHeroes.ColumnDefinitions.Add(column);
             }
             for (int i = 0; i < heroes.Length; i++)
@@ -132,10 +135,10 @@ namespace Kenshi_DnD
                 AllHeroes.RowDefinitions.Add(row);
             }
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 ColumnDefinition column = new ColumnDefinition();
-                column.Width = i == 0 ? new GridLength(1, GridUnitType.Star) : GridLength.Auto;
+                column.Width = new GridLength(1, GridUnitType.Star);
                 AllMonsters.ColumnDefinitions.Add(column);
             }
             for (int i = 0; i < monsters.Length; i++)
@@ -148,90 +151,57 @@ namespace Kenshi_DnD
             for (int i = 0; i < heroes.Length; i++)
             {
                 Button button = new Button();
-                if (heroes[i].IsAlive())
+                //Put content with the hero name and a progress bar with its hp
+                button.Content = FighterStackPanel(heroes[i]);
+                //The hero object is stored in the button's tag
+                button.Tag = heroes[i];
+                //This will show the user who the current attacker is                
+                button.ToolTip = ToolTipThemer(heroes[i].ToString());
+                ToolTipService.SetInitialShowDelay(button, 100);
+
+                button.HorizontalAlignment = HorizontalAlignment.Left;
+                if(heroes[i] == currentAttacker)
                 {
-                    button.Content = heroes[i].GetName();
-                    button.Background = new SolidColorBrush(Colors.LightGreen);
-                    button.Tag = heroes[i];
+                    Border border = PutBorderOnCurrentAttacker(button);
+                    Grid.SetRow(border, i);
+                    Grid.SetColumn(border, 0);
+                    AllHeroes.Children.Add(border);
                 }
                 else
                 {
-                    button.Content = heroes[i].GetName() + " (Inconsciente)";
-                    button.Background = new SolidColorBrush(Colors.DarkRed);
-                }
-                if (heroes[i] == currentAttacker)
-                {
-                    Debug.WriteLine("Current attacker is " + heroes[i].GetName());
-                    button.Content = "[ " + button.Content + " ]";
-                }
-                button.ToolTip = heroes[i].ToString();
-                button.HorizontalAlignment = HorizontalAlignment.Left;
-                Grid.SetRow(button, i);
-                Grid.SetColumn(button, 0);
-                AllHeroes.Children.Add(button);
-            }
-            for (int i = 0; i < heroes.Length; i++)
-            {
-                Border border = new Border();
-                border.BorderBrush = new SolidColorBrush(Colors.Black);
-                border.BorderThickness = new Thickness(2);
-                border.Background = new SolidColorBrush(Colors.IndianRed);
-                border.Margin = new Thickness(5, 0, 0, 0);
-                border.HorizontalAlignment = HorizontalAlignment.Left;
-
-                ProgressBar progressBar = new ProgressBar();
-                progressBar.Minimum = 0;
-                progressBar.Maximum = heroes[i].GetToughness();
-                progressBar.Value = heroes[i].GetHp();
-                progressBar.Background = new SolidColorBrush(Colors.DarkGray);
-                progressBar.Foreground = new SolidColorBrush(Colors.Red);
-                progressBar.Height = 20;
-                progressBar.Width = 150;
-                progressBar.Margin = new Thickness(1, 1, 1, 1);
-                progressBar.ToolTip = heroes[i].GetHp() + "/" + heroes[i].GetToughness();
-                Grid.SetRow(border, i);
-                Grid.SetColumn(border, 1);
-                border.Child = progressBar;
-                AllHeroes.Children.Add(border);
+                    Grid.SetRow(button, i);
+                    Grid.SetColumn(button, 0);
+                    AllHeroes.Children.Add(button);
+                }    
             }
             for (int i = 0; i < monsters.Length; i++)
             {
                 Button button = new Button();
+
+                button.Content = FighterStackPanel(monsters[i]);
+
+
                 if (monsters[i].IsAlive())
                 {
-                    button.Content = monsters[i].GetName();
-                    button.Background = new SolidColorBrush(Colors.PaleVioletRed);
                     button.Tag = monsters[i];
                     button.Click += SelectMonster;
                 }
-                else
-                {
-                    button.Content = monsters[i].GetName() + " (muerto)";
-                    button.Background = new SolidColorBrush(Colors.DarkRed);
-                }
+                
+                button.HorizontalAlignment = HorizontalAlignment.Right;
+
                 if (monsters[i] == currentAttacker)
                 {
-                    button.Content = "[ " + button.Content + " ]";
+                    Border border = PutBorderOnCurrentAttacker(button);
+                    Grid.SetRow(border, i);
+                    Grid.SetColumn(border, 0);
+                    AllMonsters.Children.Add(border);
                 }
-                if (monsters[i] == monsterTarget)
+                else
                 {
-                    button.Content = "-->" + button.Content;
+                    Grid.SetRow(button, i);
+                    Grid.SetColumn(button, 0);
+                    AllMonsters.Children.Add(button);
                 }
-                button.ToolTip = monsters[i].ToString();
-                button.HorizontalAlignment = HorizontalAlignment.Right;
-                Grid.SetRow(button, i);
-                Grid.SetColumn(button, 1);
-                AllMonsters.Children.Add(button);
-            }
-            for (int i = 0; i < monsters.Length; i++)
-            {
-                Label label = new Label();
-                label.Content = monsters[i].GetFaction().GetFactionName();
-                label.HorizontalAlignment = HorizontalAlignment.Right;
-                label.ToolTip = monsters[i].GetFaction().GetFactionDescription();
-                Grid.SetRow(label, i);
-                Grid.SetColumn(label, 0);
-                AllMonsters.Children.Add(label);
             }
 
         }
@@ -256,7 +226,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = rangedArray[i].GetName(),
-                    Tag = rangedArray[i]
+                    Tag = rangedArray[i],
+                    ToolTip = ToolTipThemer(rangedArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 ranged.Items.Add(item);
@@ -266,7 +237,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = meleeArray[i].GetName(),
-                    Tag = meleeArray[i]
+                    Tag = meleeArray[i],
+                    ToolTip = ToolTipThemer(meleeArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 notConsumable.Items.Add(item);
@@ -276,7 +248,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = consumableArray[i].GetName(),
-                    Tag = consumableArray[i]
+                    Tag = consumableArray[i],
+                    ToolTip = ToolTipThemer(consumableArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 consumable.Items.Add(item);
@@ -305,7 +278,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = rangedArray[i].GetName(),
-                    Tag = rangedArray[i]
+                    Tag = rangedArray[i],
+                    ToolTip = ToolTipThemer(rangedArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 ranged.Items.Add(item);
@@ -315,7 +289,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = meleeArray[i].GetName(),
-                    Tag = meleeArray[i]
+                    Tag = meleeArray[i],
+                    ToolTip = ToolTipThemer(meleeArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 notConsumable.Items.Add(item);
@@ -325,7 +300,8 @@ namespace Kenshi_DnD
                 TreeViewItem item = new TreeViewItem
                 {
                     Header = consumableArray[i].GetName(),
-                    Tag = consumableArray[i]
+                    Tag = consumableArray[i],
+                    ToolTip = ToolTipThemer(consumableArray[i].ToString())
                 };
                 item.MouseLeftButtonUp += UseItem;
                 consumable.Items.Add(item);
@@ -423,7 +399,7 @@ namespace Kenshi_DnD
         }
         public void UpdateLogUI(string message)
         {
-            CombatTest.Content = message;
+            CurrentCombatInfo.Content = message;
             InfoLog.Text += message + "\n";
         }
         private void UpdateGameStateUI()
@@ -496,6 +472,119 @@ namespace Kenshi_DnD
                 }
             } while (item.Parent != null);
             return false;
+        }
+        private StackPanel FighterStackPanel(Monster monster)
+        {
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Vertical;
+            System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+            label.Content = monster.GetName();
+            label.ToolTip = ToolTipThemer(monster.ToString());
+            ToolTipService.SetInitialShowDelay(label, 100);
+            stackPanel.Children.Add(label);
+
+
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1,GridUnitType.Auto)});
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star)});
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto)});
+
+
+            label = new System.Windows.Controls.Label();
+            label.Content = monster.GetFaction().GetFactionName();
+            label.ToolTip = ToolTipThemer(monster.GetFaction().GetFactionDescription());
+            ToolTipService.SetInitialShowDelay(label, 100);
+            Grid.SetColumn(label, 1);
+            grid.Children.Add(label);
+            if (monster.GetFaction().GetFactionImage() != null)
+            {
+                BitmapImage bitmapImage  
+                = monster.GetFaction().GetFactionImage();
+                Image image = new Image();
+                image.Source = bitmapImage;
+                Grid.SetColumn(image, 0);
+                grid.Children.Add(image);
+            }
+            if (!monster.IsAlive())
+            {
+                label = new System.Windows.Controls.Label();
+                label.Content = "Muerto";
+                label.ToolTip = ToolTipThemer("Podrías haber sido tú");
+                ToolTipService.SetInitialShowDelay(label, 100);
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
+                Grid.SetColumn(label, 2);
+                grid.Children.Add(label);
+            }
+            else
+            {
+                if(monster == monsterTarget)
+                {
+                    stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
+                }
+            }
+
+
+                stackPanel.Children.Add(grid);
+
+            return stackPanel;
+        }
+        private StackPanel FighterStackPanel(Hero hero)
+        {
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Vertical;
+            System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+            label.Content = hero.GetName();
+            label.ToolTip = ToolTipThemer(hero.ToString());
+            ToolTipService.SetInitialShowDelay(label, 100);
+            stackPanel.Children.Add(label);
+
+            if (hero.IsAlive())
+            {
+                ProgressBar progressBar = new ProgressBar();
+                progressBar.Minimum = 0;
+                progressBar.Maximum = hero.GetToughness();
+                progressBar.Value = hero.GetHp();
+                progressBar.Background = new SolidColorBrush(Colors.DarkGray);
+                progressBar.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#69b14f"));
+                progressBar.Height = 20;
+                progressBar.Width = 150;
+                progressBar.Margin = new Thickness(1, 1, 1, 1);
+
+                progressBar.ToolTip = ToolTipThemer(hero.GetHp() + "/" + hero.GetToughness());
+                ToolTipService.SetInitialShowDelay(progressBar, 100);
+                stackPanel.Children.Add(progressBar);
+            }
+            else
+            {
+                System.Windows.Controls.Label deadLabel = new System.Windows.Controls.Label();
+                deadLabel.Content = "Inconsciente...";
+                deadLabel.ToolTip = ToolTipThemer("Solo una buena cura podrá salvarlo ahora...\n \nEsperemos ganes el combate");
+                deadLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                stackPanel.Children.Add(deadLabel);
+            }
+            
+
+            return stackPanel;
+        }
+        private Border PutBorderOnCurrentAttacker(Button button)
+        {
+            Border border = new Border();
+            border.BorderBrush = new SolidColorBrush(Colors.Red);
+            border.BorderThickness = new Thickness(2);
+            border.CornerRadius = new CornerRadius(5);
+            button.Padding = new Thickness(2);
+            border.HorizontalAlignment = (button.Tag is Hero? HorizontalAlignment.Left: HorizontalAlignment.Right);
+            border.Child = button;
+            return border;
+        }
+        private ToolTip ToolTipThemer(string content)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.FontSize = 20;
+            toolTip.Content = content;
+            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
+            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
+            return toolTip;
         }
     }
 }

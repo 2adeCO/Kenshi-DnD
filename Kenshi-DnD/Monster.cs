@@ -106,7 +106,7 @@
         {
             return
                 (name != "" ? "Nombre: " + name + "\n" : "") +
-                (hp != 0 ? "Puntos de vida: " + hp + "\n" : "Cadáver") +
+                (hp != 0 ? "Puntos de vida: " + hp + "\n" : "Cadáver\n") +
                 "Fuerza bruta: " + strength + "\n" +
                 "Resistencia: " + resistance + "\n" +
                 "Agilidad: " + agility + "\n" +
