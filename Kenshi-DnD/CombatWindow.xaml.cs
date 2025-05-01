@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -14,7 +15,7 @@ namespace Kenshi_DnD
     /// </summary>
     public partial class CombatWindow : UserControl
     {
-        MainWindow mainWindow;
+        Cursor[] cursors;
         DispatcherTimer timer;
         int seconds;
         Combat myCombat;
@@ -23,16 +24,18 @@ namespace Kenshi_DnD
         Hero[] heroes;
         Monster[] monsters;
         ITurnable currentAttacker;
-        public CombatWindow()
+        public CombatWindow(Cursor[] cursors)
         {
             InitializeComponent();
             //Starts a timer
+            
             seconds = 0;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
-
+            this.cursors = cursors;
+            this.Cursor = cursors[0];
 
             Limb[] limbs = new Limb[4];
             Limb[] limbs2 = new Limb[4];
@@ -77,7 +80,6 @@ namespace Kenshi_DnD
                 timeToAttack.Start();
             }
 
-            this.mainWindow = mainWindow;
         }
         private void NextTurn(object sender, RoutedEventArgs e)
         {
@@ -227,7 +229,8 @@ namespace Kenshi_DnD
                 {
                     Header = rangedArray[i].GetName(),
                     Tag = rangedArray[i],
-                    ToolTip = ToolTipThemer(rangedArray[i].ToString())
+                    ToolTip = ToolTipThemer(rangedArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 ranged.Items.Add(item);
@@ -238,7 +241,8 @@ namespace Kenshi_DnD
                 {
                     Header = meleeArray[i].GetName(),
                     Tag = meleeArray[i],
-                    ToolTip = ToolTipThemer(meleeArray[i].ToString())
+                    ToolTip = ToolTipThemer(meleeArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 notConsumable.Items.Add(item);
@@ -249,7 +253,8 @@ namespace Kenshi_DnD
                 {
                     Header = consumableArray[i].GetName(),
                     Tag = consumableArray[i],
-                    ToolTip = ToolTipThemer(consumableArray[i].ToString())
+                    ToolTip = ToolTipThemer(consumableArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 consumable.Items.Add(item);
@@ -279,7 +284,8 @@ namespace Kenshi_DnD
                 {
                     Header = rangedArray[i].GetName(),
                     Tag = rangedArray[i],
-                    ToolTip = ToolTipThemer(rangedArray[i].ToString())
+                    ToolTip = ToolTipThemer(rangedArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 ranged.Items.Add(item);
@@ -290,7 +296,8 @@ namespace Kenshi_DnD
                 {
                     Header = meleeArray[i].GetName(),
                     Tag = meleeArray[i],
-                    ToolTip = ToolTipThemer(meleeArray[i].ToString())
+                    ToolTip = ToolTipThemer(meleeArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 notConsumable.Items.Add(item);
@@ -301,7 +308,8 @@ namespace Kenshi_DnD
                 {
                     Header = consumableArray[i].GetName(),
                     Tag = consumableArray[i],
-                    ToolTip = ToolTipThemer(consumableArray[i].ToString())
+                    ToolTip = ToolTipThemer(consumableArray[i].ToString()),
+                    Cursor = cursors[3]
                 };
                 item.MouseLeftButtonUp += UseItem;
                 consumable.Items.Add(item);
@@ -517,12 +525,23 @@ namespace Kenshi_DnD
             }
             else
             {
-                if(monster == monsterTarget)
+                if (monster == monsterTarget)
                 {
                     stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
                 }
+                if (currentAttacker is Hero)
+                {
+                    Hero hero = (Hero)currentAttacker;
+                    if (hero.GetInventory().AreRangedItems())
+                    {
+                        stackPanel.Cursor = cursors[2];
+                    }
+                    else
+                    {
+                        stackPanel.Cursor = cursors[1];
+                    }
+                }
             }
-
 
                 stackPanel.Children.Add(grid);
 
@@ -562,8 +581,6 @@ namespace Kenshi_DnD
                 deadLabel.HorizontalAlignment = HorizontalAlignment.Center;
                 stackPanel.Children.Add(deadLabel);
             }
-            
-
             return stackPanel;
         }
         private Border PutBorderOnCurrentAttacker(Button button)
@@ -585,6 +602,11 @@ namespace Kenshi_DnD
             toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
             toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
             return toolTip;
+        }
+        private void ChangeCursorWhenHover(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.Cursor = cursors[0];
         }
     }
 }

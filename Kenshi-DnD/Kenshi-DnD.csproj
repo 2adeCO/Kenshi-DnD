@@ -10,6 +10,42 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\cursors\0NormalSelect.cur" />
+    <None Remove="Resources\cursors\1HandSelect.ani" />
+    <None Remove="Resources\cursors\1Sword.cur" />
+    <None Remove="Resources\cursors\2Bow.cur" />
+    <None Remove="Resources\cursors\2Sword.cur" />
+    <None Remove="Resources\cursors\3HandSelect.ani" />
+    <None Remove="Resources\cursors\4Loading.ani" />
+    <None Remove="Resources\cursors\5Potion.ani" />
+    <None Remove="Resources\cursors\CursorLicenseInfo.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\cursors\0NormalSelect.cur">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\1Sword.cur">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\2Bow.cur">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\3HandSelect.ani">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\4Loading.ani">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\5Potion.ani">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cursors\CursorLicenseInfo.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector NET 9.3\MySql.Data.dll</HintPath>
     </Reference>

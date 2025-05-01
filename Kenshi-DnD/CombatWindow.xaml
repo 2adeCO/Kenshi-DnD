@@ -7,15 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Cursor" Value="Hand"/>
+        <Style TargetType="Button" x:Key="Buttons">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Margin" Value="4"/>
         </Style>
-        <Style TargetType="TreeViewItem">
-            <Setter Property="Cursor" Value="Hand"/>
+        <Style TargetType="TreeViewItem" x:Key="TreeViewItems">
             <Setter Property="Margin" Value="2" />
-            
         </Style>
         <Style TargetType="TreeView">
             <Setter Property="FontSize" Value="16"/>
@@ -126,6 +123,7 @@
         <Button
         Grid.Column="1" Grid.Row="4"
         Click="NextTurn"
+        MouseEnter="ChangeCursorWhenHover"
         Content="Avanzar jugada"
         >
         </Button>

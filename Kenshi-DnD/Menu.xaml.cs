@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Kenshi_DnD
 {
@@ -8,14 +9,16 @@ namespace Kenshi_DnD
     public partial class Menu : UserControl
     {
         ContentControl controller;
-        public Menu(ContentControl controller)
+        Cursor[] cursors;
+        public Menu(ContentControl controller, Cursor[] cursors)
         {
             InitializeComponent();
+            this.cursors = cursors;
             this.controller = controller;
         }
         public void GoToCombat(object sender, EventArgs e)
         {
-            controller.Content = new CombatWindow();
+            controller.Content = new CombatWindow(cursors);
         }
     }
 }
