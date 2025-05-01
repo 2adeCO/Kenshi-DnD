@@ -18,6 +18,10 @@
         {
             return breaksOnUse;
         }
+        public bool CanRevive()
+        {
+            return canRevive;
+        }
         public override string ToString()
         {
             return base.ToString() + "\n" +

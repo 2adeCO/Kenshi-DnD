@@ -13,6 +13,7 @@ namespace Kenshi_DnD
         //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
         HeroInventory personalInventory;
         StatModifier heroStats;
+        StatModifier buff;
         //Defensive ints
         //Health points
         //Toughness is max health points
@@ -59,6 +60,7 @@ namespace Kenshi_DnD
             this.subrace = subrace;
             this.limbs = limbs;
             personalInventory = new HeroInventory();
+            buff = new StatModifier(0, 0, 0, 0, 0);
         }
         public Hero(string name, string title, int toughness, int bruteForce, int agility, int resistance, int dexterity,
              Race race, Race subrace, Limb[] limbs)
@@ -75,6 +77,7 @@ namespace Kenshi_DnD
             this.subrace = subrace;
             this.limbs = limbs;
             personalInventory = new HeroInventory();
+            buff = new StatModifier(0, 0, 0, 0, 0);
         }
         // 1 = Brute Force, 2 = Dexterity, 3 = HP, 4 = Resistance, 5 = Agility
         public int GetStat(int opt)
@@ -91,7 +94,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetBruteForce();
                             }
                         }
-                        stat = heroStats.GetBruteForce() + race.GetBruteForce() + subrace.GetBruteForce() + personalInventory.GetStat(opt);
+                        stat = heroStats.GetBruteForce() + race.GetBruteForce() + subrace.GetBruteForce() + personalInventory.GetStat(opt) + buff.GetBruteForce();
                         break;
                     }
                 case 2:
@@ -103,7 +106,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetDexterity();
                             }
                         }
-                        stat = heroStats.GetDexterity() + race.GetDexterity() + subrace.GetDexterity() + personalInventory.GetStat(opt);
+                        stat = heroStats.GetDexterity() + race.GetDexterity() + subrace.GetDexterity() + personalInventory.GetStat(opt) + buff.GetDexterity();
                         break;
                     }
                 case 3:
@@ -120,7 +123,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetResistance();
                             }
                         }
-                        stat = heroStats.GetResistance() + race.GetResistance() + subrace.GetResistance() + personalInventory.GetStat(opt);
+                        stat = heroStats.GetResistance() + race.GetResistance() + subrace.GetResistance() + personalInventory.GetStat(opt) + buff.GetResistance();
                         break;
                     }
                 case 5:
@@ -132,7 +135,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetAgility();
                             }
                         }
-                        stat = heroStats.GetAgility() + race.GetAgility() + subrace.GetAgility() + personalInventory.GetStat(opt);
+                        stat = heroStats.GetAgility() + race.GetAgility() + subrace.GetAgility() + personalInventory.GetStat(opt) + buff.GetAgility();
                         break;
                     }
             }
@@ -311,6 +314,14 @@ namespace Kenshi_DnD
                 iterator += 1;
             }
         }
+        public void SetBuff(StatModifier buff)
+        {
+            this.buff = buff;
+        }
+        public StatModifier GetBuff()
+        {
+            return buff;
+        }
         private void UseLimbs(int num)
         {
             int iterator = 0;
@@ -352,7 +363,14 @@ namespace Kenshi_DnD
         }
         public void Heal(int healHp)
         {
-            this.SetHp(GetHp() + healHp);
+            if (GetHp() + healHp > GetToughness())
+            {
+                this.SetHp(GetToughness());
+            }
+            else
+            {
+                this.SetHp(GetHp() + healHp);
+            }
         }
         public void Hurt(int hurtHp)
         {
@@ -394,7 +412,10 @@ namespace Kenshi_DnD
 
         public override string ToString()
         {
-            return $"- {name}, {title} - \n" + GetAllStats().ToString();
+            return $"- {name}, {title} - \n" +
+                $"Raza: {race.GetName()}\n" +
+                $"{(subrace.GetName() != "Sin subraza" ? $"Subraza: {subrace.GetName()}\n" : "")}"
+                + GetAllStats().ToString();
         }
     }
 }

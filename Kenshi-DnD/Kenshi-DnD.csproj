@@ -19,6 +19,8 @@
     <None Remove="Resources\cursors\4Loading.ani" />
     <None Remove="Resources\cursors\5Potion.ani" />
     <None Remove="Resources\cursors\CursorLicenseInfo.txt" />
+    <None Remove="Resources\cursors\Flint.webp.cur" />
+    <None Remove="Resources\cursors\Tooth_Pick.webp.cur" />
   </ItemGroup>
 
   <ItemGroup>

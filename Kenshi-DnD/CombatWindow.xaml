@@ -7,11 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="Button" x:Key="Buttons">
+        <Style TargetType="Button">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Margin" Value="4"/>
         </Style>
-        <Style TargetType="TreeViewItem" x:Key="TreeViewItems">
+        <Style TargetType="TreeViewItem">
             <Setter Property="Margin" Value="2" />
         </Style>
         <Style TargetType="TreeView">
@@ -31,15 +31,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+
         </Grid.RowDefinitions>
 
 
-        <Grid Background="#e3e4c9" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2">
+        <Grid Background="#e3e4c9" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
@@ -82,14 +81,14 @@
 
             <Grid
             Background="#2c2825"
-        Grid.Column="0" Grid.Row="2" Grid.RowSpan="2"
+        Grid.Column="0" Grid.Row="1"
             
         x:Name="AllHeroes">
 
         </Grid>
         <Grid
             Background="#2c2825"
-        Grid.Column="2" Grid.Row="2" Grid.RowSpan="2"
+        Grid.Column="2" Grid.Row="1"
         x:Name="AllMonsters">
 
         </Grid>
@@ -97,7 +96,7 @@
             
             BorderBrush="#2c2825"
             BorderThickness="3"
-        Grid.Column="1" Grid.Row="2" Grid.RowSpan="2"
+        Grid.Column="1" Grid.Row="1"
             >
             <Grid Background="WhiteSmoke">
                 <Grid.ColumnDefinitions>
@@ -121,21 +120,22 @@
         </Border>
         
         <Button
-        Grid.Column="1" Grid.Row="4"
+        Grid.Column="1" Grid.Row="2"
         Click="NextTurn"
+        MinHeight="50"
         MouseEnter="ChangeCursorWhenHover"
         Content="Avanzar jugada"
         >
         </Button>
-        <Border BorderBrush="#2c2825" BorderThickness="3" Background="WhiteSmoke" Grid.Row="5" Grid.Column="1">
+        <Border BorderBrush="#2c2825" BorderThickness="3" Background="WhiteSmoke" Grid.Row="3" Grid.Column="1">
             <ScrollViewer    VerticalScrollBarVisibility="Auto" >
             <TextBlock x:Name="InfoLog" TextWrapping="Wrap" Margin="5,20,5,20" >
             </TextBlock>
             </ScrollViewer>
         </Border>
-        <TreeView Grid.Column="0" Grid.Row="6" x:Name="HeroItems" Background="#e3e4c9">
+        <TreeView Grid.Column="0" Grid.Row="3" x:Name="HeroItems" Background="#2c2825">
         </TreeView>
-        <TreeView Grid.Column="2" Grid.Row="6" x:Name="UnselectedItems" Background="#e3e4c9">
+        <TreeView Grid.Column="2" Grid.Row="3" x:Name="UnselectedItems" Background="#2c2825">
         </TreeView>
     </Grid>
 </UserControl>

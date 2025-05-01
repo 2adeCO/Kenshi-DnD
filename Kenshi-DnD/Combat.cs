@@ -8,6 +8,7 @@ namespace Kenshi_DnD
         Hero[] heroes;
         Monster[] enemies;
         Dice myDice;
+        Inventory myInventory;
         //Keeps track of every turn progress
         List<Turn> everyTurn;
         //Generates a list of fighters in the order they must attack
@@ -20,6 +21,7 @@ namespace Kenshi_DnD
             this.window = window;
             combatState = 0;
             rnd = new Random();
+            this.myInventory = myInventory;
             turnIndex = 0;
             this.heroes = newHeroes;
             this.enemies = newEnemies;
@@ -84,17 +86,39 @@ namespace Kenshi_DnD
             Debug.WriteLine("Turn order decided for " + numOfAddedTurns + " turns");
         }
 
-        public void NextTurn(Monster monsterTarget)
+        public void NextTurn(ITurnable fighterTarget)
         {
             ITurnable attacker = turnOrder[turnIndex];
+
+            if (fighterTarget is Hero && attacker is Hero)
+            {
+                Hero hero = (Hero)attacker;
+                hero.SetBuff(new StatModifier(0, 0, 0, 0, 0));
+                InteractWithHero(hero,(Hero)fighterTarget);
+            }
+            
             if (attacker is Hero)
             {
-                HeroAttacks((Hero)attacker, monsterTarget);
+                Hero hero = (Hero)attacker;
+                hero.SetBuff(new StatModifier(0, 0, 0, 0, 0));
+
+                if (fighterTarget is Hero && attacker is Hero)
+                {
+
+                    InteractWithHero(hero, (Hero)fighterTarget);
+                }
+                else
+                {
+
+                    HeroAttacks(hero, (Monster)fighterTarget);
+                }
+                    
             }
             else
             {
                 MonsterAttacks((Monster)attacker, DecideVictim());
             }
+
             UpdateGameState();
             if (GetGameState() != 0)
             {
@@ -105,6 +129,38 @@ namespace Kenshi_DnD
             if (turnOrder.Count - turnIndex < 6)
             {
                 DecideNextNTurns(12, false);
+            }
+        }
+        private void InteractWithHero(Hero hero, Hero receiver)
+        {
+            if (receiver.IsAlive())
+            {
+                Debug.WriteLine("Hero is alive");
+                if (hero.AreConsumableItems())
+                {
+                    ConsumableAction(hero,receiver);
+                }
+            }
+            else
+            {
+                //Loot body
+                Debug.WriteLine("Hero is dead");
+                bool canRevive = false;
+
+                Item[] consumableItems = hero.GetInventory().GetConsumables(2);
+
+                for (int i = 0; i < consumableItems.Length; i++)
+                {
+                    MeleeItem meleeItem = (MeleeItem)consumableItems[i];
+                    if (meleeItem.CanRevive())
+                    {
+                        canRevive = true;
+                    }
+                }
+                if (canRevive)
+                {
+                    ConsumableAction(hero, receiver);
+                }
             }
         }
         public void AdvanceIndex()
@@ -146,43 +202,50 @@ namespace Kenshi_DnD
         {
             if (attacker.AreConsumableItems())
             {
-
+                DamageLog(attacker.GetName() + " se medica...");
+                attacker.SetBuff(ConsumableAction(attacker, attacker));
             }
             if (attacker.AreRangedItems())
             {
                 DamageLog(attacker.GetName() + " coge distancia... y apunta a " + defender.GetName());
                 RangeAttack(attacker, defender);
             }
-            else
+        
+            if (attacker.AreMeleeItems())
             {
-                if (attacker.AreMeleeItems())
-                {
-                    DamageLog(attacker.GetName() + " arremete contra " + defender.GetName());
-                    MeleeAttack(attacker, defender);
-                }
-                //Add martial arts
+                DamageLog(attacker.GetName() + " arremete contra " + defender.GetName());
+                MeleeAttack(attacker, defender);
             }
+            //Add martial arts
+   
 
 
         }
-        private void ConsumableAction(Hero user)
+        private StatModifier ConsumableAction(Hero user, Hero receiver)
         {
-
-            Item[] uncastedConsumableItems = user.GetInventory().GetConsumables(2);
-
-            MeleeItem[] consumableItems = new MeleeItem[uncastedConsumableItems.Length];
+            
+            Item[] consumableItems = user.GetInventory().GetConsumables(2);
 
             int hpBoost = 0;
-
+            int agilityBoost = 0;
+            int bruteForceBoost = 0;
+            int resistanceBoost = 0;
+            int dexterityBoost = 0;
             for (int i = 0; i < consumableItems.Length; i++)
             {
                 if (consumableItems[i] != null)
                 {
                     hpBoost += consumableItems[i].GetStatToModify().GetHp();
+                    agilityBoost += consumableItems[i].GetStatToModify().GetAgility();
+                    bruteForceBoost += consumableItems[i].GetStatToModify().GetBruteForce();
+                    resistanceBoost += consumableItems[i].GetStatToModify().GetResistance();
+                    dexterityBoost += consumableItems[i].GetStatToModify().GetDexterity();
+                    myInventory.RemoveItem(consumableItems[i]);
+                    user.GetInventory().RemoveItem(consumableItems[i]);
                 }
             }
-            user.Heal(hpBoost);
-
+            receiver.Heal(hpBoost);
+            return new StatModifier(0, agilityBoost, bruteForceBoost, resistanceBoost, dexterityBoost);
         }
         private void MeleeAttack(Hero attacker, Monster defender)
         {

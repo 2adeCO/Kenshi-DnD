@@ -19,7 +19,7 @@ namespace Kenshi_DnD
         DispatcherTimer timer;
         int seconds;
         Combat myCombat;
-        Monster monsterTarget;
+        ITurnable fighterTarget;
         PlayerInventory myInventory;
         Hero[] heroes;
         Monster[] monsters;
@@ -28,7 +28,7 @@ namespace Kenshi_DnD
         {
             InitializeComponent();
             //Starts a timer
-            
+
             seconds = 0;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -53,16 +53,18 @@ namespace Kenshi_DnD
 
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Monstruo genérico", 3, faction1, 10, 3, 30, -1, 100, 0);
+            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, -1, 100, 0);
+            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 3, 4, 2, 1, 100, 0);
             StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
             StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
             myInventory = new PlayerInventory();
             myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, false));
+            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, false));
             myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, false));
             myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, false));
 
             heroes = new Hero[] { hero1, hero2 };
-            monsters = new Monster[] { monster1 };
+            monsters = new Monster[] { monster1, monster2 };
             myCombat = new Combat(heroes, monsters, myDice, myInventory, this);
 
             currentAttacker = myCombat.GetCurrentAttacker();
@@ -89,12 +91,14 @@ namespace Kenshi_DnD
                 MessageBox.Show("Ya terminó el combate");
                 return;
             }
-            if (currentAttacker is Hero && monsterTarget == null)
+            if (currentAttacker is Hero && fighterTarget == null)
             {
                 MessageBox.Show("Selecciona un monstruo para atacar");
                 return;
             }
-            myCombat.NextTurn(monsterTarget);
+
+            myCombat.NextTurn(fighterTarget);
+
             currentAttacker = myCombat.GetCurrentAttacker();
 
             UpdateFightersGrid();
@@ -155,14 +159,13 @@ namespace Kenshi_DnD
                 Button button = new Button();
                 //Put content with the hero name and a progress bar with its hp
                 button.Content = FighterStackPanel(heroes[i]);
-                //The hero object is stored in the button's tag
-                button.Tag = heroes[i];
-                //This will show the user who the current attacker is                
+                button.Tag = heroes[i];             
                 button.ToolTip = ToolTipThemer(heroes[i].ToString());
                 ToolTipService.SetInitialShowDelay(button, 100);
 
                 button.HorizontalAlignment = HorizontalAlignment.Left;
-                if(heroes[i] == currentAttacker)
+                button.Click += SelectTarget;
+                if (heroes[i] == currentAttacker)
                 {
                     Border border = PutBorderOnCurrentAttacker(button);
                     Grid.SetRow(border, i);
@@ -174,22 +177,21 @@ namespace Kenshi_DnD
                     Grid.SetRow(button, i);
                     Grid.SetColumn(button, 0);
                     AllHeroes.Children.Add(button);
-                }    
+                }
             }
             for (int i = 0; i < monsters.Length; i++)
             {
                 Button button = new Button();
 
                 button.Content = FighterStackPanel(monsters[i]);
-
-
+                button.MouseEnter += ChangeCursorWhenHover;
+                button.HorizontalAlignment = HorizontalAlignment.Right;
+               
                 if (monsters[i].IsAlive())
                 {
                     button.Tag = monsters[i];
-                    button.Click += SelectMonster;
+                    button.Click += SelectTarget;
                 }
-                
-                button.HorizontalAlignment = HorizontalAlignment.Right;
 
                 if (monsters[i] == currentAttacker)
                 {
@@ -223,44 +225,52 @@ namespace Kenshi_DnD
             Item[] meleeArray = myInventory.GetMelee(1);
             Item[] consumableArray = myInventory.GetConsumables(1);
 
-            for (int i = 0; i < rangedArray.Length; i++)
+            if (rangedArray.Length == 0)
             {
-                TreeViewItem item = new TreeViewItem
-                {
-                    Header = rangedArray[i].GetName(),
-                    Tag = rangedArray[i],
-                    ToolTip = ToolTipThemer(rangedArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                ranged.Items.Add(item);
+                ranged.Visibility = Visibility.Collapsed;
             }
-            for (int i = 0; i < meleeArray.Length; i++)
+            else
             {
-                TreeViewItem item = new TreeViewItem
+                for (int i = 0; i < rangedArray.Length; i++)
                 {
-                    Header = meleeArray[i].GetName(),
-                    Tag = meleeArray[i],
-                    ToolTip = ToolTipThemer(meleeArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                notConsumable.Items.Add(item);
+                    ranged.Items.Add(GenerateItem(rangedArray[i]));
+                }
             }
-            for (int i = 0; i < consumableArray.Length; i++)
+            if (meleeArray.Length == 0)
             {
-                TreeViewItem item = new TreeViewItem
-                {
-                    Header = consumableArray[i].GetName(),
-                    Tag = consumableArray[i],
-                    ToolTip = ToolTipThemer(consumableArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                consumable.Items.Add(item);
+                notConsumable.Visibility = Visibility.Collapsed;
             }
+            else
+            {
+                for (int i = 0; i < meleeArray.Length; i++)
+                {
+                    notConsumable.Items.Add(GenerateItem(meleeArray[i]));
+                }
+            }
+
+            if (consumableArray.Length == 0)
+            {
+                consumable.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                for (int i = 0; i < consumableArray.Length; i++)
+                {
+                    consumable.Items.Add(GenerateItem(consumableArray[i]));
+                }
+            }
+            if (meleeArray.Length == 0 && consumableArray.Length == 0)
+            {
+                melee.Visibility = Visibility.Collapsed;
+            }
+
             UnselectedItems.Items.Add(root);
 
+            
+            if (currentAttacker is Monster)
+            {
+                return;
+            }
             root = GenerateTreeView();
 
             ranged = (TreeViewItem)root.Items[0];
@@ -268,64 +278,62 @@ namespace Kenshi_DnD
             notConsumable = (TreeViewItem)melee.Items[0];
             consumable = (TreeViewItem)melee.Items[1];
 
-            if (currentAttacker is Monster)
-            {
-                return;
-            }
             Hero currentHero = (Hero)currentAttacker;
-
+            root.Header = root.Header + " de " + currentHero.GetName();
             HeroInventory heroInventory = currentHero.GetInventory();
             rangedArray = heroInventory.GetRanged(2);
             meleeArray = heroInventory.GetMelee(2);
             consumableArray = heroInventory.GetConsumables(2);
-            for (int i = 0; i < rangedArray.Length; i++)
+            if (rangedArray.Length == 0)
             {
-                TreeViewItem item = new TreeViewItem
-                {
-                    Header = rangedArray[i].GetName(),
-                    Tag = rangedArray[i],
-                    ToolTip = ToolTipThemer(rangedArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                ranged.Items.Add(item);
+                ranged.Visibility = Visibility.Collapsed;
             }
-            for (int i = 0; i < meleeArray.Length; i++)
+            else
             {
-                TreeViewItem item = new TreeViewItem
+                for (int i = 0; i < rangedArray.Length; i++)
                 {
-                    Header = meleeArray[i].GetName(),
-                    Tag = meleeArray[i],
-                    ToolTip = ToolTipThemer(meleeArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                notConsumable.Items.Add(item);
+                    ranged.Items.Add(GenerateItem(rangedArray[i]));
+                }
             }
-            for (int i = 0; i < consumableArray.Length; i++)
+            if (meleeArray.Length == 0)
             {
-                TreeViewItem item = new TreeViewItem
+                notConsumable.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                for (int i = 0; i < meleeArray.Length; i++)
                 {
-                    Header = consumableArray[i].GetName(),
-                    Tag = consumableArray[i],
-                    ToolTip = ToolTipThemer(consumableArray[i].ToString()),
-                    Cursor = cursors[3]
-                };
-                item.MouseLeftButtonUp += UseItem;
-                consumable.Items.Add(item);
+                    notConsumable.Items.Add(GenerateItem(meleeArray[i]));
+                }
+            }
+
+            if (consumableArray.Length == 0)
+            {
+                consumable.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                for (int i = 0; i < consumableArray.Length; i++)
+                {
+                    consumable.Items.Add(GenerateItem(consumableArray[i]));
+                }
+            }
+            if(meleeArray.Length == 0 && consumableArray.Length == 0)
+            {
+                melee.Visibility = Visibility.Collapsed;
             }
             HeroItems.Items.Add(root);
 
         }
         private TreeViewItem GenerateTreeView()
         {
-            TreeViewItem root = new TreeViewItem { Header = "Inventario", IsExpanded = true };
+            TreeViewItem root = new TreeViewItem { Header = "🎒Inventario", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
 
-            TreeViewItem ranged = new TreeViewItem { Header = "Objetos a distancia", IsExpanded = true };
-            TreeViewItem melee = new TreeViewItem { Header = "Objetos melee", IsExpanded = true };
+            TreeViewItem ranged = new TreeViewItem { Header = "🏹Objetos a distancia", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
+            TreeViewItem melee = new TreeViewItem { Header = "🤜Objetos melee", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
 
-            TreeViewItem notConsumable = new TreeViewItem { Header = "No consumibles", IsExpanded = true };
-            TreeViewItem consumable = new TreeViewItem { Header = "Consumibles", IsExpanded = true };
+            TreeViewItem notConsumable = new TreeViewItem { Header = "⚔️No consumibles", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
+            TreeViewItem consumable = new TreeViewItem { Header = "💊Consumibles", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
 
             melee.Items.Add(notConsumable);
             melee.Items.Add(consumable);
@@ -376,11 +384,17 @@ namespace Kenshi_DnD
             }
             NextTurn(null, null);
         }
-        private void SelectMonster(object sender, RoutedEventArgs e)
+        private void SelectTarget(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-
-            monsterTarget = (Monster)button.Tag;
+            if (fighterTarget == button.Tag)
+            {
+                fighterTarget = null;
+            }
+            else
+            {
+                fighterTarget = (ITurnable)button.Tag;
+            }
             UpdateFightersGrid();
         }
         private void Timer_Tick(object sender, EventArgs e)
@@ -436,29 +450,6 @@ namespace Kenshi_DnD
                     }
             }
         }
-        private TreeViewItem CloneTreeViewItem(TreeViewItem original)
-        {
-            if (original == null)
-            {
-                return null;
-            }
-
-            TreeViewItem copy = new TreeViewItem
-            {
-                Header = original.Header,
-                Tag = original.Tag,
-                IsExpanded = original.IsExpanded
-            };
-
-            for (int i = 0; i < original.Items.Count; i++)
-            {
-                TreeViewItem child = (TreeViewItem)original.Items[i];
-                TreeViewItem childCopy = CloneTreeViewItem(child);
-                copy.Items.Add(childCopy);
-            }
-
-            return copy;
-        }
         private bool IsParentX(TreeViewItem item, TreeView parentToCheck)
         {
             do
@@ -486,16 +477,16 @@ namespace Kenshi_DnD
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = Orientation.Vertical;
             System.Windows.Controls.Label label = new System.Windows.Controls.Label();
-            label.Content = monster.GetName();
+            label.Content = monster == fighterTarget ? "🎯 " + monster.GetName() : monster.GetName();
             label.ToolTip = ToolTipThemer(monster.ToString());
             ToolTipService.SetInitialShowDelay(label, 100);
             stackPanel.Children.Add(label);
 
 
             Grid grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1,GridUnitType.Auto)});
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star)});
-            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto)});
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
 
             label = new System.Windows.Controls.Label();
@@ -506,7 +497,7 @@ namespace Kenshi_DnD
             grid.Children.Add(label);
             if (monster.GetFaction().GetFactionImage() != null)
             {
-                BitmapImage bitmapImage  
+                BitmapImage bitmapImage
                 = monster.GetFaction().GetFactionImage();
                 Image image = new Image();
                 image.Source = bitmapImage;
@@ -525,26 +516,16 @@ namespace Kenshi_DnD
             }
             else
             {
-                if (monster == monsterTarget)
+                if (monster == fighterTarget)
                 {
                     stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
                 }
-                if (currentAttacker is Hero)
+                else
                 {
-                    Hero hero = (Hero)currentAttacker;
-                    if (hero.GetInventory().AreRangedItems())
-                    {
-                        stackPanel.Cursor = cursors[2];
-                    }
-                    else
-                    {
-                        stackPanel.Cursor = cursors[1];
-                    }
+                    stackPanel.Background = new SolidColorBrush(Colors.Transparent);
                 }
             }
-
-                stackPanel.Children.Add(grid);
-
+            stackPanel.Children.Add(grid);
             return stackPanel;
         }
         private StackPanel FighterStackPanel(Hero hero)
@@ -557,6 +538,14 @@ namespace Kenshi_DnD
             ToolTipService.SetInitialShowDelay(label, 100);
             stackPanel.Children.Add(label);
 
+            if(hero == fighterTarget)
+            {
+                stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
+            }
+            else
+            {
+                stackPanel.Background = new SolidColorBrush(Colors.Transparent);
+            }
             if (hero.IsAlive())
             {
                 ProgressBar progressBar = new ProgressBar();
@@ -590,7 +579,7 @@ namespace Kenshi_DnD
             border.BorderThickness = new Thickness(2);
             border.CornerRadius = new CornerRadius(5);
             button.Padding = new Thickness(2);
-            border.HorizontalAlignment = (button.Tag is Hero? HorizontalAlignment.Left: HorizontalAlignment.Right);
+            border.HorizontalAlignment = (button.Tag is Hero ? HorizontalAlignment.Left : HorizontalAlignment.Right);
             border.Child = button;
             return border;
         }
@@ -601,12 +590,57 @@ namespace Kenshi_DnD
             toolTip.Content = content;
             toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
             toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
+            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
             return toolTip;
         }
+        //The use of this method is to change the cursor when hovering over a button
+        //I do not like it, but it's the only way to prevent the cursor from changing when the button is being clicked
+        //that isn't too complex
         private void ChangeCursorWhenHover(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            button.Cursor = cursors[0];
+            if (currentAttacker is Hero)
+            {
+                Hero hero = (Hero)currentAttacker;
+                if (hero.GetInventory().AreRangedItems())
+                {
+                    button.Cursor = cursors[2];
+                }
+                else
+                {
+                    button.Cursor = cursors[1];
+                }
+            }
+        }
+        //Generates the TreeViewItem for the inventories
+        private TreeViewItem GenerateItem(Item item)
+        {
+            string name = item.GetName();
+            if(item is RangedItem)
+            {
+                RangedItem rangedItem = (RangedItem)item;
+                name += $" [{rangedItem.GetAmmo()}]"; 
+            }
+            Border border = new Border();
+            border.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e3e4c9"));
+            border.BorderThickness = new Thickness(2);
+            border.CornerRadius = new CornerRadius(5);
+            border.Child = new TextBlock() { Text = name};
+            border.Padding = new Thickness(10,0,10,0);
+            border.Background = new SolidColorBrush(Colors.WhiteSmoke);
+
+
+            TreeViewItem treeViewItem = new TreeViewItem();
+            treeViewItem.Header = border;
+            treeViewItem.Tag = item;
+            treeViewItem.ToolTip = ToolTipThemer(item.ToString());
+            ToolTipService.SetInitialShowDelay(treeViewItem, 700);
+            treeViewItem.Cursor = cursors[3];
+            treeViewItem.HorizontalAlignment = HorizontalAlignment.Center;
+            treeViewItem.MouseLeftButtonUp += UseItem;
+            treeViewItem.Margin = new Thickness(4);
+            treeViewItem.FontSize = 14;
+            return treeViewItem;
         }
     }
 }

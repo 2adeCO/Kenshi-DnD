@@ -22,6 +22,11 @@ namespace Kenshi_DnD
         }
         public StatModifier GetAllStats()
         {
+            Item[] meleeItems = base.GetMelee(2);
+            Item[] rangedItems = base.GetRanged(2);
+
+            Item[] allNonConsumableItems = new Item[meleeItems.Length + rangedItems.Length];
+
             StatModifier allStats;
             int bruteForce = 0;
             int dexterity = 0;
@@ -29,13 +34,13 @@ namespace Kenshi_DnD
             int resistance = 0;
             int agility = 0;
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < allNonConsumableItems.Length; i++)
             {
-                bruteForce += items[i].GetStatToModify().GetBruteForce();
-                dexterity += items[i].GetStatToModify().GetDexterity();
-                hp += items[i].GetStatToModify().GetHp();
-                resistance += items[i].GetStatToModify().GetResistance();
-                agility += items[i].GetStatToModify().GetAgility();
+                bruteForce += allNonConsumableItems[i].GetStatToModify().GetBruteForce();
+                dexterity += allNonConsumableItems[i].GetStatToModify().GetDexterity();
+                hp += allNonConsumableItems[i].GetStatToModify().GetHp();
+                resistance += allNonConsumableItems[i].GetStatToModify().GetResistance();
+                agility += allNonConsumableItems[i].GetStatToModify().GetAgility();
             }
             allStats = new StatModifier(bruteForce, dexterity, hp, resistance, agility);
             return allStats;
