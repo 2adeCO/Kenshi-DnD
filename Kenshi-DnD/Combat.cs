@@ -87,15 +87,16 @@ namespace Kenshi_DnD
             Debug.WriteLine("Turn order decided for " + numOfAddedTurns + " turns");
         }
 
-        public void NextTurn(ITurnable fighterTarget)
+        public async Task NextTurn(ITurnable fighterTarget)
         {
             ITurnable attacker = turnOrder[turnIndex];
-            window.UpdateLogUI(attacker.GetName() + " medita su acción");
+            await window.UpdateLogUI(attacker.GetName() + " medita su acción", 400);
+            
             if (fighterTarget is Hero && attacker is Hero)
             {
                 Hero hero = (Hero)attacker;
                 hero.SetBuff(new StatModifier(0, 0, 0, 0, 0));
-                InteractWithHero(hero, (Hero)fighterTarget);
+                await InteractWithHero(hero, (Hero)fighterTarget);
             }
 
             if (attacker is Hero)
@@ -106,18 +107,20 @@ namespace Kenshi_DnD
                 if (fighterTarget is Hero && attacker is Hero)
                 {
 
-                    InteractWithHero(hero, (Hero)fighterTarget);
+                    await InteractWithHero(hero, (Hero)fighterTarget);
                 }
                 else
                 {
 
-                    HeroAttacks(hero, (Monster)fighterTarget);
+                    await HeroAttacks(hero, (Monster)fighterTarget);
                 }
 
             }
             else
             {
-                MonsterAttacks((Monster)attacker, DecideVictim());
+                Hero victim = DecideVictim();
+                await window.UpdateLogUI(GetCurrentAttacker().GetName() + " pone los ojos en " + victim.GetName(), 400);
+                await MonsterAttacks((Monster)attacker, victim);
             }
 
             UpdateGameState();
@@ -132,13 +135,13 @@ namespace Kenshi_DnD
                 DecideNextNTurns(12, false);
             }
         }
-        private void InteractWithHero(Hero hero, Hero receiver)
+        private async Task InteractWithHero(Hero hero, Hero receiver)
         {
             if (receiver.IsAlive())
             {
                 if (hero.AreConsumableItems())
                 {
-                    ConsumableAction(hero, receiver);
+                    await ConsumableAction(hero, receiver);
                 }
             }
             else
@@ -159,8 +162,8 @@ namespace Kenshi_DnD
                     }
                     if (canRevive)
                     {
-                        window.UpdateLogUI("¡" + hero.GetName() + " revive a " + receiver.GetName() + "!");
-                        ConsumableAction(hero, receiver);
+                        await window.UpdateLogUI("¡" + hero.GetName() + " revive a " + receiver.GetName() + "!",1200);
+                        await ConsumableAction(hero, receiver);
                     }
                 }
 
@@ -176,57 +179,61 @@ namespace Kenshi_DnD
                 DecideNextNTurns(12, false);
             }
         }
-        public void MonsterAttacks(Monster attacker, Hero defender)
+        public async Task MonsterAttacks(Monster attacker, Hero defender)
         {
 
-            Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
+
             int attackerStat;
             int defenderStat;
 
             attackerStat = attacker.GetStrength();
             defenderStat = defender.GetStat(4);
-
+            await window.UpdateCombatStatsUI("Fuerza de " + attacker.GetName() + ": " + attackerStat +"\n" +
+                "Resistencia de " + defender.GetName() + ": " + defenderStat +
+                "\nVida actual de " + defender.GetName() + ": " + defender.GetHp(),0);
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
-            Debug.WriteLine("Hits: " + hits);
+            await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
+            await window.UpdateLogUI(attacker.GetName() + " golpea y hace " + hits + " de daño a " + defender.GetName(), 400);
+
             defender.Hurt(hits);
 
-            Debug.WriteLine("Defender health: " + defender.GetHp());
             if (defender.GetHp() <= 0)
             {
-                Debug.WriteLine("Killed!");
+
+                await window.UpdateLogUI(attacker.GetName() + " deja KO a " + defender.GetName(), 1200);
+                
             }
             else
             {
-                Debug.WriteLine("Not killed");
+                await window.UpdateLogUI("¡"+ defender.GetName() + " resiste!", 400);
             }
-            window.UpdateLogUI(attacker.GetName() + " ataca a " + defender.GetName() + " y le hace " + hits + " puntos de daño");
 
         }
-        public void HeroAttacks(Hero attacker, Monster defender)
+        public async Task HeroAttacks(Hero attacker, Monster defender)
         {
             bool noWeapon = true;
             if (attacker.AreConsumableItems())
             {
-                window.UpdateLogUI(attacker.GetName() + " se medica...");
-                attacker.SetBuff(ConsumableAction(attacker, attacker));
+                await window.UpdateLogUI(attacker.GetName() + " se medica..." , 400);
+                attacker.SetBuff(await ConsumableAction(attacker, attacker));
                 if (attacker.GetBuff().ToString() != "")
                 {
-                    window.UpdateCombatStatsUI(attacker.GetName() + " recibe un buff de:\n" + attacker.GetBuff().ToString());
+                    await window.UpdateCombatStatsUI(attacker.GetName() + " recibe un buff de:\n" + attacker.GetBuff().ToString(),800);
                 }
             }
             if (attacker.AreRangedItems())
             {
                 noWeapon = false;
-                window.UpdateLogUI(attacker.GetName() + " coge distancia... y apunta a " + defender.GetName());
-                RangeAttack(attacker, defender);
+                await window.UpdateLogUI(attacker.GetName() + " coge distancia... y apunta a " + defender.GetName(), 800);
+                await RangeAttack(attacker, defender);
             }
 
             if (attacker.AreMeleeItems())
             {
                 noWeapon = false;
-                window.UpdateLogUI(attacker.GetName() + " arremete contra " + defender.GetName());
-                MeleeAttack(attacker, defender);
+                await window.UpdateLogUI(attacker.GetName() + " arremete contra " + defender.GetName(), 800);
+                await MeleeAttack(attacker, defender);
             }
             if (noWeapon)
             {
@@ -237,13 +244,13 @@ namespace Kenshi_DnD
                 //I will use limbs to determine the martial arts skill, so there's no other way to get better other than to get limbs torn off
                 //and getting better ones. This will cause a struggle on the player, as only he can choose whether to train it or not because
                 //there is no reason to really master martial arts other than personal satisfaction.
-                window.UpdateLogUI(attacker.GetName() + " se pone a prueba en artes marciales contra " + defender.GetName());
-                MartialArtsAttack(attacker, defender);
+                await window.UpdateLogUI(attacker.GetName() + " se pone a prueba en artes marciales contra " + defender.GetName(), 800);
+                await MartialArtsAttack(attacker, defender);
             }
 
 
         }
-        private StatModifier ConsumableAction(Hero user, Hero receiver)
+        private async Task<StatModifier> ConsumableAction(Hero user, Hero receiver)
         {
 
             Item[] consumableItems = user.GetInventory().GetConsumables(2);
@@ -257,7 +264,7 @@ namespace Kenshi_DnD
             {
                 if (consumableItems[i] != null)
                 {
-                    window.UpdateLogUI(consumableItems[i].AnnounceUse());
+                    await window.UpdateLogUI(consumableItems[i].AnnounceUse() ,200);
                     hpBoost += consumableItems[i].GetStatToModify().GetHp();
                     agilityBoost += consumableItems[i].GetStatToModify().GetAgility();
                     bruteForceBoost += consumableItems[i].GetStatToModify().GetBruteForce();
@@ -271,11 +278,11 @@ namespace Kenshi_DnD
             {
                 if (user != receiver)
                 {
-                    window.UpdateLogUI(user.GetName() + " cura a " + receiver.GetName() + " " + hpBoost + " puntos de vida");
+                    await window.UpdateLogUI(user.GetName() + " cura a " + receiver.GetName() + " " + hpBoost + " puntos de vida" ,400);
                 }
                 else
                 {
-                    window.UpdateLogUI(user.GetName() + " se cura " + hpBoost + " puntos de vida");
+                    await window.UpdateLogUI(user.GetName() + " se cura " + hpBoost + " puntos de vida", 400);
                 }
             }
 
@@ -286,7 +293,7 @@ namespace Kenshi_DnD
 
             return statBuff;
         }
-        private void MeleeAttack(Hero attacker, Monster defender)
+        private async Task MeleeAttack(Hero attacker, Monster defender)
         {
             int attackerStat;
             int defenderStat;
@@ -294,7 +301,7 @@ namespace Kenshi_DnD
             Item[] uncastedMeleeItems = attacker.GetInventory().GetMelee(2);
             for (int i = 0; i < uncastedMeleeItems.Length; i++)
             {
-                window.UpdateLogUI(uncastedMeleeItems[i].AnnounceUse());
+                await window.UpdateLogUI(uncastedMeleeItems[i].AnnounceUse(),200);
             }
             attackerStat = attacker.GetStat(1);
             defenderStat = defender.GetResistance();
@@ -304,35 +311,35 @@ namespace Kenshi_DnD
 
             if (defender.GetImmunity() == 2)
             {
-                window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques físicos, " + attacker.GetName() + " se replantea sus acciones...");
+                await window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques físicos, " + attacker.GetName() + " se replantea sus acciones...",800);
                 return;
             }
             else
             {
                 if (defender.GetImmunity() == -3 || defender.GetImmunity() == 1)
                 {
-                    window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques físicos, " + attacker.GetName() + " lo intenta igualmente");
+                    await window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques físicos, " + attacker.GetName() + " lo intenta igualmente",800);
                     attackerStat /= 2;
                 }
             }
-            window.UpdateCombatStatsUI("Fuerza bruta de " + attacker.GetName() + ": " + attackerStat + "\n" +
+            await window.UpdateCombatStatsUI("Fuerza bruta de " + attacker.GetName() + ": " + attackerStat + "\n" +
                 "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
-                "Golpes necesarios para matar: " + defenderHealth);
+                "Golpes necesarios para matar: " + defenderHealth,0);
             int hits = myDice.PlayDice(attackerStat - defenderStat);
-            window.UpdateLogUI(attacker.GetName() + " propina " + hits + " golpes a " + defender.GetName());
-            window.UpdateDicesUI(myDice.GetRollHistory());
+            await window.UpdateLogUI(attacker.GetName() + " propina " + hits + " golpes a " + defender.GetName(), 0);
+            await window.UpdateDicesUI(myDice.GetRollHistory() , 800);
 
             if (hits >= defenderHealth)
             {
-                window.UpdateLogUI("¡" + attacker.GetName() + " rebana a " + defender.GetName() + "!");
+                await window.UpdateLogUI("¡" + attacker.GetName() + " rebana a " + defender.GetName() + "!", 1200);
                 defender.SetHp(0);
             }
             else
             {
-                window.UpdateLogUI(attacker.GetName() + " no logra matar a " + defender.GetName());
+                await window.UpdateLogUI(attacker.GetName() + " no logra matar a " + defender.GetName(), 800);
             }
         }
-        private void RangeAttack(Hero attacker, Monster defender)
+        private async Task RangeAttack(Hero attacker, Monster defender)
         {
             Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
             int attackerStat;
@@ -348,19 +355,19 @@ namespace Kenshi_DnD
             for (int i = 0; i < uncastedRangedItems.Length; i++)
             {
                 rangedItems[i] = (RangedItem)uncastedRangedItems[i];
-                window.UpdateLogUI(rangedItems[i].AnnounceUse());
+                await window.UpdateLogUI(rangedItems[i].AnnounceUse(), 200);
             }
 
             int misses = 0;
             int damage = 0;
             int emptyAmmoWeapons = 0;
             int permittedMisses = myDice.PlayDice(attackerStat / 3);
-            window.UpdateDicesUI(myDice.GetRollHistory());
-            window.UpdateCombatStatsUI("Fallos permitidos: " + permittedMisses +
+            await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
+            await window.UpdateCombatStatsUI("Fallos permitidos: " + permittedMisses +
                 "\nDestreza de " + attacker.GetName() + ": " + attackerStat + "\n" +
                 "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
                 "Agilidad de " + defender.GetName() + ": " + defenderAgility + "\n" +
-                "Dados necesarios para matar: " + defenderHealth);
+                "Dados necesarios para matar: " + defenderHealth,400);
 
             do
             {
@@ -374,23 +381,23 @@ namespace Kenshi_DnD
                     else
                     {
                         int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defenderAgility / 2)));
-                        window.UpdateDicesUI(myDice.GetRollHistory());
+                        await window.UpdateDicesUI(myDice.GetRollHistory(),0);
 
                         if (diceNum >= rangedItems[i].GetDifficulty())
                         {
                             damage += rangedItems[i].GetStatToModify().GetBruteForce();
-                            window.UpdateLogUI(attacker.GetName() + " acierta y hace " + rangedItems[i].GetStatToModify().GetBruteForce() + " de daño");
+                            await window.UpdateLogUI(attacker.GetName() + " acierta y hace " + rangedItems[i].GetStatToModify().GetBruteForce() + " de daño",400);
                             rangedItems[i].ShootAmmo();
                         }
                         else
                         {
-                            window.UpdateLogUI(defender.GetName() + " logra esquivar");
+                            await window.UpdateLogUI(defender.GetName() + " logra esquivar", 400);
                             misses += 1;
                             rangedItems[i].ShootAmmo();
                         }
                         if (rangedItems[i].GetAmmo() == 0)
                         {
-                            window.UpdateLogUI(rangedItems[i].GetName() + " se queda sin munición...");
+                            await window.UpdateLogUI(rangedItems[i].GetName() + " se queda sin munición..." , 400);
                         }
                     }
 
@@ -401,14 +408,14 @@ namespace Kenshi_DnD
 
             if (defender.GetImmunity() == -2)
             {
-                window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques a distancia, " + attacker.GetName() + " derrochó munición...");
+                await window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques a distancia, " + attacker.GetName() + " derrochó munición...",800);
                 return;
             }
             else
             {
                 if (defender.GetImmunity() == -1 || defender.GetImmunity() == 3)
                 {
-                    window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques a distancia, " + attacker.GetName() + " lo intenta igualmente");
+                    await window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques a distancia, " + attacker.GetName() + " lo intenta igualmente",800);
                     damage /= 2;
                 }
             }
@@ -416,17 +423,17 @@ namespace Kenshi_DnD
 
             if (myDice.PlayDice(damage - defenderStat) >= defenderHealth)
             {
-                window.UpdateDicesUI(myDice.GetRollHistory());
-                window.UpdateLogUI("¡" + attacker.GetName() + " deja como un colador a " + defender.GetName() + "!");
+                await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
+                await window.UpdateLogUI("¡" + attacker.GetName() + " deja como un colador a " + defender.GetName() + "!", 1200);
                 defender.SetHp(0);
             }
             else
             {
-                window.UpdateDicesUI(myDice.GetRollHistory());
-                window.UpdateLogUI(attacker.GetName() + " no dejó rasguños en " + defender.GetName());
+                await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
+                await window.UpdateLogUI(attacker.GetName() + " no dejó rasguños en " + defender.GetName(), 800);
             }
         }
-        private void MartialArtsAttack(Hero attacker, Monster defender)
+        private async Task MartialArtsAttack(Hero attacker, Monster defender)
         {
             int attackerStat = attacker.GetMartialArtStat();
             int defenderStat = defender.GetResistance();
@@ -443,37 +450,37 @@ namespace Kenshi_DnD
 
                         int hitChances = attacker.GetStat(5);
 
-                        window.UpdateCombatStatsUI("Miembro usado: " + limbUsed.GetName() + "\n" +
+                        await window.UpdateCombatStatsUI("Miembro usado: " + limbUsed.GetName() + "\n" +
                             "Daño de miembro: " + limbStat + "\n" +
                             "Posibilidades de golpear: " + hitChances + "\n" +
                             "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
-                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth);
+                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth, 0);
 
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
                             int hit = myDice.PlayDice(limbStat - defenderStat);
-                            window.UpdateDicesUI(myDice.GetRollHistory());
+                            await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {
                                 int currentDamage = rnd.Next(1, limbStat);
                                 damage += currentDamage;
-                                window.UpdateLogUI(attacker.GetName() + " hace que " + defender.GetName() + " se coma un nudillo con " + currentDamage + " de daño");
+                                await window.UpdateLogUI(attacker.GetName() + " hace que " + defender.GetName() + " se coma un nudillo con " + currentDamage + " de daño", 400);
                             }
                             else
                             {
-                                window.UpdateLogUI(defender.GetName() + " logra esquivar un puñetazo");
+                                await window.UpdateLogUI(defender.GetName() + " logra esquivar un puñetazo", 400);
                             }
                         }
-                        window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage);
+                        await window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage, 800);
                         if (damage >= defenderHealth)
                         {
-                            window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " en el suelo!");
+                            await window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " en el suelo!", 1200);
                             defender.SetHp(0);
                         }
                         else
                         {
-                            window.UpdateLogUI(attacker.GetName() + " hace reír a " + defender.GetName());
+                            await window.UpdateLogUI(attacker.GetName() + " hace reír a " + defender.GetName(), 800);
                         }
 
                         break;
@@ -500,37 +507,38 @@ namespace Kenshi_DnD
                         }
 
 
-                        window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
+                        await window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
                             "Daño de miembros: " + limbStat + "\n" +
                             "Posibilidades de golpear: " + hitChances + "\n" +
                             "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
-                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth);
+                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth,0);
 
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
                             int hit = myDice.PlayDice(limbStat - defenderStat);
-                            window.UpdateDicesUI(myDice.GetRollHistory());
+                            await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {
                                 int currentDamage = rnd.Next(1, limbStat);
                                 damage += currentDamage;
-                                window.UpdateLogUI(attacker.GetName() + " repatea a " + defender.GetName() + " con carrerilla y hace " + currentDamage + " de daño");
+                                await window.UpdateLogUI(attacker.GetName() + " repatea a " + defender.GetName() + 
+                                    " con carrerilla y hace " + currentDamage + " de daño" , 400);
                             }
                             else
                             {
-                                window.UpdateLogUI(defender.GetName() + " logra esquivar por los pelos");
+                                await window.UpdateLogUI(defender.GetName() + " logra esquivar por los pelos", 400);
                             }
                         }
-                        window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage);
+                        await window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage,800);
                         if (damage >= defenderHealth)
                         {
-                            window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " con la boca partida!");
+                            await window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " con la boca partida!",1200);
                             defender.SetHp(0);
                         }
                         else
                         {
-                            window.UpdateLogUI(attacker.GetName() + " se cansa de tanto fallar ante " + defender.GetName());
+                            await window.UpdateLogUI(attacker.GetName() + " se cansa de tanto fallar ante " + defender.GetName(), 800);
                         }
 
 
@@ -557,36 +565,37 @@ namespace Kenshi_DnD
                         }
 
 
-                        window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
+                        await window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
                             "Daño de miembros: " + limbStat + "\n" +
                             "Posibilidades de golpear: " + hitChances + "\n" +
                             "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
-                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth);
+                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth,0);
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
                             int hit = myDice.PlayDice(limbStat - defenderStat);
-                            window.UpdateDicesUI(myDice.GetRollHistory());
+                            await window.UpdateDicesUI(myDice.GetRollHistory(),0);
                             if (hit >= defenderStat)
                             {
                                 int currentDamage = rnd.Next(1, limbStat);
                                 damage += currentDamage;
-                                window.UpdateLogUI(attacker.GetName() + " agarra a " + defender.GetName() + " y lo hace morder el polvo, " + currentDamage + " de daño");
+                                await window.UpdateLogUI(attacker.GetName() + " agarra a " + defender.GetName() +
+                                    " y lo hace morder el polvo, " + currentDamage + " de daño" , 400);
                             }
                             else
                             {
-                                window.UpdateLogUI(defender.GetName() + " se zafa del agarre");
+                                await window.UpdateLogUI(defender.GetName() + " se zafa del agarre", 400);
                             }
                         }
-                        window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage);
+                        await window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage,800);
                         if (damage >= defenderHealth)
                         {
-                            window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " un nudo de pescador!");
+                            await window.UpdateLogUI("¡" + attacker.GetName() + " deja a " + defender.GetName() + " un nudo de pescador!",1200);
                             defender.SetHp(0);
                         }
                         else
                         {
-                            window.UpdateLogUI(attacker.GetName() + " se aleja de " + defender.GetName() + " tras tanto meneo");
+                            await window.UpdateLogUI(attacker.GetName() + " se aleja de " + defender.GetName() + " tras tanto meneo", 800);
                         }
 
                         break;
@@ -613,37 +622,37 @@ namespace Kenshi_DnD
                         }
 
 
-                        window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
+                        await window.UpdateCombatStatsUI("Miembros usados: " + limbsUsedNames + "\n" +
                             "Daño de miembros: " + limbStat + "\n" +
                             "Posibilidades de golpear: " + hitChances + "\n" +
                             "Resistencia de " + defender.GetName() + ": " + defenderStat + "\n" +
-                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth);
+                            "Daño necesario para acabar con " + defender.GetName() + ": " + defenderHealth, 0);
 
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
                             int hit = myDice.PlayDice(limbStat - defenderStat);
-                            window.UpdateDicesUI(myDice.GetRollHistory());
+                            await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {
                                 int currentDamage = rnd.Next(1, limbStat);
                                 damage += currentDamage;
-                                window.UpdateLogUI(attacker.GetName() + " salta y golpea " + currentDamage + " veces en el aire a " + defender.GetName());
+                                await window.UpdateLogUI(attacker.GetName() + " salta y golpea " + currentDamage + " veces en el aire a " + defender.GetName(),400);
                             }
                             else
                             {
-                                window.UpdateLogUI(defender.GetName() + " rueda por el suelo y esquiva");
+                                await window.UpdateLogUI(defender.GetName() + " rueda por el suelo y esquiva", 400);
                             }
                         }
-                        window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage);
+                        await window.UpdateLogUI(attacker.GetName() + " hace un daño total de " + damage,800);
                         if (damage >= defenderHealth)
                         {
-                            window.UpdateLogUI("¡" + attacker.GetName() + " lanza a " + defender.GetName() + " al aire y lo remata con 50 toques!");
+                            await window.UpdateLogUI("¡" + attacker.GetName() + " lanza a " + defender.GetName() + " al aire y lo remata con 50 toques!", 1200);
                             defender.SetHp(0);
                         }
                         else
                         {
-                            window.UpdateLogUI(attacker.GetName() + " se pregunta que maestro a enseñado artes marciales a " + defender.GetName());
+                            await window.UpdateLogUI(attacker.GetName() + " se pregunta que maestro a enseñado artes marciales a " + defender.GetName(), 800);
                         }
 
                         break;
@@ -687,7 +696,6 @@ namespace Kenshi_DnD
             }
             Hero victim = heroesToAttack[rnd.Next(0, count)];
 
-            window.UpdateLogUI(GetCurrentAttacker().GetName() + " pone los ojos en " + victim.GetName());
             return victim;
         }
         public int GetGameState()

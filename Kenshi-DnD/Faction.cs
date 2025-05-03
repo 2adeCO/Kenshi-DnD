@@ -8,13 +8,15 @@ namespace Kenshi_DnD
         int factionId;
         string factionName;
         string factionDescription;
+        int factionColor;
         BitmapImage factionImage;
 
-        public Faction(int factionId, string factionName, string factionDescription) 
+        public Faction(int factionId, string factionName, string factionDescription, int factionColor) 
         { 
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
+            this.factionColor = factionColor;
             this.factionImage = new BitmapImage();
         }
         public Faction(int factionId, string factionName, string factionDescription, string factionImageSource)
@@ -40,7 +42,7 @@ namespace Kenshi_DnD
         }
         public string GetFactionName()
         {
-            return factionName;
+            return "@" + factionColor + factionName +"@";
         }
         public void SetFactionDescription(string factionDescription)
         {
@@ -54,6 +56,14 @@ namespace Kenshi_DnD
         {
             this.factionImage = new BitmapImage();
             factionImage.UriSource = new Uri(factionImageSource, UriKind.RelativeOrAbsolute);
+        }
+        public void SetFactionColor(int factionColor)
+        {
+            this.factionColor = factionColor;
+        }
+        public int GetFactionColor()
+        {
+            return this.factionColor;
         }
         public BitmapImage GetFactionImage()
         {

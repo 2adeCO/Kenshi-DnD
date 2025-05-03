@@ -18,7 +18,8 @@
             <Setter Property="FontSize" Value="16"/>
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="2"/>
         </Style>
     </UserControl.Resources>
 
@@ -119,9 +120,11 @@
                  ></TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="0" x:Name="CombatStats" TextWrapping="Wrap"
                     Padding="5,2,5,2"
+                           FontSize="14"
                     HorizontalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DicesUI" TextWrapping="Wrap"
                     Padding="5,2,5,2"
+                           FontSize="14"
                     HorizontalAlignment="Center"></TextBlock>
             </Grid>
         </Border>
@@ -136,7 +139,7 @@
         </Button>
         <Border BorderBrush="#2c2825" BorderThickness="3" Background="WhiteSmoke" Grid.Row="3" Grid.Column="1">
             <ScrollViewer    VerticalScrollBarVisibility="Auto" >
-            <TextBlock x:Name="InfoLog" TextWrapping="Wrap" Margin="5,20,5,20" >
+            <TextBlock x:Name="InfoLog" TextWrapping="Wrap" Margin="5,20,5,20" FontSize="12" >
             </TextBlock>
             </ScrollViewer>
         </Border>

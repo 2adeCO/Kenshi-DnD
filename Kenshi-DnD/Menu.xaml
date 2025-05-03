@@ -18,5 +18,6 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Button Grid.Column="1" Grid.Row="1" Content="Combate" Click="GoToCombat" Width="400" Height="200"></Button>
+        <TextBlock x:Name="test" Grid.Column="0" Grid.Row="0"></TextBlock>
     </Grid>
 </UserControl>

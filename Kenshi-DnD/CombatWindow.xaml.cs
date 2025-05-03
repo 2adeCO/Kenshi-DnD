@@ -16,6 +16,7 @@ namespace Kenshi_DnD
     /// </summary>
     public partial class CombatWindow : UserControl
     {
+        MainWindow mainWindow;
         Cursor[] cursors;
         DispatcherTimer timer;
         int seconds;
@@ -25,7 +26,7 @@ namespace Kenshi_DnD
         Hero[] heroes;
         Monster[] monsters;
         ITurnable currentAttacker;
-        public CombatWindow(Cursor[] cursors)
+        public CombatWindow(MainWindow mainWindow, Cursor[] cursors)
         {
             InitializeComponent();
             //Starts a timer
@@ -35,6 +36,7 @@ namespace Kenshi_DnD
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
+            this.mainWindow = mainWindow;
             this.cursors = cursors;
             this.Cursor = cursors[0];
 
@@ -48,7 +50,7 @@ namespace Kenshi_DnD
             {
                 limbs2[i] = new Limb("Limb", 3, 3, 0, 0, 0, 0);
             }
-            Faction faction1 = new Faction(1, "DAW", "Dawer");
+            Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
             Dice myDice = new Dice(6, 5);
             Race human = new Race("Humano", -1, 1, 0, 0, -1, 1);
 
@@ -84,7 +86,7 @@ namespace Kenshi_DnD
             }
 
         }
-        private void NextTurn(object sender, RoutedEventArgs e)
+        private async void NextTurn(object sender, RoutedEventArgs e)
         {
             if (myCombat.GetGameState() != 0)
             {
@@ -98,7 +100,7 @@ namespace Kenshi_DnD
                 return;
             }
 
-            myCombat.NextTurn(fighterTarget);
+            await myCombat.NextTurn(fighterTarget);
 
             currentAttacker = myCombat.GetCurrentAttacker();
 
@@ -389,6 +391,10 @@ namespace Kenshi_DnD
         private void SelectTarget(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
+            if (currentAttacker is Monster)
+            {
+                return;
+            }
             if (fighterTarget == button.Tag)
             {
                 fighterTarget = null;
@@ -423,20 +429,35 @@ namespace Kenshi_DnD
         {
             hero.RemoveItemFromInventory(item);
         }
-        public void UpdateLogUI(string message)
+        private void UpdateLogUI(string message)
         {
-            CurrentCombatInfo.Text = message;
-            InfoLog.Text += message + "\n";
-            
+            CurrentCombatInfo.Inlines.Clear();
+            CurrentCombatInfo.Inlines.AddRange(mainWindow.DecorateText(message));
+            InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
         }
-        public void UpdateDicesUI(string message)
+        public async Task UpdateLogUI(string message, int ms)
         {
-            DicesUI.Text = message;
-            
+            CurrentCombatInfo.Inlines.Clear();
+            CurrentCombatInfo.Inlines.AddRange(mainWindow.DecorateText(message));
+
+            InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
+            if (ms != 0)
+            {
+                await Task.Delay(ms);
+            }
+
         }
-        public void UpdateCombatStatsUI(string message)
+        public async Task UpdateDicesUI(string message, int ms)
         {
-            CombatStats.Text = message;
+            DicesUI.Inlines.Clear();
+            DicesUI.Inlines.AddRange(mainWindow.DecorateText(message));
+            await Task.Delay(ms);
+        }
+        public async Task UpdateCombatStatsUI(string message, int ms)
+        {
+            CombatStats.Inlines.Clear();
+            CombatStats.Inlines.AddRange(mainWindow.DecorateText(message));
+            await Task.Delay(ms);
         }
         private void UpdateGameStateUI()
         {
@@ -490,11 +511,13 @@ namespace Kenshi_DnD
         {
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = Orientation.Vertical;
-            System.Windows.Controls.Label label = new System.Windows.Controls.Label();
-            label.Content = monster == fighterTarget ? "🎯 " + monster.GetName() : monster.GetName();
-            label.ToolTip = ToolTipThemer(monster.ToString());
-            ToolTipService.SetInitialShowDelay(label, 100);
-            stackPanel.Children.Add(label);
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText(monster == fighterTarget ?
+                "🎯 " + monster.GetName() : monster.GetName()));
+            textBlock.ToolTip = ToolTipThemer(monster.ToString());
+            ToolTipService.SetInitialShowDelay(textBlock, 100);
+            textBlock.Padding = new Thickness(2);
+            stackPanel.Children.Add(textBlock);
 
 
             Grid grid = new Grid();
@@ -502,13 +525,12 @@ namespace Kenshi_DnD
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
-
-            label = new System.Windows.Controls.Label();
-            label.Content = monster.GetFaction().GetFactionName();
-            label.ToolTip = ToolTipThemer(monster.GetFaction().GetFactionDescription());
-            ToolTipService.SetInitialShowDelay(label, 100);
-            Grid.SetColumn(label, 1);
-            grid.Children.Add(label);
+            textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText(monster.GetFaction().GetFactionName()));
+            textBlock.ToolTip = ToolTipThemer(monster.GetFaction().GetFactionDescription());
+            ToolTipService.SetInitialShowDelay(textBlock, 100);
+            Grid.SetColumn(textBlock, 1);
+            grid.Children.Add(textBlock);
             if (monster.GetFaction().GetFactionImage() != null)
             {
                 BitmapImage bitmapImage
@@ -520,13 +542,13 @@ namespace Kenshi_DnD
             }
             if (!monster.IsAlive())
             {
-                label = new System.Windows.Controls.Label();
-                label.Content = "Muerto";
-                label.ToolTip = ToolTipThemer("Podrías haber sido tú");
-                ToolTipService.SetInitialShowDelay(label, 100);
+                textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("@1Muerto@"));
+                textBlock.ToolTip = ToolTipThemer("Podrías haber sido tú");
+                ToolTipService.SetInitialShowDelay(textBlock, 100);
                 grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
-                Grid.SetColumn(label, 2);
-                grid.Children.Add(label);
+                Grid.SetColumn(textBlock, 2);
+                grid.Children.Add(textBlock);
             }
             else
             {
@@ -540,6 +562,7 @@ namespace Kenshi_DnD
                 }
             }
             stackPanel.Children.Add(grid);
+            
             return stackPanel;
         }
         private StackPanel FighterStackPanel(Hero hero)
@@ -651,7 +674,7 @@ namespace Kenshi_DnD
             border.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e3e4c9"));
             border.BorderThickness = new Thickness(2);
             border.CornerRadius = new CornerRadius(5);
-            border.Child = new TextBlock() { Text = name};
+            border.Child = new TextBlock() { Text = name, FontSize = 14};
             border.Padding = new Thickness(10,0,10,0);
             border.Background = new SolidColorBrush(Colors.WhiteSmoke);
 
@@ -665,7 +688,7 @@ namespace Kenshi_DnD
             treeViewItem.HorizontalAlignment = HorizontalAlignment.Center;
             treeViewItem.MouseLeftButtonUp += UseItem;
             treeViewItem.Margin = new Thickness(4);
-            treeViewItem.FontSize = 14;
+            treeViewItem.FontSize = 12;
             return treeViewItem;
         }
     }
