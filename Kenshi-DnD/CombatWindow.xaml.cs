@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -45,7 +46,7 @@ namespace Kenshi_DnD
             }
             for (int i = 0; i < limbs2.Length; i++)
             {
-                limbs2[i] = new Limb("Limb", 0, 0, 0, 0, 0, 0);
+                limbs2[i] = new Limb("Limb", 3, 3, 0, 0, 0, 0);
             }
             Faction faction1 = new Faction(1, "DAW", "Dawer");
             Dice myDice = new Dice(6, 5);
@@ -159,6 +160,7 @@ namespace Kenshi_DnD
                 Button button = new Button();
                 //Put content with the hero name and a progress bar with its hp
                 button.Content = FighterStackPanel(heroes[i]);
+                button.MouseEnter += ChangeCursorWhenHover;
                 button.Tag = heroes[i];             
                 button.ToolTip = ToolTipThemer(heroes[i].ToString());
                 ToolTipService.SetInitialShowDelay(button, 100);
@@ -390,10 +392,12 @@ namespace Kenshi_DnD
             if (fighterTarget == button.Tag)
             {
                 fighterTarget = null;
+                UpdateLogUI(currentAttacker.GetName() + " piensa en la inmortalidad de los cangrejos");
             }
             else
             {
                 fighterTarget = (ITurnable)button.Tag;
+                UpdateLogUI(currentAttacker.GetName() + " mira a " + fighterTarget.GetName());
             }
             UpdateFightersGrid();
         }
@@ -421,8 +425,18 @@ namespace Kenshi_DnD
         }
         public void UpdateLogUI(string message)
         {
-            CurrentCombatInfo.Content = message;
+            CurrentCombatInfo.Text = message;
             InfoLog.Text += message + "\n";
+            
+        }
+        public void UpdateDicesUI(string message)
+        {
+            DicesUI.Text = message;
+            
+        }
+        public void UpdateCombatStatsUI(string message)
+        {
+            CombatStats.Text = message;
         }
         private void UpdateGameStateUI()
         {
@@ -540,6 +554,7 @@ namespace Kenshi_DnD
 
             if(hero == fighterTarget)
             {
+                label.Content = "🎯 " + hero.GetName();
                 stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
             }
             else
@@ -557,7 +572,6 @@ namespace Kenshi_DnD
                 progressBar.Height = 20;
                 progressBar.Width = 150;
                 progressBar.Margin = new Thickness(1, 1, 1, 1);
-
                 progressBar.ToolTip = ToolTipThemer(hero.GetHp() + "/" + hero.GetToughness());
                 ToolTipService.SetInitialShowDelay(progressBar, 100);
                 stackPanel.Children.Add(progressBar);
@@ -602,14 +616,26 @@ namespace Kenshi_DnD
             if (currentAttacker is Hero)
             {
                 Hero hero = (Hero)currentAttacker;
-                if (hero.GetInventory().AreRangedItems())
+                if (button.Tag is Monster)
                 {
-                    button.Cursor = cursors[2];
+                    if (hero.GetInventory().AreRangedItems())
+                    {
+                        button.Cursor = cursors[2];
+                    }
+                    else
+                    {
+                        button.Cursor = cursors[1];
+                    }
                 }
                 else
                 {
-                    button.Cursor = cursors[1];
+                    if (hero.GetInventory().AreConsumableItems())
+                    {
+                        button.Cursor = cursors[5];
+                    }
                 }
+                
+                
             }
         }
         //Generates the TreeViewItem for the inventories

@@ -6,16 +6,26 @@ namespace Kenshi_DnD
     {
         int sides;
         int minWin;
+        string lastPlay;
+        int winHistory;
         Random random;
         public Dice(int sides, int minWin)
         {
             this.sides = sides;
             this.minWin = minWin;
+            this.lastPlay = "";
+            this.winHistory = 0;
             random = new Random();
         }
         private int Roll()
         {
-            return random.Next(1, sides + 1);
+            int roll = random.Next(1, sides + 1);
+            AddRollToHistory(roll);
+            if (IsSuccess(roll))
+            {
+                winHistory += 1;
+            }
+            return roll;
         }
         public bool IsSuccess(int roll)
         {
@@ -27,6 +37,8 @@ namespace Kenshi_DnD
         }
         public int PlayDice(int numOfRolls)
         {
+            winHistory = 0;
+            lastPlay = "";
             int totalWins = 0;
             if (numOfRolls <= 0)
             {
@@ -42,6 +54,22 @@ namespace Kenshi_DnD
             }
             Debug.WriteLine("Dices wins: " + totalWins);
             return totalWins;
+        }
+        private void AddRollToHistory(int roll)
+        {
+            if (lastPlay == "")
+            {
+                lastPlay = roll + "";
+            }
+            else
+            {
+                lastPlay += ", " + roll;
+            }
+        }
+        public string GetRollHistory()
+        {
+            return "Dados: " +lastPlay+ "\n\n" +
+                "Veces ganadas: " + winHistory;
         }
     }
 }

@@ -105,17 +105,24 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
 
-                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-     
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                FontSize="16"
                  x:Name="CurrentCombatInfo"
-                 Content=""
-                 ></Label>
-                <Label Grid.Row="1" Grid.Column="0" x:Name="Dices"></Label>
-                
+                 Text=""
+                TextWrapping="Wrap"
+                Padding="5,2,5,2"
+                HorizontalAlignment="Center"
+                 ></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="0" x:Name="CombatStats" TextWrapping="Wrap"
+                    Padding="5,2,5,2"
+                    HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DicesUI" TextWrapping="Wrap"
+                    Padding="5,2,5,2"
+                    HorizontalAlignment="Center"></TextBlock>
             </Grid>
         </Border>
         

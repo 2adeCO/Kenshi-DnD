@@ -94,7 +94,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetBruteForce();
                             }
                         }
-                        stat = heroStats.GetBruteForce() + race.GetBruteForce() + subrace.GetBruteForce() + personalInventory.GetStat(opt) + buff.GetBruteForce();
+                        stat += heroStats.GetBruteForce() + race.GetBruteForce() + subrace.GetBruteForce() + personalInventory.GetStat(opt) + buff.GetBruteForce();
                         break;
                     }
                 case 2:
@@ -106,7 +106,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetDexterity();
                             }
                         }
-                        stat = heroStats.GetDexterity() + race.GetDexterity() + subrace.GetDexterity() + personalInventory.GetStat(opt) + buff.GetDexterity();
+                        stat += heroStats.GetDexterity() + race.GetDexterity() + subrace.GetDexterity() + personalInventory.GetStat(opt) + buff.GetDexterity();
                         break;
                     }
                 case 3:
@@ -123,7 +123,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetResistance();
                             }
                         }
-                        stat = heroStats.GetResistance() + race.GetResistance() + subrace.GetResistance() + personalInventory.GetStat(opt) + buff.GetResistance();
+                        stat += heroStats.GetResistance() + race.GetResistance() + subrace.GetResistance() + personalInventory.GetStat(opt) + buff.GetResistance();
                         break;
                     }
                 case 5:
@@ -135,7 +135,7 @@ namespace Kenshi_DnD
                                 stat += limbs[i].GetAgility();
                             }
                         }
-                        stat = heroStats.GetAgility() + race.GetAgility() + subrace.GetAgility() + personalInventory.GetStat(opt) + buff.GetAgility();
+                        stat += heroStats.GetAgility() + race.GetAgility() + subrace.GetAgility() + personalInventory.GetStat(opt) + buff.GetAgility();
                         break;
                     }
             }
@@ -356,9 +356,10 @@ namespace Kenshi_DnD
             {
                 if (limbs[i] != null)
                 {
-                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + this.GetAgility() / 2;
+                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + (limbs[i].GetAgility() == 0 ? 0 : limbs[i].GetAgility() / 2);
                 }
             }
+            martialArtPower += (GetAgility() == 0 ? 0 : GetAgility() / 2);
             return martialArtPower;
         }
         public void Heal(int healHp)
@@ -374,7 +375,14 @@ namespace Kenshi_DnD
         }
         public void Hurt(int hurtHp)
         {
-            this.SetHp(GetHp() - hurtHp);
+            if(GetHp() - hurtHp < 0)
+            {
+                this.SetHp(0);
+            }
+            else
+            {
+                this.SetHp(GetHp() - hurtHp);
+            }
         }
         public bool IsInInventory(Item item)
         {
@@ -409,7 +417,6 @@ namespace Kenshi_DnD
                 }
             }
         }
-
         public override string ToString()
         {
             return $"- {name}, {title} - \n" +

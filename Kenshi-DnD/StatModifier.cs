@@ -25,7 +25,6 @@
         {
             this.bruteForce = bruteForce;
             this.dexterity = dexterity;
-
             this.hp = hp;
             this.resistance = resistance;
             this.agility = agility;
