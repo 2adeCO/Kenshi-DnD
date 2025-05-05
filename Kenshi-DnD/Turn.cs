@@ -17,7 +17,10 @@
         }
         public void AdvanceTurn()
         {
-            attackProgress += fighter.GetAgility();
+            if (fighter.IsAlive()) 
+            {
+                attackProgress += fighter.GetAgility();
+            }
         }
         public bool IsTurnComplete()
         {

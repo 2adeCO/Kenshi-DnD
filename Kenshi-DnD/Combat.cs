@@ -17,16 +17,17 @@ namespace Kenshi_DnD
         Random rnd;
         int combatState;
         int turnIndex;
-        public Combat(Hero[] newHeroes, Monster[] newEnemies, Dice myDice, Inventory myInventory, CombatWindow window)
+        public Combat(Hero[] newHeroes, Monster[] newEnemies, Dice myDice, Inventory myInventory, Random random, CombatWindow window)
         {
             this.window = window;
             combatState = 0;
-            rnd = new Random();
+            rnd = random;
             this.myInventory = myInventory;
             turnIndex = 0;
             this.heroes = newHeroes;
             this.enemies = newEnemies;
             this.myDice = myDice;
+
             everyTurn = new List<Turn>();
             for (int i = 0; i < heroes.Length; i++)
             {
@@ -92,12 +93,7 @@ namespace Kenshi_DnD
             ITurnable attacker = turnOrder[turnIndex];
             await window.UpdateLogUI(attacker.GetName() + " medita su acción", 400);
             
-            if (fighterTarget is Hero && attacker is Hero)
-            {
-                Hero hero = (Hero)attacker;
-                hero.SetBuff(new StatModifier(0, 0, 0, 0, 0));
-                await InteractWithHero(hero, (Hero)fighterTarget);
-            }
+            
 
             if (attacker is Hero)
             {
@@ -106,7 +102,8 @@ namespace Kenshi_DnD
 
                 if (fighterTarget is Hero && attacker is Hero)
                 {
-
+                    hero = (Hero)attacker;
+                    hero.SetBuff(new StatModifier(0, 0, 0, 0, 0));
                     await InteractWithHero(hero, (Hero)fighterTarget);
                 }
                 else
@@ -193,6 +190,7 @@ namespace Kenshi_DnD
                 "\n@9@Vida actual@ de " + defender.GetName() + ": " + defender.GetHp(),0);
 
             int hits = myDice.PlayDice(attackerStat - defenderStat);
+
             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
             await window.UpdateLogUI(attacker.GetName() + " golpea y hace " + hits + " de daño a " + defender.GetName(), 400);
 
@@ -325,6 +323,7 @@ namespace Kenshi_DnD
             await window.UpdateCombatStatsUI("@9@Fuerza bruta@ de " + attacker.GetName() + ": " + attackerStat + "\n" +
                 "@9@Resistencia@ de " + defender.GetName() + ": " + defenderStat + "\n" +
                 "Golpes necesarios para matar: " + defenderHealth,0);
+            
             int hits = myDice.PlayDice(attackerStat - defenderStat);
             await window.UpdateLogUI(attacker.GetName() + " propina " + hits + " golpes a " + defender.GetName(), 0);
             await window.UpdateDicesUI(myDice.GetRollHistory() , 1200);
@@ -405,6 +404,15 @@ namespace Kenshi_DnD
             } while (misses <= permittedMisses && emptyAmmoWeapons != rangedItems.Length);
 
             Debug.WriteLine("daño" + damage);
+            if(emptyAmmoWeapons == rangedItems.Length)
+            {
+                await window.UpdateLogUI(attacker.GetName() + " gastó la munición de todas sus armas...", 800);
+
+            }
+            if (misses >= permittedMisses)
+            {
+                await window.UpdateLogUI(attacker.GetName() + " falló demasiado...", 800);
+            }
 
             if (defender.GetImmunity() == -2)
             {
@@ -757,6 +765,32 @@ namespace Kenshi_DnD
                 }
             } while (errorFound);
             return list;
+        }
+        public ITurnable[] GetNTurns(int num)
+        {
+            ITurnable[] nextTurns = new ITurnable[num];
+            int turnsAdded = 0;
+            int i = 0;
+            do
+            {
+                //If we look for fighters in the last 6 positions, generate more turns
+                if ((turnOrder.Count - (turnIndex + i)) < 6)
+                {
+                    DecideNextNTurns(12, false);
+                }
+                //Add fighter if they are alive
+                if (turnOrder[i + turnIndex].IsAlive())
+                {
+                    nextTurns[turnsAdded] = turnOrder[i + turnIndex];
+                    turnsAdded += 1 ;
+                }
+                //Add value to iterator
+                i += 1;
+                
+
+            } while (turnsAdded < num);
+            
+            return nextTurns;
         }
     }
 

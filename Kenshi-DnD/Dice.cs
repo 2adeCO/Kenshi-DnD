@@ -6,16 +6,17 @@ namespace Kenshi_DnD
     {
         int sides;
         int minWin;
+
         string lastPlay;
         int winHistory;
         Random random;
-        public Dice(int sides, int minWin)
+        public Dice(int sides, int minWin,Random random)
         {
             this.sides = sides;
             this.minWin = minWin;
             this.lastPlay = "";
             this.winHistory = 0;
-            random = new Random();
+            this.random = random;
         }
         private int Roll()
         {
@@ -27,7 +28,7 @@ namespace Kenshi_DnD
             }
             return roll;
         }
-        public bool IsSuccess(int roll)
+        private bool IsSuccess(int roll)
         {
             if (roll >= minWin)
             {

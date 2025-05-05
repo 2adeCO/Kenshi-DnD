@@ -38,6 +38,7 @@ namespace Kenshi_DnD
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
+            Random rnd = new Random();
             this.mainWindow = mainWindow;
             this.cursors = cursors;
             this.Cursor = cursors[0];
@@ -53,8 +54,8 @@ namespace Kenshi_DnD
                 limbs2[i] = new Limb("Limb", 3, 3, 0, 0, 0, 0);
             }
             Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
-            Dice myDice = new Dice(6, 5);
-            Race human = new Race("Humano", -1, 1, 0, 0, -1, 1);
+            Dice myDice = new Dice(6, 5,rnd);
+            Race human = new Race("Humano", -1, 1, 10, -1, 1);
 
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
@@ -70,14 +71,14 @@ namespace Kenshi_DnD
 
             heroes = new Hero[] { hero1, hero2 };
             monsters = new Monster[] { monster1, monster2 };
-            myCombat = new Combat(heroes, monsters, myDice, myInventory, this);
+            myCombat = new Combat(heroes, monsters, myDice, myInventory,rnd, this);
 
             currentAttacker = myCombat.GetCurrentAttacker();
 
             FillItemTrees();
             UpdateGameStateUI();
             UpdateFightersGrid();
-
+            UpdateNextTurnUI();
 
             if (currentAttacker is Monster)
             {
@@ -115,6 +116,7 @@ namespace Kenshi_DnD
             currentAttacker = myCombat.GetCurrentAttacker();
 
             UpdateFightersGrid();
+            UpdateNextTurnUI();
             FillItemTrees();
             if (myCombat.GetGameState() != 0)
             {
@@ -374,7 +376,7 @@ namespace Kenshi_DnD
                     else
                     {
                         Debug.WriteLine("Trying to use item");
-                        if (item.CanUseItem(currentHero))
+                        if (currentHero.CanUseItem(item))
                         {
                             Debug.WriteLine("Item added!");
                             AddItemToHero(currentHero, item);
@@ -382,6 +384,7 @@ namespace Kenshi_DnD
                     }
                     FillItemTrees();
                     UpdateFightersGrid();
+                    UpdateNextTurnUI();
                 }
             }
         }
@@ -437,6 +440,99 @@ namespace Kenshi_DnD
         private void RemoveItemFromHero(Hero hero, Item item)
         {
             hero.RemoveItemFromInventory(item);
+        }
+        private void UpdateNextTurnUI()
+        {
+            ITurnable[] nextTurns = myCombat.GetNTurns(6);
+
+            NextTurnGrid.Children.Clear();
+            NextTurnGrid.ColumnDefinitions.Clear();
+            NextTurnGrid.RowDefinitions.Clear();
+            
+            for(int i = 0; i < 3; i += 1)
+            {
+                ColumnDefinition columnDefinition = new ColumnDefinition();
+                columnDefinition.Width = GridLength.Auto;
+                NextTurnGrid.ColumnDefinitions.Add(columnDefinition);
+            }
+            for(int i = 0; i < 2;  i += 1)
+            {
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = GridLength.Auto;
+                NextTurnGrid.RowDefinitions.Add(rowDefinition);
+            }
+
+            for(int i = 0; i < 3; i += 1)
+            {
+                Border border = new Border();
+                border.BorderThickness = new Thickness(2);
+                border.CornerRadius = new CornerRadius(5);
+                border.Padding = new Thickness(10, 0, 10, 0);
+                border.Margin = new Thickness(1, 3, 1, 3);
+
+                TextBlock textBlock = new TextBlock();
+                textBlock.FontSize = 12;
+
+                if (nextTurns[i] is Hero)
+                {
+                    Hero hero = (Hero)nextTurns[i];
+
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+1}.@   " + hero.GetNameAndTitle()));
+                    border.BorderBrush = Brushes.AntiqueWhite;
+                    border.Child = textBlock;
+
+                }
+                else
+                {
+                    Monster monster = (Monster)nextTurns[i];
+
+
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+1}.@  " + nextTurns[i].GetName()));
+                    border.BorderBrush = mainWindow.GetBrushByNum(monster.GetFaction().GetFactionColor());
+                    border.Child = textBlock;
+                }
+                Grid.SetColumn(border, i);
+                Grid.SetRow(border, 0);
+
+                NextTurnGrid.Children.Add(border);
+            }
+            for (int i = 0; i < 3; i += 1)
+            {
+                Border border = new Border();
+                border.BorderThickness = new Thickness(2);
+                border.CornerRadius = new CornerRadius(5);
+                border.Padding = new Thickness(10,0,10,0);
+                border.Margin = new Thickness(1, 3, 1, 3);
+
+
+                TextBlock textBlock = new TextBlock();
+                textBlock.FontSize = 12;
+
+
+                if (nextTurns[i+3] is Hero)
+                {
+                    Hero hero = (Hero)nextTurns[i+3];
+
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+4}.@   " + hero.GetNameAndTitle()));
+                    border.BorderBrush = Brushes.AntiqueWhite;
+                    border.Child = textBlock;
+
+                }
+                else
+                {
+                    Monster monster = (Monster)nextTurns[i+3];
+
+
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+4}.@   " + nextTurns[i +3].GetName()));
+                    border.BorderBrush = mainWindow.GetBrushByNum(monster.GetFaction().GetFactionColor());
+                    border.Child = textBlock;
+                }
+                Grid.SetColumn(border, i);
+                Grid.SetRow(border, 1);
+                NextTurnGrid.Children.Add(border);
+            }
+
+            
         }
         private void UpdateLogUI(string message)
         {

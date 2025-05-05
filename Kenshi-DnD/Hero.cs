@@ -51,7 +51,7 @@ namespace Kenshi_DnD
             this.name = name;
             this.title = title;
             SetToughnessAtConstructor(toughness, race, subrace, limbs);
-            this.SetHp(toughness);
+
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
             this.level = level;
@@ -69,7 +69,6 @@ namespace Kenshi_DnD
             this.title = title;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             SetToughnessAtConstructor(toughness, race, subrace, limbs);
-            this.SetHp(toughness);
             this.level = 1;
             this.backgroundStory = "";
             this.recruitmentDate = DateTime.Now;
@@ -151,7 +150,11 @@ namespace Kenshi_DnD
                     stat += limbs[i].GetHp();
                 }
             }
+            Debug.WriteLine(stat);
+            Debug.WriteLine(race.GetHp());
+            Debug.WriteLine(subrace.GetHp());
             SetToughness(toughness + race.GetHp() + subrace.GetHp() + stat);
+            this.hp = this.toughness;   
         }
         public StatModifier GetAllStats()
         {
@@ -275,17 +278,31 @@ namespace Kenshi_DnD
         }
         public void AddItemToInventory(Item item)
         {
-            if (item.CanUseItem(this))
+            //Hacer que item no sepa sobre heroe
+            
+            Debug.WriteLine(this.name + " can use " + item.GetName());
+            item.SetAlreadyUsed(true);
+            UseLimbs(item.GetLimbsNeeded());
+            personalInventory.AddItem(item);
+            
+            
+        }
+        public bool CanUseItem(Item item)
+        {
+            int limbsAvailable = 0;
+            for (int i = 0; i < GetLimbs().Length; i += 1)
             {
-                Debug.WriteLine(this.name + " can use " + item.GetName());
-                item.SetAlreadyUsed(true);
-                UseLimbs(item.GetLimbsNeeded());
-                personalInventory.AddItem(item);
+                if (!GetLimbs()[i].GetBeingUsed())
+                {
+                    limbsAvailable += 1;
+                }
             }
-            else
+            if (limbsAvailable >= item.GetLimbsNeeded())
             {
-                Debug.WriteLine(this.name + " can't use " + item.GetName());
+                return true;
             }
+
+            return false;
         }
         private void FreeLimbs(int num)
         {
@@ -356,7 +373,8 @@ namespace Kenshi_DnD
             {
                 if (limbs[i] != null)
                 {
-                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + (limbs[i].GetAgility() == 0 ? 0 : limbs[i].GetAgility() / 2);
+                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + 
+                        (limbs[i].GetAgility() == 0 ? 0 : limbs[i].GetAgility() / 2);
                 }
             }
             martialArtPower += (GetAgility() == 0 ? 0 : GetAgility() / 2);

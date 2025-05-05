@@ -13,7 +13,7 @@
         //Value of 0 is no immunity
         //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to dexterity
         //Value of -1 is resistance to dexterity, -2 is immunity to dexterity, -3 is immunity to dexterity and resistance to brute force
-        int immunity;
+        int immunity; //añadir resistencia a ambas
         public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, int immunity, int cats, int xpDrop)
         {
             this.name = name;

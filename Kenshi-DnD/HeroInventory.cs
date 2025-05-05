@@ -4,9 +4,8 @@ namespace Kenshi_DnD
 {
     internal class HeroInventory : Inventory
     {
-        public HeroInventory()
+        public HeroInventory(): base()
         {
-            base.items = new List<Item>();
         }
 
         public void AllItemsDisponible()

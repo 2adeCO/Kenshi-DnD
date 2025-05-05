@@ -42,24 +42,7 @@ namespace Kenshi_DnD
         {
             this.alreadyUsed = alreadyUsed;
         }
-        public bool CanUseItem(Hero hero)
-        {
-
-            int limbsAvailable = 0;
-            for (int i = 0; i < hero.GetLimbs().Length; i += 1)
-            {
-                if (!hero.GetLimbs()[i].GetBeingUsed())
-                {
-                    limbsAvailable += 1;
-                }
-            }
-            if (limbsAvailable >= limbsNeeded)
-            {
-                return true;
-            }
-
-            return false;
-        }
+        
         public int GetRarity()
         {
             return rarity;

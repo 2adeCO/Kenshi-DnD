@@ -3,12 +3,10 @@
     class Race : StatModifier
     {
         string name;
-        int toughness;
-        public Race(string name, int bruteForce, int dexterity, int toughness, int hp, int resistance, int agility)
-            : base(bruteForce, dexterity, hp, resistance, agility)
+        public Race(string name, int bruteForce, int dexterity, int toughness, int resistance, int agility)
+            : base(bruteForce, dexterity, toughness, resistance, agility)
         {
             this.name = name;
-            this.toughness = toughness;
         }
         public string GetName()
         {
@@ -18,13 +16,7 @@
         {
             this.name = name;
         }
-        public void SetToughness(int toughness)
-        {
-            this.toughness = toughness;
-        }
-        public int GetToughness()
-        {
-            return toughness;
-        }
+        
+        
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    public class StatModifier
+    class StatModifier
     {
         //All of these are buffs and debuffs to the ints of the hero
         //Offensive ints
@@ -50,23 +50,7 @@
         {
             return agility;
         }
-        public void SetBruteForce(int bruteForce)
-        {
-            this.bruteForce = bruteForce;
-        }
-        public void SetDexterity(int dexterity)
-        {
-            this.dexterity = dexterity;
-        }
-
-        public void SetHp(int hp)
-        {
-            this.hp = hp;
-        }
-        public void SetResistance(int resistance)
-        {
-            this.resistance = resistance;
-        }
+        
         public override string ToString()
         {
             return
