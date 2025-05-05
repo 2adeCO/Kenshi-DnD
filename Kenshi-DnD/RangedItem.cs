@@ -4,15 +4,15 @@
     {
         int difficulty;
         int ammo;
-        public RangedItem(string name, int difficulty, int ammo, int value, int resellValue, int limbsNeeded, StatModifier statsToModify, bool isRare)
-            : base(name, value, resellValue, limbsNeeded, statsToModify, isRare)
+        public RangedItem(string name, int difficulty, int ammo, int value, int resellValue, int limbsNeeded, StatModifier statsToModify, int rarity)
+            : base(name, value, resellValue, limbsNeeded, statsToModify, rarity)
         {
             this.ammo = ammo;
             this.difficulty = difficulty;
         }
         public override string AnnounceUse()
         {
-            return "¡El héroe coge distancia... y usa " + base.name + "!";
+            return "¡El héroe coge distancia... y usa " + "@" + GetRarityColor() + "@" + name + "@" + "!";
         }
         public int GetDifficulty()
         {

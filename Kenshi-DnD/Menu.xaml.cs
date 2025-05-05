@@ -18,7 +18,7 @@ namespace Kenshi_DnD
             this.controller = controller;
             this.mainWindow = mainWindow;
             test.Inlines.Clear();
-            test.Inlines.AddRange(mainWindow.DecorateText("Esto es @3una@ prueba @2HOLA@ que pasa"));
+            test.Inlines.AddRange(mainWindow.DecorateText("Esto es @320@una@ prueba @2@HOLA@ que pasa"));
         }
         public void GoToCombat(object sender, EventArgs e)
         {

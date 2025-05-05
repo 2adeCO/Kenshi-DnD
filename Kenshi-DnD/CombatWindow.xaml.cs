@@ -3,7 +3,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -57,14 +59,14 @@ namespace Kenshi_DnD
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
             Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, -1, 100, 0);
-            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 3, 4, 2, 1, 100, 0);
+            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, 1, 100, 0);
             StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
             StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
             myInventory = new PlayerInventory();
-            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, false));
-            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, false));
-            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, false));
-            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, false));
+            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, 1));
+            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, 3));
+            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, 4));
+            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, 0));
 
             heroes = new Hero[] { hero1, hero2 };
             monsters = new Monster[] { monster1, monster2 };
@@ -102,6 +104,14 @@ namespace Kenshi_DnD
 
             await myCombat.NextTurn(fighterTarget);
 
+            if(fighterTarget != null)
+            {
+                if (!fighterTarget.IsAlive())
+                {
+                    fighterTarget = null;
+                }
+            }
+            
             currentAttacker = myCombat.GetCurrentAttacker();
 
             UpdateFightersGrid();
@@ -164,8 +174,7 @@ namespace Kenshi_DnD
                 button.Content = FighterStackPanel(heroes[i]);
                 button.MouseEnter += ChangeCursorWhenHover;
                 button.Tag = heroes[i];             
-                button.ToolTip = ToolTipThemer(heroes[i].ToString());
-                ToolTipService.SetInitialShowDelay(button, 100);
+                
 
                 button.HorizontalAlignment = HorizontalAlignment.Left;
                 button.Click += SelectTarget;
@@ -514,7 +523,7 @@ namespace Kenshi_DnD
             TextBlock textBlock = new TextBlock();
             textBlock.Inlines.AddRange(mainWindow.DecorateText(monster == fighterTarget ?
                 "🎯 " + monster.GetName() : monster.GetName()));
-            textBlock.ToolTip = ToolTipThemer(monster.ToString());
+            textBlock.ToolTip = HeaderToolTipThemer(monster.GetName(),monster.ToString());
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             textBlock.Padding = new Thickness(2);
             stackPanel.Children.Add(textBlock);
@@ -543,7 +552,7 @@ namespace Kenshi_DnD
             if (!monster.IsAlive())
             {
                 textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("@1Muerto@"));
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("@1@Muerto@"));
                 textBlock.ToolTip = ToolTipThemer("Podrías haber sido tú");
                 ToolTipService.SetInitialShowDelay(textBlock, 100);
                 grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
@@ -571,7 +580,7 @@ namespace Kenshi_DnD
             stackPanel.Orientation = Orientation.Vertical;
             System.Windows.Controls.Label label = new System.Windows.Controls.Label();
             label.Content = hero.GetName();
-            label.ToolTip = ToolTipThemer(hero.ToString());
+            label.ToolTip = HeaderToolTipThemer(hero.GetName(), hero.ToString());
             ToolTipService.SetInitialShowDelay(label, 100);
             stackPanel.Children.Add(label);
 
@@ -620,11 +629,39 @@ namespace Kenshi_DnD
             border.Child = button;
             return border;
         }
+        private ToolTip HeaderToolTipThemer(string header, string content)
+        {
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Vertical;
+            TextBlock textBlock = new TextBlock();
+
+            textBlock.Inlines.AddRange(mainWindow.DecorateText(header));
+            textBlock.FontSize = 18;
+            stackPanel.Children.Add(textBlock);
+            textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText(content));
+            textBlock.FontSize = 14;
+            stackPanel.Children.Add(textBlock);
+
+            ToolTip toolTip = new ToolTip();
+            toolTip.Content = stackPanel;
+            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
+            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
+            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
+            return toolTip;
+
+
+
+
+
+        }
         private ToolTip ToolTipThemer(string content)
         {
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText(content));
+            textBlock.FontSize = 18;
             ToolTip toolTip = new ToolTip();
-            toolTip.FontSize = 20;
-            toolTip.Content = content;
+            toolTip.Content = textBlock;
             toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
             toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
             toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
@@ -682,7 +719,7 @@ namespace Kenshi_DnD
             TreeViewItem treeViewItem = new TreeViewItem();
             treeViewItem.Header = border;
             treeViewItem.Tag = item;
-            treeViewItem.ToolTip = ToolTipThemer(item.ToString());
+            treeViewItem.ToolTip = HeaderToolTipThemer(item.GetName(), item.ToString());
             ToolTipService.SetInitialShowDelay(treeViewItem, 700);
             treeViewItem.Cursor = cursors[3];
             treeViewItem.HorizontalAlignment = HorizontalAlignment.Center;

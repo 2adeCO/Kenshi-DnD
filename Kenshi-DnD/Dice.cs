@@ -68,8 +68,8 @@ namespace Kenshi_DnD
         }
         public string GetRollHistory()
         {
-            return "Dados: " + ((lastPlay == "") ? ("No se consiguieron dados"): (lastPlay +"\n\n"+
-                "Veces ganadas: " + winHistory));
+            return "@917@Dados:@ " + ((lastPlay == "") ? ("No se consiguieron dados"): (lastPlay +"\n\n"+
+                "@917@Veces ganadas:@ " + winHistory));
         }
     }
 }

@@ -417,9 +417,13 @@ namespace Kenshi_DnD
                 }
             }
         }
+        public string GetNameAndTitle()
+        {
+            return name + ", " + title;
+        }
         public override string ToString()
         {
-            return $"- {name}, {title} - \n" +
+            return
                 $"Raza: {race.GetName()}\n" +
                 $"{(subrace.GetName() != "Sin subraza" ? $"Subraza: {subrace.GetName()}\n" : "")}"
                 + GetAllStats().ToString();

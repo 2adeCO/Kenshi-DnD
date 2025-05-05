@@ -28,8 +28,9 @@
         }
         public string GetName()
         {
-            return "@"+ faction.GetFactionColor() + name +"@";
+            return "@"+ faction.GetFactionColor() + "@" + name +"@";
         }
+        
         public void SetName(string name)
         {
             this.name = name;
@@ -105,7 +106,7 @@
         public override string ToString()
         {
             return
-                (name != "" ? "Nombre: " + GetName() + "\n" : "") +
+                
                 (hp != 0 ? "Puntos de vida: " + hp + "\n" : "Cadáver\n") +
                 "Fuerza bruta: " + strength + "\n" +
                 "Resistencia: " + resistance + "\n" +

@@ -52,45 +52,64 @@ public partial class MainWindow : Window
                 cursors[i] = new Cursor(cursorFiles[i]);
             }
         }
-        public List<Inline> DecorateText(string msg)
+        public List<Inline> DecorateText(string message)
         {
             string txt = "";
             List<Inline> inlines = new List<Inline>();
             Run inlineRun;
             bool foundDecoration = false;
             bool startDecoration = false;
+            int size = 0;
             int color = 0;
 
-            for (int i = 0; i < msg.Length; i++)
+            for (int i = 0; i < message.Length; i++)
             {
+                //If it's normal text, just write it normally
                 if (!foundDecoration && ! startDecoration)
                 {
-                    if (msg[i] == '@')
+                    //If the special character is found, then save the bool
+                    if (message[i] == '@')
                     {
                         foundDecoration = true;
                     }
                     else
                     {
-                        txt += msg[i];
+                        //Write it
+                        txt += message[i];
                     }
                 }
                 else
                 {
+                    //Because the decoration has been found, see what to do next
+
+                    //If just found the decoration, then read it
                     if (!startDecoration)
                     {
                         foundDecoration = false;
-                        color = int.Parse(msg[i].ToString());
                         startDecoration = true;
+                        color = int.Parse(message[i].ToString());
                         inlineRun = new Run();
                         inlineRun.Text = txt;
                         inlines.Add(inlineRun);
                         txt = "";
+                        i += 1;
+                        while (message[i] != '@')
+                        {
+                            txt += message[i];
+                            i += 1;
+                        }
+                        if (txt != "")
+                        {
+                            size = int.Parse(txt);
+                        }
+                        txt = "";
                     }
                     else
                     {
-                        if (msg[i] != '@')
+                        //If the decoration is known, then, start it until the special character is found again
+                        if (message[i] != '@')
                         { 
-                            txt += msg[i];
+                            txt += message[i];
                         }
                         else
                         {
@@ -99,14 +118,22 @@ public partial class MainWindow : Window
                             inlineRun = new Run();
                             inlineRun.Text = txt;
                             inlineRun.FontWeight = FontWeights.Bold;
-                            txt = "";
                             inlineRun.Foreground = GetBrushByNum(color);
+                            if(size != 0)
+                            {
+                                inlineRun.FontSize = size;
+                            }
+
                             inlines.Add(inlineRun);
+
+                            txt = "";
+                            size = 0;
                         }
                     }
                     
                 }    
             }
+            //If some text at the end of the loop and not special, these lines of code will save them
             inlineRun = new Run();
             inlineRun.Text = txt;
             inlines.Add(inlineRun);
@@ -126,7 +153,8 @@ public partial class MainWindow : Window
                     }
                 case 3:
                     {
-                        return Brushes.Blue;
+                        //Normal blue is really hard to read
+                        return Brushes.CornflowerBlue;
                     }
                 case 4:
                     {
@@ -134,7 +162,7 @@ public partial class MainWindow : Window
                     }
                 case 5:
                     {
-                        return Brushes.Yellow;
+                        return Brushes.LightYellow;
                     }
                 case 6:
                     {
@@ -142,7 +170,7 @@ public partial class MainWindow : Window
                     }
                 case 7:
                     {
-                        return Brushes.WhiteSmoke;
+                        return Brushes.LightSlateGray;
                     }
                 case 8:
                     {

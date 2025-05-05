@@ -42,7 +42,7 @@ namespace Kenshi_DnD
         }
         public string GetFactionName()
         {
-            return "@" + factionColor + factionName +"@";
+            return "@" + factionColor + "@" + factionName +"@";
         }
         public void SetFactionDescription(string factionDescription)
         {
