@@ -59,8 +59,8 @@ namespace Kenshi_DnD
 
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, -1, 100, 0);
-            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, 1, 100, 0);
+            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, Immunities.Immunity.ResistantToRanged, 100, 0);
+            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, Immunities.Immunity.ResistantToBoth, 100, 0);
             StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
             StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
             myInventory = new PlayerInventory();
@@ -659,7 +659,15 @@ namespace Kenshi_DnD
             {
                 if (monster == fighterTarget)
                 {
-                    stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
+                    LinearGradientBrush linearBrush = new LinearGradientBrush();
+                    linearBrush.StartPoint = new Point(1, 1);
+                    linearBrush.EndPoint = new Point(0, 0);
+
+                    linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
+                    linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.5));
+                    linearBrush.GradientStops.Add(new GradientStop(Colors.Red, 0.9));
+                    linearBrush.GradientStops.Add(new GradientStop(Colors.IndianRed, 1.2));
+                    stackPanel.Background = linearBrush;
                 }
                 else
                 {
@@ -683,7 +691,15 @@ namespace Kenshi_DnD
             if(hero == fighterTarget)
             {
                 label.Content = "🎯 " + hero.GetName();
-                stackPanel.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#8a7327"));
+                LinearGradientBrush linearBrush = new LinearGradientBrush();
+                linearBrush.StartPoint = new Point(0, 1);
+                linearBrush.EndPoint = new Point(0.8, 0);
+
+                linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.6));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.Red, 0.9));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.IndianRed, 1.2));
+                stackPanel.Background = linearBrush;
             }
             else
             {
@@ -699,7 +715,7 @@ namespace Kenshi_DnD
                 progressBar.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#69b14f"));
                 progressBar.Height = 20;
                 progressBar.Width = 150;
-                progressBar.Margin = new Thickness(1, 1, 1, 1);
+                progressBar.Margin = new Thickness(4, 2, 4, 2);
                 progressBar.ToolTip = ToolTipThemer(hero.GetHp() + "/" + hero.GetToughness());
                 ToolTipService.SetInitialShowDelay(progressBar, 100);
                 stackPanel.Children.Add(progressBar);
@@ -785,10 +801,22 @@ namespace Kenshi_DnD
                 }
                 else
                 {
-                    if (hero.GetInventory().AreConsumableItems())
+                    if(button.Tag is Hero)
                     {
-                        button.Cursor = cursors[5];
+                        if (hero.GetInventory().AreConsumableItems())
+                        {
+                            button.Cursor = cursors[5];
+                        }
+                        else
+                        {
+                            Hero heroTag = (Hero)button.Tag;
+                            if (!heroTag.IsAlive())
+                            {
+                                button.Cursor = cursors[3];
+                            }
+                        }
                     }
+                    
                 }
                 
                 

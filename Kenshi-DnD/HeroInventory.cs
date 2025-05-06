@@ -1,23 +1,22 @@
-﻿using System.Diagnostics;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
     internal class HeroInventory : Inventory
     {
-        public HeroInventory(): base()
+        public HeroInventory() : base()
         {
         }
 
-        public void AllItemsDisponible()
+        public string MakeAllItemsDisponible()
         {
+            string itemNames = "";
             for (int i = 0; i < items.Count; i++)
             {
-                if (items[i].IsUsed())
-                {
-                    items[i].UnUse();
-                }
+                itemNames += items[i].GetName() + (i == items.Count - 1 ? "" : ", ");
+                items[i].UnUse();
+
             }
-            Debug.WriteLine("All items are available");
+
+            return itemNames;
         }
         public StatModifier GetAllStats()
         {
@@ -45,36 +44,36 @@ namespace Kenshi_DnD
             return allStats;
         }
         // 1 = Brute Force, 2 = Dexterity, 3 = HP, 4 = Resistance, 5 = Agility
-        public int GetStat(int option)
+        public int GetStat(Stats.Stat opt)
         {
             int stat = 0;
-            switch (option)
+            switch (opt)
             {
-                case 1:
+                case Stats.Stat.BruteForce:
                     for (int i = 0; i < items.Count; i++)
                     {
                         stat += items[i].GetStatToModify().GetBruteForce();
                     }
                     break;
-                case 2:
+                case Stats.Stat.Dexterity:
                     for (int i = 0; i < items.Count; i++)
                     {
                         stat += items[i].GetStatToModify().GetDexterity();
                     }
                     break;
-                case 3:
+                case Stats.Stat.HP:
                     for (int i = 0; i < items.Count; i++)
                     {
                         stat += items[i].GetStatToModify().GetHp();
                     }
                     break;
-                case 4:
+                case Stats.Stat.Resistance:
                     for (int i = 0; i < items.Count; i++)
                     {
                         stat += items[i].GetStatToModify().GetResistance();
                     }
                     break;
-                case 5:
+                case Stats.Stat.Agility:
                     for (int i = 0; i < items.Count; i++)
                     {
                         stat += items[i].GetStatToModify().GetAgility();

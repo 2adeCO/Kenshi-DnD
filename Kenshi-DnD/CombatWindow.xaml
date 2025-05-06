@@ -106,6 +106,7 @@
             <Grid Background="WhiteSmoke">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -114,7 +115,7 @@
                 </Grid.RowDefinitions>
 
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                 FontSize="16"
                  x:Name="CurrentCombatInfo"
                  Text=""
@@ -122,11 +123,13 @@
                 Padding="5,2,5,2"
                 HorizontalAlignment="Center"
                  ></TextBlock>
+                
                 <TextBlock Grid.Row="1" Grid.Column="0" x:Name="CombatStats" TextWrapping="Wrap"
                     Padding="5,2,5,2"
                            FontSize="14"
                     HorizontalAlignment="Center"></TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DicesUI" TextWrapping="Wrap"
+                <Rectangle Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" Width="2" Margin="4" Stroke="Black"></Rectangle>
+                    <TextBlock Grid.Row="1" Grid.Column="2" x:Name="DicesUI" TextWrapping="Wrap"
                     Padding="5,2,5,2"
                            FontSize="14"
                     HorizontalAlignment="Center"></TextBlock>

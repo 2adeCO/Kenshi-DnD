@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Kenshi_DnD
 {
@@ -163,6 +164,10 @@ namespace Kenshi_DnD
                         await ConsumableAction(hero, receiver);
                     }
                 }
+                else
+                {
+                    LootBody(hero, receiver);
+                }
 
 
 
@@ -176,6 +181,27 @@ namespace Kenshi_DnD
                 DecideNextNTurns(12, false);
             }
         }
+        private async Task LootBody(Hero hero, Hero corpse)
+        {
+            int looterStat = hero.GetStat(Stats.Stat.Agility) + (hero.GetStat(Stats.Stat.Dexterity) / 2);
+
+            await window.UpdateCombatStatsUI("@9@Habilidad de robo@ de " + hero.GetName() + ": " + looterStat, 0);
+
+            if(myDice.PlayDice(looterStat) > 3)
+            {
+                corpse.FreeAllItems();
+                await window.UpdateLogUI(hero.GetName() + " revolvió el cuerpo inconsciente de " + corpse.GetName() +
+                    " y consiguió recuperar: " + corpse.FreeAllItems(), 0);
+
+
+            }
+            else
+            {
+                await window.UpdateLogUI(hero.GetName() + " se tropieza y vuelve a su posición..." ,0);
+            }
+                await window.UpdateDicesUI(myDice.GetRollHistory(), 1200);
+
+        }
         public async Task MonsterAttacks(Monster attacker, Hero defender)
         {
 
@@ -184,14 +210,30 @@ namespace Kenshi_DnD
             int defenderStat;
 
             attackerStat = attacker.GetStrength();
-            defenderStat = defender.GetStat(4);
+            defenderStat = defender.GetStat(Stats.Stat.Resistance);
             await window.UpdateCombatStatsUI("@9@Fuerza@ de " + attacker.GetName() + ": " + attackerStat +"\n" +
                 "@9@Resistencia@ de " + defender.GetName() + ": " + defenderStat +
                 "\n@9@Vida actual@ de " + defender.GetName() + ": " + defender.GetHp(),0);
 
-            int hits = myDice.PlayDice(attackerStat - defenderStat);
+            int hits = attackerStat;
+
+            //Defender(hero) throws a dice, protects 1 hp for each pair of dice wins. Example: Monster has 3 strength,
+            //and defender has 1 resistance, so defender throws two dices, if the two are won, he will take 2 damage instead of 3
+            int hitsDefense = myDice.PlayDice(defenderStat - attackerStat) /2;
 
             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
+            if (hitsDefense == 0)
+            {
+                await window.UpdateLogUI(defender.GetName() + " no es capaz de parar ningún golpe", 400);
+
+            }
+            else
+            {
+                await window.UpdateLogUI( defender.GetName() + " consigue bloquear " + hitsDefense + " de daño", 400);
+            }
+
+            hits = hits - hitsDefense;
+
             await window.UpdateLogUI(attacker.GetName() + " golpea y hace " + hits + " de daño a " + defender.GetName(), 400);
 
             defender.Hurt(hits);
@@ -268,8 +310,9 @@ namespace Kenshi_DnD
                     bruteForceBoost += consumableItems[i].GetStatToModify().GetBruteForce();
                     resistanceBoost += consumableItems[i].GetStatToModify().GetResistance();
                     dexterityBoost += consumableItems[i].GetStatToModify().GetDexterity();
+
                     myInventory.RemoveItem(consumableItems[i]);
-                    user.GetInventory().RemoveItem(consumableItems[i]);
+                    user.RemoveItemFromInventory(consumableItems[i]);
                 }
             }
             if (hpBoost > 0)
@@ -301,20 +344,22 @@ namespace Kenshi_DnD
             {
                 await window.UpdateLogUI(uncastedMeleeItems[i].AnnounceUse(),200);
             }
-            attackerStat = attacker.GetStat(1);
+            attackerStat = attacker.GetStat(Stats.Stat.BruteForce);
             defenderStat = defender.GetResistance();
             defenderHealth = defender.GetHp();
 
 
 
-            if (defender.GetImmunity() == 2)
+            if (defender.GetImmunity() == Immunities.Immunity.ImmuneToMeleeAndResistantToRanged || defender.GetImmunity() == Immunities.Immunity.ImmuneToMelee)
             {
                 await window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques físicos, " + attacker.GetName() + " se replantea sus acciones...",800);
                 return;
             }
             else
             {
-                if (defender.GetImmunity() == -3 || defender.GetImmunity() == 1)
+                if (defender.GetImmunity() == Immunities.Immunity.ResistantToMelee ||
+                    defender.GetImmunity() == Immunities.Immunity.ResistantToBoth ||
+                    defender.GetImmunity() == Immunities.Immunity.ImmunteToRangedAndResistantToMelee)
                 {
                     await window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques físicos, " + attacker.GetName() + " lo intenta igualmente",800);
                     attackerStat /= 2;
@@ -341,11 +386,10 @@ namespace Kenshi_DnD
         private async Task RangeAttack(Hero attacker, Monster defender)
         {
             Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
-            int attackerStat;
             int defenderStat = defender.GetResistance();
             int defenderHealth = defender.GetHp();
             int defenderAgility = defender.GetAgility();
-            attackerStat = attacker.GetStat(2);
+            int attackerStat = attacker.GetStat(Stats.Stat.Dexterity);
 
             Item[] uncastedRangedItems = attacker.GetInventory().GetRanged(2);
 
@@ -414,14 +458,17 @@ namespace Kenshi_DnD
                 await window.UpdateLogUI(attacker.GetName() + " falló demasiado...", 800);
             }
 
-            if (defender.GetImmunity() == -2)
+            if (defender.GetImmunity() == Immunities.Immunity.ImmunteToRangedAndResistantToMelee ||
+                defender.GetImmunity() == Immunities.Immunity.ImmuneToRanged)
             {
                 await window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques a distancia, " + attacker.GetName() + " derrochó munición...",1200);
                 return;
             }
             else
             {
-                if (defender.GetImmunity() == -1 || defender.GetImmunity() == 3)
+                if (defender.GetImmunity() == Immunities.Immunity.ResistantToBoth ||
+                defender.GetImmunity() == Immunities.Immunity.ResistantToRanged ||
+                defender.GetImmunity() == Immunities.Immunity.ImmuneToMeleeAndResistantToRanged)
                 {
                     await window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques a distancia, " + attacker.GetName() + " lo intenta igualmente",1200);
                     damage /= 2;
@@ -456,7 +503,7 @@ namespace Kenshi_DnD
 
                         int limbStat = limbUsed.GetBruteForce() + limbUsed.GetDexterity();
 
-                        int hitChances = attacker.GetStat(5);
+                        int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         await window.UpdateCombatStatsUI("Miembro usado: " + limbUsed.GetName() + "\n" +
                             "Daño de miembro: " + limbStat + "\n" +
@@ -506,7 +553,7 @@ namespace Kenshi_DnD
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
-                        int hitChances = attacker.GetStat(5);
+                        int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
                         for (int i = 0; i < limbsUsed.Length; i++)
@@ -564,7 +611,7 @@ namespace Kenshi_DnD
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
-                        int hitChances = attacker.GetStat(5);
+                        int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
                         for (int i = 0; i < limbsUsed.Length; i++)
@@ -621,7 +668,7 @@ namespace Kenshi_DnD
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
-                        int hitChances = attacker.GetStat(5);
+                        int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
                         for (int i = 0; i < limbsUsed.Length; i++)

@@ -10,11 +10,8 @@
         int agility;
         int cats;
         int xpDrop;
-        //Value of 0 is no immunity
-        //1 is resistance to brute force, 2 is immunity to brute force, 3 is immunity to brute force and resistance to dexterity
-        //Value of -1 is resistance to dexterity, -2 is immunity to dexterity, -3 is immunity to dexterity and resistance to brute force
-        int immunity; //añadir resistencia a ambas
-        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, int immunity, int cats, int xpDrop)
+        Immunities.Immunity immunity; 
+        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop)
         {
             this.name = name;
             this.hp = hp;
@@ -95,14 +92,11 @@
         {
             this.xpDrop = xpDrop;
         }
-        public int GetImmunity()
+        public Immunities.Immunity GetImmunity()
         {
             return immunity;
         }
-        public void SetImmunity(int immunity)
-        {
-            this.immunity = immunity;
-        }
+        
         public override string ToString()
         {
             return
@@ -120,13 +114,15 @@
         {
             switch (immunity)
             {
-                case 1: return "Resistencia a Fuerza Bruta";
-                case 2: return "Inmunidad a Fuerza Bruta";
-                case 3: return "Inmunidad a Fuerza Bruta y Resistencia a Destreza";
-                case -1: return "Resistencia a Destreza";
-                case -2: return "Inmunidad a Destreza";
-                case -3: return "Inmunidad a Destreza y Resistencia a Fuerza Bruta";
-                default: return "Sin inmunidad";
+                case Immunities.Immunity.ResistantToMelee: return "Resistencia a Fuerza Bruta";
+                case Immunities.Immunity.ImmuneToMelee: return "Inmunidad a Fuerza Bruta";
+                case Immunities.Immunity.ImmuneToMeleeAndResistantToRanged: return "Inmunidad a Fuerza Bruta y Resistencia a Destreza";
+                case Immunities.Immunity.ResistantToRanged: return "Resistencia a Destreza";
+                case Immunities.Immunity.ImmuneToRanged: return "Inmunidad a Destreza";
+                case Immunities.Immunity.ImmunteToRangedAndResistantToMelee: return "Inmunidad a Destreza y Resistencia a Fuerza Bruta";
+                case Immunities.Immunity.ResistantToBoth: return "Resistencia a Destreza y Fuerza Bruta";
+                case Immunities.Immunity.None: return "Sin inmunidad";
+                default: return "Error en inmunidad";
             }
         }
 
