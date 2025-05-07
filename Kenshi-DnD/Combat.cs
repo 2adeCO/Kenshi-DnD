@@ -217,8 +217,8 @@ namespace Kenshi_DnD
 
             int hits = attackerStat;
 
-            //Defender(hero) throws a dice, protects 1 hp for each pair of dice wins. Example: Monster has 3 strength,
-            //and defender has 1 resistance, so defender throws two dices, if the two are won, he will take 2 damage instead of 3
+            //Defender(hero) throws a dice, protects 1 hp for each pair of dice wins. Example: Hero has 3 resistance,
+            //and attacker has 1 strength, so defender throws two dices, if the two are won, he will take 2 damage instead of 3
             int hitsDefense = myDice.PlayDice(defenderStat - attackerStat) /2;
 
             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);

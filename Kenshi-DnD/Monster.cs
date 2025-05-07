@@ -110,7 +110,7 @@
                 "Inmunidad: " + GetImmunityDescription() + "\n";
         }
 
-        private string GetImmunityDescription()
+        public string GetImmunityDescription()
         {
             switch (immunity)
             {

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -79,7 +80,7 @@ namespace Kenshi_DnD
             FillItemTrees();
             UpdateGameStateUI();
             UpdateFightersGrid();
-            UpdateFightersStatsGrid();
+            UpdateFightersStatsGrid(null,null);
             UpdateNextTurnUI();
 
             if (currentAttacker is Monster)
@@ -117,7 +118,7 @@ namespace Kenshi_DnD
             
             currentAttacker = myCombat.GetCurrentAttacker();
 
-            UpdateFightersStatsGrid();
+            UpdateFightersStatsGrid(null,null);
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
@@ -343,7 +344,7 @@ namespace Kenshi_DnD
             HeroItems.Items.Add(root);
 
         }
-        private void UpdateFightersStatsGrid()
+        private void UpdateFightersStatsGrid(object sender , EventArgs e)
         {
             
             double width = HeroStatsGrid.ActualWidth;
@@ -354,7 +355,7 @@ namespace Kenshi_DnD
             HeroStatsGrid.ColumnDefinitions.Clear();
             HeroStatsGrid.RowDefinitions.Clear();
 
-            if(currentAttacker is Hero)
+            if (currentAttacker is Hero)
             {
                 Hero hero = (Hero)currentAttacker;
 
@@ -380,52 +381,270 @@ namespace Kenshi_DnD
                 double proportion = width / biggestNum;
 
 
-                for(int i = 0; i < 4; i += 1)
+                for (int i = 0; i < 4; i += 1)
                 {
                     RowDefinition rowDefinition = new RowDefinition();
                     rowDefinition.Height = new GridLength(1, GridUnitType.Star);
                     HeroStatsGrid.RowDefinitions.Add(rowDefinition);
                 }
-                for(int i = 0;i < 4; i += 1)
+                for (int i = 0; i < 4; i += 1)
                 {
                     System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
-
-
+                    TextBlock textBlock = new TextBlock();
+                    rectangle.HorizontalAlignment = HorizontalAlignment.Left;
+                    textBlock.HorizontalAlignment = HorizontalAlignment.Left;
+                    rectangle.VerticalAlignment = VerticalAlignment.Stretch;
+                    textBlock.VerticalAlignment = VerticalAlignment.Center;
+                    textBlock.Margin = new Thickness(0, 2, 0, 2);
+                    rectangle.Margin = new Thickness(0, 2, 0, 2);
+                    rectangle.Stroke = Brushes.Black;
                     switch (i)
                     {
                         case 0:
                             {
                                 rectangle.Width = proportion * bruteForce;
-                                rectangle.Fill = Brushes.Blue;
+                                rectangle.Fill = Brushes.SaddleBrown;
+                                textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@FBT@: " + bruteForce));
+                                textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
+                                    "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
+                                ToolTipService.SetInitialShowDelay(textBlock, 100);
                                 break;
                             }
                         case 1:
                             {
                                 rectangle.Width = proportion * dexterity;
-                                rectangle.Fill = Brushes.Blue;
+                                rectangle.Fill = Brushes.SteelBlue;
+
+                                textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@DST@: " + dexterity));
+                                textBlock.ToolTip = HeaderToolTipThemer("Destreza: " + dexterity,
+                                    "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
+
                                 break;
                             }
                         case 2:
                             {
                                 rectangle.Width = proportion * resistance;
-                                rectangle.Fill = Brushes.Blue;
+                                rectangle.Fill = Brushes.Olive;
+                                textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@RES@: " + resistance));
+                                textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                    "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
+                                    "para cada posibilidad de defenderse un punto de ataque.");
                                 break;
                             }
                         case 3:
                             {
                                 rectangle.Width = proportion * agility;
-                                rectangle.Fill = Brushes.Blue;
+                                rectangle.Fill = Brushes.Gold;
+                                textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@AG@: " + agility));
+                                textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                    "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
+                                    "\nTambién para saquear a tus compañeros...");
                                 break;
                             }
                     }
-                    Grid.SetRow(rectangle,i);
+                    Grid.SetRow(rectangle, i);
+                    Grid.SetRow(textBlock, i);
+                    //Textblock must be added last, otherwise it won't show on top of rectangle
                     HeroStatsGrid.Children.Add(rectangle);
+                    HeroStatsGrid.Children.Add(textBlock);
+
+
+                }
+                TargetStatsGrid.Children.Clear();
+                TargetStatsGrid.ColumnDefinitions.Clear();
+                TargetStatsGrid.RowDefinitions.Clear();
+                if (fighterTarget == null)
+                {
+                    return;
+                }
+                if (fighterTarget is Hero)
+                {
+                    hero = (Hero)fighterTarget;
+                    bruteForce = hero.GetStat(Stats.Stat.BruteForce);
+                    biggestNum = bruteForce;
+                    dexterity = hero.GetStat(Stats.Stat.Dexterity);
+                    if (biggestNum < dexterity)
+                    {
+                        biggestNum = dexterity;
+                    }
+                    resistance = hero.GetStat(Stats.Stat.Resistance);
+                    if (biggestNum < resistance)
+                    {
+                        biggestNum = resistance;
+                    }
+                    agility = hero.GetStat(Stats.Stat.Agility);
+                    if (biggestNum < agility)
+                    {
+                        biggestNum = agility;
+                    }
+
+                    proportion = width / biggestNum;
+
+
+                    for (int i = 0; i < 4; i += 1)
+                    {
+                        RowDefinition rowDefinition = new RowDefinition();
+                        rowDefinition.Height = new GridLength(1, GridUnitType.Star);
+                        TargetStatsGrid.RowDefinitions.Add(rowDefinition);
+                    }
+                    for (int i = 0; i < 4; i += 1)
+                    {
+                        System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
+                        TextBlock textBlock = new TextBlock();
+                        rectangle.HorizontalAlignment = HorizontalAlignment.Right;
+                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;
+                        rectangle.VerticalAlignment = VerticalAlignment.Stretch;
+                        textBlock.VerticalAlignment = VerticalAlignment.Center;
+                        textBlock.Margin = new Thickness(0, 2, 0, 2);
+                        rectangle.Margin = new Thickness(0, 2, 0, 2);
+                        rectangle.Stroke = Brushes.Black;
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    rectangle.Width = proportion * bruteForce;
+                                    rectangle.Fill = Brushes.SaddleBrown;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FBT@ "));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
+                                        "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
+                                    ToolTipService.SetInitialShowDelay(textBlock, 100);
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    rectangle.Width = proportion * dexterity;
+                                    rectangle.Fill = Brushes.SteelBlue;
+
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(dexterity + " :@9@DST@"));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Destreza: " + dexterity,
+                                        "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
+
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    rectangle.Width = proportion * resistance;
+                                    rectangle.Fill = Brushes.Olive;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                        "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
+                                        "para cada posibilidad de defenderse un punto de ataque.");
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    rectangle.Width = proportion * agility;
+                                    rectangle.Fill = Brushes.Gold;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                        "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
+                                        "\nTambién para saquear a tus compañeros...");
+                                    break;
+                                }
+                        }
+                        Grid.SetRow(rectangle, i);
+                        Grid.SetRow(textBlock, i);
+                        //Textblock must be added last, otherwise it won't show on top of rectangle
+                        TargetStatsGrid.Children.Add(rectangle);
+                        TargetStatsGrid.Children.Add(textBlock);
+
+
+                    }
+                }
+                else
+                {
+                    Monster monster = (Monster)fighterTarget;
+                    bruteForce = monster.GetStrength();
+                    biggestNum = bruteForce;
+                    
+                    resistance = monster.GetResistance();
+                    if (biggestNum < resistance)
+                    {
+                        biggestNum = resistance;
+                    }
+                    agility = monster.GetAgility();
+                    if (biggestNum < agility)
+                    {
+                        biggestNum = agility;
+                    }
+                    width = TargetStatsGrid.ActualWidth;
+                    proportion = width / biggestNum;
+
+                    for (int i = 0; i < 4; i += 1)
+                    {
+                        RowDefinition rowDefinition = new RowDefinition();
+                        rowDefinition.Height = new GridLength(1, GridUnitType.Star);
+                        TargetStatsGrid.RowDefinitions.Add(rowDefinition);
+                    }
+                    for (int i = 0; i < 4; i += 1)
+                    {
+                        System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
+                        TextBlock textBlock = new TextBlock();
+                        rectangle.HorizontalAlignment = HorizontalAlignment.Right;
+                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;
+                        rectangle.VerticalAlignment = VerticalAlignment.Stretch;
+                        textBlock.VerticalAlignment = VerticalAlignment.Center;
+                        textBlock.Margin = new Thickness(0, 2, 0, 2);
+                        rectangle.Margin = new Thickness(0, 2, 0, 2);
+                        rectangle.Stroke = Brushes.Black;
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    rectangle.Width = proportion * bruteForce;
+                                    rectangle.Fill = Brushes.SaddleBrown;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FRZ@ "));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Fuerza: " + bruteForce,
+                                        "La fuerza de los enemigos es el daño total que hacen si no consigues defenderte.");
+                                    ToolTipService.SetInitialShowDelay(textBlock, 100);
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    rectangle.Width = proportion * resistance;
+                                    rectangle.Fill = Brushes.Olive;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                        "La resistencia del enemigo es usada para defenderse de todo tu daño total.");
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    rectangle.Width = proportion * agility;
+                                    rectangle.Fill = Brushes.Gold;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
+                                    textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                        "La agilidad de los enemigos es usada para esquivar tus ataques y para \ndeterminar su frecuencia de turno.");
+                                    break;
+                                }
+                            case 3:
+                                {
+
+                                    if (monster.GetImmunity() != Immunities.Immunity.None)
+                                    {
+                                        rectangle.Fill = Brushes.White;
+                                    }
+                                    else
+                                    {
+                                        rectangle.Fill = Brushes.WhiteSmoke;
+                                    }
+                                    rectangle.Width = proportion * biggestNum;
+                                    textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                                    rectangle.HorizontalAlignment = HorizontalAlignment.Center;
+                                    textBlock.Inlines.AddRange(mainWindow.DecorateText(monster.GetImmunityDescription()));
+
+                                    break;
+                                }
+                        }
+                        Grid.SetRow(rectangle, i);
+                        Grid.SetRow(textBlock, i);
+                        //Textblock must be added last, otherwise it won't show on top of rectangle
+                        TargetStatsGrid.Children.Add(rectangle);
+                        TargetStatsGrid.Children.Add(textBlock);
+                    }
                 }
             }
-            else
-            {
-
-            }
+            
             
 
         }
@@ -471,7 +690,7 @@ namespace Kenshi_DnD
                             AddItemToHero(currentHero, item);
                         }
                     }
-                    UpdateFightersStatsGrid();
+                    UpdateFightersStatsGrid(null,null);
                     FillItemTrees();
                     UpdateFightersGrid();
                     UpdateNextTurnUI();
@@ -508,7 +727,7 @@ namespace Kenshi_DnD
                 UpdateLogUI(currentAttacker.GetName() + " mira a " + fighterTarget.GetName());
             }
             UpdateFightersGrid();
-            UpdateFightersStatsGrid();
+            UpdateFightersStatsGrid(null,null);
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -803,7 +1022,7 @@ namespace Kenshi_DnD
                 progressBar.Maximum = hero.GetToughness();
                 progressBar.Value = hero.GetHp();
                 progressBar.Background = new SolidColorBrush(Colors.DarkGray);
-                progressBar.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#69b14f"));
+                progressBar.Foreground = new SolidColorBrush(Colors.DarkRed);
                 progressBar.Height = 20;
                 progressBar.Width = 150;
                 progressBar.Margin = new Thickness(4, 2, 4, 2);

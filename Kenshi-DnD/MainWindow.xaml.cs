@@ -163,7 +163,7 @@ public partial class MainWindow : Window
                     }
                 case 5:
                     {
-                        return Brushes.LightYellow;
+                        return Brushes.Goldenrod;
                     }
                 case 6:
                     {
