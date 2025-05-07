@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
@@ -78,6 +79,7 @@ namespace Kenshi_DnD
             FillItemTrees();
             UpdateGameStateUI();
             UpdateFightersGrid();
+            UpdateFightersStatsGrid();
             UpdateNextTurnUI();
 
             if (currentAttacker is Monster)
@@ -114,7 +116,7 @@ namespace Kenshi_DnD
             }
             
             currentAttacker = myCombat.GetCurrentAttacker();
-
+            UpdateFightersStatsGrid();
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
@@ -340,6 +342,92 @@ namespace Kenshi_DnD
             HeroItems.Items.Add(root);
 
         }
+        private void UpdateFightersStatsGrid()
+        {
+            
+            double width = HeroStatsGrid.ActualWidth;
+
+            Debug.WriteLine(width);
+            
+            HeroStatsGrid.Children.Clear();
+            HeroStatsGrid.ColumnDefinitions.Clear();
+            HeroStatsGrid.RowDefinitions.Clear();
+
+            if(currentAttacker is Hero)
+            {
+                Hero hero = (Hero)currentAttacker;
+
+                double biggestNum;
+                double bruteForce = hero.GetStat(Stats.Stat.BruteForce);
+                biggestNum = bruteForce;
+                double dexterity = hero.GetStat(Stats.Stat.Dexterity);
+                if (biggestNum < dexterity)
+                {
+                    biggestNum = dexterity;
+                }
+                double resistance = hero.GetStat(Stats.Stat.Resistance);
+                if (biggestNum < resistance)
+                {
+                    biggestNum = resistance;
+                }
+                double agility = hero.GetStat(Stats.Stat.Agility);
+                if (biggestNum < agility)
+                {
+                    biggestNum = agility;
+                }
+
+                double proportion = width / biggestNum;
+
+
+                for(int i = 0; i < 4; i += 1)
+                {
+                    RowDefinition rowDefinition = new RowDefinition();
+                    rowDefinition.Height = new GridLength(1, GridUnitType.Star);
+                    HeroStatsGrid.RowDefinitions.Add(rowDefinition);
+                }
+                for(int i = 0;i < 4; i += 1)
+                {
+                    System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
+
+
+                    switch (i)
+                    {
+                        case 0:
+                            {
+                                rectangle.Width = proportion * bruteForce;
+                                rectangle.Fill = Brushes.Blue;
+                                break;
+                            }
+                        case 1:
+                            {
+                                rectangle.Width = proportion * dexterity;
+                                rectangle.Fill = Brushes.Blue;
+                                break;
+                            }
+                        case 2:
+                            {
+                                rectangle.Width = proportion * resistance;
+                                rectangle.Fill = Brushes.Blue;
+                                break;
+                            }
+                        case 3:
+                            {
+                                rectangle.Width = proportion * agility;
+                                rectangle.Fill = Brushes.Blue;
+                                break;
+                            }
+                    }
+                    Grid.SetRow(rectangle,i);
+                    HeroStatsGrid.Children.Add(rectangle);
+                }
+            }
+            else
+            {
+
+            }
+            
+
+        }
         private TreeViewItem GenerateTreeView()
         {
             TreeViewItem root = new TreeViewItem { Header = "🎒Inventario", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
@@ -382,6 +470,7 @@ namespace Kenshi_DnD
                             AddItemToHero(currentHero, item);
                         }
                     }
+                    UpdateFightersStatsGrid();
                     FillItemTrees();
                     UpdateFightersGrid();
                     UpdateNextTurnUI();
@@ -418,6 +507,7 @@ namespace Kenshi_DnD
                 UpdateLogUI(currentAttacker.GetName() + " mira a " + fighterTarget.GetName());
             }
             UpdateFightersGrid();
+            UpdateFightersStatsGrid();
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -660,8 +750,8 @@ namespace Kenshi_DnD
                 if (monster == fighterTarget)
                 {
                     LinearGradientBrush linearBrush = new LinearGradientBrush();
-                    linearBrush.StartPoint = new Point(1, 1);
-                    linearBrush.EndPoint = new Point(0, 0);
+                    linearBrush.StartPoint = new System.Windows.Point(1, 1);
+                    linearBrush.EndPoint = new System.Windows.Point(0, 0);
 
                     linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
                     linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.5));
@@ -692,8 +782,8 @@ namespace Kenshi_DnD
             {
                 label.Content = "🎯 " + hero.GetName();
                 LinearGradientBrush linearBrush = new LinearGradientBrush();
-                linearBrush.StartPoint = new Point(0, 1);
-                linearBrush.EndPoint = new Point(0.8, 0);
+                linearBrush.StartPoint = new System.Windows.Point(0, 1);
+                linearBrush.EndPoint = new System.Windows.Point(0.8, 0);
 
                 linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
                 linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.6));
