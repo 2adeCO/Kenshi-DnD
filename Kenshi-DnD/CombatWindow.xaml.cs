@@ -51,7 +51,7 @@ namespace Kenshi_DnD
             }
             for (int i = 0; i < limbs2.Length; i++)
             {
-                limbs2[i] = new Limb("Limb", 3, 3, 0, 0, 0, 0);
+                limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
             }
             Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
             Dice myDice = new Dice(6, 5,rnd);
@@ -114,7 +114,6 @@ namespace Kenshi_DnD
             }
             
             currentAttacker = myCombat.GetCurrentAttacker();
-
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
