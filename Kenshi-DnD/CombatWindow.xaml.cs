@@ -116,10 +116,8 @@ namespace Kenshi_DnD
             }
             
             currentAttacker = myCombat.GetCurrentAttacker();
-<<<<<<< HEAD
+
             UpdateFightersStatsGrid();
-=======
->>>>>>> 27a1e638a723365523f25a032f91fb3261e81ab2
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
