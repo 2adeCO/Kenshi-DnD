@@ -10,11 +10,11 @@ namespace Kenshi_DnD
         protected int value;
         protected int resellValue;
         protected int limbsNeeded;
-        protected int rarity;
+        protected Rarity.Rarities rarity;
         protected bool alreadyUsed;
         protected StatModifier statToModify;
 
-        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify, int rarity)
+        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify, Rarity.Rarities rarity)
         {
             this.name = name;
             this.value = value;
@@ -43,10 +43,6 @@ namespace Kenshi_DnD
             this.alreadyUsed = alreadyUsed;
         }
         
-        public int GetRarity()
-        {
-            return rarity;
-        }
         public string GetName()
         {
             return name;
@@ -94,27 +90,27 @@ namespace Kenshi_DnD
             //Also, in Kenshi anything below Edge is garbage, I won't make it so harsh in this game haha
             switch (rarity)
             {
-                case 0:
+                case Rarity.Rarities.Junk:
                     {
                         return "@8@Chatarra@";
                     }
-                case 1:
+                case Rarity.Rarities.RustCovered:
                     {
                         return "@7@Llena de óxido@";
                     }
-                case 2:
+                case Rarity.Rarities.Catun:
                     {
                         return "@6@Catun No. 1@";
                     }
-                case 3:
+                case Rarity.Rarities.Mk:
                     {
                         return "@2@Mk I@";
                     }
-                case 4:
+                case Rarity.Rarities.Edgewalker:
                     {
                         return "@3@Edgewalker I@";
                     }
-                case 5:
+                case Rarity.Rarities.Meitou:
                     {
                         return "@6@Meitu@";
                     }
@@ -129,27 +125,27 @@ namespace Kenshi_DnD
         {
             switch (rarity)
             {
-                case 0:
+                case Rarity.Rarities.Junk:
                     {
                         return 8;
                     }
-                case 1:
+                case Rarity.Rarities.RustCovered:
                     {
                         return 7;
                     }
-                case 2:
+                case Rarity.Rarities.Catun:
                     {
                         return 6;
                     }
-                case 3:
+                case Rarity.Rarities.Mk:
                     {
                         return 2;
                     }
-                case 4:
+                case Rarity.Rarities.Edgewalker:
                     {
                         return 3;
                     }
-                case 5:
+                case Rarity.Rarities.Meitou:
                     {
                         return 6;
                     }

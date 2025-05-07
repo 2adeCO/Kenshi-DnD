@@ -13,7 +13,7 @@
         }
         public int SellItem(Item item)
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i].Equals(item))
                 {
@@ -25,7 +25,7 @@
         }
         public bool ContainsItem(Item item)
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i].Equals(item))
                 {
@@ -36,7 +36,7 @@
         }
         public void RemoveItem(Item item)
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i].Equals(item))
                 {
@@ -67,7 +67,7 @@
             {
                 case 0:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is MeleeItem)
                             {
@@ -80,7 +80,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is MeleeItem)
                             {
@@ -95,7 +95,7 @@
                     }
                 case 1:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -108,7 +108,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -123,7 +123,7 @@
                     }
                 case 2:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -137,7 +137,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -165,7 +165,7 @@
             {
                 case 0:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is RangedItem)
                             {
@@ -175,7 +175,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is RangedItem)
                             {
@@ -187,7 +187,7 @@
                     }
                 case 1:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is RangedItem)
                             {
@@ -198,7 +198,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is RangedItem)
                             {
@@ -210,7 +210,7 @@
                     }
                 case 2:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is RangedItem)
                             {
@@ -221,7 +221,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is RangedItem)
                             {
@@ -246,7 +246,7 @@
             {
                 case 0:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is MeleeItem)
                             {
@@ -259,7 +259,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i] is MeleeItem)
                             {
@@ -274,7 +274,7 @@
                     }
                 case 1:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -287,7 +287,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (!items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -302,7 +302,7 @@
                     }
                 case 2:
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
                             {
@@ -315,7 +315,7 @@
 
                         itemsToReturn = new Item[count];
                         count = 0;
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < items.Count; i+=1)
                         {
                             if (items[i].IsUsed() && items[i] is MeleeItem)
                             {

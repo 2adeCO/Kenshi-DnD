@@ -46,7 +46,7 @@ namespace Kenshi_DnD
                 Debug.WriteLine("<0 number of rolls");
                 return 0;
             }
-            for (int i = 0; i < numOfRolls; i++)
+            for (int i = 0; i < numOfRolls; i+=1)
             {
                 if (IsSuccess(Roll()))
                 {

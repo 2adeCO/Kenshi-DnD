@@ -4,7 +4,7 @@
     {
         protected bool canRevive;
         protected bool breaksOnUse;
-        public MeleeItem(string name, int value, int resellValue, int limbsNeeded, bool canRevive, StatModifier statToModify, bool breaksOnUse, int rarity)
+        public MeleeItem(string name, int value, int resellValue, int limbsNeeded, bool canRevive, StatModifier statToModify, bool breaksOnUse, Rarity.Rarities rarity)
             : base(name, value, resellValue, limbsNeeded, statToModify, rarity)
         {
             this.canRevive = canRevive;

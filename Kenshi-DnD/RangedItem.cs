@@ -4,7 +4,7 @@
     {
         int difficulty;
         int ammo;
-        public RangedItem(string name, int difficulty, int ammo, int value, int resellValue, int limbsNeeded, StatModifier statsToModify, int rarity)
+        public RangedItem(string name, int difficulty, int ammo, int value, int resellValue, int limbsNeeded, StatModifier statsToModify, Rarity.Rarities rarity)
             : base(name, value, resellValue, limbsNeeded, statsToModify, rarity)
         {
             this.ammo = ammo;

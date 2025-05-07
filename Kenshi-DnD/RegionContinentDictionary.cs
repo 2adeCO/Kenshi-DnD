@@ -37,7 +37,7 @@ namespace Kenshi_DnD
             // Europa
             { "FR", "0" },
             { "DE", "0" },
-            { "ES", "españita" },
+            { "ES", "0" },
             { "IT", "0" },
             { "GB", "0" },
             { "PL", "0" },

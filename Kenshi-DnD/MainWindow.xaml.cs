@@ -36,18 +36,18 @@ public partial class MainWindow : Window
             string[] cursorFiles = new string[arrayNum];
 
             Debug.WriteLine($"Loading {arrayNum} cursors...");
-            for (int i = 0; i < cursorCurFiles.Length; i++)
+            for (int i = 0; i < cursorCurFiles.Length; i+=1)
             {
                 cursorFiles[i] = cursorCurFiles[i];
             }
-            for (int i = 0; i < cursorAniFiles.Length; i++)
+            for (int i = 0; i < cursorAniFiles.Length; i+=1)
             {
                 cursorFiles[i + cursorCurFiles.Length] = cursorAniFiles[i];
             }
 
 
             cursors = new Cursor[arrayNum];
-            for (int i = 0; i < arrayNum; i++)
+            for (int i = 0; i < arrayNum; i+=1)
             {
                 Debug.WriteLine($"Loading cursor: {cursorFiles[i]}");
                 cursors[i] = new Cursor(cursorFiles[i]);
@@ -63,7 +63,7 @@ public partial class MainWindow : Window
             int size = 0;
             int color = 0;
 
-            for (int i = 0; i < message.Length; i++)
+            for (int i = 0; i < message.Length; i+=1)
             {
                 //If it's normal text, just write it normally
                 if (!foundDecoration && ! startDecoration)

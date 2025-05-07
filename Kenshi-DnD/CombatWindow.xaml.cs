@@ -47,31 +47,34 @@ namespace Kenshi_DnD
 
             Limb[] limbs = new Limb[4];
             Limb[] limbs2 = new Limb[4];
-            for (int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < 3; i+=1)
             {
                 limbs[i] = new Limb("Limb", 0, 0, 0, 0, 0, 0);
             }
-            for (int i = 0; i < limbs2.Length; i++)
+            for (int i = 0; i < 3; i+=1)
             {
                 limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
             }
             Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
-            Dice myDice = new Dice(6, 5,rnd);
+            Dice myDice = new Dice(6, 5, rnd);
             Race human = new Race("Humano", -1, 1, 10, -1, 1);
-
+            RangedItem specialItem = new RangedItem("El arma única", 5, 6, 200, 100, 2, new StatModifier(20,6,0,-3,-3), Rarity.Rarities.Meitou);
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, Immunities.Immunity.ResistantToRanged, 100, 0);
-            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, Immunities.Immunity.ResistantToBoth, 100, 0);
+            
+            Hero hero3 = new Hero("Héroe tanque", "El Arquero", 24, 2, 2, 3, 8, human, human, limbs2);
+            Hero hero4 = new Hero("Héroe rapidisimo", "El Arquero", 8, 2, 8, 3, 8, human, human, limbs2);
+            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, Immunities.Immunity.ResistantToRanged, 100, 20 ,null);
+            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, Immunities.Immunity.ResistantToBoth, 100, 20, specialItem);
             StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
             StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
             myInventory = new PlayerInventory();
-            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, 1));
-            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, 3));
-            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, 4));
-            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, 0));
+            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, Rarity.Rarities.Junk));
+            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, Rarity.Rarities.Mk));
+            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, Rarity.Rarities.Catun));
+            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, Rarity.Rarities.RustCovered));
 
-            heroes = new Hero[] { hero1, hero2 };
+            heroes = new Hero[] { hero1, hero2 , hero3,hero4};
             monsters = new Monster[] { monster1, monster2 };
             myCombat = new Combat(heroes, monsters, myDice, myInventory,rnd, this);
 
@@ -147,33 +150,33 @@ namespace Kenshi_DnD
             AllMonsters.ColumnDefinitions.Clear();
 
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 1; i+=1)
             {
                 ColumnDefinition column = new ColumnDefinition();
                 column.Width = new GridLength(1, GridUnitType.Star);
                 AllHeroes.ColumnDefinitions.Add(column);
             }
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 RowDefinition row = new RowDefinition();
                 row.Height = GridLength.Auto;
                 AllHeroes.RowDefinitions.Add(row);
             }
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 1; i+=1)
             {
                 ColumnDefinition column = new ColumnDefinition();
                 column.Width = new GridLength(1, GridUnitType.Star);
                 AllMonsters.ColumnDefinitions.Add(column);
             }
-            for (int i = 0; i < monsters.Length; i++)
+            for (int i = 0; i < monsters.Length; i+=1)
             {
                 RowDefinition row = new RowDefinition();
                 row.Height = GridLength.Auto;
                 AllMonsters.RowDefinitions.Add(row);
             }
 
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 Button button = new Button();
                 //Put content with the hero name and a progress bar with its hp
@@ -198,7 +201,7 @@ namespace Kenshi_DnD
                     AllHeroes.Children.Add(button);
                 }
             }
-            for (int i = 0; i < monsters.Length; i++)
+            for (int i = 0; i < monsters.Length; i+=1)
             {
                 Button button = new Button();
 
@@ -250,7 +253,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < rangedArray.Length; i++)
+                for (int i = 0; i < rangedArray.Length; i+=1)
                 {
                     ranged.Items.Add(GenerateItem(rangedArray[i]));
                 }
@@ -261,7 +264,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < meleeArray.Length; i++)
+                for (int i = 0; i < meleeArray.Length; i+=1)
                 {
                     notConsumable.Items.Add(GenerateItem(meleeArray[i]));
                 }
@@ -273,7 +276,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < consumableArray.Length; i++)
+                for (int i = 0; i < consumableArray.Length; i+=1)
                 {
                     consumable.Items.Add(GenerateItem(consumableArray[i]));
                 }
@@ -309,7 +312,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < rangedArray.Length; i++)
+                for (int i = 0; i < rangedArray.Length; i+=1)
                 {
                     ranged.Items.Add(GenerateItem(rangedArray[i]));
                 }
@@ -320,7 +323,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < meleeArray.Length; i++)
+                for (int i = 0; i < meleeArray.Length; i+=1)
                 {
                     notConsumable.Items.Add(GenerateItem(meleeArray[i]));
                 }
@@ -332,7 +335,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < consumableArray.Length; i++)
+                for (int i = 0; i < consumableArray.Length; i+=1)
                 {
                     consumable.Items.Add(GenerateItem(consumableArray[i]));
                 }
@@ -402,7 +405,7 @@ namespace Kenshi_DnD
                     {
                         case 0:
                             {
-                                rectangle.Width = proportion * bruteForce;
+                                rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                 rectangle.Fill = Brushes.SaddleBrown;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@FBT@: " + bruteForce));
                                 textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
@@ -412,7 +415,7 @@ namespace Kenshi_DnD
                             }
                         case 1:
                             {
-                                rectangle.Width = proportion * dexterity;
+                                rectangle.Width = proportion * dexterity < 0 ? 0 : proportion * dexterity;
                                 rectangle.Fill = Brushes.SteelBlue;
 
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@DST@: " + dexterity));
@@ -423,7 +426,7 @@ namespace Kenshi_DnD
                             }
                         case 2:
                             {
-                                rectangle.Width = proportion * resistance;
+                                rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                 rectangle.Fill = Brushes.Olive;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@RES@: " + resistance));
                                 textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
@@ -433,7 +436,7 @@ namespace Kenshi_DnD
                             }
                         case 3:
                             {
-                                rectangle.Width = proportion * agility;
+                                rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                 rectangle.Fill = Brushes.Gold;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@AG@: " + agility));
                                 textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
@@ -502,7 +505,7 @@ namespace Kenshi_DnD
                         {
                             case 0:
                                 {
-                                    rectangle.Width = proportion * bruteForce;
+                                    rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                     rectangle.Fill = Brushes.SaddleBrown;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FBT@ "));
                                     textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
@@ -512,7 +515,7 @@ namespace Kenshi_DnD
                                 }
                             case 1:
                                 {
-                                    rectangle.Width = proportion * dexterity;
+                                    rectangle.Width = proportion * dexterity < 0 ? 0 : proportion * dexterity;
                                     rectangle.Fill = Brushes.SteelBlue;
 
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(dexterity + " :@9@DST@"));
@@ -523,7 +526,7 @@ namespace Kenshi_DnD
                                 }
                             case 2:
                                 {
-                                    rectangle.Width = proportion * resistance;
+                                    rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                     rectangle.Fill = Brushes.Olive;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
                                     textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
@@ -533,7 +536,7 @@ namespace Kenshi_DnD
                                 }
                             case 3:
                                 {
-                                    rectangle.Width = proportion * agility;
+                                    rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                     rectangle.Fill = Brushes.Gold;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
                                     textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
@@ -591,7 +594,7 @@ namespace Kenshi_DnD
                         {
                             case 0:
                                 {
-                                    rectangle.Width = proportion * bruteForce;
+                                    rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                     rectangle.Fill = Brushes.SaddleBrown;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FRZ@ "));
                                     textBlock.ToolTip = HeaderToolTipThemer("Fuerza: " + bruteForce,
@@ -601,7 +604,7 @@ namespace Kenshi_DnD
                                 }
                             case 1:
                                 {
-                                    rectangle.Width = proportion * resistance;
+                                    rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                     rectangle.Fill = Brushes.Olive;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
                                     textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
@@ -610,7 +613,7 @@ namespace Kenshi_DnD
                                 }
                             case 2:
                                 {
-                                    rectangle.Width = proportion * agility;
+                                    rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                     rectangle.Fill = Brushes.Gold;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
                                     textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
@@ -775,6 +778,7 @@ namespace Kenshi_DnD
             for(int i = 0; i < 3; i += 1)
             {
                 Border border = new Border();
+                border.Background = Brushes.Snow;
                 border.BorderThickness = new Thickness(2);
                 border.CornerRadius = new CornerRadius(5);
                 border.Padding = new Thickness(10, 0, 10, 0);
@@ -809,6 +813,7 @@ namespace Kenshi_DnD
             for (int i = 0; i < 3; i += 1)
             {
                 Border border = new Border();
+                border.Background = Brushes.Snow;
                 border.BorderThickness = new Thickness(2);
                 border.CornerRadius = new CornerRadius(5);
                 border.Padding = new Thickness(10,0,10,0);
@@ -1048,6 +1053,13 @@ namespace Kenshi_DnD
             border.CornerRadius = new CornerRadius(5);
             button.Padding = new Thickness(2);
             border.HorizontalAlignment = (button.Tag is Hero ? HorizontalAlignment.Left : HorizontalAlignment.Right);
+            LinearGradientBrush linearColorBrush = new LinearGradientBrush();
+            linearColorBrush.StartPoint = new System.Windows.Point(0, 0);
+            linearColorBrush.EndPoint = new System.Windows.Point(1, 0);
+            linearColorBrush.GradientStops.Add(new GradientStop(Colors.White, 0.0));
+            linearColorBrush.GradientStops.Add(new GradientStop(Colors.WhiteSmoke,1.0));
+            button.Background = linearColorBrush;
+
             border.Child = button;
             return border;
         }

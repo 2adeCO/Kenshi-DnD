@@ -17,11 +17,11 @@ namespace Kenshi_DnD
 
             Limb[] limbs = new Limb[4];
             Limb[] limbs2 = new Limb[4];
-            for (int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < limbs.Length; i+=1)
             {
                 limbs[i] = new Limb("Limb", 0, 0, 0, 0, 0, 0);
             }
-            for (int i = 0; i < limbs2.Length; i++)
+            for (int i = 0; i < limbs2.Length; i+=1)
             {
                 limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
             }

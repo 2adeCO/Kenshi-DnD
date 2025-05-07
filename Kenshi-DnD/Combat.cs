@@ -30,11 +30,11 @@ namespace Kenshi_DnD
             this.myDice = myDice;
 
             everyTurn = new List<Turn>();
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 everyTurn.Add(new Turn(heroes[i]));
             }
-            for (int i = 0; i < enemies.Length; i++)
+            for (int i = 0; i < enemies.Length; i+=1)
             {
                 everyTurn.Add(new Turn(enemies[i]));
             }
@@ -62,14 +62,14 @@ namespace Kenshi_DnD
             {
                 debugCounter += 1;
                 tempList = new List<ITurnable>();
-                for (int i = 0; i < everyTurn.Count; i++)
+                for (int i = 0; i < everyTurn.Count; i+=1)
                 {
                     if (everyTurn[i].GetFighter().IsAlive())
                     {
                         everyTurn[i].AdvanceTurn();
                     }
                 }
-                for (int i = 0; i < everyTurn.Count; i++)
+                for (int i = 0; i < everyTurn.Count; i+=1)
                 {
                     while (everyTurn[i].IsTurnComplete())
                     {
@@ -78,7 +78,7 @@ namespace Kenshi_DnD
                     }
                 }
                 tempList = SortByAgility(tempList);
-                for (int i = 0; i < tempList.Count; i++)
+                for (int i = 0; i < tempList.Count; i+=1)
                 {
                     Debug.WriteLine("Added to turnorder: " + tempList[i].GetName() + debugCounter);
                     turnOrder.Add(tempList[i]);
@@ -150,7 +150,7 @@ namespace Kenshi_DnD
                 if (hero.GetInventory().AreConsumableItems())
                 {
                     Item[] consumableItems = hero.GetInventory().GetConsumables(2);
-                    for (int i = 0; i < consumableItems.Length; i++)
+                    for (int i = 0; i < consumableItems.Length; i+=1)
                     {
                         MeleeItem meleeItem = (MeleeItem)consumableItems[i];
                         if (meleeItem.CanRevive())
@@ -238,7 +238,21 @@ namespace Kenshi_DnD
 
             defender.Hurt(hits);
 
-            if (defender.GetHp() <= 0)
+			Debug.WriteLine("toughness/2: " + defender.GetToughness() / 2);
+            Debug.WriteLine("hits/4: " +hits / 4);
+			if (hits > defender.GetToughness() / 2)
+			{
+                Debug.WriteLine("Might lose an arm");
+				if (myDice.PlayDice(hits / 4) > 2)
+				{
+					Limb limbLost = defender.RemoveLimb(rnd.Next(0, 5));
+					await window.UpdateLogUI("El " + limbLost.GetName() + " de " + defender.GetName() + " @120@voló por los aires@...",0);
+                    await window.UpdateDicesUI(myDice.GetRollHistory(), 1200);
+				}
+			}
+
+
+			if (defender.GetHp() <= 0)
             {
 
                 await window.UpdateLogUI(attacker.GetName() + " @120@deja KO@ a " + defender.GetName(), 1200);
@@ -247,6 +261,7 @@ namespace Kenshi_DnD
             else
             {
                 await window.UpdateLogUI("¡"+ defender.GetName() + " resiste!", 400);
+
             }
 
         }
@@ -288,6 +303,24 @@ namespace Kenshi_DnD
                 await MartialArtsAttack(attacker, defender);
             }
 
+            if (!defender.IsAlive())
+            {
+                if(defender.GetItemDrop() != null)
+                {
+                    await window.UpdateLogUI("Se encontró " + defender.GetItemDrop().GetName() + " en el cadáver...",800);
+                    myInventory.AddItem(defender.GetItemDrop());
+                }
+                if(defender.GetXpDrop() == 0)
+                {
+					await window.UpdateLogUI("No se consiguió nada de experiencia", 300);
+				}
+				await window.UpdateLogUI("¡" + attacker.GetName() + " ha conseguido @214@" + defender.GetXpDrop() + " puntos de experiencia@!", 800);
+                if (attacker.GainXp(defender.GetXpDrop()))
+                {
+                    await window.UpdateLogUI("¡Y sube a @218@NIVEL " + attacker.GetLevel()+"@!",800);
+                }
+			}
+
 
         }
         private async Task<StatModifier> ConsumableAction(Hero user, Hero receiver)
@@ -300,7 +333,7 @@ namespace Kenshi_DnD
             int bruteForceBoost = 0;
             int resistanceBoost = 0;
             int dexterityBoost = 0;
-            for (int i = 0; i < consumableItems.Length; i++)
+            for (int i = 0; i < consumableItems.Length; i+=1)
             {
                 if (consumableItems[i] != null)
                 {
@@ -340,7 +373,7 @@ namespace Kenshi_DnD
             int defenderStat;
             int defenderHealth;
             Item[] uncastedMeleeItems = attacker.GetInventory().GetMelee(2);
-            for (int i = 0; i < uncastedMeleeItems.Length; i++)
+            for (int i = 0; i < uncastedMeleeItems.Length; i+=1)
             {
                 await window.UpdateLogUI(uncastedMeleeItems[i].AnnounceUse(),200);
             }
@@ -395,7 +428,7 @@ namespace Kenshi_DnD
 
             RangedItem[] rangedItems = new RangedItem[uncastedRangedItems.Length];
 
-            for (int i = 0; i < uncastedRangedItems.Length; i++)
+            for (int i = 0; i < uncastedRangedItems.Length; i+=1)
             {
                 rangedItems[i] = (RangedItem)uncastedRangedItems[i];
                 await window.UpdateLogUI(rangedItems[i].AnnounceUse(), 200);
@@ -415,7 +448,7 @@ namespace Kenshi_DnD
             do
             {
                 emptyAmmoWeapons = 0;
-                for (int i = 0; i < rangedItems.Length; i++)
+                for (int i = 0; i < rangedItems.Length; i+=1)
                 {
                     if (rangedItems[i].GetAmmo() <= 0)
                     {
@@ -499,7 +532,7 @@ namespace Kenshi_DnD
             {
                 case < 20:
                     {
-                        Limb limbUsed = attacker.GetLimbs()[rnd.Next(0, 4)];
+                        Limb limbUsed = attacker.GetRandomLimb(rnd);
 
                         int limbStat = limbUsed.GetBruteForce() + limbUsed.GetDexterity();
 
@@ -543,20 +576,20 @@ namespace Kenshi_DnD
                 case < 30:
                     {
                         Limb[] limbsUsed = new Limb[2];
-                        limbsUsed[0] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[1] = attacker.GetLimbs()[rnd.Next(0, 4)];
+                        limbsUsed[0] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[1] = attacker.GetRandomLimb(rnd);
 
 
                         int limbStat = 0;
 
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbsUsedNames += limbsUsed[i].GetName() + "\n";
                         }
@@ -602,19 +635,19 @@ namespace Kenshi_DnD
                 case < 50:
                     {
                         Limb[] limbsUsed = new Limb[3];
-                        limbsUsed[0] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[1] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[2] = attacker.GetLimbs()[rnd.Next(0, 4)];
+                        limbsUsed[0] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[1] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[2] = attacker.GetRandomLimb(rnd);
 
                         int limbStat = 0;
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbsUsedNames += limbsUsed[i].GetName() + "\n";
                         }
@@ -658,20 +691,20 @@ namespace Kenshi_DnD
                 default:
                     {
                         Limb[] limbsUsed = new Limb[4];
-                        limbsUsed[0] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[1] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[2] = attacker.GetLimbs()[rnd.Next(0, 4)];
-                        limbsUsed[3] = attacker.GetLimbs()[rnd.Next(0, 4)];
+                        limbsUsed[0] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[1] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[2] = attacker.GetRandomLimb(rnd);
+                        limbsUsed[3] = attacker.GetRandomLimb(rnd);
 
                         int limbStat = 0;
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
                         string limbsUsedNames = "\n";
-                        for (int i = 0; i < limbsUsed.Length; i++)
+                        for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
                             limbsUsedNames += limbsUsed[i].GetName() + "\n";
                         }
@@ -730,17 +763,17 @@ namespace Kenshi_DnD
         private Hero DecideVictim()
         {
             int count = 0;
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 if (heroes[i].IsAlive())
                 {
                     Debug.WriteLine("Victim counted " + i);
-                    count++;
+                    count+=1;
                 }
             }
             Hero[] heroesToAttack = new Hero[count];
             count = 0;
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 if (heroes[i].IsAlive())
                 {
@@ -762,14 +795,14 @@ namespace Kenshi_DnD
             bool lost = true;
             bool won = true;
 
-            for (int i = 0; i < heroes.Length; i++)
+            for (int i = 0; i < heroes.Length; i+=1)
             {
                 if (heroes[i].IsAlive())
                 {
                     lost = false;
                 }
             }
-            for (int i = 0; i < enemies.Length; i++)
+            for (int i = 0; i < enemies.Length; i+=1)
             {
                 if (enemies[i].IsAlive())
                 {
@@ -800,7 +833,7 @@ namespace Kenshi_DnD
             do
             {
                 errorFound = false;
-                for (int i = 0; i < list.Count - 1; i++)
+                for (int i = 0; i < list.Count - 1; i+=1)
                 {
                     if (list[i].GetAgility() < list[i + 1].GetAgility())
                     {
@@ -839,6 +872,7 @@ namespace Kenshi_DnD
             
             return nextTurns;
         }
+        
     }
 
 }

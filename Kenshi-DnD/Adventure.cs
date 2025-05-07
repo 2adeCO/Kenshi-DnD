@@ -26,6 +26,21 @@ namespace Kenshi_DnD
         public Adventure(string name, Hero hero, Random rnd)
         {
             this.id = GenerateId(name, rnd);
+            this.cats = 200;
+            startDate = DateTime.Now;
+            hoursPlayed = DateTime.Now;
+
+            heroes = new Hero[12];
+            heroes[0] = hero;
+
+            savedSquads = new Hero[10][];
+
+            savedSquads[0] = new Hero[4];
+            savedSquads[0][0] = hero;
+            currentSquad = savedSquads[0];
+
+            playerInventory = new PlayerInventory();
+
             Debug.WriteLine(id);
         }
         private string GenerateId(string name, Random rnd)
@@ -50,7 +65,7 @@ namespace Kenshi_DnD
             numberCount = MINIMUM_NUMBER_LENGTH - numberCount;
 
             //Adds the remaining zeroes for aesthetic purpose
-            for (int i = 0; i < numberCount; i++)
+            for (int i = 0; i < numberCount; i+=1)
             {
                 zeroes += "0";
             }

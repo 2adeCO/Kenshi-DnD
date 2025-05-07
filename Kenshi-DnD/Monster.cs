@@ -10,8 +10,9 @@
         int agility;
         int cats;
         int xpDrop;
+        Item drop;
         Immunities.Immunity immunity; 
-        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop)
+        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop, Item drop)
         {
             this.name = name;
             this.hp = hp;
@@ -22,6 +23,7 @@
             this.immunity = immunity;
             this.cats = cats;
             this.xpDrop = xpDrop;
+            this.drop = drop;
         }
         public string GetName()
         {
@@ -96,7 +98,10 @@
         {
             return immunity;
         }
-        
+        public Item GetItemDrop()
+        {
+            return drop;
+        }
         public override string ToString()
         {
             return

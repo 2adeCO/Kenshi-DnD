@@ -42,8 +42,12 @@ namespace Kenshi_DnD
         int level;
         //Experience is the amount of experience the hero has. It determines how much the hero has leveled up.
         int experience;
+
+        int xpPoints;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
+        //In Kenshi the best way to level up at the start is to get beaten a lot
+        const int PART_DAMAGE_AS_XP = 6;
         public Hero(string name, string title, int toughness, int bruteForce, int agility, int resistance, int dexterity,
             string backgroundStory, int level, int experience, Race race, Race subrace, Limb[] limbs)
         {
@@ -51,7 +55,7 @@ namespace Kenshi_DnD
             this.name = name;
             this.title = title;
             SetToughnessAtConstructor(toughness, race, subrace, limbs);
-
+            this.xpPoints = 0;
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
             this.level = level;
@@ -70,6 +74,7 @@ namespace Kenshi_DnD
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             SetToughnessAtConstructor(toughness, race, subrace, limbs);
             this.level = 1;
+            this.xpPoints = 0;
             this.backgroundStory = "";
             this.recruitmentDate = DateTime.Now;
             this.race = race;
@@ -86,7 +91,7 @@ namespace Kenshi_DnD
             {
                 case Stats.Stat.BruteForce:
                     {
-                        for (int i = 0; i < limbs.Length; i++)
+                        for (int i = 0; i < limbs.Length; i+=1)
                         {
                             if (limbs[i] != null)
                             {
@@ -98,7 +103,7 @@ namespace Kenshi_DnD
                     }
                 case Stats.Stat.Dexterity:
                     {
-                        for (int i = 0; i < limbs.Length; i++)
+                        for (int i = 0; i < limbs.Length; i+=1)
                         {
                             if (limbs[i] != null)
                             {
@@ -115,7 +120,7 @@ namespace Kenshi_DnD
                     }
                 case Stats.Stat.Resistance:
                     {
-                        for (int i = 0; i < limbs.Length; i++)
+                        for (int i = 0; i < limbs.Length; i+=1)
                         {
                             if (limbs[i] != null)
                             {
@@ -127,7 +132,7 @@ namespace Kenshi_DnD
                     }
                 case Stats.Stat.Agility:
                     {
-                        for (int i = 0; i < limbs.Length; i++)
+                        for (int i = 0; i < limbs.Length; i+=1)
                         {
                             if (limbs[i] != null)
                             {
@@ -143,7 +148,7 @@ namespace Kenshi_DnD
         private void SetToughnessAtConstructor(int toughness, Race race, Race subrace, Limb[] limbs)
         {
             int stat = 0;
-            for (int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < limbs.Length; i+=1)
             {
                 if (limbs[i] != null)
                 {
@@ -271,10 +276,14 @@ namespace Kenshi_DnD
             int limbsAvailable = 0;
             for (int i = 0; i < GetLimbs().Length; i += 1)
             {
-                if (!GetLimbs()[i].GetBeingUsed())
+                if (GetLimbs()[i] != null)
                 {
-                    limbsAvailable += 1;
-                }
+					if (!GetLimbs()[i].GetBeingUsed())
+					{
+						limbsAvailable += 1;
+					}
+				}
+                
             }
             if (limbsAvailable >= item.GetLimbsNeeded())
             {
@@ -348,7 +357,7 @@ namespace Kenshi_DnD
         public int GetMartialArtStat()
         {
             int martialArtPower = 0;
-            for (int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < limbs.Length; i+=1)
             {
                 if (limbs[i] != null)
                 {
@@ -359,6 +368,21 @@ namespace Kenshi_DnD
             martialArtPower += (GetStat(Stats.Stat.Agility) == 0 ? 0 : GetStat(Stats.Stat.Agility) / 2);
             return martialArtPower;
         }
+        public bool GainXp(int newXp)
+        {
+            bool leveledUp = false;
+            this.experience += newXp;
+            while (experience >= (10 * ((level + 1) * (level + 1))))
+            {
+                leveledUp = true;
+                Debug.WriteLine("Level up");
+                level += 1;
+                xpPoints += 1;
+            }
+
+            return leveledUp;
+        }
+
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())
@@ -370,8 +394,10 @@ namespace Kenshi_DnD
                 this.SetHp(GetHp() + healHp);
             }
         }
-        public void Hurt(int hurtHp)
+        public bool Hurt(int hurtHp)
         {
+            //
+            bool leveledUp = GainXp(hurtHp / PART_DAMAGE_AS_XP);
             if(GetHp() - hurtHp < 0)
             {
                 this.SetHp(0);
@@ -380,6 +406,7 @@ namespace Kenshi_DnD
             {
                 this.SetHp(GetHp() - hurtHp);
             }
+            return leveledUp;
         }
         public bool IsInInventory(Item item)
         {
@@ -403,9 +430,34 @@ namespace Kenshi_DnD
         {
             return personalInventory.AreMeleeItems();
         }
+        public Limb RemoveLimb(int limbIndex)
+        {
+            if (limbs[limbIndex] != null)
+            {
+                Limb limbToReturn = limbs[limbIndex];
+
+				limbs[limbIndex] = null;
+                return limbToReturn;
+            }
+            else
+            {
+                for (int i = 0; i < limbs.Length; i++)
+                {
+                    if (limbs[i] != null)
+                    {
+                        Limb limbToReturn = limbs[i];
+
+						limbs[i] = null;
+                        return limbToReturn;
+                    }
+
+                }
+            }
+            return null;
+        }
         public void PutLimb(Limb newLimb)
         {
-            for (int i = 0; i < limbs.Length; i++)
+            for (int i = 0; i < limbs.Length; i += 1)
             {
                 if (limbs[i] == null)
                 {
@@ -413,6 +465,33 @@ namespace Kenshi_DnD
                     break;
                 }
             }
+        }
+        public Limb GetRandomLimb(Random rnd)
+        {
+            bool atLeastOne = false;
+
+            for (int i = 0; i < limbs.Length; i += 1)
+            {
+                if (limbs[i] != null)
+                {
+                    atLeastOne = true;
+                    break;
+                }
+            }
+            Limb randomLimb = null;
+			if (atLeastOne)
+            {
+                do
+                {
+                    int randomIndex = rnd.Next(0, limbs.Length);
+                    if (limbs[randomIndex]!= null)
+                    {
+                        randomLimb = limbs[randomIndex];
+                    }
+                } while (randomLimb == null);
+            }
+
+            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0,0):randomLimb;
         }
         public string FreeAllItems()
         {
@@ -425,6 +504,7 @@ namespace Kenshi_DnD
         public override string ToString()
         {
             return
+                $"Nivel: {level}\n" +
                 $"Raza: {race.GetName()}\n" +
                 $"{(subrace.GetName() != "Sin subraza" ? $"Subraza: {subrace.GetName()}\n" : "")}"
                 + GetAllStats().ToString();

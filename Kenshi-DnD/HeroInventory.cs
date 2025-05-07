@@ -9,7 +9,7 @@
         public string MakeAllItemsDisponible()
         {
             string itemNames = "";
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 itemNames += items[i].GetName() + (i == items.Count - 1 ? "" : ", ");
                 items[i].UnUse();
@@ -32,7 +32,7 @@
             int resistance = 0;
             int agility = 0;
 
-            for (int i = 0; i < allNonConsumableItems.Length; i++)
+            for (int i = 0; i < allNonConsumableItems.Length; i+=1)
             {
                 bruteForce += allNonConsumableItems[i].GetStatToModify().GetBruteForce();
                 dexterity += allNonConsumableItems[i].GetStatToModify().GetDexterity();
@@ -50,31 +50,31 @@
             switch (opt)
             {
                 case Stats.Stat.BruteForce:
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i+=1)
                     {
                         stat += items[i].GetStatToModify().GetBruteForce();
                     }
                     break;
                 case Stats.Stat.Dexterity:
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i+=1)
                     {
                         stat += items[i].GetStatToModify().GetDexterity();
                     }
                     break;
                 case Stats.Stat.HP:
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i+=1)
                     {
                         stat += items[i].GetStatToModify().GetHp();
                     }
                     break;
                 case Stats.Stat.Resistance:
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i+=1)
                     {
                         stat += items[i].GetStatToModify().GetResistance();
                     }
                     break;
                 case Stats.Stat.Agility:
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i+=1)
                     {
                         stat += items[i].GetStatToModify().GetAgility();
                     }
@@ -84,7 +84,7 @@
         }
         public bool AreRangedItems()
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i] is RangedItem)
                 {
@@ -95,7 +95,7 @@
         }
         public bool AreMeleeItems()
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i] is MeleeItem)
                 {
@@ -110,7 +110,7 @@
         }
         public bool AreConsumableItems()
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i+=1)
             {
                 if (items[i] is MeleeItem)
                 {
