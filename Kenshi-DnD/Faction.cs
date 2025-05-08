@@ -3,7 +3,7 @@ using System.Windows.Media.Imaging;
 
 namespace Kenshi_DnD
 {
-    class Faction
+    public class Faction
     {
         int factionId;
         string factionName;

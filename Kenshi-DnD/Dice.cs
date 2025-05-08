@@ -2,7 +2,7 @@
 
 namespace Kenshi_DnD
 {
-    class Dice
+    public class Dice
     {
         int sides;
         int minWin;

@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class Race : StatModifier
+    public class Race : StatModifier
     {
         string name;
         public Race(string name, int bruteForce, int dexterity, int toughness, int resistance, int agility)

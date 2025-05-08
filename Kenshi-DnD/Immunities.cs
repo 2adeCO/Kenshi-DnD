@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class Immunities
+    public class Immunities
     {
         public enum Immunity
         {

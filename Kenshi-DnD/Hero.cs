@@ -2,7 +2,7 @@
 
 namespace Kenshi_DnD
 {
-    class Hero : ITurnable
+    public class Hero : ITurnable
     {
         //Name and title, example: "Carlos, the database scholar"
         string name;

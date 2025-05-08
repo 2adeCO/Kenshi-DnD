@@ -4,7 +4,7 @@ using System.Windows.Documents;
 
 namespace Kenshi_DnD
 {
-    abstract class Item
+    public abstract class Item
     {
         protected string name;
         protected int value;

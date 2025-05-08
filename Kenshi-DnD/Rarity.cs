@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class Rarity
+    public class Rarity
     {
         public enum Rarities
         {

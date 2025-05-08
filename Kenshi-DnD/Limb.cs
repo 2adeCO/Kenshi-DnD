@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class Limb : StatModifier
+    public class Limb : StatModifier
     {
         string name;
         bool beingUsed;

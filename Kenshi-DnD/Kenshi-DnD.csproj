@@ -21,6 +21,7 @@
     <None Remove="Resources\cursors\CursorLicenseInfo.txt" />
     <None Remove="Resources\cursors\Flint.webp.cur" />
     <None Remove="Resources\cursors\Tooth_Pick.webp.cur" />
+    <None Remove="Resources\img\bonepeople.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +46,12 @@
     <Content Include="Resources\cursors\CursorLicenseInfo.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\img\bonepeople.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

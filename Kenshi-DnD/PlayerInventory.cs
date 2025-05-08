@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class PlayerInventory : Inventory
+    public class PlayerInventory : Inventory
     {
         public PlayerInventory()
         {

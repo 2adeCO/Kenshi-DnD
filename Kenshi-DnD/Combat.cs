@@ -32,10 +32,12 @@ namespace Kenshi_DnD
             everyTurn = new List<Turn>();
             for (int i = 0; i < heroes.Length; i+=1)
             {
+                Debug.WriteLine("hero added to combat");
                 everyTurn.Add(new Turn(heroes[i]));
             }
             for (int i = 0; i < enemies.Length; i+=1)
             {
+                Debug.WriteLine("enemy added to combat");
                 everyTurn.Add(new Turn(enemies[i]));
             }
 

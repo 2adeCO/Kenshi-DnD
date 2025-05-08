@@ -16,16 +16,13 @@ namespace Kenshi_DnD
 public partial class MainWindow : Window
     {
         Cursor[] cursors;
-        
+        Random rnd;
         public MainWindow()
         {
             InitializeComponent();
             LoadCursors();
-            PageController.Content = new Menu(this,PageController, cursors);
-        }
-        public void GoToCombat(object sender, EventArgs e)
-        {
-            PageController.Content = new CombatWindow(this, cursors);
+            rnd = new Random();
+            PageController.Content = new Menu(this,PageController, cursors, rnd);
         }
         public void LoadCursors()
         {

@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class StatModifier
+    public class StatModifier
     {
         //All of these are buffs and debuffs to the ints of the hero
         //Offensive ints

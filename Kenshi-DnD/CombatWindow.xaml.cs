@@ -29,8 +29,9 @@ namespace Kenshi_DnD
         PlayerInventory myInventory;
         Hero[] heroes;
         Monster[] monsters;
+        Random rnd;
         ITurnable currentAttacker;
-        public CombatWindow(MainWindow mainWindow, Cursor[] cursors)
+        public CombatWindow(MainWindow mainWindow, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
         {
             InitializeComponent();
             //Starts a timer
@@ -40,43 +41,15 @@ namespace Kenshi_DnD
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
-            Random rnd = new Random();
             this.mainWindow = mainWindow;
             this.cursors = cursors;
             this.Cursor = cursors[0];
+            this.rnd = rnd;
 
-            Limb[] limbs = new Limb[4];
-            Limb[] limbs2 = new Limb[4];
-            for (int i = 0; i < 3; i+=1)
-            {
-                limbs[i] = new Limb("Limb", 0, 0, 0, 0, 0, 0);
-            }
-            for (int i = 0; i < 3; i+=1)
-            {
-                limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
-            }
-            Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
-            Dice myDice = new Dice(6, 5, rnd);
-            Race human = new Race("Humano", -1, 1, 10, -1, 1);
-            RangedItem specialItem = new RangedItem("El arma única", 5, 6, 200, 100, 2, new StatModifier(20,6,0,-3,-3), Rarity.Rarities.Meitou);
-            Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
-            Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
-            
-            Hero hero3 = new Hero("Héroe tanque", "El Arquero", 24, 2, 2, 3, 8, human, human, limbs2);
-            Hero hero4 = new Hero("Héroe rapidisimo", "El Arquero", 8, 2, 8, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, Immunities.Immunity.ResistantToRanged, 100, 20 ,null);
-            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, Immunities.Immunity.ResistantToBoth, 100, 20, specialItem);
-            StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
-            StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
-            myInventory = new PlayerInventory();
-            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, Rarity.Rarities.Junk));
-            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0,0,5,0,0), true, Rarity.Rarities.Mk));
-            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, Rarity.Rarities.Catun));
-            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, Rarity.Rarities.RustCovered));
-
-            heroes = new Hero[] { hero1, hero2 , hero3,hero4};
-            monsters = new Monster[] { monster1, monster2 };
-            myCombat = new Combat(heroes, monsters, myDice, myInventory,rnd, this);
+            myInventory = myAdventure.GetInventory();
+            this.heroes = myAdventure.GetCurrentSquad();
+            this.monsters = monsters;
+            myCombat = new Combat(heroes, monsters, myAdventure.GetDice(), myInventory,rnd, this);
 
             currentAttacker = myCombat.GetCurrentAttacker();
 
@@ -895,12 +868,14 @@ namespace Kenshi_DnD
                     {
                         GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
                         break;
                     }
                 case -1:
                     {
                         GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
                         break;
                     }
             }

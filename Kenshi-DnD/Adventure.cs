@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    class Adventure
+    public class Adventure
     {
         string id;
         const int MINIMUM_NUMBER_LENGTH = 9;
         int cats;
         DateTime startDate;
         DateTime hoursPlayed;
+
+        Dice myDice;
 
         Hero[] heroes;
         Hero[] currentSquad;
@@ -25,10 +27,11 @@ namespace Kenshi_DnD
 
         List<Item> alreadyObtainedItems;
         
-        public Adventure(string name, Hero hero, Random rnd)
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice)
         {
             this.id = GenerateId(name, rnd);
             this.cats = 200;
+            this.myDice = myDice;
             startDate = DateTime.Now;
             hoursPlayed = DateTime.Now;
 
@@ -87,6 +90,52 @@ namespace Kenshi_DnD
             // 
             // output: MyFirstAdventure2000123456
             return name + continent + zeroes + randomNum;
+        }
+        public PlayerInventory GetInventory()
+        {
+            return playerInventory;
+        }
+        public int GetCats()
+        {
+            return cats;
+        }
+        public Dice GetDice()
+        {
+            return myDice;
+        }
+        public Hero[] GetCurrentSquad()
+        {
+            int count = 0;
+            for(int i = 0; i < currentSquad.Length; i += 1)
+            {
+                if (currentSquad[i] != null)
+                {
+                    count += 1;
+                }
+            }
+            Hero[] heroesToReturn = new Hero[count];
+            count = 0;
+            int iterator = 0;
+            do
+            {
+                if (currentSquad[iterator] != null)
+                {
+                    heroesToReturn[count] = currentSquad[iterator];
+                    count += 1;
+                }
+                iterator += 1;
+
+            }while (count != heroesToReturn.Length);
+
+            return heroesToReturn;
+        }
+        public DateTime GetStartDate()
+        {
+            return startDate;
+        }
+        public DateTime GetTimePlayed()
+        {
+            return hoursPlayed;
         }
     }
 }

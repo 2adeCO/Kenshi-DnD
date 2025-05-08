@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class Monster : ITurnable
+    public class Monster : ITurnable
     {
         string name;
         Faction faction;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
-    internal class RegionContinentDictionary
+    public class RegionContinentDictionary
     {
         public static Dictionary<string, string> zonesToContinents = new Dictionary<string, string>
         {

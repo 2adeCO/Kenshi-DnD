@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    class Inventory
+    public class Inventory
     {
         protected List<Item> items;
         public Inventory()

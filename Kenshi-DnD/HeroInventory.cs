@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    internal class HeroInventory : Inventory
+    public class HeroInventory : Inventory
     {
         public HeroInventory() : base()
         {
