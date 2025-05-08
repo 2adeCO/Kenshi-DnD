@@ -42,7 +42,7 @@ namespace Kenshi_DnD
         int level;
         //Experience is the amount of experience the hero has. It determines how much the hero has leveled up.
         int experience;
-
+        //XP points to spend in stat upgrades
         int xpPoints;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;

@@ -23,6 +23,8 @@ namespace Kenshi_DnD
 
         PlayerInventory playerInventory;
 
+        List<Item> alreadyObtainedItems;
+        
         public Adventure(string name, Hero hero, Random rnd)
         {
             this.id = GenerateId(name, rnd);
@@ -40,7 +42,7 @@ namespace Kenshi_DnD
             currentSquad = savedSquads[0];
 
             playerInventory = new PlayerInventory();
-
+            alreadyObtainedItems = new List<Item>();
             Debug.WriteLine(id);
         }
         private string GenerateId(string name, Random rnd)
