@@ -180,5 +180,43 @@ public partial class MainWindow : Window
                     }
             }
         }
+        public ToolTip HeaderToolTipThemer(string header, string content)
+        {
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Vertical;
+            TextBlock textBlock = new TextBlock();
+
+            textBlock.Inlines.AddRange(DecorateText(header));
+            textBlock.FontSize = 18;
+            stackPanel.Children.Add(textBlock);
+            textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(DecorateText(content));
+            textBlock.FontSize = 14;
+            stackPanel.Children.Add(textBlock);
+
+            ToolTip toolTip = new ToolTip();
+            toolTip.Content = stackPanel;
+            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
+            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
+            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
+            return toolTip;
+
+
+
+
+
+        }
+        public ToolTip ToolTipThemer(string content)
+        {
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(DecorateText(content));
+            textBlock.FontSize = 18;
+            ToolTip toolTip = new ToolTip();
+            toolTip.Content = textBlock;
+            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
+            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
+            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
+            return toolTip;
+        }
     }
 }

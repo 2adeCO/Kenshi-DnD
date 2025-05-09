@@ -381,7 +381,7 @@ namespace Kenshi_DnD
                                 rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                 rectangle.Fill = Brushes.SaddleBrown;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@FBT@: " + bruteForce));
-                                textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
+                                textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
                                     "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
                                 ToolTipService.SetInitialShowDelay(textBlock, 100);
                                 break;
@@ -392,7 +392,7 @@ namespace Kenshi_DnD
                                 rectangle.Fill = Brushes.SteelBlue;
 
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@DST@: " + dexterity));
-                                textBlock.ToolTip = HeaderToolTipThemer("Destreza: " + dexterity,
+                                textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Destreza: " + dexterity,
                                     "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
 
                                 break;
@@ -402,7 +402,7 @@ namespace Kenshi_DnD
                                 rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                 rectangle.Fill = Brushes.Olive;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@RES@: " + resistance));
-                                textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Resistencia " + resistance,
                                     "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
                                     "para cada posibilidad de defenderse un punto de ataque.");
                                 break;
@@ -412,7 +412,7 @@ namespace Kenshi_DnD
                                 rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                 rectangle.Fill = Brushes.Gold;
                                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@AG@: " + agility));
-                                textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Agilidad: " + agility,
                                     "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
                                     "\nTambién para saquear a tus compañeros...");
                                 break;
@@ -481,7 +481,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                     rectangle.Fill = Brushes.SaddleBrown;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FBT@ "));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
                                         "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
                                     ToolTipService.SetInitialShowDelay(textBlock, 100);
                                     break;
@@ -492,7 +492,7 @@ namespace Kenshi_DnD
                                     rectangle.Fill = Brushes.SteelBlue;
 
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(dexterity + " :@9@DST@"));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Destreza: " + dexterity,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Destreza: " + dexterity,
                                         "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
 
                                     break;
@@ -502,7 +502,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                     rectangle.Fill = Brushes.Olive;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Resistencia " + resistance,
                                         "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
                                         "para cada posibilidad de defenderse un punto de ataque.");
                                     break;
@@ -512,7 +512,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                     rectangle.Fill = Brushes.Gold;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Agilidad: " + agility,
                                         "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
                                         "\nTambién para saquear a tus compañeros...");
                                     break;
@@ -570,7 +570,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
                                     rectangle.Fill = Brushes.SaddleBrown;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(bruteForce + " :@9@FRZ@ "));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Fuerza: " + bruteForce,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Fuerza: " + bruteForce,
                                         "La fuerza de los enemigos es el daño total que hacen si no consigues defenderte.");
                                     ToolTipService.SetInitialShowDelay(textBlock, 100);
                                     break;
@@ -580,7 +580,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
                                     rectangle.Fill = Brushes.Olive;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(resistance + " :@9@RES@"));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Resistencia " + resistance,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Resistencia " + resistance,
                                         "La resistencia del enemigo es usada para defenderse de todo tu daño total.");
                                     break;
                                 }
@@ -589,7 +589,7 @@ namespace Kenshi_DnD
                                     rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
                                     rectangle.Fill = Brushes.Gold;
                                     textBlock.Inlines.AddRange(mainWindow.DecorateText(agility + " :@9@AG@"));
-                                    textBlock.ToolTip = HeaderToolTipThemer("Agilidad: " + agility,
+                                    textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Agilidad: " + agility,
                                         "La agilidad de los enemigos es usada para esquivar tus ataques y para \ndeterminar su frecuencia de turno.");
                                     break;
                                 }
@@ -909,7 +909,7 @@ namespace Kenshi_DnD
             TextBlock textBlock = new TextBlock();
             textBlock.Inlines.AddRange(mainWindow.DecorateText(monster == fighterTarget ?
                 "🎯 " + monster.GetName() : monster.GetName()));
-            textBlock.ToolTip = HeaderToolTipThemer(monster.GetName(),monster.ToString());
+            textBlock.ToolTip = mainWindow.HeaderToolTipThemer(monster.GetName(),monster.ToString());
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             textBlock.Padding = new Thickness(2);
             stackPanel.Children.Add(textBlock);
@@ -922,7 +922,7 @@ namespace Kenshi_DnD
 
             textBlock = new TextBlock();
             textBlock.Inlines.AddRange(mainWindow.DecorateText(monster.GetFaction().GetFactionName()));
-            textBlock.ToolTip = ToolTipThemer(monster.GetFaction().GetFactionDescription());
+            textBlock.ToolTip = mainWindow.ToolTipThemer(monster.GetFaction().GetFactionDescription());
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             Grid.SetColumn(textBlock, 1);
             grid.Children.Add(textBlock);
@@ -939,7 +939,7 @@ namespace Kenshi_DnD
             {
                 textBlock = new TextBlock();
                 textBlock.Inlines.AddRange(mainWindow.DecorateText("@1@Muerto@"));
-                textBlock.ToolTip = ToolTipThemer("Podrías haber sido tú");
+                textBlock.ToolTip = mainWindow.ToolTipThemer("Podrías haber sido tú");
                 ToolTipService.SetInitialShowDelay(textBlock, 100);
                 grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
                 Grid.SetColumn(textBlock, 2);
@@ -974,7 +974,7 @@ namespace Kenshi_DnD
             stackPanel.Orientation = Orientation.Vertical;
             System.Windows.Controls.Label label = new System.Windows.Controls.Label();
             label.Content = hero.GetName();
-            label.ToolTip = HeaderToolTipThemer(hero.GetName(), hero.ToString());
+            label.ToolTip = mainWindow.HeaderToolTipThemer(hero.GetName(), hero.ToString());
             ToolTipService.SetInitialShowDelay(label, 100);
             stackPanel.Children.Add(label);
 
@@ -1006,7 +1006,7 @@ namespace Kenshi_DnD
                 progressBar.Height = 20;
                 progressBar.Width = 150;
                 progressBar.Margin = new Thickness(4, 2, 4, 2);
-                progressBar.ToolTip = ToolTipThemer(hero.GetHp() + "/" + hero.GetToughness());
+                progressBar.ToolTip = mainWindow.ToolTipThemer(hero.GetHp() + "/" + hero.GetToughness());
                 ToolTipService.SetInitialShowDelay(progressBar, 100);
                 stackPanel.Children.Add(progressBar);
             }
@@ -1014,7 +1014,7 @@ namespace Kenshi_DnD
             {
                 System.Windows.Controls.Label deadLabel = new System.Windows.Controls.Label();
                 deadLabel.Content = "Inconsciente...";
-                deadLabel.ToolTip = ToolTipThemer("Solo una buena cura podrá salvarlo ahora...\n \nEsperemos ganes el combate");
+                deadLabel.ToolTip = mainWindow.ToolTipThemer("Solo una buena cura podrá salvarlo ahora...\n \nEsperemos ganes el combate");
                 deadLabel.HorizontalAlignment = HorizontalAlignment.Center;
                 stackPanel.Children.Add(deadLabel);
             }
@@ -1038,44 +1038,7 @@ namespace Kenshi_DnD
             border.Child = button;
             return border;
         }
-        private ToolTip HeaderToolTipThemer(string header, string content)
-        {
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.Orientation = Orientation.Vertical;
-            TextBlock textBlock = new TextBlock();
-
-            textBlock.Inlines.AddRange(mainWindow.DecorateText(header));
-            textBlock.FontSize = 18;
-            stackPanel.Children.Add(textBlock);
-            textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText(content));
-            textBlock.FontSize = 14;
-            stackPanel.Children.Add(textBlock);
-
-            ToolTip toolTip = new ToolTip();
-            toolTip.Content = stackPanel;
-            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
-            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
-            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
-            return toolTip;
-
-
-
-
-
-        }
-        private ToolTip ToolTipThemer(string content)
-        {
-            TextBlock textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText(content));
-            textBlock.FontSize = 18;
-            ToolTip toolTip = new ToolTip();
-            toolTip.Content = textBlock;
-            toolTip.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e6e5d5"));
-            toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
-            toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
-            return toolTip;
-        }
+        
         //The use of this method is to change the cursor when hovering over a button
         //I do not like it, but it's the only way to prevent the cursor from changing when the button is being clicked
         //that isn't too complex
@@ -1140,7 +1103,7 @@ namespace Kenshi_DnD
             TreeViewItem treeViewItem = new TreeViewItem();
             treeViewItem.Header = border;
             treeViewItem.Tag = item;
-            treeViewItem.ToolTip = HeaderToolTipThemer(item.GetName(), item.ToString());
+            treeViewItem.ToolTip = mainWindow.HeaderToolTipThemer(item.GetName(), item.ToString());
             ToolTipService.SetInitialShowDelay(treeViewItem, 700);
             treeViewItem.Cursor = cursors[3];
             treeViewItem.HorizontalAlignment = HorizontalAlignment.Center;
