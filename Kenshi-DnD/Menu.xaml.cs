@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Kenshi_DnD
 {
@@ -23,7 +24,7 @@ namespace Kenshi_DnD
             this.controller = controller;
             this.mainWindow = mainWindow;
             this.rnd = rnd;
-            Dice myDice = new Dice(6,5,rnd);
+            Dice myDice = new Dice(6, 5, rnd);
 
             Limb[] limbs = new Limb[4];
             Limb[] limbs2 = new Limb[4];
@@ -38,12 +39,12 @@ namespace Kenshi_DnD
             Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
 
             Race human = new Race("Humano", -1, 1, 10, -1, 1);
-        
+
 
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
 
             myAdventure = new Adventure("Prueba", hero2, new Random(), myDice);
-            
+
         }
         public void GoToCombat(object sender, EventArgs e)
         {
@@ -84,11 +85,45 @@ namespace Kenshi_DnD
         }
         public void OpenAdventureMaker(object sender, EventArgs e)
         {
+            MenuBorder.Visibility = System.Windows.Visibility.Visible;
+            MenuWindow.Visibility = System.Windows.Visibility.Visible;
+            MenuWindow.Orientation = Orientation.Vertical;
+
+            TextBox textBox = new TextBox();
+
+            textBox.BorderBrush = Brushes.Black;
+            textBox.BorderThickness = new System.Windows.Thickness(2);
+
+            textBox.TextChanged += OnlyNumsAndLetters;
+            MenuWindow.Children.Add(textBox);
 
         }
         public void OpenSavedAdventures(object sender, EventArgs e)
         {
 
+        }
+        private void OnlyNumsAndLetters(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int caretIndex = -1;
+            string text = textBox.Text;
+            string result = "";
+            for (int i = 0; i < text.Length; i += 1)
+            {
+                if (char.IsAsciiLetterOrDigit(text[i]))
+                {
+                    result += text[i];
+                }
+                else
+                {
+                    caretIndex = i;
+                }
+            }
+            textBox.Text = result;
+            if(caretIndex != -1)
+            {
+                textBox.CaretIndex = caretIndex;
+            }
         }
     }
 }
