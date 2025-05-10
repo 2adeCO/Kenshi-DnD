@@ -11,7 +11,9 @@ namespace Kenshi_DnD
         public static Dictionary<string, List<string>> RacesAndSubraces = new Dictionary<string, List<string>>
         {
             {"Humano",new List<string>{"Greenlander", "Scorchlander" } },
-            {"Hive" , new List<string>{"Prince","Soldier", "Worker" } }
+            {"Enjambre" , new List<string>{"Príncipe","Dron Soldado", "Dron Trabajador" } },
+            {"Shek" , new List<string>{"Puro"} },
+            {"Esqueleto" , new List<string>{"Puro" } }
         };
     }
 }

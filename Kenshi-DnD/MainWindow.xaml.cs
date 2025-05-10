@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -17,12 +17,15 @@ public partial class MainWindow : Window
     {
         Cursor[] cursors;
         Random rnd;
+        Race[] allRaces;
         public MainWindow()
         {
             InitializeComponent();
             LoadCursors();
             rnd = new Random();
-            PageController.Content = new Menu(this,PageController, cursors, rnd);
+            allRaces = new Race[] {new Race("Humano",0,0,0,0,0),new Race("Greenlander",0,0,0,0,0),new Race("Scorchlander",0,0,0,0,0),
+                new Race("Hive",0,0,0,0,0),new Race("Prince",0,0,0,0,0),new Race("Soldier",0,0,0,0,0), new Race("Worker",0,0,0,0,0)};
+            PageController.Content = new Menu(this,PageController, cursors, rnd,allRaces);
         }
         public void LoadCursors()
         {
@@ -156,7 +159,7 @@ public partial class MainWindow : Window
                     }
                 case 4:
                     {
-                        return Brushes.Magenta;
+                        return Brushes.Purple;
                     }
                 case 5:
                     {

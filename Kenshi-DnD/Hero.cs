@@ -66,6 +66,15 @@ namespace Kenshi_DnD
             personalInventory = new HeroInventory();
             buff = new StatModifier(0, 0, 0, 0, 0);
         }
+        public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs) 
+        {
+            heroStats = new StatModifier(bruteForce,dexterity,10,resistance,agility);
+            this.race = race;
+            this.subrace = subrace;
+            this.limbs = limbs;
+            personalInventory = new HeroInventory();
+            buff = new StatModifier(0, 0, 0, 0, 0);
+        }
         public Hero(string name, string title, int toughness, int bruteForce, int agility, int resistance, int dexterity,
              Race race, Race subrace, Limb[] limbs)
         {

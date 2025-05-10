@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Kenshi_DnD
 {
@@ -17,40 +18,57 @@ namespace Kenshi_DnD
         Random rnd;
         ContentControl controller;
         Cursor[] cursors;
+        bool changingSliders;
 
+        bool currentAdventureIsValid = false;
 
-        TextBox adventureName;
-        TextBox diceSides;
-        TextBox diceMinWin;
-        TextBox startingCats;
-        TextBox characterName;
-        TextBox characterTitle;
-        TextBox characterBackgroundStory;
+        Race[] allRaces;
 
-        ComboBox characterRace;
-        ComboBox characterSubrace;
-        TextBlock remainingPoints;
-
-
-        Slider bruteForceSlider;
-        Slider dexteritySlider;
-        Slider resistanceSlider;
-        Slider agilitySlider;
-
-
-        const int DEFAULT_POINTS_ON_HERO_MAKER = 10;
+        int remainingPoints;
+        const int DEFAULT_DICE_SIDES = 6;
+        const int DEFAULT_DICE_MIN_WIN = 4;
+        const int DEFAULT_POINTS_ON_HERO_MAKER = 14;
+        const string DEFAULT_FACTION_NAME = "El club famelico";
         const string DEFAULT_HERO_NAME = "Beep";
+        const string DEFAULT_HERO_TITLE = "El Elegido";
+        const string DEFAULT_HERO_BACKGROUND = "Una cualquiera... Abusado por las terribles condiciones de estas tierras, se escabulle ganándose la vida como puede," +
+            " realizando ilícitas actividades, tratando de ganarse un nombre sin morir en el intento";
         const int DEFAULT_CATS = 200;
-        public Menu(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd)
+        public Menu(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Race[] allRaces)
         {
+            changingSliders = true;
             InitializeComponent();
-            TitleText.Inlines.Clear();
-            TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
-
+            this.allRaces = allRaces;
             this.cursors = cursors;
             this.controller = controller;
             this.mainWindow = mainWindow;
             this.rnd = rnd;
+            TitleText.Inlines.Clear();
+            TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
+            remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4 ;
+            remainingPointsText.Text = remainingPoints.ToString();
+            
+            adventureName.Text = "AventuraDe" + DEFAULT_HERO_NAME;
+            factionName.Text = DEFAULT_FACTION_NAME;
+            factionColor.ItemsSource = new string[] { "Rojo", "Verde", "Azul", "Morado", "Dorado", "Naranja", "Gris azulado", "Gris", "Negro" };
+            factionColor.SelectedItem = "Rojo";
+            diceMinWin.Text = DEFAULT_DICE_MIN_WIN.ToString();
+            diceSides.Text = DEFAULT_DICE_SIDES.ToString();
+            characterName.Text = DEFAULT_HERO_NAME;
+            characterTitle.Text = DEFAULT_HERO_TITLE;
+            startingCats.Text = DEFAULT_CATS.ToString();
+            characterBackgroundStory.Text = "";
+
+            changingSliders = false;
+            characterRace.ItemsSource = RacesDictionary.RacesAndSubraces.Keys;
+            characterRace.SelectedItem = "Humano";
+            characterSubrace.ItemsSource = RacesDictionary.RacesAndSubraces["Humano"];
+
+            bruteForceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
+            dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
+            resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
+            agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
+            
             Dice myDice = new Dice(6, 5, rnd);
 
             Limb[] limbs = new Limb[4];
@@ -71,7 +89,7 @@ namespace Kenshi_DnD
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
 
             myAdventure = new Adventure("Prueba", hero2, new Random(), myDice);
-
+            IsAdventureValid(null, null);
         }
         public void GoToCombat(object sender, EventArgs e)
         {
@@ -117,211 +135,115 @@ namespace Kenshi_DnD
             {
                 MenuBorder.Visibility = Visibility.Collapsed;
                 MenuWindow.Visibility = Visibility.Collapsed;
+                DarkUI.Visibility = Visibility.Collapsed;
                 return;
             }
             else
             {
+                DarkUI.Visibility = System.Windows.Visibility.Visible;
                 MenuBorder.Visibility = System.Windows.Visibility.Visible;
                 MenuWindow.Visibility = System.Windows.Visibility.Visible;
             }
-            if (MenuWindow.Children.Count == 0)
-            {
-                MenuWindow.Orientation = Orientation.Vertical;
-                adventureName = new TextBox();
-
-                adventureName.BorderBrush = Brushes.Black;
-                adventureName.BorderThickness = new System.Windows.Thickness(2);
-                adventureName.Name = "AdventureName";
-                adventureName.TextChanged += OnlyNumsAndLetters;
-                MenuWindow.Children.Add(PutTextOnElement("Nombre de aventura: ", adventureName));
-
-                diceSides = new TextBox();
-                diceSides.BorderBrush = Brushes.Black;
-                diceSides.BorderThickness = new System.Windows.Thickness(2);
-                diceSides.Name = "DiceSides";
-                diceSides.TextChanged += OnlyNums;
-
-                MenuWindow.Children.Add(PutTextOnElement("Número de caras en el dado: ", diceSides));
-
-                diceMinWin = new TextBox();
-                diceMinWin.BorderBrush = Brushes.Black;
-                diceMinWin.BorderThickness = new System.Windows.Thickness(2);
-                diceMinWin.Name = "DiceMinWin";
-                diceMinWin.TextChanged += OnlyNums;
-
-                MenuWindow.Children.Add(PutTextOnElement("Número mínimo considerado victoria(Mínimo incluido): ", diceMinWin));
-
-                startingCats = new TextBox();
-                startingCats.BorderBrush = Brushes.Black;
-                startingCats.BorderThickness = new System.Windows.Thickness(2);
-                startingCats.Name = "StartingCats";
-                startingCats.TextChanged += OnlyNums;
-                startingCats.Text = DEFAULT_CATS.ToString();
-
-                MenuWindow.Children.Add(PutTextOnElement("Cantidad de cats al empezar: ", startingCats));
-
-                characterName = new TextBox();
-                characterName.BorderBrush = Brushes.Black;
-                characterName.BorderThickness = new System.Windows.Thickness(2);
-                characterName.Name = "CharacterName";
-                characterName.TextChanged += OnlyText;
-                characterName.Text = DEFAULT_HERO_NAME;
-
-                MenuWindow.Children.Add(PutTextOnElement("Nombre de héroe inicial: ", characterName));
-
-                characterTitle = new TextBox();
-                characterTitle.BorderBrush = Brushes.Black;
-                characterTitle.BorderThickness = new System.Windows.Thickness(2);
-                characterTitle.Name = "CharacterName";
-                characterTitle.TextChanged += OnlyText;
-                characterTitle.Text = DEFAULT_HERO_NAME;
-
-                MenuWindow.Children.Add(PutTextOnElement("Título de héroe inicial: ", characterTitle));
-
-                characterRace = new ComboBox();
-
-                characterRace.ItemsSource = RacesDictionary.RacesAndSubraces.Keys;
-                characterRace.SelectionChanged += ChangeSubraces;
-
-                MenuWindow.Children.Add(PutTextOnElement("Raza del héroe: ", characterRace));
-
-                characterSubrace = new ComboBox();
-
-
-
-                MenuWindow.Children.Add(PutTextOnElement("Raza del héroe: ", characterSubrace));
-
-                TextBlock remainingPoints = new TextBlock();
-
-                remainingPoints.Name = "RemainingPoints";
-                remainingPoints.Tag = DEFAULT_POINTS_ON_HERO_MAKER;
-
-                remainingPoints.Text = remainingPoints.Tag.ToString();
-
-                MenuWindow.Children.Add(PutTextOnElement("Puntos restantes: ", remainingPoints));
-
-                bruteForceSlider = new Slider();
-                bruteForceSlider.Minimum = 1;
-                bruteForceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER;
-                bruteForceSlider.Value = 1;
-
-
-                MenuWindow.Children.Add(PutTextOnElement("Fuerza bruta: ", bruteForceSlider));
-
-                dexteritySlider = new Slider();
-                dexteritySlider.Minimum = 1;
-                dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER;
-                dexteritySlider.Value = 1;
-                
-
-                MenuWindow.Children.Add(PutTextOnElement("Destreza: ", dexteritySlider));
-
-
-                resistanceSlider = new Slider();
-                resistanceSlider.Minimum = 1;
-                resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER;
-                resistanceSlider.Value = 1;
-
-                MenuWindow.Children.Add(PutTextOnElement("Resistencia: ", resistanceSlider));
-
-                agilitySlider = new Slider();
-                agilitySlider.Minimum = 1;
-                agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER;
-                agilitySlider.Value = 1;
-                
-
-                MenuWindow.Children.Add(PutTextOnElement("Agilidad: ", agilitySlider));
-
-                Grid statsGrid = new Grid();
-            }
-                        
-
-
-
-
         }
         public void OpenSavedAdventures(object sender, EventArgs e)
         {
 
         }
-        private void OnlyNumsAndLetters(object sender, EventArgs e)
+       
+        private void SliderChanged(object sender, EventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
-            int caretIndex = -1;
-            string text = textBox.Text;
-            string result = "";
-            for (int i = 0; i < text.Length; i += 1)
+            if (changingSliders) { return; }
+            changingSliders = true;
+
+            int totalPointsUsed = (int)(bruteForceSlider.Value + dexteritySlider.Value + resistanceSlider.Value + agilitySlider.Value);
+
+            if (totalPointsUsed > DEFAULT_POINTS_ON_HERO_MAKER)
             {
-                if (char.IsAsciiLetterOrDigit(text[i]))
-                {
-                    result += text[i];
-                }
-                else
-                {
-                    caretIndex = i;
-                }
+                Slider changedSlider = (Slider)sender;
+
+                int valueWithoutSlider = totalPointsUsed - (int)changedSlider.Value;
+
+                changedSlider.Value = DEFAULT_POINTS_ON_HERO_MAKER - valueWithoutSlider;
+                totalPointsUsed = (int)(bruteForceSlider.Value + dexteritySlider.Value + resistanceSlider.Value + agilitySlider.Value);
+
             }
-            textBox.Text = result;
-            if (caretIndex != -1)
-            {
-                textBox.CaretIndex = caretIndex;
-            }
+            remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - totalPointsUsed;
+            remainingPointsText.Text = remainingPoints.ToString();
+            UpdateHeroStatGrid(null, null);
+            changingSliders = false;
+            IsAdventureValid(null,null);
+
         }
-        private void OnlyNums(object sender, EventArgs e)
+
+
+
+        private void IsAdventureValid(object sender, EventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
-            int caretIndex = -1;
-            string text = textBox.Text;
-            string result = "";
-            for (int i = 0; i < text.Length; i += 1)
+            AboutYourAdventure.Inlines.Clear();
+            currentAdventureIsValid = true;
+            if (string.IsNullOrWhiteSpace(adventureName.Text)) 
+            {  currentAdventureIsValid = false; }
+            else
             {
-                if (char.IsAsciiDigit(text[i]))
-                {
-                    result += text[i];
-                }
-                else
-                {
-                    caretIndex = i;
-                }
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu aventura se nombrará " + adventureName.Text + "\n"));
             }
-            textBox.Text = result;
-            if (caretIndex != -1)
+            if (!int.TryParse(diceSides.Text, out int diceSidesInt)) 
+            { currentAdventureIsValid = false; }
+            if (!int.TryParse(diceMinWin.Text, out int diceMinWinInt)) { currentAdventureIsValid = false; }
+
+            if (string.IsNullOrWhiteSpace(characterName.Text)) { currentAdventureIsValid = false; }
+            if (string.IsNullOrWhiteSpace(factionName.Text)) { currentAdventureIsValid = false; }
+            
+            
+
+
+            if(diceMinWinInt > diceSidesInt) { currentAdventureIsValid = false; } else
             {
-                textBox.CaretIndex = caretIndex;
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Jugarás con un dado que tiene "
+                    + diceSidesInt + " caras, cada vez que saques al menos (" + diceMinWinInt + ")" +
+                    ", tendrás un éxito.\n"));
             }
-        }
-        private void OnlyText(object sender, EventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            int caretIndex = -1;
-            string text = textBox.Text;
-            string result = "";
-            for (int i = 0; i < text.Length; i += 1)
+
+            if (!int.TryParse(startingCats.Text, out int startingCatsInt)) { currentAdventureIsValid = false; } else
             {
-                if (char.IsAsciiLetter(text[i]))
-                {
-                    result += text[i];
-                }
-                else
-                {
-                    caretIndex = i;
-                }
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu aventura empezará con " + startingCatsInt + " cats. " +
+                    (startingCatsInt > 2000 ? "Eso es una fortuna...\n" : (startingCatsInt > 500 ? "" : "Buena suerte...\n"))));
+
             }
-            textBox.Text = result;
-            if (caretIndex != -1)
+
+            if (currentAdventureIsValid)
             {
-                textBox.CaretIndex = caretIndex;
+                Debug.WriteLine((factionColor.SelectedIndex + 1));
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu facción se llama @" + 
+                    (factionColor.SelectedIndex + 1) + "@" + factionName.Text + "@\n"));
+
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu héroe es " + characterName.Text + ", " +
+                    (characterTitle.Text == "" ? " " : characterTitle.Text + ", ") + "un " + characterRace.SelectedItem + "\n"));
+
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Su historia es: " + (characterBackgroundStory.Text == "" ? 
+                  DEFAULT_HERO_BACKGROUND : characterBackgroundStory.Text) + "\n\n"));
+
+                
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Recuerda, es un mundo hostil al que te enfrentas. " +
+                    "Puedes recibir golpes que te dejen paralítico, morirte de hambre, ser secuestrado... \n" +
+                    "Elige bien a tus compañeros y mejor a tus enemigos" +
+                    "\nProcede con cuidado en el mundo de Kenshi_DnD..."));
+                MakeAdventureButton.IsEnabled = true;
+                MakeAdventureButton.Background = Brushes.LightGreen;
+            }
+            else
+            {
+                MakeAdventureButton.IsEnabled = false;
+                MakeAdventureButton.Background = Brushes.Red;
             }
         }
         
-        private void UpdateHeroStatGrid(Grid statsGrid, Hero hero)
+
+        private void UpdateHeroStatGrid(object sender, EventArgs e)
         {
 
-            if (hero == null)
-            {
-                MessageBox.Show("Tienes que hacer un héroe válido");
-                return;
-            }
+            Hero hero = new Hero((int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,
+                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
             double width = statsGrid.ActualWidth;
 
             Debug.WriteLine(width);
@@ -422,28 +344,143 @@ namespace Kenshi_DnD
             }
         }
     
-        
     
         private void ChangeSubraces(object sender, EventArgs e)
         {
             string race = (string)characterRace.SelectedItem;
             characterSubrace.ItemsSource = RacesDictionary.RacesAndSubraces[race];
+            characterSubrace.SelectedIndex = 0;
         }
-        private Grid PutTextOnElement(string text, UIElement element)
+        private Race GetSelectedRace()
         {
-            Grid grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            
-            TextBlock textBlock = new TextBlock();
+            for (int i = 0; i < allRaces.Length; i += 1)
+            {
+                if (allRaces[i].GetName() == (string)characterRace.SelectedItem)
+                {
+                    return allRaces[i];
+                }
+            }
+            return null;
+        }
+        private Race GetSeletedSubrace()
+        {
+            for(int i = 0; i < allRaces.Length; i += 1)
+            {
+                if (allRaces[i].GetName() == (string)characterSubrace.SelectedItem)
+                {
+                    return allRaces[i];
+                }
+            }
+            return null;
+        }
+        private void MakeAdventure(object sender, EventArgs e)
+        {
+            if (currentAdventureIsValid)
+            {
+                //Adventure myAdventure = new Adventure(adventureName.Text, characterName.Text, characterTitle.Text, characterBackgroundStory.Text,
+                //    int.Parse(startingCats.Text), int.Parse(diceSides.Text), int.Parse(diceMinWin.Text), GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
+                //controller.Content = new AdventureWindow(mainWindow, cursors, rnd, myAdventure);
+            }
+            else
+            {
+                MessageBox.Show("Aventura inválida, revisa los campos.");
+            }
+        }
+        private Limb[] GenerateLimbs()
+        {
+            Limb[] limbs = new Limb[4];
 
-            textBlock.Inlines.AddRange(mainWindow.DecorateText(text));
-            Grid.SetColumn(textBlock, 0);
-            Grid.SetColumn(element, 1);
-            grid.Children.Add(textBlock);
-            grid.Children.Add(element);
-
-            return grid;
+            for (int i = 0; i < limbs.Length; i += 1)
+            {
+                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0, 0);
+            }
+            return limbs;
+        }
+        private void OnlyNumsAndLetters(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int caretIndex = -1;
+            string text = textBox.Text;
+            string result = "";
+            for (int i = 0; i < text.Length; i += 1)
+            {
+                if (char.IsAsciiLetterOrDigit(text[i]))
+                {
+                    result += text[i];
+                }
+                else
+                {
+                    if (char.IsWhiteSpace(text[i]))
+                    {
+                        result += text[i];
+                    }
+                    else
+                    {
+                        caretIndex = i;
+                    }
+                }
+            }
+            textBox.Text = result;
+            if (caretIndex != -1)
+            {
+                textBox.CaretIndex = caretIndex;
+            }
+            IsAdventureValid(null, null);
+        }
+        private void OnlyNums(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int caretIndex = -1;
+            string text = textBox.Text;
+            string result = "";
+            for (int i = 0; i < text.Length; i += 1)
+            {
+                if (char.IsAsciiDigit(text[i]))
+                {
+                    result += text[i];
+                }
+                else
+                {
+                    caretIndex = i;
+                }
+            }
+            textBox.Text = result;
+            if (caretIndex != -1)
+            {
+                textBox.CaretIndex = caretIndex;
+            }
+            IsAdventureValid(null, null);
+        }
+        private void OnlyText(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int caretIndex = -1;
+            string text = textBox.Text;
+            string result = "";
+            for (int i = 0; i < text.Length; i += 1)
+            {
+                if (char.IsAsciiLetter(text[i]))
+                {
+                    result += text[i];
+                }
+                else
+                {
+                    if (char.IsWhiteSpace(text[i]))
+                    {
+                        result += text[i];
+                    }
+                    else
+                    {
+                        caretIndex = i;
+                    }
+                }
+            }
+            textBox.Text = result;
+            if (caretIndex != -1)
+            {
+                textBox.CaretIndex = caretIndex;
+            }
+            IsAdventureValid(null, null);
         }
     }
 }

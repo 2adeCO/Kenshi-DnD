@@ -6,14 +6,16 @@
              xmlns:local="clr-namespace:Kenshi_DnD"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280" Background="Black">
-    <Grid>
+    
+
+    <Grid x:Name="BigGrid">
         <Grid.Background>
             <ImageBrush ImageSource="/Resources/img/bonepeople.jpg" Stretch="None"></ImageBrush>
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -24,11 +26,11 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
+            <TextBlock x:Name="TitleText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,20" Grid.Row="0" Grid.Column="1"></TextBlock>
             <Button Content="Elige tu propia aventura" HorizontalAlignment="Center" VerticalAlignment="Center" 
         Padding="20" Click="OpenAdventureMaker" Grid.Row="1" Grid.Column="0" Margin="10"></Button>
             <Button Content="Cargar aventura" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10" Click="OpenSavedAdventures" 
         Grid.Row="2" Grid.Column="0"></Button>
-            <TextBlock x:Name="TitleText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Grid.Row="0" Grid.Column="1"></TextBlock>
 
         </Grid>
 
@@ -40,17 +42,443 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Grid.Column="2" Grid.Row="1" Content="Combate" Click="GoToCombat" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10"></Button>
+            <Button Grid.Column="2" Grid.Row="1" Content="Combate" 
+                    Click="GoToCombat" HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" Padding="20" Margin="10"></Button>
             <Button Grid.Column="2" Grid.Row="3" Content="Combate" Click="GoToShop" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10"></Button>
 
         </Grid>
+        <Rectangle x:Name="DarkUI" Fill="Black" Opacity="0.8" Grid.ColumnSpan="3" Visibility="Collapsed" MouseUp="OpenAdventureMaker"></Rectangle>
 
-        <Border Grid.Column="1" Margin="200,50,200,50" x:Name="MenuBorder" Visibility="Collapsed">
-            <StackPanel x:Name="MenuWindow" Visibility="Collapsed">
-                
-            </StackPanel>
-            
+        <Border Grid.Column="1" Margin="50,50,50,50" x:Name="MenuBorder" Visibility="Collapsed" BorderBrush="Black" BorderThickness="2" CornerRadius="7" SizeChanged="UpdateHeroStatGrid">
+            <Border.Background>
+                <RadialGradientBrush GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5">
+                    <GradientStop Color="Goldenrod" Offset="0"/>
+                    <GradientStop Color="DarkGoldenrod" Offset="0.5"/>
+                    <GradientStop Color="#4B3621" Offset="0.8"/>
+                    <GradientStop Color="Black" Offset="1.2"/>
+                </RadialGradientBrush>
+            </Border.Background>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="#4B3621"></Setter>
+                        <Setter Property="Margin" Value="2"></Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+                    <StackPanel x:Name="MenuWindow" Visibility="Collapsed" Margin="5" Background="Transparent">
+
+                    <!-- Sección de Aventura -->
+                    <Border Margin="5" BorderThickness="1" BorderBrush="Black">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#4B3621" Offset="0.0"/>
+                                <GradientStop Color="#EEE8AA" Offset="0.5"/>
+                                <GradientStop Color="#4B3621" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="Aventura" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" FontSize="16" FontWeight="Bold" 
+                                   Foreground="Black" />
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Nombre de aventura" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                       Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="adventureName" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyNumsAndLetters" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="20" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Nombre de facción" 
+                                FontSize="14"
+                            VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="factionName" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyText" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="20" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Color de facción" 
+                   FontSize="14"
+                   VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Border Grid.Column="1" Margin="2" BorderBrush="Black" BorderThickness="2">
+                                <ComboBox x:Name="factionColor" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="IsAdventureValid"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Número de caras en el dado" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="diceSides" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyNums" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="2" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Número mínimo considerado victoria" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="diceMinWin" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyNums" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="2" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Cantidad de cats al empezar"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="startingCats" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyNums" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="5" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+
+                    <!-- Sección de Héroe -->
+                    <Border Margin="5" BorderThickness="1" BorderBrush="Black">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#4B3621" Offset="0.0"/>
+                                <GradientStop Color="#EEE8AA" Offset="0.5"/>
+                                <GradientStop Color="#4B3621" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="Héroe" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" FontSize="16" FontWeight="Bold" 
+                            Foreground="Black" />
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Nombre de héroe inicial" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="characterName" BorderBrush="Black"
+                                     BorderThickness="2" TextChanged="OnlyText" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="20" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Título de héroe inicial"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="characterTitle" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyText" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="50" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Historia del héroe"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBox x:Name="characterBackgroundStory" BorderBrush="Black" BorderThickness="2" TextChanged="OnlyNumsAndLetters" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxLength="300" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Raza del héroe" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Border Grid.Column="1" Margin="2" BorderBrush="Black" BorderThickness="2">
+                                <ComboBox x:Name="characterRace" SelectionChanged="ChangeSubraces" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Subraza del héroe"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Border Grid.Column="1" Margin="2" BorderBrush="Black" BorderThickness="2">
+                                <ComboBox x:Name="characterSubrace" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Sección de Estadísticas -->
+                    <Border Margin="5" BorderThickness="1" BorderBrush="Black">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#4B3621" Offset="0.0"/>
+                                <GradientStop Color="#EEE8AA" Offset="0.5"/>
+                                <GradientStop Color="#4B3621" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="Estadísticas de héroe" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" FontSize="16" FontWeight="Bold" 
+                             Foreground="Black" />
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Puntos restantes"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <TextBlock x:Name="remainingPointsText" 
+                                       FontSize="16"
+                                       VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Sliders -->
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Fuerza bruta" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Slider x:Name="bruteForceSlider" Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Destreza"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Slider x:Name="dexteritySlider" Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Resistencia" 
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Slider x:Name="resistanceSlider" Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Grid Margin="2">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                    <GradientStop Color="Goldenrod" Offset="0.8"/>
+                                    <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Agilidad"
+                                       FontSize="14"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
+                            <Slider x:Name="agilitySlider" Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Grid de estadísticas -->
+                    <Border Margin="5,0,5,20" Padding="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                <GradientStop Color="Goldenrod" Offset="0.9"/>
+                                <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid x:Name="statsGrid" Height="120">
+                            
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="5,0,5,20" Padding="5" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="AntiqueWhite" Offset="0"/>
+                                <GradientStop Color="Goldenrod" Offset="0.9"/>
+                                <GradientStop Color="DarkGoldenrod" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock x:Name="AboutYourAdventure" Text="" TextWrapping="Wrap" FontSize="15"></TextBlock>
+                    </Border>
+                    <!-- Botón final -->
+                    <Border Margin="5,5,5,20" BorderBrush="#6E4B3A" BorderThickness="1">
+                        <Button x:Name="MakeAdventureButton" Click="MakeAdventure" 
+                                HorizontalAlignment="Stretch" BorderBrush="White" 
+                                Height="50"
+                                FontSize="30"
+                                BorderThickness="1" Content="Elijo mi propia aventura"/>
+                    </Border>
+
+                    
+
+                </StackPanel>
+            </ScrollViewer>
         </Border>
-        
+
+
+
+
     </Grid>
 </UserControl>

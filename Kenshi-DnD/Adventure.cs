@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public class Adventure
     {
         string id;
@@ -60,6 +61,20 @@ namespace Kenshi_DnD
             string zeroes = "";
             Debug.WriteLine(randomNum);
 
+            //Formats the name, replacing spaces with underscores
+            string formattedName = "";
+            for (int i = 0; i < name.Length; i += 1)
+            {
+                if (name[i] == ' ')
+                {
+                    formattedName += "_";
+                }
+                else
+                {
+                    formattedName += name[i];
+                }
+            }
+
             //Counts how many numbers there are
             while (temp >= 10)
             {
@@ -84,11 +99,11 @@ namespace Kenshi_DnD
             {
                 continent = RegionContinentDictionary.zonesToContinents[country];
             }
-            // name: MyFirstAdventure
+            // name: My First Adventure
             // country: Ethiopia
             // number generated: 123456
             // 
-            // output: MyFirstAdventure2000123456
+            // output: My_First_Adventure2000123456
             return name + continent + zeroes + randomNum;
         }
         public PlayerInventory GetInventory()

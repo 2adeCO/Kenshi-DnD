@@ -868,14 +868,14 @@ namespace Kenshi_DnD
                     {
                         GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd,null);
                         break;
                     }
                 case -1:
                     {
                         GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd,null);
                         break;
                     }
             }
