@@ -1,0 +1,91 @@
+drop database if exists Kenshi_DnD_DB;
+create database Kenshi_DnD_DB;
+Use Kenshi_DnD_DB;
+
+drop table if exists Factions;
+
+create table Factions(
+	id Int auto_increment primary key,
+    name varchar(50) not null,
+    description varchar(500)
+);
+drop table if exists stats;
+create table stats(
+	id int auto_increment primary key,
+    bruteForce int default 0,
+    dexterity int default 0,
+    hp int default 0,
+    resistance int default 0,
+    agility int default 0
+
+);
+drop table if exists races;
+CREATE TABLE races (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    stats_id int UNIQUE not null,
+    
+    foreign key(stats_id) references stats(id)
+);
+drop table if exists items;
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description varchar(200) default '',
+    value int,
+    resellValue int,
+    type enum('melee','ranged') ,
+    weight int not null,
+    stats_id int Unique not null,
+    
+    foreign key(stats_id) references stats(id)
+    
+);
+drop table if exists rangedItems;
+create table rangedItems(
+	item_id int primary key,
+    difficulty int not null,
+    ammo int not null,
+    
+    foreign key (item_id) references items(id)
+);
+drop table if exists meleeItems;
+create table meleeItems(
+	item_id int primary key,
+    breaksOnUse bool default false,
+    canRevive bool default false,
+        
+    foreign key (item_id) references items(id)
+);
+drop table if exists limbs;
+create table limbs(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    stats_id int UNIQUE not null,
+    
+    foreign key(stats_id) references stats(id)
+);
+drop table if exists enemies;
+CREATE TABLE enemies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    factionId int not null,
+    name VARCHAR(100) NOT NULL,
+    health INT not null,
+    strength INT not null,
+    resistance INT not null,
+    canDropItem bool default false,
+    
+    FOREIGN KEY (factionId) REFERENCES factions(id)
+);
+drop table if exists titles;
+CREATE TABLE titles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL
+);
+drop table if exists backgrounds;
+CREATE TABLE backgrounds (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    background VARCHAR(100) NOT NULL
+);
+
+

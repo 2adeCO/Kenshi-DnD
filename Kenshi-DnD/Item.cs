@@ -8,6 +8,7 @@ namespace Kenshi_DnD
     public abstract class Item
     {
         protected string name;
+        protected string description;
         protected int value;
         protected int resellValue;
         protected int limbsNeeded;
