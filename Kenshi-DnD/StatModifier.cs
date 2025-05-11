@@ -1,5 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
+    [Serializable]
     public class StatModifier
     {
         //All of these are buffs and debuffs to the ints of the hero

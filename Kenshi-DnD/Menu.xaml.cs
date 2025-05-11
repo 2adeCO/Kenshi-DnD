@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Text.Json;
 
 namespace Kenshi_DnD
 {
@@ -69,7 +72,7 @@ namespace Kenshi_DnD
             resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             
-            Dice myDice = new Dice(6, 5, rnd);
+            Dice myDice = new Dice(6, 5);
 
             Limb[] limbs = new Limb[4];
             Limb[] limbs2 = new Limb[4];
@@ -88,7 +91,7 @@ namespace Kenshi_DnD
 
             Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
 
-            myAdventure = new Adventure("Prueba", hero2, new Random(), myDice);
+          
             IsAdventureValid(null, null);
         }
         public void GoToCombat(object sender, EventArgs e)
@@ -104,7 +107,7 @@ namespace Kenshi_DnD
                 limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
             }
             Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
-            Dice myDice = new Dice(6, 5, rnd);
+            Dice myDice = new Dice(6, 5);
             Race human = new Race("Humano", -1, 1, 10, -1, 1);
             RangedItem specialItem = new RangedItem("El arma única", 5, 6, 200, 100, 2, new StatModifier(20, 6, 0, -3, -3), Rarity.Rarities.Meitou);
             Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
@@ -131,22 +134,49 @@ namespace Kenshi_DnD
         public void OpenAdventureMaker(object sender, EventArgs e)
         {
 
-            if (MenuBorder.Visibility == Visibility.Visible)
+            if (AdventureMakerBorder.Visibility == Visibility.Visible)
             {
-                MenuBorder.Visibility = Visibility.Collapsed;
-                MenuWindow.Visibility = Visibility.Collapsed;
+                AdventureMakerBorder.Visibility = Visibility.Collapsed;
+                AdventureMakerMenu.Visibility = Visibility.Collapsed;
                 DarkUI.Visibility = Visibility.Collapsed;
                 return;
             }
             else
             {
                 DarkUI.Visibility = System.Windows.Visibility.Visible;
-                MenuBorder.Visibility = System.Windows.Visibility.Visible;
-                MenuWindow.Visibility = System.Windows.Visibility.Visible;
+                AdventureMakerBorder.Visibility = System.Windows.Visibility.Visible;
+                AdventureMakerMenu.Visibility = System.Windows.Visibility.Visible;
             }
         }
         public void OpenSavedAdventures(object sender, EventArgs e)
         {
+            if (AdventureChooserBorder.Visibility == Visibility.Visible)
+            {
+                AdventureChooserBorder.Visibility = Visibility.Collapsed;
+                AdventureChooserMenu.Visibility = Visibility.Collapsed;
+                DarkUI.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                DarkUI.Visibility = System.Windows.Visibility.Visible;
+                AdventureChooserBorder.Visibility = System.Windows.Visibility.Visible;
+                AdventureChooserMenu.Visibility = System.Windows.Visibility.Visible;
+            }
+            string[] adventureFiles = Directory.GetFiles("./saves", "*.adventure");
+
+            AdventureChooserMenu.Children.Clear();
+
+            for(int i = 0; i < adventureFiles.Length; i += 1)
+            {
+#pragma warning disable SYSLIB0011
+                FileStream fileStream = new FileStream(adventureFiles[i], FileMode.Open);
+                BinaryFormatter formatter = new BinaryFormatter();
+                Adventure adventure = (Adventure)formatter.Deserialize(fileStream);
+#pragma warning restore SYSLIB0011
+                fileStream.Close();
+                AdventureChooserMenu.Children.Add(CreateAdventureButton(adventure));
+            }
 
         }
        
@@ -377,9 +407,40 @@ namespace Kenshi_DnD
         {
             if (currentAdventureIsValid)
             {
-                //Adventure myAdventure = new Adventure(adventureName.Text, characterName.Text, characterTitle.Text, characterBackgroundStory.Text,
-                //    int.Parse(startingCats.Text), int.Parse(diceSides.Text), int.Parse(diceMinWin.Text), GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
-                //controller.Content = new AdventureWindow(mainWindow, cursors, rnd, myAdventure);
+                Hero hero = new Hero((int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,
+                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
+                Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
+                Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text));
+
+                if (!Directory.Exists("./saves"))
+                {
+                    Directory.CreateDirectory("./saves");
+                }
+
+                string adventurePath = "./saves/" + myAdventure.GetId() + ".adventure";
+
+                if(File.Exists(adventurePath))
+                {
+                    return;
+                }
+                else
+                {
+
+                    FileStream fileStream = new FileStream(adventurePath, FileMode.CreateNew);
+                    
+#pragma warning disable SYSLIB0011 
+
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(fileStream, myAdventure);
+
+#pragma warning restore SYSLIB0011 
+
+                    fileStream.Close();
+
+
+                    Debug.WriteLine("Adventure saved in: " + adventurePath);
+                }
+
             }
             else
             {
@@ -481,6 +542,44 @@ namespace Kenshi_DnD
                 textBox.CaretIndex = caretIndex;
             }
             IsAdventureValid(null, null);
+        }
+        private void CloseCurrentMenu(object sender, EventArgs e)
+        {
+            if (AdventureMakerBorder.Visibility == Visibility.Visible)
+            {
+                AdventureMakerBorder.Visibility = Visibility.Collapsed;
+                AdventureMakerMenu.Visibility = Visibility.Collapsed;
+                DarkUI.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                if (AdventureChooserBorder.Visibility == Visibility.Visible)
+                {
+                    AdventureChooserBorder.Visibility = Visibility.Collapsed;
+                    AdventureChooserMenu.Visibility = Visibility.Collapsed;
+                    DarkUI.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+        private StackPanel CreateAdventureButton(Adventure adventure)
+        {
+            StackPanel adventureStack = new StackPanel();
+            adventureStack.Orientation = Orientation.Horizontal;
+            adventureStack.Margin = new Thickness(0, 5, 0, 5);
+            adventureStack.HorizontalAlignment = HorizontalAlignment.Center;
+            adventureStack.VerticalAlignment = VerticalAlignment.Center;
+            adventureStack.Background = Brushes.LightGray;
+
+            Button button = new Button();
+            button.Content = adventure.GetId();
+
+            Button deleteButton = new Button();
+            deleteButton.Content = "🗑️";
+
+            adventureStack.Children.Add(button);
+            adventureStack.Children.Add(deleteButton);
+
+            return adventureStack;
         }
     }
 }

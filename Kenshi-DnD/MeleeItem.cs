@@ -1,5 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
+    [Serializable]
     class MeleeItem : Item
     {
         protected bool canRevive;

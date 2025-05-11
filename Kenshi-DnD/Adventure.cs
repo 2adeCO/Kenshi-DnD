@@ -28,10 +28,10 @@ namespace Kenshi_DnD
 
         List<Item> alreadyObtainedItems;
         
-        public Adventure(string name, Hero hero, Random rnd, Dice myDice)
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats)
         {
             this.id = GenerateId(name, rnd);
-            this.cats = 200;
+            this.cats = startingCats;
             this.myDice = myDice;
             startDate = DateTime.Now;
             hoursPlayed = DateTime.Now;
@@ -105,6 +105,10 @@ namespace Kenshi_DnD
             // 
             // output: My_First_Adventure2000123456
             return name + continent + zeroes + randomNum;
+        }
+        public string GetId()
+        {
+            return id;
         }
         public PlayerInventory GetInventory()
         {

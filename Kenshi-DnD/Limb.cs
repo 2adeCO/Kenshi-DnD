@@ -1,5 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
+    [Serializable]
     public class Limb : StatModifier
     {
         string name;

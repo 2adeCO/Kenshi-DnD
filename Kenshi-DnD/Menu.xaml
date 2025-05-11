@@ -48,9 +48,9 @@
             <Button Grid.Column="2" Grid.Row="3" Content="Combate" Click="GoToShop" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10"></Button>
 
         </Grid>
-        <Rectangle x:Name="DarkUI" Fill="Black" Opacity="0.8" Grid.ColumnSpan="3" Visibility="Collapsed" MouseUp="OpenAdventureMaker"></Rectangle>
+        <Rectangle x:Name="DarkUI" Fill="Black" Opacity="0.8" Grid.ColumnSpan="3" Visibility="Collapsed" MouseUp="CloseCurrentMenu"></Rectangle>
 
-        <Border Grid.Column="1" Margin="50,50,50,50" x:Name="MenuBorder" Visibility="Collapsed" BorderBrush="Black" BorderThickness="2" CornerRadius="7" SizeChanged="UpdateHeroStatGrid">
+        <Border Grid.Column="1" Margin="50,50,50,50" x:Name="AdventureMakerBorder" Visibility="Collapsed" BorderBrush="Black" BorderThickness="2" CornerRadius="7" SizeChanged="UpdateHeroStatGrid">
             <Border.Background>
                 <RadialGradientBrush GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5">
                     <GradientStop Color="Goldenrod" Offset="0"/>
@@ -66,7 +66,7 @@
                         <Setter Property="Margin" Value="2"></Setter>
                     </Style>
                 </ScrollViewer.Resources>
-                    <StackPanel x:Name="MenuWindow" Visibility="Collapsed" Margin="5" Background="Transparent">
+                <StackPanel x:Name="AdventureMakerMenu" Visibility="Collapsed" Margin="5" Background="Transparent">
 
                     <!-- Sección de Aventura -->
                     <Border Margin="5" BorderThickness="1" BorderBrush="Black">
@@ -448,7 +448,7 @@
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid x:Name="statsGrid" Height="120">
-                            
+
                         </Grid>
                     </Border>
 
@@ -471,13 +471,36 @@
                                 BorderThickness="1" Content="Elijo mi propia aventura"/>
                     </Border>
 
-                    
+
 
                 </StackPanel>
             </ScrollViewer>
         </Border>
 
+        <Border Grid.Column="1" Margin="50,50,50,50" x:Name="AdventureChooserBorder" Visibility="Collapsed" BorderBrush="Black" BorderThickness="2" CornerRadius="7" SizeChanged="UpdateHeroStatGrid">
+            <Border.Background>
+                <RadialGradientBrush GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5">
+                    <GradientStop Color="Goldenrod" Offset="0"/>
+                    <GradientStop Color="DarkGoldenrod" Offset="0.5"/>
+                    <GradientStop Color="#4B3621" Offset="0.8"/>
+                    <GradientStop Color="Black" Offset="1.2"/>
+                </RadialGradientBrush>
+            </Border.Background>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="#4B3621"></Setter>
+                        <Setter Property="Margin" Value="2"></Setter>
+                    </Style>
+                </ScrollViewer.Resources>
 
+
+                <StackPanel x:Name="AdventureChooserMenu" Visibility="Collapsed" Margin="5" Background="Transparent">
+
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
 
 
     </Grid>

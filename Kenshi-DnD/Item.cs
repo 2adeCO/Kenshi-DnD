@@ -4,6 +4,7 @@ using System.Windows.Documents;
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public abstract class Item
     {
         protected string name;

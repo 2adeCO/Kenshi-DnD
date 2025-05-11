@@ -2,6 +2,7 @@
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public class Hero : ITurnable
     {
         //Name and title, example: "Carlos, the database scholar"

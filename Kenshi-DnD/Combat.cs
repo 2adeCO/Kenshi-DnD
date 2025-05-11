@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -189,7 +190,7 @@ namespace Kenshi_DnD
 
             await window.UpdateCombatStatsUI("@9@Habilidad de robo@ de " + hero.GetName() + ": " + looterStat, 0);
 
-            if(myDice.PlayDice(looterStat) > 3)
+            if(myDice.PlayDice(looterStat,rnd) > 3)
             {
                 corpse.FreeAllItems();
                 await window.UpdateLogUI(hero.GetName() + " revolvió el cuerpo inconsciente de " + corpse.GetName() +
@@ -221,7 +222,7 @@ namespace Kenshi_DnD
 
             //Defender(hero) throws a dice, protects 1 hp for each pair of dice wins. Example: Hero has 3 resistance,
             //and attacker has 1 strength, so defender throws two dices, if the two are won, he will take 2 damage instead of 3
-            int hitsDefense = myDice.PlayDice(defenderStat - attackerStat) /2;
+            int hitsDefense = myDice.PlayDice(defenderStat - attackerStat, rnd) /2;
 
             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
             if (hitsDefense == 0)
@@ -245,7 +246,7 @@ namespace Kenshi_DnD
 			if (hits > defender.GetToughness() / 2)
 			{
                 Debug.WriteLine("Might lose an arm");
-				if (myDice.PlayDice(hits / 4) > 2)
+				if (myDice.PlayDice(hits / 4, rnd) > 2)
 				{
 					Limb limbLost = defender.RemoveLimb(rnd.Next(0, 5));
 					await window.UpdateLogUI("El " + limbLost.GetName() + " de " + defender.GetName() + " @120@voló por los aires@...",0);
@@ -404,7 +405,7 @@ namespace Kenshi_DnD
                 "@9@Resistencia@ de " + defender.GetName() + ": " + defenderStat + "\n" +
                 "Golpes necesarios para matar: " + defenderHealth,0);
             
-            int hits = myDice.PlayDice(attackerStat - defenderStat);
+            int hits = myDice.PlayDice(attackerStat - defenderStat, rnd);
             await window.UpdateLogUI(attacker.GetName() + " propina " + hits + " golpes a " + defender.GetName(), 0);
             await window.UpdateDicesUI(myDice.GetRollHistory() , 1200);
 
@@ -439,7 +440,7 @@ namespace Kenshi_DnD
             int misses = 0;
             int damage = 0;
             int emptyAmmoWeapons = 0;
-            int permittedMisses = myDice.PlayDice(attackerStat / 3);
+            int permittedMisses = myDice.PlayDice(attackerStat / 3, rnd);
             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
             await window.UpdateCombatStatsUI("Fallos permitidos: " + permittedMisses +
                 "\n@9@Destreza@ de " + attacker.GetName() + ": " + attackerStat + "\n" +
@@ -458,7 +459,7 @@ namespace Kenshi_DnD
                     }
                     else
                     {
-                        int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defenderAgility / 2)));
+                        int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defenderAgility / 2)), rnd);
                         await window.UpdateDicesUI(myDice.GetRollHistory(),0);
 
                         if (diceNum >= rangedItems[i].GetDifficulty())
@@ -511,7 +512,7 @@ namespace Kenshi_DnD
             }
 
 
-            if (myDice.PlayDice(damage - defenderStat) >= defenderHealth)
+            if (myDice.PlayDice(damage - defenderStat, rnd) >= defenderHealth)
             {
                 await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                 await window.UpdateLogUI("¡" + attacker.GetName() + " @120@deja como un colador a@ " + defender.GetName() + "!", 1200);
@@ -549,7 +550,7 @@ namespace Kenshi_DnD
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
-                            int hit = myDice.PlayDice(limbStat - defenderStat);
+                            int hit = myDice.PlayDice(limbStat - defenderStat, rnd);
                             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {
@@ -606,7 +607,7 @@ namespace Kenshi_DnD
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
-                            int hit = myDice.PlayDice(limbStat - defenderStat);
+                            int hit = myDice.PlayDice(limbStat - defenderStat, rnd);
                             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {
@@ -663,7 +664,7 @@ namespace Kenshi_DnD
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
-                            int hit = myDice.PlayDice(limbStat - defenderStat);
+                            int hit = myDice.PlayDice(limbStat - defenderStat, rnd);
                             await window.UpdateDicesUI(myDice.GetRollHistory(),0);
                             if (hit >= defenderStat)
                             {
@@ -721,7 +722,7 @@ namespace Kenshi_DnD
 
                         for (int i = hitChances; i > 0; i -= 1)
                         {
-                            int hit = myDice.PlayDice(limbStat - defenderStat);
+                            int hit = myDice.PlayDice(limbStat - defenderStat, rnd);
                             await window.UpdateDicesUI(myDice.GetRollHistory(), 0);
                             if (hit >= defenderStat)
                             {

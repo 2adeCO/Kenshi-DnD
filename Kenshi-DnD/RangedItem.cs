@@ -1,5 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
+    [Serializable]
     class RangedItem : Item
     {
         int difficulty;

@@ -1,5 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
+    [Serializable]
     public class PlayerInventory : Inventory
     {
         public PlayerInventory()

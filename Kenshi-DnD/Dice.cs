@@ -2,6 +2,7 @@
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public class Dice
     {
         int sides;
@@ -9,16 +10,15 @@ namespace Kenshi_DnD
 
         string lastPlay;
         int winHistory;
-        Random random;
-        public Dice(int sides, int minWin,Random random)
+
+        public Dice(int sides, int minWin)
         {
             this.sides = sides;
             this.minWin = minWin;
             this.lastPlay = "";
             this.winHistory = 0;
-            this.random = random;
         }
-        private int Roll()
+        private int Roll(Random random)
         {
             int roll = random.Next(1, sides + 1);
             AddRollToHistory(roll);
@@ -36,7 +36,7 @@ namespace Kenshi_DnD
             }
             return false;
         }
-        public int PlayDice(int numOfRolls)
+        public int PlayDice(int numOfRolls,Random random)
         {
             winHistory = 0;
             lastPlay = "";
@@ -48,7 +48,7 @@ namespace Kenshi_DnD
             }
             for (int i = 0; i < numOfRolls; i+=1)
             {
-                if (IsSuccess(Roll()))
+                if (IsSuccess(Roll(random)))
                 {
                     totalWins += 1;
                 }
