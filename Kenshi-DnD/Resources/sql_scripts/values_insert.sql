@@ -1,29 +1,26 @@
 use kenshi_dnd_db;
 
-INSERT INTO Factions (name, description) VALUES
+INSERT INTO Factions (name, description, color) VALUES
 ('La Nación Sagrada', 'La Nación Sagrada es una teocracia fanática que venera a Okran,
  su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua, 
  a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología 
- con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.'),
+ con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.',6),
 ('Ciudades Unidas', 'Las Ciudades Unidas son un conglomerado de estados esclavistas y comerciantes, d
 ominados por una aristocracia corrupta. Su poder se basa en el comercio, la esclavitud y la riqueza. 
-La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.'),
+La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.',4),
 ('Shek Kingdom', 'El Reino Shek está formado por una orgullosa raza de guerreros con cuerpos endurecidos por el combate.
  Su cultura gira en torno al honor, la fuerza y la superación personal. Desprecian la cobardía y valoran la muerte en batalla 
- por encima de todo.'),
-('Tech Hunters', 'Los Cazadores de Tecnología son exploradores independientes que buscan restos de civilizaciones antiguas.
- Su objetivo es recuperar conocimientos olvidados del mundo previo al cataclismo. Aunque no son una nación unificada, 
- comparten la pasión por la ciencia perdida y el peligro de sus incursiones en ruinas olvidadas.'),
+ por encima de todo.',1),
  ('Canibales','Los canibales habitan en tribus por todo el norte de la isla. Practican la antrofagía como ritual sagrado, 
- y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.'),
+ y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.',3),
  ('El Enjambre del Oeste','Sometidos a las feromonas de la Reina, los Enjambres actuan bajo una única voluntad. 
  El Enjambre del Oeste es una nación pacífica, y muy comercial. Mandan caravanas de enjambres a ambular el mundo en búsqueda de vender
- sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.'),
+ sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.',5),
  ('Reino Animal','En la isla hay una gran variedad de animales. Expuestos al mundo post-apocalíptico de la isla, buscan comida
- donde pueden. Esa comida podrías ser tú.'),
- ('Bandidos famélicos','Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.'),
+ donde pueden. Esa comida podrías ser tú.',2),
+ ('Bandidos famélicos','Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.',8),
  ('Esclavistas','Trabajan junto a las Ciudades Unidas y La Nación Sagrada para suplir su demanda de esclavos. Su modo de operación es simple, 
- trataran de derrotarte para después venderte.');
+ trataran de derrotarte para después venderte.',7);
  Insert into stats(bruteForce,dexterity,hp,resistance,agility) values
  -- Pure race
  (0,0,0,0,0), 
@@ -107,26 +104,27 @@ insert into stats(bruteForce,dexterity,hp,resistance,agility) values
 (2, -1, 0, 1, -2);
 
 INSERT INTO items (name, description, value, resellValue, type, weight, stats_id) VALUES
-('Ringed Saber', 'Una espada curva balanceada, común entre mercenarios.', 500, 300, 'melee', 2, 1),
-('Fragment Axe', 'Un hacha inmensa que puede partir en dos a un enemigo.', 1200, 800, 'melee', 4, 2),
-('Wakizashi', 'Hoja corta y ligera, excelente como arma secundaria.', 250, 150, 'melee', 1, 3),
-('Hacker', 'Hoja recta y pesada diseñada para atravesar armaduras.', 600, 400, 'melee', 3, 4),
-('Paladin’s Cross', 'Espada bendita usada por paladines. Muy pesada.', 1800, 1200, 'melee', 4, 5),
-('Horse Chopper', 'Corta fácilmente extremidades, ligera y común.', 400, 250, 'melee', 2, 6),
-('Desert Sabre', 'Hoja curva adaptada al combate en desiertos.', 450, 300, 'melee', 2, 7),
-('Nodachi', 'Espada muy larga, buena para cargar en campo abierto.', 800, 500, 'melee', 2, 8),
-('Falling Sun', 'Un mandoble inmenso capaz de aniquilar enemigos.', 2000, 1500, 'melee', 4, 9),
-('Short Cleaver', 'Cuchilla de batalla pequeña pero brutal.', 550, 350, 'melee', 2, 10),
-('Plank', 'Arma brutal hecha con un trozo de hierro reforzado.', 1500, 1000, 'melee', 4, 11),
-('Combat Cleaver', 'Gran cuchilla utilizada en escaramuzas de élite.', 900, 600, 'melee', 3, 12),
-('Topper', 'Arma sencilla, bien balanceada, común entre reclutas.', 350, 200, 'melee', 2, 13),
-('Guardless Katana', 'Versión sin guardamano, más rápida pero vulnerable.', 300, 180, 'melee', 2, 14),
-('Jitte', 'Diseñada para bloquear y controlar, no matar.', 280, 160, 'melee', 2, 15),
-('Moon Cleaver', 'Pesada hoja con forma de luna, elegante y letal.', 1100, 750, 'melee', 4, 16),
-('Heavy Jitte', 'Versión reforzada del jitte, más pesada.', 500, 300, 'melee', 3, 17),
-('Katana', 'La clásica espada curva, versátil y efectiva.', 600, 400, 'melee', 3, 18),
-('Crescent Scythe', 'Hoja curvada con mucho estilo, pero algo torpe.', 850, 600, 'melee', 3, 19),
-('Iron Stick', 'Una simple barra de hierro improvisada.', 100, 50, 'melee', 1, 20);
+('Ringed Saber', 'Una espada curva balanceada, común entre mercenarios.', 500, 300, 'melee', 2, 11),
+('Fragment Axe', 'Un hacha inmensa que puede partir en dos a un enemigo.', 1200, 800, 'melee', 4, 12),
+('Wakizashi', 'Hoja corta y ligera, excelente como arma secundaria.', 250, 150, 'melee', 1, 13),
+('Hacker', 'Hoja recta y pesada diseñada para atravesar armaduras.', 600, 400, 'melee', 3, 14),
+('Paladin’s Cross', 'Espada bendita usada por paladines. Muy pesada.', 1800, 1200, 'melee', 4, 15),
+('Horse Chopper', 'Corta fácilmente extremidades, ligera y común.', 400, 250, 'melee', 2, 16),
+('Desert Sabre', 'Hoja curva adaptada al combate en desiertos.', 450, 300, 'melee', 2, 17),
+('Nodachi', 'Espada muy larga, buena para cargar en campo abierto.', 800, 500, 'melee', 2, 18),
+('Falling Sun', 'Un mandoble inmenso capaz de aniquilar enemigos.', 2000, 1500, 'melee', 4, 19),
+('Short Cleaver', 'Cuchilla de batalla pequeña pero brutal.', 550, 350, 'melee', 2, 20),
+('Plank', 'Arma brutal hecha con un trozo de hierro reforzado.', 1500, 1000, 'melee', 4, 21),
+('Combat Cleaver', 'Gran cuchilla utilizada en escaramuzas de élite.', 900, 600, 'melee', 3, 22),
+('Topper', 'Arma sencilla, bien balanceada, común entre reclutas.', 350, 200, 'melee', 2, 23),
+('Guardless Katana', 'Versión sin guardamano, más rápida pero vulnerable.', 300, 180, 'melee', 2, 24),
+('Jitte', 'Diseñada para bloquear y controlar, no matar.', 280, 160, 'melee', 2, 25),
+('Moon Cleaver', 'Pesada hoja con forma de luna, elegante y letal.', 1100, 750, 'melee', 4, 26),
+('Heavy Jitte', 'Versión reforzada del jitte, más pesada.', 500, 300, 'melee', 3, 27),
+('Katana', 'La clásica espada curva, versátil y efectiva.', 600, 400, 'melee', 3, 28),
+('Crescent Scythe', 'Hoja curvada con mucho estilo, pero algo torpe.', 850, 600, 'melee', 3, 29),
+('Iron Stick', 'Una simple barra de hierro improvisada.', 100, 50, 'melee', 1, 30);
+
 
 INSERT INTO meleeItems (item_id, breaksOnUse, canRevive) VALUES
 (1, false, false),
@@ -163,11 +161,12 @@ INSERT INTO stats (bruteForce, dexterity, hp, resistance, agility) VALUES
 (3, 3, 0, 3, -2), 
 (4, 2, 0, 4, -3); 
 INSERT INTO items (name, description, value, resellValue, type, weight, stats_id) VALUES
-('Spring Bat', 'Ballesta rudimentaria de corto alcance.', 600, 400, 'ranged', 2, 21),
-('Toothpick', 'Ballesta ligera con buena velocidad de disparo.', 750, 500, 'ranged', 1, 22),
-('Eagle’s Cross', 'Ballesta de largo alcance, muy precisa.', 1200, 800, 'ranged', 3, 23),
-('Oldworld Bow MkII', 'Una ballesta militar mejorada de gran daño.', 1500, 1000, 'ranged', 4, 24),
-('Harpoon Gun', 'Arma pesada de defensa estática.', 2000, 1500, 'ranged', 4, 25);
+('Spring Bat', 'Ballesta rudimentaria de corto alcance.', 600, 400, 'ranged', 2, 31),
+('Toothpick', 'Ballesta ligera con buena velocidad de disparo.', 750, 500, 'ranged', 1, 32),
+('Eagle’s Cross', 'Ballesta de largo alcance, muy precisa.', 1200, 800, 'ranged', 3, 33),
+('Oldworld Bow MkII', 'Una ballesta militar mejorada de gran daño.', 1500, 1000, 'ranged', 4, 34),
+('Harpoon Gun', 'Arma pesada de defensa estática.', 2000, 1500, 'ranged', 4, 35);
+
 
 INSERT INTO rangedItems (item_id, difficulty, ammo) VALUES
 (21, 1, 10),   
@@ -216,21 +215,23 @@ INSERT INTO stats (bruteForce, dexterity, hp, resistance, agility) VALUES
 
 
 INSERT INTO items (name, description, value, resellValue, type, weight, stats_id) VALUES
-('Primeros auxilios estándar', 'Kit básico de primeros auxilios. Se consume al usarse.', 200, 100, 'melee', 1, 26),
-('Ferula basica', 'Inmoviliza miembros fracturados. Se consume al usarse.', 150, 75, 'melee', 1, 27),
-('Primeros auxilios profesional', 'Restaura sangre rápidamente. Se consume al usarse.', 300, 150, 'melee', 1, 28),
-('Mendrugo de pan', 'La única comida que sobrevivió el cataclismo.Se consume al usarse.', 200, 50, 'melee', 1, 29),
-('Phoenix Tear', 'Objeto raro capaz de revivir a un aliado. Se consume al usarse.', 2000, 1000, 'melee', 1, 30),
-('Simple Meal', 'Comida básica que satisface el hambre y otorga un ligero aumento en la fuerza.', 50, 25, 'melee', 1, 41),
-('Mug of Water', 'Agua potable que hidrata y mejora la resistencia física temporalmente.', 10, 5, 'melee', 1, 42),
-('Meat Wrap', 'Parece carne cruda envuelta en tela, aumenta la energía y la agilidad.', 80, 40, 'melee', 1, 43),
-('Raw Meat', 'Carne cruda que puede ser cocinada, otorga un pequeño aumento de fuerza.', 100, 50, 'melee', 1, 44),
-('Herbal Tea', 'Bebida herbal que mejora la calma y recarga la resistencia.', 150, 75, 'melee', 1, 45),
-('Stew', 'Un guiso que cubre bien el hambre y mejora la resistencia y fuerza.', 200, 100, 'melee', 2, 46),
-('Hemp Beer', 'Cerveza artesanal que alivia el cansancio, pero reduce la agilidad.', 120, 60, 'melee', 1, 47),
+('Primeros auxilios estándar', 'Kit básico de primeros auxilios. Se consume al usarse.', 200, 100, 'melee', 1, 36),
+('Ferula basica', 'Inmoviliza miembros fracturados. Se consume al usarse.', 150, 75, 'melee', 1, 37),
+('Primeros auxilios profesional', 'Restaura sangre rápidamente. Se consume al usarse.', 300, 150, 'melee', 1, 38),
+('Mendrugo de pan', 'La única comida que sobrevivió el cataclismo.Se consume al usarse.', 200, 50, 'melee', 1, 39),
+('Ron de sangre', 'Su nombre es un misterio, y su elaboración, también. Es capaz de revivir a un aliado. Se consume al usarse.', 2000, 1000, 'melee', 1, 40),
+('Comida Simple', 'Comida básica que satisface el hambre y otorga un ligero aumento en la fuerza.', 50, 25, 'melee', 1, 41),
+('Taza de agua', 'Agua potable que hidrata y mejora la resistencia física temporalmente.', 10, 5, 'melee', 1, 42),
+('Wrap de carne', 'Parece carne cruda envuelta en tela, aumenta la energía y la agilidad.', 80, 40, 'melee', 1, 43),
+('Comida cruda', 'Carne cruda, otorga un pequeño aumento de fuerza.', 100, 50, 'melee', 1, 44),
+('Té herbal', 'Bebida herbal que mejora la calma y recarga la resistencia.', 150, 75, 'melee', 1, 45),
+('Guiso', 'Un guiso que cubre bien el hambre y mejora la resistencia y fuerza.', 200, 100, 'melee', 2, 46),
+('Cerveza de cáñamo', 'Cerveza artesanal que alivia el cansancio, pero reduce la agilidad.', 120, 60, 'melee', 1, 47),
 ('Dustwich', 'Un sándwich con polvo del desierto, ligeramente mejora la agilidad.', 60, 30, 'melee', 1, 48),
-('Toxin Purge', 'Elimina veneno y otorga un aumento de resistencia temporal.', 300, 150, 'melee', 1, 49),
-('Grog', 'Bebida alcohólica que aumenta la resistencia, pero reduce la agilidad.', 250, 125, 'melee', 1, 50);
+('Sake', 'Poca cosa pero matón, otorga un aumento de resistencia temporal a costa de equilibrio.', 300, 150, 'melee', 1, 49),
+('Grog', 'Bebida alcohólica que aumenta la resistencia, pero reduce la agilidad.', 250, 125, 'melee', 1, 50),
+('Hashish', 'Tremendamente ilegal, te dejará en con el corazón a mil.', 700, 600, 'melee', 1, 51);
+
 
 INSERT INTO meleeItems (item_id, breaksOnUse, canRevive) VALUES
 (26, true, false),  
@@ -247,5 +248,6 @@ INSERT INTO meleeItems (item_id, breaksOnUse, canRevive) VALUES
 (37, true, false),  
 (38, true, false),  
 (39, true, false),  
-(40, true, false);  
+(40, true, false),
+(41, true, false);  
 

@@ -7,7 +7,9 @@ drop table if exists Factions;
 create table Factions(
 	id Int auto_increment primary key,
     name varchar(50) not null,
-    description varchar(500)
+    description varchar(500),
+    color int not null,
+    imagePath varchar(100)
 );
 drop table if exists stats;
 create table stats(
