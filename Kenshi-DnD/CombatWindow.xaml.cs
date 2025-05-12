@@ -868,14 +868,14 @@ namespace Kenshi_DnD
                     {
                         GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd,null);
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
                         break;
                     }
                 case -1:
                     {
                         GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd,null);
+                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
                         break;
                     }
             }
@@ -926,15 +926,7 @@ namespace Kenshi_DnD
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             Grid.SetColumn(textBlock, 1);
             grid.Children.Add(textBlock);
-            if (monster.GetFaction().GetFactionImage() != null)
-            {
-                BitmapImage bitmapImage
-                = monster.GetFaction().GetFactionImage();
-                Image image = new Image();
-                image.Source = bitmapImage;
-                Grid.SetColumn(image, 0);
-                grid.Children.Add(image);
-            }
+           
             if (!monster.IsAlive())
             {
                 textBlock = new TextBlock();

@@ -25,7 +25,7 @@ public partial class MainWindow : Window
             rnd = new Random();
             allRaces = new Race[] {new Race("Humano",0,0,0,0,0),new Race("Greenlander",0,0,0,0,0),new Race("Scorchlander",0,0,0,0,0),
                 new Race("Hive",0,0,0,0,0),new Race("Prince",0,0,0,0,0),new Race("Soldier",0,0,0,0,0), new Race("Worker",0,0,0,0,0)};
-            PageController.Content = new Menu(this,PageController, cursors, rnd,allRaces);
+            PageController.Content = new Menu(this,PageController, cursors, rnd);
         }
         public void LoadCursors()
         {

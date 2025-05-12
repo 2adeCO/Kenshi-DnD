@@ -5,7 +5,7 @@
     {
         string name;
         bool beingUsed;
-        public Limb(string name, int bruteForce, int dexterity, int toughness, int hp, int resistance, int agility)
+        public Limb(string name, int bruteForce, int dexterity, int hp, int resistance, int agility)
             : base(bruteForce, dexterity, hp, resistance, agility)
         {
             this.name = name;

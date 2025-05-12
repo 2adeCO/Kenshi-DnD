@@ -1,26 +1,56 @@
 use kenshi_dnd_db;
 
-INSERT INTO Factions (name, description, color) VALUES
+INSERT INTO Factions (name, description, baseRelations,color) VALUES
 ('La Nación Sagrada', 'La Nación Sagrada es una teocracia fanática que venera a Okran,
  su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua, 
  a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología 
- con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.',6),
+ con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.',30,6),
 ('Ciudades Unidas', 'Las Ciudades Unidas son un conglomerado de estados esclavistas y comerciantes, d
 ominados por una aristocracia corrupta. Su poder se basa en el comercio, la esclavitud y la riqueza. 
-La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.',4),
+La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.',30,4),
 ('Shek Kingdom', 'El Reino Shek está formado por una orgullosa raza de guerreros con cuerpos endurecidos por el combate.
  Su cultura gira en torno al honor, la fuerza y la superación personal. Desprecian la cobardía y valoran la muerte en batalla 
- por encima de todo.',1),
+ por encima de todo.',60,1),
  ('Canibales','Los canibales habitan en tribus por todo el norte de la isla. Practican la antrofagía como ritual sagrado, 
- y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.',3),
+ y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.',0,3),
  ('El Enjambre del Oeste','Sometidos a las feromonas de la Reina, los Enjambres actuan bajo una única voluntad. 
  El Enjambre del Oeste es una nación pacífica, y muy comercial. Mandan caravanas de enjambres a ambular el mundo en búsqueda de vender
- sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.',5),
+ sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.',70,5),
  ('Reino Animal','En la isla hay una gran variedad de animales. Expuestos al mundo post-apocalíptico de la isla, buscan comida
- donde pueden. Esa comida podrías ser tú.',2),
- ('Bandidos famélicos','Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.',8),
+ donde pueden. Esa comida podrías ser tú.',0,2),
+ ('Bandidos famélicos','Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.',0,8),
  ('Esclavistas','Trabajan junto a las Ciudades Unidas y La Nación Sagrada para suplir su demanda de esclavos. Su modo de operación es simple, 
- trataran de derrotarte para después venderte.',7);
+ trataran de derrotarte para después venderte.',0,7);
+ 
+ insert into regions(name,description) values
+ ('Norte de la isla','No hay motivo por el que quieras estar aquí, más que para entrenar.'),
+ ('La Nación Sagrada','Serás atacado si no eres humano greenlander, y si lo eres, serás juzgado.'),
+ ('Ciudades Unidas','En un buen día, encontrarás mercaderes con grandes botínes, en uno malo, un noble querrá jugar a cazarte'),
+ ('Río del Enjambre del Oeste', 'Desean intercambiar bienes contigo, aunque la zona es conocida por tener una fauna peligrosa'),
+ ('Reino Shek', 'El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral'),
+ ('Pantano','Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla');
+ 
+ insert into region_faction(regionId,factionId) values
+ -- Norte de la isla: Esclavistas, canibales
+ (1,4),
+ (1,8),
+ -- Nación sagrada: Nación sagrada, esclavistas,
+ (2,1),
+ (2,8),
+ -- Ciudades unidas: Ciudades unidas, esclavistas, reino animal
+ (3,2),
+ (3,6),
+ (3,8),
+ -- Rio del enjambre del oeste: Enjambre del oeste, reino animal
+ (4,5),
+ (4,6),
+ -- Reino Shek: Reino shek, bandidos famélicos
+ (5,3),
+ (5,7),
+ -- Pantano: Reino animal, bandidos famélicos
+ (6,6),
+ (6,7);
+ 
  Insert into stats(bruteForce,dexterity,hp,resistance,agility) values
  -- Pure race
  (0,0,0,0,0), 
@@ -53,9 +83,9 @@ insert into races(name, stats_id) values
 ('Shek', 5),
 ('Esqueleto', 6),
 ('Enjambre', 7),
-('Trabajador', 8),
+('Dron Trabajador', 8),
 ('Príncipe', 9),
-('Soldado', 10);
+('Dron Soldado', 10);
 
 
 
@@ -250,4 +280,108 @@ INSERT INTO meleeItems (item_id, breaksOnUse, canRevive) VALUES
 (39, true, false),  
 (40, true, false),
 (41, true, false);  
+
+INSERT INTO stats (bruteForce, dexterity, hp, resistance, agility) VALUES
+(0, 2, 2, -2, 4),  
+(4, -2, 4, 4, -2), 
+(4, 4, 0, 1, 1),   
+(-2, -2, 2, 8, -2),
+(1, 6, 0, -1, -2); 
+INSERT INTO limbs (name, stats_id) VALUES
+('Pierna ágil', 52),
+('Extremidad de metal', 53),
+('Extremidad de Kung-Fu', 54),
+('Extremidad Antigolpes', 55),
+('Brazo de francotirador', 56);
+
+
+-- Reino Animal
+INSERT INTO enemies (factionId, name, health, strength, resistance, immunity, xp, maxCatDrop, canDropItem) VALUES
+(6, 'Perro Salvaje', 4, 3, 2, 'ResistantToMelee', 50, 0, false),
+(6, 'Garral Joven', 6, 5, 4, 'ResistantToMelee', 75, 0, false),
+(6, 'Bicho de las Dunas', 5, 4, 3, 'ResistantToBoth', 100, 0, false),
+
+-- Caníbales
+(4, 'Caníbal Desnutrido', 3, 2, 2, 'None', 50, 100, true),
+(4, 'Caníbal Cazador', 4, 3, 2, 'None', 75, 100, true),
+(4, 'Chaman Caníbal', 5, 2, 3, 'ResistantToRanged', 120, 150, true),
+
+-- Bandidos Famélicos
+(7, 'Bandido Famélico', 2, 2, 2, 'None', 50, 100, true),
+(7, 'Líder Bandido Famélico', 3, 3, 3, 'None', 100, 150, true),
+
+-- La Nación Sagrada
+(1, 'Paladín Sagrado', 6, 6, 5, 'ResistantToBoth', 1000, 1000, true),
+(1, 'Inquisidor', 8, 7, 6, 'ImmuneToRanged', 2000, 2000, true),
+
+-- Ciudades Unidas
+(2, 'Soldado de las Ciudades Unidas', 5, 5, 4, 'ResistantToMelee', 800, 800, true),
+(2, 'Guardia de Seguridad', 6, 6, 5, 'ImmuneToMeleeAndResistantToRanged', 1000, 1200, true),
+
+-- Reino Shek
+(3, 'Guerrero Shek', 5, 6, 5, 'ResistantToBoth', 800, 1000, true),
+(3, 'Campeón Shek', 7, 7, 6, 'ImmuneToMelee', 1500, 1500, true),
+
+-- Enjambre del Oeste
+(5, 'Errante del Enjambre', 3, 3, 3, 'None', 200, 200, true),
+(5, 'Guerrero del Enjambre', 4, 5, 4, 'ResistantToRanged', 400, 400, true),
+(5, 'Comerciante del Enjambre', 3, 2, 3, 'None', 150, 600, true),
+
+-- Esclavistas
+(8, 'Cazador Esclavista', 4, 4, 3, 'None', 600, 500, true),
+(8, 'Mercader Esclavista', 3, 3, 2, 'None', 300, 400, true),
+(8, 'Capataz Esclavista', 5, 5, 4, 'ImmuneToRanged', 1000, 800, true);
+
+INSERT INTO names (name) VALUES
+('Esata'),
+('Squin'),
+('Cat-Lon'),
+('Tinfist'),
+('Holy Phoenix'),
+('Okran'),
+('Simone'),
+('Bugmaster'),
+('Agnu'),
+('Beep'),
+('Seto'),
+('Miu'),
+('Ruka'),
+('Greenfinger'),
+('Rain the Giant'),
+('Kang'),
+('Burn'),
+('Sadneil'),
+('Oron'),
+('Moll'),
+('Longen'),
+('Soto'),
+('Nux'),
+('Crimper'),
+('Stobe'),
+('Dimak'),
+('Barka'),
+('Green'),
+('Sarn'),
+('Griffin'),
+('Chad'),
+('Owl'),
+('Grey'),
+('Bo'),
+('Mu'),
+('Bishop'),
+('Bull'),
+('Void'),
+('Caliburn'),
+('Ghost'),
+('Fang'),
+('Buzzo'),
+('Rane'),
+('Okra'),
+('Ray'),
+('Juno'),
+('Patch'),
+('Slug'),
+('Zan'),
+('Twinkle');
+
 

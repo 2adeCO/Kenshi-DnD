@@ -15,6 +15,7 @@ namespace Kenshi_DnD
         string id;
         const int MINIMUM_NUMBER_LENGTH = 9;
         int cats;
+        int color;
         DateTime startDate;
         DateTime hoursPlayed;
 
@@ -25,10 +26,21 @@ namespace Kenshi_DnD
         Hero[][] savedSquads;
 
         PlayerInventory playerInventory;
-
         List<Item> alreadyObtainedItems;
-        
-        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats)
+
+        Faction[] allFactions;
+        Region[] allRegions;
+        Monster[] allMonsters;
+        string[] titles;
+        string[] backgrounds;
+        string[] names;
+        Item[] allItems;
+        Race[] allRaces;
+        Limb[] allLimbs;
+
+
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
+            string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
             this.id = GenerateId(name, rnd);
             this.cats = startingCats;
@@ -48,6 +60,15 @@ namespace Kenshi_DnD
             playerInventory = new PlayerInventory();
             alreadyObtainedItems = new List<Item>();
             Debug.WriteLine(id);
+            this.allFactions = allFactions;
+            this.allRegions = allRegions;
+            this.allMonsters = allMonsters;
+            this.titles = titles;
+            this.backgrounds = backgrounds;
+            this.names = names;
+            this.allItems = allItems;
+            this.allRaces = allRaces;
+            this.allLimbs = allLimbs;
         }
         private string GenerateId(string name, Random rnd)
         {
@@ -155,6 +176,43 @@ namespace Kenshi_DnD
         public DateTime GetTimePlayed()
         {
             return hoursPlayed;
+        }
+
+        public Item[] GetAllItems()
+        {
+            return allItems;
+        }
+        public Race[] GetAllRaces()
+        {
+            return allRaces;
+        }
+        public Limb[] GetAllLimbs()
+        {
+            return allLimbs;
+        }
+        public Faction[] GetAllFactions()
+        {
+            return allFactions;
+        }
+        public Region[] GetAllRegions()
+        {
+            return allRegions;
+        }
+        public Monster[] GetAllMonsters()
+        {
+            return allMonsters;
+        }
+        public string[] GetTitles()
+        {
+            return titles;
+        }
+        public string[] GetBackgrounds()
+        {
+            return backgrounds;
+        }
+        public string[] GetNames()
+        {
+            return names;
         }
     }
 }

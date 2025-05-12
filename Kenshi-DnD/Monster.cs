@@ -1,4 +1,6 @@
-﻿namespace Kenshi_DnD
+﻿using System.Diagnostics;
+
+namespace Kenshi_DnD
 {
     public class Monster : ITurnable
     {
@@ -10,9 +12,9 @@
         int agility;
         int cats;
         int xpDrop;
-        Item drop;
+        bool canDropItem;
         Immunities.Immunity immunity; 
-        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop, Item drop)
+        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop, bool canDropItem)
         {
             this.name = name;
             this.hp = hp;
@@ -23,7 +25,36 @@
             this.immunity = immunity;
             this.cats = cats;
             this.xpDrop = xpDrop;
-            this.drop = drop;
+            this.canDropItem = canDropItem;
+        }
+        public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, string immunity, int cats, int xpDrop, bool canDropItem)
+        {
+            this.name = name;
+            this.hp = hp;
+            this.faction = faction;
+            this.strength = strength;
+            this.resistance = resistance;
+            this.agility = agility;
+            this.immunity = ImmunityParser(immunity);
+            this.cats = cats;
+            this.xpDrop = xpDrop;
+            this.canDropItem = canDropItem;
+        }
+        private Immunities.Immunity ImmunityParser(string immunity)
+        {
+            switch (immunity)
+            {
+                case "ResistantToMelee": return Immunities.Immunity.ResistantToMelee;
+                case "ImmuneToMelee": return Immunities.Immunity.ImmuneToMelee;
+                case "ImmuneToMeleeAndResistantToRanged": return Immunities.Immunity.ImmuneToMeleeAndResistantToRanged;
+                case "ResistantToRanged": return Immunities.Immunity.ResistantToRanged;
+                case "ImmuneToRanged": return Immunities.Immunity.ImmuneToRanged;
+                case "ImmuneToRangedAndResistantToMelee": return Immunities.Immunity.ImmuneToRangedAndResistantToMelee;
+                case "ResistantToBoth": return Immunities.Immunity.ResistantToBoth;
+                default:
+                    Debug.WriteLine("No immunity");
+                    return Immunities.Immunity.None;
+            }
         }
         public string GetName()
         {
@@ -98,9 +129,9 @@
         {
             return immunity;
         }
-        public Item GetItemDrop()
+        public bool GetDropPosibility()
         {
-            return drop;
+            return canDropItem;
         }
         public override string ToString()
         {
@@ -124,7 +155,7 @@
                 case Immunities.Immunity.ImmuneToMeleeAndResistantToRanged: return "Inmunidad a Fuerza Bruta y Resistencia a Destreza";
                 case Immunities.Immunity.ResistantToRanged: return "Resistencia a Destreza";
                 case Immunities.Immunity.ImmuneToRanged: return "Inmunidad a Destreza";
-                case Immunities.Immunity.ImmunteToRangedAndResistantToMelee: return "Inmunidad a Destreza y Resistencia a Fuerza Bruta";
+                case Immunities.Immunity.ImmuneToRangedAndResistantToMelee: return "Inmunidad a Destreza y Resistencia a Fuerza Bruta";
                 case Immunities.Immunity.ResistantToBoth: return "Resistencia a Destreza y Fuerza Bruta";
                 case Immunities.Immunity.None: return "Sin inmunidad";
                 default: return "Error en inmunidad";

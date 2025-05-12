@@ -3,29 +3,31 @@ using System.Windows.Media.Imaging;
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public class Faction
     {
         int factionId;
         string factionName;
         string factionDescription;
         int factionColor;
-        BitmapImage factionImage;
+        int relations;
+        
 
-        public Faction(int factionId, string factionName, string factionDescription, int factionColor) 
+        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor) 
         { 
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
+            this.relations = relations;
             this.factionColor = factionColor;
-            this.factionImage = new BitmapImage();
+            
         }
         public Faction(int factionId, string factionName, string factionDescription, string factionImageSource)
         {
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
-            this.factionImage = new BitmapImage();
-            factionImage.UriSource = new Uri(factionImageSource, UriKind.RelativeOrAbsolute);
+           
         }
 
         public void SetFactionId(int factionId)
@@ -52,11 +54,7 @@ namespace Kenshi_DnD
         {
             return factionDescription;
         }
-        public void SetFactionImage(string factionImageSource)
-        {
-            this.factionImage = new BitmapImage();
-            factionImage.UriSource = new Uri(factionImageSource, UriKind.RelativeOrAbsolute);
-        }
+       
         public void SetFactionColor(int factionColor)
         {
             this.factionColor = factionColor;
@@ -65,9 +63,6 @@ namespace Kenshi_DnD
         {
             return this.factionColor;
         }
-        public BitmapImage GetFactionImage()
-        {
-            return factionImage;
-        }
+        
     }
 }

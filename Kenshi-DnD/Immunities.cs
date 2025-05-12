@@ -13,7 +13,7 @@ namespace Kenshi_DnD
             None,
             ResistantToRanged,
             ImmuneToRanged,
-            ImmunteToRangedAndResistantToMelee,
+            ImmuneToRangedAndResistantToMelee,
             ResistantToMelee,
             ImmuneToMelee,
             ImmuneToMeleeAndResistantToRanged,

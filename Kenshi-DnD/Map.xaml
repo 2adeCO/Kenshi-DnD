@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Kenshi_DnD"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
-    <Grid>
+    <Grid Background="#707c7c">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
@@ -19,12 +19,12 @@
         </Grid.RowDefinitions>
         <Image Source="/Resources/img/map.jpg" Width="600" Grid.Column="1" Grid.Row="1">
         </Image>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="258" Margin="640,130,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="189"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="201" Margin="492,159,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="148"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="124" Margin="424,365,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="84"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="49" Margin="392,316,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.78,0.592"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="86" Margin="466,74,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="174"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="508,399,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100"/>
+        <Rectangle x:Name="UnitedCitiesZone" Grid.Column="1" HorizontalAlignment="Left" Height="258" Margin="640,130,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="189"/>
+        <Rectangle x:Name="HolyNationZone" Grid.Column="1" HorizontalAlignment="Left" Height="201" Margin="492,159,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="148"/>
+        <Rectangle x:Name="ShekKingdomZone" Grid.Column="1" HorizontalAlignment="Left" Height="124" Margin="424,365,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="84"/>
+        <Rectangle x:Name="WestHiveZone" Grid.Column="1" HorizontalAlignment="Left" Height="49" Margin="392,316,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.78,0.592"/>
+        <Rectangle x:Name="NorthZone" Grid.Column="1" HorizontalAlignment="Left" Height="86" Margin="466,74,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="174"/>
+        <Rectangle x:Name="SwampZone" Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="508,399,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </UserControl>

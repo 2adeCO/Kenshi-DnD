@@ -308,12 +308,13 @@ namespace Kenshi_DnD
 
             if (!defender.IsAlive())
             {
-                if(defender.GetItemDrop() != null)
-                {
-                    await window.UpdateLogUI("Se encontró " + defender.GetItemDrop().GetName() + " en el cadáver...",800);
-                    myInventory.AddItem(defender.GetItemDrop());
-                }
-                if(defender.GetXpDrop() == 0)
+                //Need to implement a way to loot random items
+                //if(defender.GetItemDrop() != null)
+                //{
+                //    await window.UpdateLogUI("Se encontró " + defender.GetItemDrop().GetName() + " en el cadáver...",800);
+                //    myInventory.AddItem(defender.GetItemDrop());
+                //}
+                if (defender.GetXpDrop() == 0)
                 {
 					await window.UpdateLogUI("No se consiguió nada de experiencia", 300);
 				}
@@ -395,7 +396,7 @@ namespace Kenshi_DnD
             {
                 if (defender.GetImmunity() == Immunities.Immunity.ResistantToMelee ||
                     defender.GetImmunity() == Immunities.Immunity.ResistantToBoth ||
-                    defender.GetImmunity() == Immunities.Immunity.ImmunteToRangedAndResistantToMelee)
+                    defender.GetImmunity() == Immunities.Immunity.ImmuneToRangedAndResistantToMelee)
                 {
                     await window.UpdateLogUI(defender.GetName() + " tiene resistencia a ataques físicos, " + attacker.GetName() + " lo intenta igualmente",800);
                     attackerStat /= 2;
@@ -494,7 +495,7 @@ namespace Kenshi_DnD
                 await window.UpdateLogUI(attacker.GetName() + " falló demasiado...", 800);
             }
 
-            if (defender.GetImmunity() == Immunities.Immunity.ImmunteToRangedAndResistantToMelee ||
+            if (defender.GetImmunity() == Immunities.Immunity.ImmuneToRangedAndResistantToMelee ||
                 defender.GetImmunity() == Immunities.Immunity.ImmuneToRanged)
             {
                 await window.UpdateLogUI(defender.GetName() + " tiene inmunidad a ataques a distancia, " + attacker.GetName() + " derrochó munición...",1200);

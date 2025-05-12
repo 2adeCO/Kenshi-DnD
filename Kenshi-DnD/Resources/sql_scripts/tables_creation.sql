@@ -9,8 +9,28 @@ create table Factions(
     name varchar(50) not null,
     description varchar(500),
     color int not null,
+    baseRelations int not null,
     imagePath varchar(100)
 );
+
+drop table if exists regions;
+create table regions(
+	id int auto_increment primary key ,
+    name varchar(50) not null,
+    description varchar(500) not null
+);
+
+drop table if exists region_faction;
+create table region_faction(
+	regionId int not null,
+	factionId int not null,
+    
+    primary key(regionId,factionId),
+    foreign key(regionId) references regions(id),
+    foreign key(factionId) references factions(id)
+);
+
+
 drop table if exists stats;
 create table stats(
 	id int auto_increment primary key,
@@ -75,9 +95,18 @@ CREATE TABLE enemies (
     health INT not null,
     strength INT not null,
     resistance INT not null,
+    immunity enum('None', 'ResistantToRanged','ImmuneToRanged','ImmuneToRangedAndResistantToMelee',
+    'ResistantToMelee','ImmuneToMelee','ImmuneToMeleeAndResistantToRanged','ResistantToBoth'),
+	xp int not null,
+    maxCatDrop int not null,
     canDropItem bool default false,
     
     FOREIGN KEY (factionId) REFERENCES factions(id)
+);
+drop table if exists names;
+create table names(
+	id int auto_increment primary key,
+    name varchar(50) not null
 );
 drop table if exists titles;
 CREATE TABLE titles (

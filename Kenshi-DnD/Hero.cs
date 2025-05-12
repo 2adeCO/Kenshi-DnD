@@ -69,7 +69,8 @@ namespace Kenshi_DnD
         }
         public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs) 
         {
-            heroStats = new StatModifier(bruteForce,dexterity,10,resistance,agility);
+            heroStats = new StatModifier(bruteForce,dexterity,0,resistance,agility);
+            SetToughnessAtConstructor(7,race, subrace, limbs);
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
@@ -501,7 +502,7 @@ namespace Kenshi_DnD
                 } while (randomLimb == null);
             }
 
-            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0,0):randomLimb;
+            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0):randomLimb;
         }
         public string FreeAllItems()
         {

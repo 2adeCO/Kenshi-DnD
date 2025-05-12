@@ -317,7 +317,7 @@
                                        FontSize="14"
                                        VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="2"/>
                             <Border Grid.Column="1" Margin="2" BorderBrush="Black" BorderThickness="2">
-                                <ComboBox x:Name="characterSubrace" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                <ComboBox x:Name="characterSubrace" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="UpdateHeroStatGrid"/>
                             </Border>
                         </Grid>
                     </Border>
