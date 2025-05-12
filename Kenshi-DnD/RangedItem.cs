@@ -1,12 +1,14 @@
-﻿namespace Kenshi_DnD
+﻿using System.Xml.Linq;
+
+namespace Kenshi_DnD
 {
     [Serializable]
     class RangedItem : Item
     {
         int difficulty;
         int ammo;
-        public RangedItem(string name, int difficulty, int ammo, int value, int resellValue, int limbsNeeded, StatModifier statsToModify, Rarity.Rarities rarity)
-            : base(name, value, resellValue, limbsNeeded, statsToModify, rarity)
+        public RangedItem(string name, string description, int value, int resellValue, int limbsNeeded, int difficulty, int ammo, StatModifier statToModify)
+            : base(name, description, value, resellValue, limbsNeeded, statToModify)
         {
             this.ammo = ammo;
             this.difficulty = difficulty;

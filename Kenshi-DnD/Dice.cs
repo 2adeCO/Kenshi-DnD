@@ -72,5 +72,9 @@ namespace Kenshi_DnD
             return "@917@Dados:@ " + ((lastPlay == "") ? ("No se consiguieron dados"): (lastPlay +"\n\n"+
                 "@917@Veces ganadas:@ " + winHistory));
         }
+        public override string ToString()
+        {
+            return "Caras: " + sides + ", Valor mínimo para ganar: " + minWin;
+        }
     }
 }

@@ -16,15 +16,16 @@ namespace Kenshi_DnD
         protected bool alreadyUsed;
         protected StatModifier statToModify;
 
-        public Item(string name, int value, int resellValue, int limbsNeeded, StatModifier statToModify, Rarity.Rarities rarity)
+        public Item(string name,string description, int value, int resellValue, int limbsNeeded, StatModifier statToModify)
         {
             this.name = name;
+            this.description = description;
             this.value = value;
             this.resellValue = resellValue;
             this.limbsNeeded = limbsNeeded;
             alreadyUsed = false;
             this.statToModify = statToModify;
-            this.rarity = rarity;
+            this.rarity = Rarity.Rarities.Junk;
         }
 
         public abstract string AnnounceUse();

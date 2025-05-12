@@ -8,6 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Text.Json;
+using MySql.Data.MySqlClient;
 
 namespace Kenshi_DnD
 {
@@ -50,7 +51,12 @@ namespace Kenshi_DnD
             TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
             remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4 ;
             remainingPointsText.Text = remainingPoints.ToString();
-            
+
+
+            SqlConnectionTest();
+            SqlGetFactions();
+            SqlGetItems();
+
             adventureName.Text = "AventuraDe" + DEFAULT_HERO_NAME;
             factionName.Text = DEFAULT_FACTION_NAME;
             factionColor.ItemsSource = new string[] { "Rojo", "Verde", "Azul", "Morado", "Dorado", "Naranja", "Gris azulado", "Gris", "Negro" };
@@ -96,36 +102,8 @@ namespace Kenshi_DnD
         }
         public void GoToCombat(object sender, EventArgs e)
         {
-            Limb[] limbs = new Limb[4];
-            Limb[] limbs2 = new Limb[4];
-            for (int i = 0; i < 3; i += 1)
-            {
-                limbs[i] = new Limb("Limb", 0, 0, 0, 0, 0, 0);
-            }
-            for (int i = 0; i < 3; i += 1)
-            {
-                limbs2[i] = new Limb("Limb2", 3, 3, 0, 0, 0, 0);
-            }
-            Faction faction1 = new Faction(1, "DAW", "Dawer", 2);
-            Dice myDice = new Dice(6, 5);
-            Race human = new Race("Humano", -1, 1, 10, -1, 1);
-            RangedItem specialItem = new RangedItem("El arma única", 5, 6, 200, 100, 2, new StatModifier(20, 6, 0, -3, -3), Rarity.Rarities.Meitou);
-            Hero hero1 = new Hero("Héroe bruto", "El PartePiedras", 10, 4, 1, 4, 5, human, human, limbs);
-            Hero hero2 = new Hero("Héroe habilidoso", "El Arquero", 8, 2, 2, 3, 8, human, human, limbs2);
 
-            Hero hero3 = new Hero("Héroe tanque", "El Arquero", 24, 2, 2, 3, 8, human, human, limbs2);
-            Hero hero4 = new Hero("Héroe rapidisimo", "El Arquero", 8, 2, 8, 3, 8, human, human, limbs2);
-            Monster monster1 = new Monster("Monstruo medio veloz", 3, faction1, 10, 3, 5, Immunities.Immunity.ResistantToRanged, 100, 20, null);
-            Monster monster2 = new Monster("Monstruo lento", 2, faction1, 20, 4, 2, Immunities.Immunity.ResistantToBoth, 100, 20, specialItem);
-            StatModifier genericStats = new StatModifier(5, 0, 0, 1, -1);
-            StatModifier genericRangedStats = new StatModifier(2, 2, 0, 0, -2);
-            PlayerInventory myInventory = myAdventure.GetInventory();
-            myInventory.AddItem(new MeleeItem("Espada", 10, 2, 2, false, genericStats, false, Rarity.Rarities.Junk));
-            myInventory.AddItem(new MeleeItem("Poción de curación", 10, 2, 1, true, new StatModifier(0, 0, 5, 0, 0), true, Rarity.Rarities.Mk));
-            myInventory.AddItem(new MeleeItem("Poción de fuerza", 6, 1, 1, false, genericStats, true, Rarity.Rarities.Catun));
-            myInventory.AddItem(new RangedItem("Ballesta de principiante", 2, 10, 15, 4, 3, genericRangedStats, Rarity.Rarities.RustCovered));
-            Monster[] monsters = new Monster[] { monster1, monster2 };
-            controller.Content = new CombatWindow(mainWindow, cursors, rnd, myAdventure, monsters);
+            controller.Content = new CombatWindow(mainWindow, cursors, rnd, myAdventure, null);
         }
         public void GoToShop(object sender, EventArgs e)
         {
@@ -268,7 +246,50 @@ namespace Kenshi_DnD
             }
         }
         
+        private void PlayAdventure(object sender, EventArgs e) 
+        {
+            Adventure adventure = (Adventure)((Button)sender).Tag;
 
+            if (adventure != null)
+            {
+                controller.Content = new CombatWindow(mainWindow, cursors, rnd, adventure, null);
+            }
+            else
+            {
+                MessageBox.Show("Algo ha ido terriblemente mal.");
+            }
+        }
+        private void DeleteAdventureWarning(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            Adventure adventure = (Adventure)button.Tag;
+            string adventurePath = "./saves/" + adventure.GetId() + ".adventure";
+            if (File.Exists(adventurePath))
+            {
+                MessageBox.Show("¿Quieres eliminar la aventura " + adventure.GetId() + "? Pulsa de nuevo para eliminarla.");
+                button.Click -= DeleteAdventureWarning;
+                button.Click += DeleteAdventure;
+            } else
+            {
+                MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
+            }
+        }
+        private void DeleteAdventure(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            Adventure adventure = (Adventure)button.Tag;
+            string adventurePath = "./saves/" + adventure.GetId() + ".adventure";
+            if (File.Exists(adventurePath))
+            {
+                File.Delete(adventurePath);
+                AdventureChooserMenu.Children.Remove((Grid)button.Parent);
+                MessageBox.Show("Aventura eliminada.");
+            }
+            else
+            {
+                MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
+            }
+        }
         private void UpdateHeroStatGrid(object sender, EventArgs e)
         {
 
@@ -561,25 +582,204 @@ namespace Kenshi_DnD
                 }
             }
         }
-        private StackPanel CreateAdventureButton(Adventure adventure)
+        private Grid CreateAdventureButton(Adventure adventure)
         {
-            StackPanel adventureStack = new StackPanel();
-            adventureStack.Orientation = Orientation.Horizontal;
-            adventureStack.Margin = new Thickness(0, 5, 0, 5);
-            adventureStack.HorizontalAlignment = HorizontalAlignment.Center;
-            adventureStack.VerticalAlignment = VerticalAlignment.Center;
-            adventureStack.Background = Brushes.LightGray;
+            Grid adventureGrid = new Grid();
+            ColumnDefinition columnDefinition = new ColumnDefinition();
+            columnDefinition.Width = new GridLength(1, GridUnitType.Star);
+            adventureGrid.ColumnDefinitions.Add(columnDefinition);
+
+            columnDefinition = new ColumnDefinition();
+            columnDefinition.Width = new GridLength(0, GridUnitType.Auto);
+            adventureGrid.ColumnDefinitions.Add(columnDefinition);
+
+            LinearGradientBrush linearBrush = new LinearGradientBrush();
+            linearBrush.StartPoint = new Point(0, 0); 
+            linearBrush.EndPoint = new Point(1, 0);
+
+            linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
+            linearBrush.GradientStops.Add(new GradientStop(Colors.Goldenrod, 0.7));
+            linearBrush.GradientStops.Add(new GradientStop(Colors.DarkGoldenrod, 1.0));
+
+            adventureGrid.Margin = new Thickness(10);
+            adventureGrid.VerticalAlignment = VerticalAlignment.Center;
+            adventureGrid.Background = Brushes.LightGray;
+            adventureGrid.Height = 120;
+
 
             Button button = new Button();
-            button.Content = adventure.GetId();
+            button.Content = adventure.GetId() + "\nDado: " + adventure.GetDice().ToString() + "\nCats: " + adventure.GetCats() + "$";
+            button.HorizontalAlignment = HorizontalAlignment.Stretch;
+            button.Background = linearBrush;
+            button.Tag = adventure;
+            button.HorizontalContentAlignment = HorizontalAlignment.Left;
+
 
             Button deleteButton = new Button();
             deleteButton.Content = "🗑️";
+            deleteButton.FontSize = 30;
+            deleteButton.Background = Brushes.Red;
+            deleteButton.Width = 120;
+            deleteButton.HorizontalAlignment = HorizontalAlignment.Right;
+            deleteButton.Tag = adventure;
 
-            adventureStack.Children.Add(button);
-            adventureStack.Children.Add(deleteButton);
+            button.Click += PlayAdventure;
+            deleteButton.Click += DeleteAdventureWarning;
 
-            return adventureStack;
+            Grid.SetColumn(button, 0);
+            Grid.SetColumn(deleteButton, 1);
+
+            adventureGrid.Children.Add(button);
+            adventureGrid.Children.Add(deleteButton);
+
+            return adventureGrid;
         }
+        private void SqlConnectionTest()
+        {
+            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlCommand command = new MySqlCommand("SELECT * FROM factions;", connection);
+            MySqlDataReader reader;
+
+
+            try
+            {
+                connection.Open();
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Debug.WriteLine(reader.GetString(1) + " " + reader.GetString(2));
+                }
+                reader.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySql wanted to crash");
+                connection.Close();
+            }
+            connection.Close();
+
+        }
+        private Faction[] SqlGetFactions()
+        {
+
+            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
+            MySqlDataReader reader;
+            int numberOfFactions = 0;
+            try
+            {
+                connection.Open();
+                reader = command.ExecuteReader();
+                reader.Read();
+                numberOfFactions = reader.GetInt32(0);
+                Debug.WriteLine("Number of factions: " + numberOfFactions);
+                reader.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySql wanted to crash");
+                connection.Close();
+            }
+
+
+                Faction[] factions = new Faction[numberOfFactions];
+            try
+            {
+               command = new MySqlCommand("SELECT * FROM factions;", connection);
+                reader = command.ExecuteReader();
+
+                for(int i = 0; i < numberOfFactions; i += 1)
+                {
+                    reader.Read();
+                    factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
+                }
+                reader.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySql wanted to crash");
+                connection.Close();
+            }
+            connection.Close();
+
+
+            return factions;
+        }
+        private Item[] SqlGetItems()
+        {
+            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlCommand command;
+            MySqlDataReader reader;
+            int numberOfItems = 0;
+
+            try
+            {
+                // Abre la conexión
+                connection.Open();
+
+                // Obtener la cantidad de items
+                command = new MySqlCommand("SELECT count(*) FROM items;", connection);
+                reader = command.ExecuteReader();
+                reader.Read();
+                numberOfItems = reader.GetInt32(0);
+                Debug.WriteLine("Number of items: " + numberOfItems);
+                reader.Close(); // Cierra el reader
+
+                // Crear el arreglo de items
+                Item[] items = new Item[numberOfItems];
+                int iteration = 0;
+
+                // Obtener MeleeItems
+                command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, mi.canRevive, stats.bruteForce, " +
+                    "stats.dexterity, stats.hp, stats.resistance, stats.agility, mi.breaksOnUse " +
+                    "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
+                    "INNER JOIN meleeitems mi ON mi.item_id = i.id;", connection);
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    items[iteration] = new MeleeItem(
+                        reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3),
+                        reader.GetInt32(4), reader.GetBoolean(5), new StatModifier(
+                            reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8),
+                            reader.GetInt32(9), reader.GetInt32(10)), reader.GetBoolean(11));
+                    iteration++;
+                }
+                reader.Close(); // Cierra el reader después de leer MeleeItems
+
+                // Obtener RangedItems
+                command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, ri.ammo, ri.difficulty, stats.bruteForce, " +
+                    "stats.dexterity, stats.hp, stats.resistance, stats.agility " +
+                    "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
+                    "INNER JOIN rangeditems ri ON ri.item_id = i.id;", connection);
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    items[iteration] = new RangedItem(
+                        reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3),
+                        reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), new StatModifier(
+                            reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9),
+                            reader.GetInt32(10), reader.GetInt32(11)));
+                    iteration++;
+                }
+                reader.Close(); // Cierra el reader después de leer RangedItems
+
+                // Cierra la conexión al final
+                connection.Close();
+
+                return items;
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySQL error: " + ex.Message);
+                connection.Close(); // Cierra la conexión en caso de error
+                return null; // En caso de error, retorna null
+            }
+        }
+
     }
 }

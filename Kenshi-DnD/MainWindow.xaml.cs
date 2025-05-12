@@ -1,7 +1,7 @@
 ﻿
 using System.Diagnostics;
 using System.IO;
-
+using MySql.Data.MySqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;

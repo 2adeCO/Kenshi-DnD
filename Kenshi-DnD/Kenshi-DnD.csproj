@@ -22,6 +22,7 @@
     <None Remove="Resources\cursors\Flint.webp.cur" />
     <None Remove="Resources\cursors\Tooth_Pick.webp.cur" />
     <None Remove="Resources\img\bonepeople.jpg" />
+    <None Remove="Resources\img\map.jpg" />
     <None Remove="saves\saves.txt" />
   </ItemGroup>
 
@@ -54,15 +55,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\img\bonepeople.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector NET 9.3\MySql.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector NET 9.3\MySql.Data.dll</HintPath>
-    </Reference>
+    <Resource Include="Resources\img\bonepeople.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\img\map.jpg" />
   </ItemGroup>
 
   
