@@ -5,8 +5,59 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Kenshi_DnD"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="720" d:DesignWidth="1280">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        
+        
+        <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="2">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+                <TextBox x:Name="InfoLog">
+                </TextBox>
+            </ScrollViewer>
             
+        </Border>
+        <StackPanel x:Name="ActionsPanel" Grid.Column="0">
+            <StackPanel.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.9">
+                    <GradientStop Color="#D2B48C" Offset="0" />
+                    <GradientStop Color="#8B5A2B" Offset="0.7"/>
+                    <GradientStop Color="#5C4033" Offset="1.0"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+        
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+            <!-- Bar -->
+            <Grid x:Name="BarGrid" Visibility="Collapsed">
+                <TextBlock Text="Estás en el Bar." FontSize="20"/>
+            </Grid>
+
+            <!-- Hospital -->
+            <Grid x:Name="HospitalGrid" Visibility="Collapsed">
+                <TextBlock Text="Estás en el Hospital." FontSize="20"/>
+            </Grid>
+
+            <!-- Tienda -->
+            <Grid x:Name="ShopGrid" Visibility="Collapsed">
+                <TextBlock Text="Estás en la Tienda." FontSize="20"/>
+            </Grid>
+
+            <!-- Contrabando -->
+            <Grid x:Name="ContrabandMarketGrid" Visibility="Collapsed">
+                <TextBlock Text="Estás en el Mercado Negro." FontSize="20"/>
+            </Grid>
+
+            <!-- Armas a distancia -->
+            <Grid x:Name="RangedShop" Visibility="Collapsed">
+                <TextBlock Text="Estás en la Tienda de Armas a Distancia." FontSize="20"/>
+            </Grid>
+        </Grid>
     </Grid>
+
 </UserControl>

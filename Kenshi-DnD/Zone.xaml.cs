@@ -35,6 +35,17 @@ namespace Kenshi_DnD
             this.rnd = rnd;
             this.myAdventure = myAdventure;
             this.region = currentRegion;
+
+
+            UpdateUI();
+
+        }
+        private void UpdateUI()
+        {
+            if (region.HasBar())
+            {
+
+            }
         }
     }
 }

@@ -56,8 +56,6 @@ namespace Kenshi_DnD
             //This makes 10 the max number of possible heroes, as max relations is 100
             int numberOfHeroes = rnd.Next(0, (GetRelations() / 10) + 1);
 
-
-
             if (numberOfHeroes > 0)
             {
                 Hero[] heroesInBar = new Hero[numberOfHeroes];
