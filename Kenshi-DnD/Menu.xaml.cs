@@ -88,10 +88,7 @@ namespace Kenshi_DnD
 
             controller.Content = new CombatWindow(mainWindow, cursors, rnd, myAdventure, null);
         }
-        public void GoToShop(object sender, EventArgs e)
-        {
-            controller.Content = new Shop();
-        }
+        
         public void OpenAdventureMaker(object sender, EventArgs e)
         {
 

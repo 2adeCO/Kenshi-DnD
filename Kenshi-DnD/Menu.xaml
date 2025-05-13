@@ -42,11 +42,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Grid.Column="2" Grid.Row="1" Content="Combate" 
-                    Click="GoToCombat" HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" Padding="20" Margin="10"></Button>
-            <Button Grid.Column="2" Grid.Row="3" Content="Combate" Click="GoToShop" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10"></Button>
-
+           
         </Grid>
         <Rectangle x:Name="DarkUI" Fill="Black" Opacity="0.8" Grid.ColumnSpan="3" Visibility="Collapsed" MouseUp="CloseCurrentMenu"></Rectangle>
 

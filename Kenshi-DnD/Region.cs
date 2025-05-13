@@ -65,26 +65,26 @@ namespace Kenshi_DnD
                 for (int i = 0; i < numberOfHeroes; i++)
                 {
                     int rarity = rnd.Next(0, 10);
-                    switch (rarity) {
+                    switch (rarity)
+                    {
                         case < 5:
                             {
-                                Competency.StartCompetency.Apprentice;
+                                heroesInBar[i] = GenerateRandomHero(myAdventure, rnd, Competency.StartCompetency.Apprentice);
                                 break;
                             }
-                        case < 8: 
+                        case < 8:
                             {
-                                Competency.StartCompetency.Intermediate;
+                                heroesInBar[i] = GenerateRandomHero(myAdventure, rnd, Competency.StartCompetency.Intermediate);
                                 break;
                             }
                         case < 9:
                             {
-                                Competency.StartCompetency.Master;
-                                break ;
+                                heroesInBar[i] = GenerateRandomHero(myAdventure, rnd, Competency.StartCompetency.Master);
+                                break;
                             }
-
-
+                    }
                 }
-
+                return heroesInBar;
             }
             else
             {
@@ -92,22 +92,22 @@ namespace Kenshi_DnD
             }
 
         }
-        public Item[] GoToShop(Adventure myAdventure, Random rnd)
-        {
+        //public Item[] GoToShop(Adventure myAdventure, Random rnd)
+        //{
 
-        }
-        public Item[] GoToContrabandMarket(Adventure myAdventure, Random rnd)
-        {
+        //}
+        //public Item[] GoToContrabandMarket(Adventure myAdventure, Random rnd)
+        //{
 
-        }
-        public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
-        {
+        //}
+        //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
+        //{
 
-        }
-        public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
-        {
+        //}
+        //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
+        //{
 
-        }
+        //}
         public int GetRelations()
         {
             int relations = 0;
