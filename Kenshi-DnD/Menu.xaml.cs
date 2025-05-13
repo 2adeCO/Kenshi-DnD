@@ -851,10 +851,14 @@ namespace Kenshi_DnD
                 reader.Close();
 
                 command = new MySqlCommand("select * from regions", connection);
+                reader = command.ExecuteReader();
                 for (int i = 0; i < numOfRegions; i += 1)
                 {
                     reader.Read();
-                    regions[i] = new Region(reader.GetString(1), reader.GetString(2));
+                    Debug.WriteLine(reader.GetString(1), reader.GetString(2),
+                        reader.GetBoolean(3), reader.GetBoolean(4), reader.GetBoolean(5), reader.GetBoolean(6), reader.GetBoolean(7));
+                    regions[i] = new Region(reader.GetString(1), reader.GetString(2),
+                        reader.GetBoolean(3),reader.GetBoolean(4),reader.GetBoolean(5),reader.GetBoolean(6),reader.GetBoolean(7));
                 }
                 reader.Close();
 
@@ -863,8 +867,8 @@ namespace Kenshi_DnD
                 reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    int regionId = reader.GetInt32(0);
-                    int factionId = reader.GetInt32(1);
+                    int regionId = reader.GetInt32(0) -1;
+                    int factionId = reader.GetInt32(1) -1;
 
                     regions[regionId].AddFaction(factions[factionId]);
                 }

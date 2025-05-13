@@ -22,13 +22,15 @@ La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirv
  ('Esclavistas','Trabajan junto a las Ciudades Unidas y La Nación Sagrada para suplir su demanda de esclavos. Su modo de operación es simple, 
  trataran de derrotarte para después venderte.',0,7);
  
- insert into regions(name,description) values
- ('Norte de la isla','No hay motivo por el que quieras estar aquí, más que para entrenar.'),
- ('La Nación Sagrada','Serás atacado si no eres humano greenlander, y si lo eres, serás juzgado.'),
- ('Ciudades Unidas','En un buen día, encontrarás mercaderes con grandes botínes, en uno malo, un noble querrá jugar a cazarte'),
- ('Río del Enjambre del Oeste', 'Desean intercambiar bienes contigo, aunque la zona es conocida por tener una fauna peligrosa'),
- ('Reino Shek', 'El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral'),
- ('Pantano','Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla');
+INSERT INTO regions(name, description, hasBar, hasShop, hasLimbHospital, hasContrabandMarket, hasRangedShop) VALUES
+('Norte de la isla', 'No hay motivo por el que quieras estar aquí, más que para entrenar.', false, false, false, false, false),
+('La Nación Sagrada', 'Serás atacado si no eres humano greenlander, y si lo eres, serás juzgado.', true, true, false, false, false),
+('Ciudades Unidas', 'En un buen día, encontrarás mercaderes con grandes botínes, en uno malo, un noble querrá jugar a cazarte', true, true, false, false, true),
+('Río del Enjambre del Oeste', 'Desean intercambiar bienes contigo, aunque la zona es conocida por tener una fauna peligrosa', false, true, true, false, false),
+('Reino Shek', 'El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral', true, true, false, false, false),
+('Pantano', 'Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla', true, true, true, true, false);
+
+ 
  
  insert into region_faction(regionId,factionId) values
  -- Norte de la isla: Esclavistas, canibales

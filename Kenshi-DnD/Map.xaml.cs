@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace Kenshi_DnD
         MainWindow mainWindow;
         ContentControl controller;
         Region selectedRegion;
+        Rectangle[] zones;
         Adventure adventure;
         Cursor[] cursors;
         Random rnd;
@@ -39,55 +41,52 @@ namespace Kenshi_DnD
 
 
             Region[] regions = adventure.GetAllRegions();
-            
+            zones = new Rectangle[regions.Length];
+
             NorthZone.Tag = regions[0];
+            zones[0] = NorthZone;
             HolyNationZone.Tag = regions[1];
+            zones[1] = HolyNationZone;
             UnitedCitiesZone.Tag = regions[2];
+            zones[2] = UnitedCitiesZone;
             WestHiveZone.Tag = regions[3];
+            zones[3] = WestHiveZone;
             ShekKingdomZone.Tag = regions[4];
+            zones[4] = ShekKingdomZone;
             SwampZone.Tag = regions[5];
-            UpdateZoneSelected();
+            zones[5] = SwampZone;
+            
 
         }
         private void SelectZone(object sender, MouseButtonEventArgs e)
         {
-            UpdateZoneSelected();
+            
+            Debug.WriteLine("Tried to select zone");
             Rectangle rectangle = (Rectangle)sender;
-            rectangle.Stroke = Brushes.Red;
-            rectangle.StrokeThickness = 5;
-            rectangle.MouseLeftButtonDown -= SelectZone;
-            rectangle.MouseLeftButtonDown += GoToZone;
             Region region = (Region)rectangle.Tag;
+            if (region == selectedRegion)
+            {
 
-            selectedRegion = region;
+            }
+            else
+            {
+                rectangle.Stroke = Brushes.Red;
+                rectangle.StrokeThickness = 5;
+                selectedRegion = region;
+                UpdateZoneSelected();
+            }
 
         }
         private void UpdateZoneSelected()
         {
-            NorthZone.MouseLeftButtonDown -= GoToZone;
-            NorthZone.MouseLeftButtonDown += SelectZone;
-            NorthZone.Stroke = Brushes.Black;
-            NorthZone.StrokeThickness = 1;
-            HolyNationZone.MouseLeftButtonDown -= GoToZone;
-            HolyNationZone.MouseLeftButtonDown += SelectZone;
-            HolyNationZone.Stroke = Brushes.Black;
-            HolyNationZone.StrokeThickness = 1;
-            UnitedCitiesZone.MouseLeftButtonDown -= GoToZone;
-            UnitedCitiesZone.MouseLeftButtonDown += SelectZone;
-            UnitedCitiesZone.Stroke = Brushes.Black;
-            UnitedCitiesZone.StrokeThickness = 1;
-            WestHiveZone.MouseLeftButtonDown -= GoToZone;
-            WestHiveZone.MouseLeftButtonDown += SelectZone;
-            WestHiveZone.Stroke = Brushes.Black;
-            WestHiveZone.StrokeThickness = 1;
-            ShekKingdomZone.MouseLeftButtonDown -= GoToZone;
-            ShekKingdomZone.MouseLeftButtonDown += SelectZone;
-            ShekKingdomZone.Stroke = Brushes.Black;
-            ShekKingdomZone.StrokeThickness = 1;
-            SwampZone.MouseLeftButtonDown -= GoToZone;
-            SwampZone.MouseLeftButtonDown += SelectZone;
-            SwampZone.Stroke = Brushes.Black;
-            SwampZone.StrokeThickness = 1;
+            for (int i = 0; i < zones.Length; i++)
+            {
+                if (zones[i].Tag != selectedRegion)
+                {
+                    zones[i].Stroke = Brushes.Black;
+                    zones[i].StrokeThickness = 1;
+                }
+            }
         }
         private void GoToZone(object sender, EventArgs e)
         {

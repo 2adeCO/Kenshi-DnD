@@ -22,22 +22,7 @@ namespace Kenshi_DnD
             this.factionColor = factionColor;
             
         }
-        public Faction(int factionId, string factionName, string factionDescription, string factionImageSource)
-        {
-            this.factionId = factionId;
-            this.factionName = factionName;
-            this.factionDescription = factionDescription;
-           
-        }
-
-        public void SetFactionId(int factionId)
-        {
-            this.factionId = factionId;
-        }
-        public int GetFactionId()
-        {
-            return factionId;
-        }
+        
         public void SetFactionName(string factionName)
         {
             this.factionName = factionName;
@@ -63,6 +48,9 @@ namespace Kenshi_DnD
         {
             return this.factionColor;
         }
-        
+        public int GetRelation()
+        {
+            return relations;
+        }
     }
 }

@@ -5,26 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Kenshi_DnD"
              mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1280">
-    <Grid Background="#707c7c">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Image Source="/Resources/img/map.jpg" Width="600" Grid.Column="1" Grid.Row="1">
-        </Image>
-        <Rectangle x:Name="UnitedCitiesZone" Grid.Column="1" HorizontalAlignment="Left" Height="258" Margin="640,130,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="189"/>
-        <Rectangle x:Name="HolyNationZone" Grid.Column="1" HorizontalAlignment="Left" Height="201" Margin="492,159,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="148"/>
-        <Rectangle x:Name="ShekKingdomZone" Grid.Column="1" HorizontalAlignment="Left" Height="124" Margin="424,365,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="84"/>
-        <Rectangle x:Name="WestHiveZone" Grid.Column="1" HorizontalAlignment="Left" Height="49" Margin="392,316,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.78,0.592"/>
-        <Rectangle x:Name="NorthZone" Grid.Column="1" HorizontalAlignment="Left" Height="86" Margin="466,74,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="174"/>
-        <Rectangle x:Name="SwampZone" Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="508,399,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="100"/>
+             d:DesignHeight="720" d:DesignWidth="1280" Background="#707c7c">
 
-    </Grid>
+    <Viewbox Stretch="Uniform">
+        <Canvas Width="600" Height="600">
+            <!-- Base size of your map image -->
+            <Image Source="/Resources/img/map.jpg" Width="600" Height="600" Canvas.Left="0" Canvas.Top="0"/>
+
+
+            <Rectangle x:Name="UnitedCitiesZone" Width="189" Height="258" Canvas.Left="305" Canvas.Top="61" Stroke="Black" StrokeThickness="1" Fill="#400000FF" MouseLeftButtonDown="SelectZone"/>
+            <Rectangle x:Name="HolyNationZone" Width="139" Height="174" Canvas.Left="161" Canvas.Top="126" Stroke="Black" StrokeThickness="1" Fill="#40FF0000" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <Rectangle x:Name="ShekKingdomZone" Width="84" Height="124" Canvas.Left="84" Canvas.Top="319" Stroke="Black" StrokeThickness="1" Fill="#40FF0000" MouseLeftButtonDown="SelectZone"/>
+            <Rectangle x:Name="WestHiveZone" Width="104" Height="80" Canvas.Left="57" Canvas.Top="239" Stroke="Black" StrokeThickness="1" Fill="#40FFD700" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Rectangle x:Name="NorthZone" Width="185" Height="111" Canvas.Left="120" Canvas.Top="10" Stroke="Black" StrokeThickness="1" Fill="#40808080" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Rectangle x:Name="SwampZone" Width="100" Height="100" Canvas.Left="168" Canvas.Top="343" Stroke="Black" StrokeThickness="1" Fill="#4000FF00" MouseLeftButtonDown="SelectZone"/>
+        </Canvas>
+    </Viewbox>
+
 </UserControl>

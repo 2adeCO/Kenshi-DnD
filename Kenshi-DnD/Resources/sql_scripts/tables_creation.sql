@@ -17,7 +17,12 @@ drop table if exists regions;
 create table regions(
 	id int auto_increment primary key ,
     name varchar(50) not null,
-    description varchar(500) not null
+    description varchar(500) not null,
+    hasBar bool default false not null,
+    hasShop bool default false not null,
+    hasLimbHospital bool default false not null,
+    hasContrabandMarket bool default false not null,
+    hasRangedShop bool default false not null
 );
 
 drop table if exists region_faction;

@@ -47,11 +47,13 @@ namespace Kenshi_DnD
         int xpPoints;
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
+        Competency.StartCompetency startCompetency;
         //In Kenshi the best way to level up at the start is to get beaten a lot
         const int PART_DAMAGE_AS_XP = 6;
-        public Hero(string name, string title, int toughness, int bruteForce, int agility, int resistance, int dexterity,
-            string backgroundStory, int level, int experience, Race race, Race subrace, Limb[] limbs)
+        public Hero(string name, string title,string backgroundStory,int bruteForce ,int dexterity, int resistance, int agility,
+             int level, Race race, Race subrace, Limb[] limbs, Competency.StartCompetency startCompetency)
         {
+            toughness = 7;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             this.name = name;
             this.title = title;
@@ -60,12 +62,13 @@ namespace Kenshi_DnD
             this.backgroundStory = backgroundStory;
             this.recruitmentDate = DateTime.Now;
             this.level = level;
-            this.experience = experience;
+            experience = (10 * ((level) * (level)));
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
             personalInventory = new HeroInventory();
             buff = new StatModifier(0, 0, 0, 0, 0);
+            this.startCompetency = startCompetency;
         }
         public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs) 
         {
@@ -77,9 +80,10 @@ namespace Kenshi_DnD
             personalInventory = new HeroInventory();
             buff = new StatModifier(0, 0, 0, 0, 0);
         }
-        public Hero(string name, string title, int toughness, int bruteForce, int agility, int resistance, int dexterity,
+        public Hero(string name, string title, int bruteForce, int agility, int resistance, int dexterity,
              Race race, Race subrace, Limb[] limbs)
         {
+            toughness = 7;
             this.name = name;
             this.title = title;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
@@ -255,14 +259,6 @@ namespace Kenshi_DnD
         public void SetRecruitmentDate(DateTime recruitmentDate)
         {
             this.recruitmentDate = recruitmentDate;
-        }
-        public void SetLevel(int level)
-        {
-            this.level = level;
-        }
-        public void SetExperience(int experience)
-        {
-            this.experience = experience;
         }
         public Limb[] GetLimbs()
         {
