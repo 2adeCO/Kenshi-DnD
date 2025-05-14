@@ -386,4 +386,12 @@ INSERT INTO names (name) VALUES
 ('Zan'),
 ('Twinkle');
 
+insert into titles (title) values
+('El probado 1'),
+('El probado 2'),
+('El probado 3');
 
+insert into backgrounds (background) values
+('la descripción 1'),
+('El descripción 2'),
+('El descripción 3');

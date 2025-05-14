@@ -48,11 +48,13 @@ namespace Kenshi_DnD
         //Limbs can be lost and bought in the kenshi universe.
         Limb[] limbs;
         Competency.StartCompetency startCompetency;
+        bool hired;
         //In Kenshi the best way to level up at the start is to get beaten a lot
         const int PART_DAMAGE_AS_XP = 6;
         public Hero(string name, string title,string backgroundStory,int bruteForce ,int dexterity, int resistance, int agility,
              int level, Race race, Race subrace, Limb[] limbs, Competency.StartCompetency startCompetency)
         {
+            hired = false;
             toughness = 7;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             this.name = name;
@@ -260,6 +262,10 @@ namespace Kenshi_DnD
         {
             this.recruitmentDate = recruitmentDate;
         }
+        public void Hire()
+        {
+            hired = true;
+        }
         public Limb[] GetLimbs()
         {
             return limbs;
@@ -389,7 +395,11 @@ namespace Kenshi_DnD
 
             return leveledUp;
         }
-
+        public bool IsHired()
+        {
+            Debug.WriteLine("Hired? : " + hired);
+            return hired;
+        }
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())
@@ -461,6 +471,10 @@ namespace Kenshi_DnD
                 }
             }
             return null;
+        }
+        public Competency.StartCompetency GetCompetency()
+        {
+            return startCompetency;
         }
         public void PutLimb(Limb newLimb)
         {

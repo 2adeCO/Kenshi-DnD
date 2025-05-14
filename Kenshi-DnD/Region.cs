@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,8 +54,8 @@ namespace Kenshi_DnD
 
         public Hero[] GoToBar(Adventure myAdventure, Random rnd)
         {
-            //This makes 10 the max number of possible heroes, as max relations is 100
-            int numberOfHeroes = rnd.Next(0, (GetRelations() / 10) + 1);
+            //This makes 20 the max number of possible heroes, as max relations is 100
+            int numberOfHeroes = rnd.Next(0, (GetRelations() / 5) + 1);
 
             if (numberOfHeroes > 0)
             {
@@ -75,12 +76,14 @@ namespace Kenshi_DnD
                                 heroesInBar[i] = GenerateRandomHero(myAdventure, rnd, Competency.StartCompetency.Intermediate);
                                 break;
                             }
-                        case < 9:
+                        case <= 9:
                             {
                                 heroesInBar[i] = GenerateRandomHero(myAdventure, rnd, Competency.StartCompetency.Master);
                                 break;
                             }
                     }
+                    Debug.WriteLine(heroesInBar[i].GetNameAndTitle());
+
                 }
                 return heroesInBar;
             }
@@ -112,8 +115,9 @@ namespace Kenshi_DnD
             bool hasAnimals = false;
             for(int i = 0; i< factions.Count; i += 1)
             {
-                if (factions[i].GetFactionName() != "Reino Animal")
+                if (factions[i].GetFactionName() != "@2@Reino Animal@")
                 {
+                    Debug.WriteLine(factions[i].GetFactionName() + " " + factions[i].GetRelation());
                     relations += factions[i].GetRelation();
                 }
                 else
@@ -121,7 +125,8 @@ namespace Kenshi_DnD
                     hasAnimals = true;
                 }
             }
-
+            Debug.WriteLine(relations / (factions.Count -
+                (hasAnimals ? 1 : 0)));
             return relations / (factions.Count - 
                 (hasAnimals ? 1 : 0));
         }
@@ -186,16 +191,24 @@ namespace Kenshi_DnD
             string name = myAdventure.GetNames()[rnd.Next(0, myAdventure.GetNames().Length)];
             string title = myAdventure.GetTitles()[rnd.Next(0, myAdventure.GetTitles().Length)];
             string background = myAdventure.GetBackgrounds()[rnd.Next(0, myAdventure.GetBackgrounds().Length)];
-            Race race = myAdventure.GetAllRaces()[rnd.Next(0,myAdventure.GetAllRaces().Length)];
+            Race race = null;
             Race subrace = null;
+            do
+            {
+                Race tempRace = myAdventure.GetAllRaces()[rnd.Next(0, myAdventure.GetAllRaces().Length)];
+                if (RacesDictionary.RacesAndSubraces.ContainsKey(tempRace.GetName()))
+                {
+                    race = tempRace;
+                }
 
+            } while (race == null);
             do
             {
                 Race tempSubrace = myAdventure.GetAllRaces()[rnd.Next(0, myAdventure.GetAllRaces().Length)];
 
                 if (RacesDictionary.RacesAndSubraces[race.GetName()].Contains(tempSubrace.GetName()))
                 {
-                    race = tempSubrace;
+                    subrace = tempSubrace;
                 }
             } while (subrace == null);
 

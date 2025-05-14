@@ -441,8 +441,9 @@ namespace Kenshi_DnD
 
 
 
-                Hero hero = new Hero((int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,
-                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
+                Hero hero = new Hero(characterName.Text,characterTitle.Text,characterBackgroundStory.Text,
+                    (int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,1,
+                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs(),Competency.StartCompetency.Apprentice);
 
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
                 Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text)

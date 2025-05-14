@@ -37,8 +37,9 @@ namespace Kenshi_DnD
         Item[] allItems;
         Race[] allRaces;
         Limb[] allLimbs;
-
-
+        const int MAX_HEROES = 12;
+        const int MAX_SQUADS = 10;
+        const int MAX_SQUAD_LENGTH = 4;
         public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
             string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
@@ -48,12 +49,12 @@ namespace Kenshi_DnD
             startDate = DateTime.Now;
             hoursPlayed = DateTime.Now;
 
-            heroes = new Hero[12];
+            heroes = new Hero[MAX_HEROES];
             heroes[0] = hero;
 
-            savedSquads = new Hero[10][];
+            savedSquads = new Hero[MAX_SQUADS][];
 
-            savedSquads[0] = new Hero[4];
+            savedSquads[0] = new Hero[MAX_SQUAD_LENGTH];
             savedSquads[0][0] = hero;
             currentSquad = savedSquads[0];
 
@@ -143,6 +144,53 @@ namespace Kenshi_DnD
         {
             return myDice;
         }
+        public void HireHero(Hero hero)
+        {
+            int cost = 0;
+            switch (hero.GetCompetency())
+            {
+                case Competency.StartCompetency.Apprentice:
+                    {
+                        cost += 200;
+                        break;
+                    }
+                case Competency.StartCompetency.Intermediate:
+                    {
+                        cost += 1000;
+                        break;
+                    }
+                case Competency.StartCompetency.Master:
+                    {
+                        cost += 2000;
+                        break;
+                    }
+            }
+
+            int countOfHeros = 0;
+
+            for(int i = 0; i < heroes.Length; i += 1)
+            {
+                if (heroes[i] != null) { countOfHeros += 1; }
+            }
+
+            if(cats < cost || countOfHeros >= MAX_HEROES || hero.IsHired())
+            {
+                Debug.WriteLine("Cost too high o too much heroes or is already hired");
+                return;
+            }
+            
+            cats -= cost;
+            for(int i = 0; i < heroes.Length; i++)
+            {
+                if(heroes[i] == null)
+                {
+                    Debug.WriteLine("Hired in adventure");
+                    hero.Hire();
+                    heroes[i] = hero;
+                    break;
+                }
+            }
+        }
         public Hero[] GetCurrentSquad()
         {
             int count = 0;
@@ -214,5 +262,6 @@ namespace Kenshi_DnD
         {
             return names;
         }
+        
     }
 }

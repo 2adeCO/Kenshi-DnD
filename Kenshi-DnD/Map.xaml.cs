@@ -66,7 +66,7 @@ namespace Kenshi_DnD
             Region region = (Region)rectangle.Tag;
             if (region == selectedRegion)
             {
-
+                controller.Content = new Zone(mainWindow,controller,cursors,rnd,adventure,selectedRegion);
             }
             else
             {
@@ -87,13 +87,6 @@ namespace Kenshi_DnD
                     zones[i].StrokeThickness = 1;
                 }
             }
-        }
-        private void GoToZone(object sender, EventArgs e)
-        {
-            Rectangle rectangle = (Rectangle)sender;
-            Region region = (Region)rectangle.Tag;
-
-
         }
     }
 }

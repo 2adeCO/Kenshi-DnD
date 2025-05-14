@@ -8,8 +8,8 @@ create table Factions(
 	id Int auto_increment primary key,
     name varchar(50) not null,
     description varchar(500),
-    color int not null,
     baseRelations int not null,
+    color int not null,
     imagePath varchar(100)
 );
 

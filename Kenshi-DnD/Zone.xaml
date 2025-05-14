@@ -31,31 +31,70 @@
             </StackPanel.Background>
         
         </StackPanel>
+        <Button Content="Irse" FontSize="20" 
+                Click="GoToMap"
+                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="0" Margin="4,10,4,10">
+            
+        </Button>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="2">
             <!-- Bar -->
             <Grid x:Name="BarGrid" Visibility="Collapsed">
-                <TextBlock Text="Estás en el Bar." FontSize="20"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="BarActions" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" 
+                            Grid.Row="0" HorizontalAlignment="Stretch" Margin="4,10,4,10"></Button>
+                    <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
+                             HorizontalAlignment="Stretch" Margin="4,10,4,10"
+                        ></Button>
+                    <Button Content="Irse del bar" Grid.Row="2"
+                             HorizontalAlignment="Stretch" Margin="4,10,4,10"
+                            Click="CloseCurrentGrid"
+                            />
+
+                </Grid>
+
+                <Grid x:Name="BarItems" Grid.Column="1">
+
+                </Grid>
             </Grid>
 
             <!-- Hospital -->
             <Grid x:Name="HospitalGrid" Visibility="Collapsed">
-                <TextBlock Text="Estás en el Hospital." FontSize="20"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="HospitalActions" Grid.Row="0">
+                    
+                </Grid>
+
+                <Grid x:Name="HospitalItems" Grid.Row="1">
+                    
+                </Grid>
             </Grid>
 
             <!-- Tienda -->
             <Grid x:Name="ShopGrid" Visibility="Collapsed">
-                <TextBlock Text="Estás en la Tienda." FontSize="20"/>
+                
             </Grid>
 
             <!-- Contrabando -->
             <Grid x:Name="ContrabandMarketGrid" Visibility="Collapsed">
-                <TextBlock Text="Estás en el Mercado Negro." FontSize="20"/>
+                
             </Grid>
 
             <!-- Armas a distancia -->
-            <Grid x:Name="RangedShop" Visibility="Collapsed">
-                <TextBlock Text="Estás en la Tienda de Armas a Distancia." FontSize="20"/>
+            <Grid x:Name="RangedShopGrid" Visibility="Collapsed">
+                
             </Grid>
         </Grid>
     </Grid>
