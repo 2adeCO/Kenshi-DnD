@@ -15,7 +15,7 @@
         
         
         <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="2">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <TextBox x:Name="InfoLog">
                 </TextBox>
             </ScrollViewer>
@@ -39,32 +39,66 @@
 
         <Grid Grid.Column="2">
             <!-- Bar -->
-            <Grid x:Name="BarGrid" Visibility="Collapsed">
+            <Grid x:Name="BarGrid" Visibility="Visible">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Grid x:Name="BarActions" Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" 
-                            Grid.Row="0" HorizontalAlignment="Stretch" Margin="4,10,4,10"></Button>
-                    <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
-                             HorizontalAlignment="Stretch" Margin="4,10,4,10"
-                        ></Button>
-                    <Button Content="Irse del bar" Grid.Row="2"
-                             HorizontalAlignment="Stretch" Margin="4,10,4,10"
-                            Click="CloseCurrentGrid"
-                            />
+                
+                
+                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,1,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4B2E2B" Offset="0.0"/>
+                            <!-- Madera oscura -->
+                            <GradientStop Color="#8B5E3C" Offset="0.3"/>
+                            <!-- Cobre/ámbar -->
+                            <GradientStop Color="#B38B59" Offset="0.6"/>
+                            <!-- Luz de vela -->
+                            <GradientStop Color="#3C2F2F" Offset="1.0"/>
+                            <!-- Sombra ahumada -->
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid x:Name="BarActions" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" 
+            Height="50"
+            Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,10,50,10"></Button>
+                        <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
+            Height="50"
+             HorizontalAlignment="Stretch" Margin="20,10,50,10"
+        ></Button>
+                        <Button Content="Irse del bar" Grid.Row="2"
+             HorizontalAlignment="Stretch" Margin="20,10,50,10"
+            Height="50"
+            Click="CloseCurrentGrid"
+            />
 
-                </Grid>
+                    </Grid>
+                </Border>
+                
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#D2B48C" Offset="0.0"/>
+                            <!-- Madera clara / cuero gastado -->
+                            <GradientStop Color="#EED8AE" Offset="0.3"/>
+                            <!-- Luz cálida de lámpara -->
+                            <GradientStop Color="#F5E6C4" Offset="0.6"/>
+                            <!-- Reflejo dorado / polvo en el aire -->
+                            <GradientStop Color="#C2A279" Offset="1.0"/>
+                            <!-- Sombra suave en madera clara -->
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+                    <Grid x:Name="BarItems">
 
-                <Grid x:Name="BarItems" Grid.Column="1">
-
-                </Grid>
+                    </Grid>
+                </ScrollViewer>
+                
             </Grid>
 
             <!-- Hospital -->

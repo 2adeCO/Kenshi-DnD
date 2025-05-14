@@ -29,7 +29,7 @@ namespace Kenshi_DnD
         Region region;
 
         Hero[] heroesInBar;
-        Hero selectedHero;
+        Button selectedHeroButton;
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
             InitializeComponent();
@@ -130,6 +130,7 @@ namespace Kenshi_DnD
                     button.Tag = heroesInBar[i];
                     button.Content = heroesInBar[i].GetNameAndTitle();
                     button.Margin = new Thickness(4, 10, 4, 10);
+                    button.MinHeight = 30;
                     button.ToolTip = mainWindow.ToolTipThemer(heroesInBar[i].GetBackgroundStory());
                     button.Click += SelectHero;
 
@@ -146,7 +147,7 @@ namespace Kenshi_DnD
 
                 TextBlock textBlock = new TextBlock();
                 textBlock.Inlines.AddRange(mainWindow.DecorateText("No hay @916@nadie@ aquí..."));
-
+                textBlock.Margin = new Thickness(4, 10, 4, 10);
                 Grid.SetRow(textBlock, 0);
                 BarItems.Children.Add(textBlock);
             }
@@ -171,8 +172,17 @@ namespace Kenshi_DnD
         }
         private void SelectHero(object sender, EventArgs e)
         {
-            selectedHero = (Hero)((Button)sender).Tag;
-            HireButton.Content = "Contratar a " + selectedHero.GetName(); 
+            if(sender == null)
+            {
+                HireButton.Background = new SolidColorBrush(Colors.White);
+                HireButton.Content = "Elige a quien contratar";
+            }
+            else
+            {
+                selectedHeroButton = ((Button)sender);
+                HireButton.Content = "Contratar a " + ((Hero)(selectedHeroButton.Tag)).GetName();
+                HireButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
+            }
         }
         private void HireHero(object sender, EventArgs e)
         {
@@ -186,6 +196,8 @@ namespace Kenshi_DnD
                 MessageBox.Show("Ya has contratado a " + selectedHero.GetName());
                 return;
             }
+            selectedHero = null;
+            SelectHero(null, null);
             Debug.WriteLine("Hired");
             myAdventure.HireHero(selectedHero);
         }
