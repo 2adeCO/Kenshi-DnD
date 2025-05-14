@@ -446,9 +446,9 @@ namespace Kenshi_DnD
                     GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs(),Competency.StartCompetency.Apprentice);
 
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
-                Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text)
-                    ,factions,regions,enemies,titles,backgrounds,names,items,allRaces,limbs);
-
+                Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text),
+                    factionName.Text,factionColor.SelectedIndex + 1,factions,regions,enemies,titles,backgrounds,names,items,allRaces,limbs);
+                Debug.WriteLine(myAdventure.GetColor());
                 if (!Directory.Exists("./saves"))
                 {
                     Directory.CreateDirectory("./saves");

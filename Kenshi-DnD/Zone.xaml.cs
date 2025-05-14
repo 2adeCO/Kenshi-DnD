@@ -30,6 +30,8 @@ namespace Kenshi_DnD
 
         Hero[] heroesInBar;
         Button selectedHeroButton;
+
+        TextBox squadEditorTextBox;
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
             InitializeComponent();
@@ -39,8 +41,11 @@ namespace Kenshi_DnD
             this.rnd = rnd;
             this.myAdventure = myAdventure;
             this.region = currentRegion;
-
-
+            UpdateCats();
+            PlayerFaction.Inlines.AddRange(mainWindow.DecorateText(myAdventure.GetFactionName()));
+            PlayerGrid.Background = mainWindow.GetBrushByNum(myAdventure.GetColor());
+            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
+            MakePlayerGrid();
             CreateActions();
 
 
@@ -118,24 +123,39 @@ namespace Kenshi_DnD
             CloseCurrentGrid(null,null);
             BarGrid.Visibility = Visibility.Visible;
 
-            if(heroesInBar != null)
+            HireButton.IsEnabled = false;
+            HireButton.Content = "Elige a quién contratar";
+            if (heroesInBar != null)
             {
                 for (int i = 0; i < heroesInBar.Length; i++)
                 {
+
                     RowDefinition row = new RowDefinition();
                     row.Height = new GridLength(1, GridUnitType.Auto);
                     BarItems.RowDefinitions.Add(row);
-
                     Button button = new Button();
                     button.Tag = heroesInBar[i];
                     button.Content = heroesInBar[i].GetNameAndTitle();
-                    button.Margin = new Thickness(4, 10, 4, 10);
-                    button.MinHeight = 30;
-                    button.ToolTip = mainWindow.ToolTipThemer(heroesInBar[i].GetBackgroundStory());
+                    button.FontSize = 17;
+                    button.Margin = new Thickness(10, 20, 30, 20);
+                    button.MinHeight = 40;
+                    button.Padding = new Thickness(5);
+                    button.ToolTip = mainWindow.HeaderToolTipThemer(heroesInBar[i].GetNameAndTitle(),heroesInBar[i].Meet());
                     button.Click += SelectHero;
+                    if (heroesInBar[i].IsHired())
+                    {
+                        button.IsEnabled = false;
+                        button.Content = heroesInBar[i].GetName() + " (Contratado)";
+                        button.Background = new SolidColorBrush(Colors.LightGreen);
+                        button.BorderThickness = new Thickness(3);
+                    }
+                    else
+                    {
+                        button.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                    }
 
 
-                    Grid.SetRow(button, i);
+                        Grid.SetRow(button, i);
                     BarItems.Children.Add(button);
                 }
             }
@@ -172,42 +192,242 @@ namespace Kenshi_DnD
         }
         private void SelectHero(object sender, EventArgs e)
         {
-            if(sender == null)
+
+            if (selectedHeroButton != null)
             {
-                HireButton.Background = new SolidColorBrush(Colors.White);
-                HireButton.Content = "Elige a quien contratar";
+                selectedHeroButton.ClearValue(Button.BorderBrushProperty);
+                selectedHeroButton.ClearValue(Button.BorderThicknessProperty);
+                selectedHeroButton.ClearValue(Button.BackgroundProperty);
             }
-            else
+
+            selectedHeroButton = ((Button)sender);
+            if (((Hero)(selectedHeroButton.Tag)).IsHired())
             {
-                selectedHeroButton = ((Button)sender);
-                HireButton.Content = "Contratar a " + ((Hero)(selectedHeroButton.Tag)).GetName();
-                HireButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
+                HireButton.Content = "Ya has contratado a " + ((Hero)(selectedHeroButton.Tag)).GetName();
+                HireButton.IsEnabled = false;
+                return;
             }
+            HireButton.IsEnabled = true;
+
+            HireButton.Content = "Contratar a " + ((Hero)(selectedHeroButton.Tag)).GetName();
+            selectedHeroButton.BorderBrush = Brushes.DarkGreen;
+            selectedHeroButton.BorderThickness = new Thickness(3);
+            selectedHeroButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C"))); 
+
         }
         private void HireHero(object sender, EventArgs e)
         {
-            if(selectedHero == null) 
+            if(selectedHeroButton == null) 
             {
                 MessageBox.Show("Debes elegir un héroe al que contratar");
                 return; 
+            }
+            Hero selectedHero = (Hero)selectedHeroButton.Tag;
+            
+
+            if (myAdventure.GetCats() < selectedHero.GetCompetencyCost())
+            {
+                MessageBox.Show("No tienes suficiente dinero para contratar a " + selectedHero.GetName());
+                return;
             }
             if (selectedHero.IsHired())
             {
                 MessageBox.Show("Ya has contratado a " + selectedHero.GetName());
                 return;
             }
-            selectedHero = null;
-            SelectHero(null, null);
-            Debug.WriteLine("Hired");
+            HireButton.Background = new SolidColorBrush(Colors.LightGreen);
+            HireButton.Content = "✔ Contratado";
             myAdventure.HireHero(selectedHero);
+            HireButton.IsEnabled = false;
+            UpdateSquadEditor(null,null);
+            UpdateCats();
+            selectedHeroButton.Background = new SolidColorBrush(Colors.LightGreen);
+            selectedHeroButton.Content = selectedHero.GetName() + " (Contratado)";
+            selectedHeroButton.IsEnabled = false;
+            selectedHeroButton = null;
+            
+            Debug.WriteLine("Hired");
         }
-        private void UpdateItems()
+        private void MakePlayerGrid()
+        {
+            Hero[] currentHeroes = myAdventure.GetCurrentSquad();
+            for (int i = 0; i < currentHeroes.Length; i += 1)
+            {
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Orientation = Orientation.Vertical;
+                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+                label.Content = currentHeroes[i].GetName();
+                label.ToolTip = mainWindow.HeaderToolTipThemer(currentHeroes[i].GetName(), currentHeroes[i].ToString());
+                ToolTipService.SetInitialShowDelay(label, 100);
+                stackPanel.Children.Add(label);
+
+                if (currentHeroes[i].IsAlive())
+                {
+                    ProgressBar progressBar = new ProgressBar();
+                    progressBar.Minimum = 0;
+                    progressBar.Maximum = currentHeroes[i].GetToughness();
+                    progressBar.Value = currentHeroes[i].GetHp();
+                    progressBar.Background = new SolidColorBrush(Colors.DarkGray);
+                    progressBar.Foreground = new SolidColorBrush(Colors.DarkRed);
+                    progressBar.Height = 20;
+                    progressBar.Width = 150;
+                    progressBar.Margin = new Thickness(4, 2, 4, 2);
+                    progressBar.ToolTip = mainWindow.ToolTipThemer(currentHeroes[i].GetHp() + "/" + currentHeroes[i].GetToughness());
+                    ToolTipService.SetInitialShowDelay(progressBar, 100);
+                    stackPanel.Background = Brushes.WhiteSmoke;
+                    stackPanel.Children.Add(progressBar);
+                }
+                else
+                {
+                    stackPanel.Background = Brushes.Gray;
+                }
+                Border border = new Border();
+                border.Margin = new Thickness(2, 8, 20, 8);
+                border.BorderBrush = Brushes.Black;
+                border.BorderThickness = new Thickness(1);
+                border.Child = stackPanel;
+                border.VerticalAlignment = VerticalAlignment.Center;
+                PlayerSquad.Children.Add(border);
+            }
+
+
+
+        }
+        private void OpenSquadEditor(object sender, EventArgs e)
+        {
+            if (SquadEditor.Visibility == Visibility.Visible)
+            {
+                SquadEditor.Visibility = Visibility.Collapsed;
+                SquadEditorButton.Content = "Abrir editor de escuadrones";
+                return;
+            }
+            SquadEditor.Visibility = Visibility.Visible;
+            SquadEditorButton.Content = "Cerrar editor";
+            UpdateSquadEditor(sender, e);
+        }
+        private void UpdateSquadEditor(object sender, EventArgs e)
+        {
+            SquadEditor.Children.Clear();
+            SquadEditor.RowDefinitions.Clear();
+            SquadEditor.ColumnDefinitions.Clear();
+
+            RowDefinition row1 = new RowDefinition();
+            row1.Height = new GridLength(1, GridUnitType.Auto);
+            RowDefinition row2 = new RowDefinition();
+            row2.Height = new GridLength(1, GridUnitType.Auto);
+            RowDefinition row3 = new RowDefinition();
+            row3.Height = new GridLength(1, GridUnitType.Auto);
+
+            SquadEditor.RowDefinitions.Add(row1);
+            SquadEditor.RowDefinitions.Add(row2);
+            SquadEditor.RowDefinitions.Add(row3);
+
+
+
+            TextBox textBox = new TextBox();
+            textBox.Text = myAdventure.GetCurrentSquadName();
+            textBox.TextChanged += OnlyNumsAndLetters;
+            textBox.Margin = new Thickness(5, 20, 5, 2);
+
+            squadEditorTextBox = textBox;
+            Grid.SetColumn(textBox, 0);
+            Grid.SetRow(textBox, 2);
+            Grid.SetColumnSpan(textBox, 2);
+
+            SquadEditor.Children.Add(textBox);
+            Button button1 = new Button();
+            button1.Content = "Crear squad";
+            button1.Margin = new Thickness(5, 20, 5, 2);
+            button1.Background = Brushes.WhiteSmoke;
+            button1.Height = 40;
+
+            Grid.SetColumn(button1, 2);
+            Grid.SetRow(button1, 2);
+
+            SquadEditor.Children.Add(button1);
+
+            Hero[] heroes =  myAdventure.GetHeroes();
+            int index = 0;
+            for (int i = 0; i < (heroes.Length / 2) + 1; i+=1  )
+            { 
+                ColumnDefinition col = new ColumnDefinition();
+                col.Width = new GridLength(1, GridUnitType.Star);
+
+                SquadEditor.ColumnDefinitions.Add(col);
+               
+
+                if (heroes[index] != null)
+                {
+                    Button button = new Button();
+                    button.ToolTip = mainWindow.HeaderToolTipThemer(heroes[index].GetName(), heroes[index].ToString());
+                    ToolTipService.SetInitialShowDelay(button, 100);
+                    button.Content = heroes[index].GetName();
+                    button.Padding = new Thickness(5);
+                    button.Margin = new Thickness(5, 2, 5, 2);
+                    if (myAdventure.IsInCurrentSquad(heroes[index]))
+                    {
+                        button.Background = new SolidColorBrush(Colors.LightGreen);
+                    }
+                    else
+                    {
+                        button.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                    }
+                    button.Click += AddOrRemoveFromSquad;
+                    button.BorderBrush = new SolidColorBrush(Colors.Black);
+                    button.BorderThickness = new Thickness(1);
+                    button.Tag = heroes[index];
+                    index += 1;
+                    Grid.SetRow(button, 0);
+                    Grid.SetColumn(button, i);
+
+                    SquadEditor.Children.Add(button);
+                    if (heroes[index]!= null)
+                    {
+                        Button button2 = new Button();
+                        button2.ToolTip = mainWindow.HeaderToolTipThemer(heroes[index].GetName(), heroes[index].ToString());
+                        ToolTipService.SetInitialShowDelay(button2, 100);
+                        button2.Content = heroes[index].GetName();
+                        button2.Padding = new Thickness(5);
+                        button2.Margin = new Thickness(5, 2, 5, 2);
+                        if (myAdventure.IsInCurrentSquad(heroes[index]))
+                        {
+                            button2.Background = new SolidColorBrush(Colors.LightGreen);
+                        }
+                        else
+                        {
+                            button2.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                        }
+                        button2.Click += AddOrRemoveFromSquad;
+                        button2.BorderBrush = new SolidColorBrush(Colors.Black);
+                        button2.BorderThickness = new Thickness(1);
+                        button2.Tag = heroes[index];
+                        index += 1;
+                        Grid.SetRow(button2, 1);
+
+                        Grid.SetColumn(button2, i);
+
+                        SquadEditor.Children.Add(button2);
+                    }
+                    
+                }
+                
+            }
+        }
+
+      
+
+        private void AddOrRemoveFromSquad(object sender,EventArgs e)
         {
 
         }
         private void GoToMap(object sender, EventArgs e)
         {
             controller.Content = new Map(mainWindow, controller, cursors, rnd, myAdventure);
+        }
+        private void UpdateCats()
+        {
+            PlayerCats.Inlines.Clear();
+            PlayerCats.Inlines.AddRange(mainWindow.DecorateText("@218@" + myAdventure.GetCats() + "$@"));
         }
         private void CloseCurrentGrid(object sender, EventArgs e)
         {
@@ -216,6 +436,36 @@ namespace Kenshi_DnD
             HospitalGrid.Visibility = Visibility.Collapsed;
             RangedShopGrid.Visibility = Visibility.Collapsed;
             ContrabandMarketGrid.Visibility = Visibility.Collapsed;
+        }
+        private void OnlyNumsAndLetters(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int caretIndex = -1;
+            string text = textBox.Text;
+            string result = "";
+            for (int i = 0; i < text.Length; i += 1)
+            {
+                if (char.IsAsciiLetterOrDigit(text[i]))
+                {
+                    result += text[i];
+                }
+                else
+                {
+                    if (char.IsWhiteSpace(text[i]))
+                    {
+                        result += text[i];
+                    }
+                    else
+                    {
+                        caretIndex = i;
+                    }
+                }
+            }
+            textBox.Text = result;
+            if (caretIndex != -1)
+            {
+                textBox.CaretIndex = caretIndex;
+            }
         }
     }
 }

@@ -12,7 +12,9 @@ namespace Kenshi_DnD
     [Serializable]
     public class Adventure
     {
+        public Dictionary<string, Hero[]> savedSquads;
         string id;
+        string factionName;
         const int MINIMUM_NUMBER_LENGTH = 9;
         int cats;
         int color;
@@ -23,7 +25,8 @@ namespace Kenshi_DnD
 
         Hero[] heroes;
         Hero[] currentSquad;
-        Hero[][] savedSquads;
+        List<Hero> tempSquadMaker;
+
 
         PlayerInventory playerInventory;
         List<Item> alreadyObtainedItems;
@@ -40,7 +43,7 @@ namespace Kenshi_DnD
         const int MAX_HEROES = 12;
         const int MAX_SQUADS = 10;
         const int MAX_SQUAD_LENGTH = 4;
-        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats,string factionName,int factionColor, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
             string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
             this.id = GenerateId(name, rnd);
@@ -48,15 +51,15 @@ namespace Kenshi_DnD
             this.myDice = myDice;
             startDate = DateTime.Now;
             hoursPlayed = DateTime.Now;
-
+            this.factionName = factionName;
+            this.color = factionColor;
             heroes = new Hero[MAX_HEROES];
             heroes[0] = hero;
-
-            savedSquads = new Hero[MAX_SQUADS][];
-
-            savedSquads[0] = new Hero[MAX_SQUAD_LENGTH];
-            savedSquads[0][0] = hero;
-            currentSquad = savedSquads[0];
+            savedSquads = new Dictionary<string, Hero[]> { };
+            //Adds the first squad, which is the one that is created when the game starts
+            savedSquads.Add("Mi primera squad", new Hero[MAX_SQUAD_LENGTH]);
+            savedSquads["Mi primera squad"][0] = hero;
+            currentSquad = savedSquads["Mi primera squad"];
 
             playerInventory = new PlayerInventory();
             alreadyObtainedItems = new List<Item>();
@@ -146,25 +149,7 @@ namespace Kenshi_DnD
         }
         public void HireHero(Hero hero)
         {
-            int cost = 0;
-            switch (hero.GetCompetency())
-            {
-                case Competency.StartCompetency.Apprentice:
-                    {
-                        cost += 200;
-                        break;
-                    }
-                case Competency.StartCompetency.Intermediate:
-                    {
-                        cost += 1000;
-                        break;
-                    }
-                case Competency.StartCompetency.Master:
-                    {
-                        cost += 2000;
-                        break;
-                    }
-            }
+            int cost = hero.GetCompetencyCost();
 
             int countOfHeros = 0;
 
@@ -191,6 +176,22 @@ namespace Kenshi_DnD
                 }
             }
         }
+        public Dictionary<string,Hero[]> GetSavedSquads()
+        {
+            return savedSquads;
+        }
+        public string GetCurrentSquadName()
+        {
+            for(int i = 0; i < savedSquads.Count; i += 1)
+            {
+                if (savedSquads.ElementAt(i).Value == currentSquad)
+                {
+                    return savedSquads.ElementAt(i).Key;
+                }
+            }
+
+            return null;
+        }
         public Hero[] GetCurrentSquad()
         {
             int count = 0;
@@ -216,6 +217,31 @@ namespace Kenshi_DnD
             }while (count != heroesToReturn.Length);
 
             return heroesToReturn;
+        }
+        public bool IsInCurrentSquad(Hero hero)
+        {
+            bool found = false;
+            for(int i = 0; i < currentSquad.Length; i+=1)
+            {
+                if (currentSquad[i] == hero)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
+        }
+        public string GetFactionName()
+        {
+            return "@" + color + "@" + factionName +"@";
+        }
+        public int GetColor()
+        {
+            return color;
+        }
+        public Hero[] GetHeroes()
+        {
+            return heroes;
         }
         public DateTime GetStartDate()
         {

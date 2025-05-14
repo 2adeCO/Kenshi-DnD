@@ -526,9 +526,39 @@ namespace Kenshi_DnD
         {
             return
                 $"Nivel: {level}\n" +
+                $"Experiencia: {experience}\n" +
                 $"Raza: {race.GetName()}\n" +
-                $"{(subrace.GetName() != "Sin subraza" ? $"Subraza: {subrace.GetName()}\n" : "")}"
+                $"{(subrace.GetName() != "Puro" ? $"Subraza: {subrace.GetName()}\n" : "")}"
                 + GetAllStats().ToString();
+        }
+        public string Meet()
+        {
+            return $"{backgroundStory}\n" + ToString() + "\n Me uniré a tu aventura por " +  GetCompetencyCost();
+        }
+        public int GetCompetencyCost()
+        {
+          
+            int cost = 0;
+
+            switch (startCompetency)
+            {
+                case Competency.StartCompetency.Apprentice:
+                    {
+                        cost += 200;
+                        break;
+                    }
+                case Competency.StartCompetency.Intermediate:
+                    {
+                        cost += 1000;
+                        break;
+                    }
+                case Competency.StartCompetency.Master:
+                    {
+                        cost += 2000;
+                        break;
+                    }
+            }
+            return cost;
         }
     }
 }

@@ -12,16 +12,57 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
-        
-        <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="PlayerGrid" Grid.Column="1" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid x:Name="PlayerInSfo" Grid.Row="0" Background="#FF8B5A2B">
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
+                        <TextBlock x:Name="PlayerFaction" FontSize="16" FontWeight="Bold" 
+                                    Padding="10" Background="WhiteSmoke"></TextBlock>
+
+                    </Border>
+
+                    <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
+                        <TextBlock x:Name="PlayerCats" FontSize="16" 
+                                   Padding="10" Background="WhiteSmoke"></TextBlock>
+                    </Border>
+                    <Rectangle Stroke="Black" Fill="Black" Width="200"
+                               VerticalAlignment="Center" Height="5"></Rectangle>
+                    <Button x:Name="SquadEditorButton" BorderBrush="Black" BorderThickness="3" Margin="5"
+                     FontSize="16" Padding="10" Content="Editar escuadrón" 
+                        Background="WhiteSmoke" Click="OpenSquadEditor">
+                    </Button>
+                    <ComboBox x:Name="SquadAlignmentsCombobox" VerticalContentAlignment="Center"></ComboBox>
+                </StackPanel>
+            </Grid>
+            <StackPanel x:Name="PlayerSquad" Grid.Row="1" Orientation="Horizontal">
+                
+                </StackPanel>
+            <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <Grid x:Name="SquadEditor" Visibility="Collapsed">
+
+                </Grid>
+            </ScrollViewer>
+            
+        </Grid>
+        <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="1,2,1,2" Grid.Row="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <TextBox x:Name="InfoLog">
                 </TextBox>
             </ScrollViewer>
             
         </Border>
-        <StackPanel x:Name="ActionsPanel" Grid.Column="0">
+        <StackPanel x:Name="ActionsPanel" Grid.Column="0" Grid.RowSpan="2">
             <StackPanel.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.9">
                     <GradientStop Color="#D2B48C" Offset="0" />
@@ -33,11 +74,12 @@
         </StackPanel>
         <Button Content="Irse" FontSize="20" 
                 Click="GoToMap"
-                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="0" Margin="4,10,4,10">
+                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" 
+                Grid.Column="0" Grid.Row="1" Margin="4,10,4,10">
             
         </Button>
 
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2" Grid.RowSpan="2">
             <!-- Bar -->
             <Grid x:Name="BarGrid" Visibility="Visible">
                 <Grid.ColumnDefinitions>
@@ -59,24 +101,24 @@
                             <!-- Sombra ahumada -->
                         </LinearGradientBrush>
                     </Border.Background>
-                    <Grid x:Name="BarActions" Grid.Column="0">
+                    <Grid x:Name="BarActions" Grid.Column="0" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" 
-            Height="50"
-            Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,10,50,10"></Button>
-                        <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
-            Height="50"
-             HorizontalAlignment="Stretch" Margin="20,10,50,10"
-        ></Button>
-                        <Button Content="Irse del bar" Grid.Row="2"
-             HorizontalAlignment="Stretch" Margin="20,10,50,10"
-            Height="50"
-            Click="CloseCurrentGrid"
-            />
+                            Height="50"
+                            Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,20,50,20"></Button>
+                                        <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
+                            Height="50" Padding="15"
+                                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                        ></Button>
+                                        <Button Content="Irse del bar" Grid.Row="2"
+                                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                            Height="50"
+                            Click="CloseCurrentGrid"
+                            />
 
                     </Grid>
                 </Border>
@@ -94,7 +136,7 @@
                             <!-- Sombra suave en madera clara -->
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
-                    <Grid x:Name="BarItems">
+                    <Grid x:Name="BarItems" VerticalAlignment="Center">
 
                     </Grid>
                 </ScrollViewer>
