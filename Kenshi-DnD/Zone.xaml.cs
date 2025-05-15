@@ -618,6 +618,7 @@ namespace Kenshi_DnD
             {
                 string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
                 myAdventure.SetCurrentSquad(squadKey);
+                squadEditorTextBox.Text = squadKey;
                 UpdatePlayerGrid();
                 UpdateSquadEditor(null, null);
             }
