@@ -31,7 +31,6 @@ namespace Kenshi_DnD
         Hero[] heroesInBar;
         Button selectedHeroButton;
 
-        TextBox squadEditorTextBox;
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
             InitializeComponent();
@@ -45,7 +44,10 @@ namespace Kenshi_DnD
             PlayerFaction.Inlines.AddRange(mainWindow.DecorateText(myAdventure.GetFactionName()));
             PlayerGrid.Background = mainWindow.GetBrushByNum(myAdventure.GetColor());
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
-            MakePlayerGrid();
+            SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
+            Debug.WriteLine("Selected item: " + (string)SquadAlignmentsCombobox.SelectedItem);
+            UpdatePlayerGrid();
+            
             CreateActions();
 
 
@@ -248,8 +250,9 @@ namespace Kenshi_DnD
             
             Debug.WriteLine("Hired");
         }
-        private void MakePlayerGrid()
+        private void UpdatePlayerGrid()
         {
+            PlayerSquad.Children.Clear();
             Hero[] currentHeroes = myAdventure.GetCurrentSquad();
             for (int i = 0; i < currentHeroes.Length; i += 1)
             {
@@ -307,45 +310,9 @@ namespace Kenshi_DnD
         }
         private void UpdateSquadEditor(object sender, EventArgs e)
         {
-            SquadEditor.Children.Clear();
-            SquadEditor.RowDefinitions.Clear();
-            SquadEditor.ColumnDefinitions.Clear();
-
-            RowDefinition row1 = new RowDefinition();
-            row1.Height = new GridLength(1, GridUnitType.Auto);
-            RowDefinition row2 = new RowDefinition();
-            row2.Height = new GridLength(1, GridUnitType.Auto);
-            RowDefinition row3 = new RowDefinition();
-            row3.Height = new GridLength(1, GridUnitType.Auto);
-
-            SquadEditor.RowDefinitions.Add(row1);
-            SquadEditor.RowDefinitions.Add(row2);
-            SquadEditor.RowDefinitions.Add(row3);
-
-
-
-            TextBox textBox = new TextBox();
-            textBox.Text = myAdventure.GetCurrentSquadName();
-            textBox.TextChanged += OnlyNumsAndLetters;
-            textBox.Margin = new Thickness(5, 20, 5, 2);
-
-            squadEditorTextBox = textBox;
-            Grid.SetColumn(textBox, 0);
-            Grid.SetRow(textBox, 2);
-            Grid.SetColumnSpan(textBox, 2);
-
-            SquadEditor.Children.Add(textBox);
-            Button button1 = new Button();
-            button1.Content = "Crear squad";
-            button1.Margin = new Thickness(5, 20, 5, 2);
-            button1.Background = Brushes.WhiteSmoke;
-            button1.Height = 40;
-
-            Grid.SetColumn(button1, 2);
-            Grid.SetRow(button1, 2);
-
-            SquadEditor.Children.Add(button1);
-
+            SquadEditorItems.Children.Clear();
+            SquadEditorItems.ColumnDefinitions.Clear();
+            squadEditorTextBox.Text = myAdventure.GetCurrentSquadName();
             Hero[] heroes =  myAdventure.GetHeroes();
             int index = 0;
             for (int i = 0; i < (heroes.Length / 2) + 1; i+=1  )
@@ -353,7 +320,7 @@ namespace Kenshi_DnD
                 ColumnDefinition col = new ColumnDefinition();
                 col.Width = new GridLength(1, GridUnitType.Star);
 
-                SquadEditor.ColumnDefinitions.Add(col);
+                SquadEditorItems.ColumnDefinitions.Add(col);
                
 
                 if (heroes[index] != null)
@@ -380,7 +347,7 @@ namespace Kenshi_DnD
                     Grid.SetRow(button, 0);
                     Grid.SetColumn(button, i);
 
-                    SquadEditor.Children.Add(button);
+                    SquadEditorItems.Children.Add(button);
                     if (heroes[index]!= null)
                     {
                         Button button2 = new Button();
@@ -406,7 +373,7 @@ namespace Kenshi_DnD
 
                         Grid.SetColumn(button2, i);
 
-                        SquadEditor.Children.Add(button2);
+                        SquadEditorItems.Children.Add(button2);
                     }
                     
                 }
@@ -418,7 +385,53 @@ namespace Kenshi_DnD
 
         private void AddOrRemoveFromSquad(object sender,EventArgs e)
         {
+            Button button = (Button)sender;
+            Hero hero = (Hero)button.Tag;
 
+            if (myAdventure.IsInCurrentSquad(hero))
+            {
+                myAdventure.RemoveHeroFromSquad(hero);
+            }
+            else
+            {
+                if(myAdventure.GetCurrentSquad().Length < 4)
+                {
+                    myAdventure.AddHeroInSquad(hero);
+                }
+                else
+                {
+                    MessageBox.Show("No puedes hacer una alineación con más de 4 héroes");
+                }
+            }
+            UpdateSquadEditor(null,null);
+            UpdatePlayerGrid();
+        }
+        private void CreateSquad(object sender, EventArgs e)
+        {
+            
+            string squadName = squadEditorTextBox.Text + " copia";
+            if(myAdventure.GetSquadCount() < 12)
+            {
+                myAdventure.CreateSquad(squadName);
+            }
+            else
+            {
+                MessageBox.Show("No puedes crear más de 12 escuadrones");
+                return; 
+            }
+            myAdventure.SetCurrentSquad(squadName);
+
+            Debug.WriteLine("Squad Created" + " " + squadName);
+            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
+            SquadAlignmentsCombobox.SelectedItem = squadName;
+            UpdatePlayerGrid();
+        }
+        private void ChangeSquad(object sender, EventArgs e)
+        {
+            string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
+            myAdventure.SetCurrentSquad(squadKey);
+            UpdatePlayerGrid();
+            UpdateSquadEditor(null, null);
         }
         private void GoToMap(object sender, EventArgs e)
         {
@@ -439,6 +452,7 @@ namespace Kenshi_DnD
         }
         private void OnlyNumsAndLetters(object sender, EventArgs e)
         {
+            Debug.WriteLine("Text changed");
             TextBox textBox = (TextBox)sender;
             int caretIndex = -1;
             string text = textBox.Text;
@@ -461,11 +475,28 @@ namespace Kenshi_DnD
                     }
                 }
             }
+            squadEditorTextBox.TextChanged -= OnlyNumsAndLetters;
             textBox.Text = result;
+
+            squadEditorTextBox.TextChanged += OnlyNumsAndLetters;
             if (caretIndex != -1)
             {
                 textBox.CaretIndex = caretIndex;
             }
+            else
+            {
+                textBox.CaretIndex = result.Length;
+            }
+
+            string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
+
+            Hero[] squadToChangeName = myAdventure.GetSavedSquads()[squadKey];
+            myAdventure.GetSavedSquads().Remove(squadKey);
+            myAdventure.GetSavedSquads().Add(textBox.Text, squadToChangeName);
+            
+
+            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
+            SquadAlignmentsCombobox.SelectedItem = squadEditorTextBox.Text;
         }
     }
 }

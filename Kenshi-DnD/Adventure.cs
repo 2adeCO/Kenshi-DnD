@@ -25,7 +25,7 @@ namespace Kenshi_DnD
 
         Hero[] heroes;
         Hero[] currentSquad;
-        List<Hero> tempSquadMaker;
+        
 
 
         PlayerInventory playerInventory;
@@ -55,6 +55,7 @@ namespace Kenshi_DnD
             this.color = factionColor;
             heroes = new Hero[MAX_HEROES];
             heroes[0] = hero;
+
             savedSquads = new Dictionary<string, Hero[]> { };
             //Adds the first squad, which is the one that is created when the game starts
             savedSquads.Add("Mi primera squad", new Hero[MAX_SQUAD_LENGTH]);
@@ -189,7 +190,7 @@ namespace Kenshi_DnD
                     return savedSquads.ElementAt(i).Key;
                 }
             }
-
+            Debug.WriteLine("GetCurrentSquadName failed");
             return null;
         }
         public Hero[] GetCurrentSquad()
@@ -231,6 +232,70 @@ namespace Kenshi_DnD
             }
             return found;
         }
+        public void AddHeroInSquad(Hero hero)
+        {
+            
+            for (int i = 0; i < currentSquad.Length; i += 1)
+            {
+                if (currentSquad[i] == null)
+                {
+                    currentSquad[i] = hero;
+                    Debug.WriteLine("Added");
+                    break;
+                }
+            }
+        }
+        public void RemoveHeroFromSquad(Hero hero)
+        {
+            for (int i = 0; i < currentSquad.Length; i += 1)
+            {
+                if (currentSquad[i] == hero)
+                {
+                    currentSquad[i] = null;
+                    Debug.WriteLine("Removed");
+                    break;
+                }
+            }
+            //This was made by autocomplete. However it is just perfect,
+            //it just moves the rest of the heroes to the left when it encounters a null value
+            for (int i = 0; i < currentSquad.Length; i += 1)
+            {
+                if (currentSquad[i] == null)
+                {
+                    for (int j = i; j < currentSquad.Length - 1; j += 1)
+                    {
+                        currentSquad[j] = currentSquad[j + 1];
+                    }
+                    break;
+                }
+            }
+        }
+        public void CreateSquad(string squadName)
+        {
+            Hero[] newSquad = new Hero[MAX_SQUAD_LENGTH];
+            for (int i = 0; i < MAX_SQUAD_LENGTH; i += 1)
+            {
+                newSquad[i] = currentSquad[i];
+            }
+
+            savedSquads.Add(squadName, newSquad);
+        }
+        public void SetCurrentSquad(string squadName)
+        {
+            for (int i = 0; i < savedSquads.Count; i += 1)
+            {
+                if (savedSquads.ElementAt(i).Key == squadName)
+                {
+                    currentSquad = savedSquads.ElementAt(i).Value;
+                    break;
+                }
+            }
+        }
+        public int GetSquadCount()
+        {
+            return savedSquads.Count;
+        }
+
         public string GetFactionName()
         {
             return "@" + color + "@" + factionName +"@";
