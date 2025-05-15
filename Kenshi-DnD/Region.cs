@@ -18,6 +18,7 @@ namespace Kenshi_DnD
         bool hasContrabandMarket;
         bool hasRangedShop;
         List<Faction> factions;
+        const int DEFAULT_SHOP_SIZE = 3;
 
         public Region(string name, string description, bool hasBar, bool hasShop, bool hasLimbHospital, bool hasContrabandMarket, bool hasRangedShop)
         {
@@ -93,22 +94,73 @@ namespace Kenshi_DnD
             }
 
         }
-        //public Item[] GoToShop(Adventure myAdventure, Random rnd)
-        //{
+        public Item[] GoToShop(Adventure myAdventure, Random rnd)
+        {
+            Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
+            Item[] allItems = myAdventure.GetAllItems();
+            for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
+            {
+                Item itemInShop = null;
+                int rarityDecider = rnd.Next(0,4);
+                Rarity.Rarities rarity;
+                switch (rarityDecider)
+                {
+                    case 0:
+                        {
+                            rarity= Rarity.Rarities.Junk;
+                            break;
+                        }
+                    case 1:
+                        {
+                            rarity = Rarity.Rarities.RustCovered;
+                            break;
+                        }
 
-        //}
+                    case 2:
+                        {
+                            rarity = Rarity.Rarities.Catun;
+                            break;
+                        }
+                    case 3:
+                        {
+                            rarity = Rarity.Rarities.Mk;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                do
+                {
+                    int itemIndex = rnd.Next(0, allItems.Length);
+                    if (allItems[itemIndex] is not RangedItem)
+                    {
+                        itemInShop = allItems[itemIndex];
+                    }
+
+                } while (itemInShop == null);
+
+                itemsInShop[i] = itemInShop.GetCopy();
+                itemsInShop[i].SetRarity(rarity);
+            }
+            return itemsInShop;
+        }
         //public Item[] GoToContrabandMarket(Adventure myAdventure, Random rnd)
         //{
 
-        //}
-        //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
-        //{
+            //}
+            //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
+            //{
 
-        //}
-        //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
-        //{
+            //}
+            //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
+            //{
 
-        //}
+            //}
         public int GetRelations()
         {
             int relations = 0;

@@ -37,27 +37,33 @@
 
                     </LinearGradientBrush>
                 </Grid.Background>
-               
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                    <Border Grid.Column="0" BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
                         <TextBlock x:Name="PlayerFaction" FontSize="16" FontWeight="Bold" 
                                     Padding="10" Background="WhiteSmoke"></TextBlock>
                     </Border>
 
-                    <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
+                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
                         <TextBlock x:Name="PlayerCats" FontSize="16" 
                                    Padding="10" Background="WhiteSmoke"></TextBlock>
                     </Border>
-                    <Rectangle Stroke="Black" Fill="Black" Width="200"
+                    <Rectangle Grid.Column="2" Stroke="Black" Fill="Black" HorizontalAlignment="Stretch"
                                VerticalAlignment="Center" Height="3"></Rectangle>
-                    <Button x:Name="SquadEditorButton" BorderBrush="Black" BorderThickness="3" Margin="5"
-                     FontSize="16" Padding="10" Content="Editar escuadrón" 
+                    <Button Grid.Column="3" x:Name="SquadEditorButton" BorderBrush="Black" BorderThickness="3" Margin="5"
+                     FontSize="16" Padding="10" Content="Editar escuadrón"
                         Background="WhiteSmoke" Click="OpenSquadEditor">
                     </Button>
-                    <ComboBox x:Name="SquadAlignmentsCombobox" VerticalContentAlignment="Center"
+                    <ComboBox Grid.Column="4" x:Name="SquadAlignmentsCombobox" VerticalContentAlignment="Center"
                               Margin="5" BorderBrush="Black" BorderThickness="3" SelectionChanged="ChangeSquad"
                               ></ComboBox>
-                </StackPanel>
+                
             </Grid>
             <Border BorderBrush="Black" BorderThickness="0,1,0,1" Grid.Row="1">
                 <StackPanel x:Name="PlayerSquad" Grid.Row="1" Orientation="Horizontal">
@@ -110,8 +116,8 @@
         </Grid>
         <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="0,1,0,1" Grid.Row="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <TextBox x:Name="InfoLog">
-                </TextBox>
+                <TextBlock x:Name="InfoLog">
+                </TextBlock>
             </ScrollViewer>
             
         </Border>
@@ -124,7 +130,10 @@
                         <GradientStop Color="#5C4033" Offset="1.0"/>
                     </LinearGradientBrush>
                 </StackPanel.Background>
-
+                <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="2">
+                    <TextBlock x:Name="ZoneName" FontSize="20" 
+               Padding="10" Background="WhiteSmoke"></TextBlock>
+                </Border>
             </StackPanel>
         </Border>
         
@@ -137,12 +146,11 @@
 
         <Grid Grid.Column="2" Grid.RowSpan="2">
             <!-- Bar -->
-            <Grid x:Name="BarGrid" Visibility="Visible">
+            <Grid x:Name="BarGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                
                 
                 <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,0,0">
                     <Border.Background>
@@ -215,8 +223,62 @@
             </Grid>
 
             <!-- Tienda -->
-            <Grid x:Name="ShopGrid" Visibility="Collapsed">
-                
+            <Grid x:Name="ShopGrid" Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Para botones -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Para el ScrollViewer -->
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#3E3E3E" Offset="0.0"/>
+                            <!-- Metal desgastado -->
+                            <GradientStop Color="#6F5F4F" Offset="0.3"/>
+                            <!-- Cuero envejecido -->
+                            <GradientStop Color="#A0835B" Offset="0.6"/>
+                            <!-- Arena del desierto -->
+                            <GradientStop Color="#2B2B2B" Offset="1.0"/>
+                            <!-- Sombra de lona -->
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid x:Name="ShopActions" Grid.Column="0" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="BuyButton" Content="Elige que comprar" Click="BuyShopItem"
+                Height="50"
+                Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        <Button Content="Vender por chatarra" Grid.Row="1"
+                Height="50" Padding="15"
+                HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        <Button Content="Salir de la tienda" Grid.Row="2"
+                Height="50"
+                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                Click="CloseCurrentGrid"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#8B7D6B" Offset="0.0"/>
+                            <!-- Arena y cuero -->
+                            <GradientStop Color="#BFAE9F" Offset="0.3"/>
+                            <!-- Sol filtrado por tela -->
+                            <GradientStop Color="#D6C7B2" Offset="0.6"/>
+                            <!-- Luz ambiental del desierto -->
+                            <GradientStop Color="#9C8972" Offset="1.0"/>
+                            <!-- Polvo y desgaste -->
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+                    <Grid x:Name="ShopItems" VerticalAlignment="Center">
+
+                    </Grid>
+                </ScrollViewer>
             </Grid>
 
             <!-- Contrabando -->

@@ -400,6 +400,28 @@ namespace Kenshi_DnD
             Debug.WriteLine("Hired? : " + hired);
             return hired;
         }
+        public string CompetencyToString()
+        {
+            switch (startCompetency)
+            {
+                case Competency.StartCompetency.Apprentice:
+                    {
+                        return "Aprendiz";
+                    }
+                case Competency.StartCompetency.Intermediate:
+                    {
+                        return "Discípulo";
+                    }
+                case Competency.StartCompetency.Master:
+                    {
+                        return "Maestro";
+                    }
+                default:
+                    {
+                        return "Error en la competencia";
+                    }
+            }
+        }
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())

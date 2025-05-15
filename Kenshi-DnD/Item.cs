@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -27,7 +28,7 @@ namespace Kenshi_DnD
             this.statToModify = statToModify;
             this.rarity = Rarity.Rarities.Junk;
         }
-
+        
         public abstract string AnnounceUse();
         public override string ToString()
         {
@@ -35,8 +36,12 @@ namespace Kenshi_DnD
                    "Valor: " + value + "\n" +
                    "Valor de reventa: " + resellValue + "\n" +
                    "Peso (Cantidad de miembros necesitados): " + limbsNeeded + "\n" +
-                   "Rareza: " + RarityToString();
+                   "Rareza: " + RarityToString() + "\n" +
+                   statToModify.ToString();
         }
+        public abstract void SetRarity(Rarity.Rarities rarity);
+        public abstract Item GetCopy();
+        
         public void UnUse()
         {
             this.alreadyUsed = false;
@@ -46,6 +51,10 @@ namespace Kenshi_DnD
             this.alreadyUsed = alreadyUsed;
         }
         
+        public string GetDescription()
+        {
+            return description;
+        }
         public string GetName()
         {
             return name;

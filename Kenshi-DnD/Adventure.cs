@@ -148,6 +148,19 @@ namespace Kenshi_DnD
         {
             return myDice;
         }
+        public void BuyItem(Item item)
+        {
+            int cost = item.GetValue();
+
+            if (cats < cost)
+            {
+                Debug.WriteLine("Cost too high to buy item");
+                return;
+            }
+            cats -= cost;
+            playerInventory.AddItem(item.GetCopy());
+
+        }
         public void HireHero(Hero hero)
         {
             int cost = hero.GetCompetencyCost();

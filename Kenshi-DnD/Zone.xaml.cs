@@ -31,6 +31,10 @@ namespace Kenshi_DnD
         Hero[] heroesInBar;
         Button selectedHeroButton;
 
+        Item[] itemsInShop;
+        Button selectedShopItemButton;
+
+
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
             InitializeComponent();
@@ -56,6 +60,29 @@ namespace Kenshi_DnD
         }
         private void CreateActions()
         {
+            int relations = region.GetRelations();
+            switch (relations)
+            {
+                case < 20:
+                    {
+                        relations = 1;
+                        break;
+                    }
+                case < 40:
+                    {
+                        relations = 6;
+                        break;
+                    }
+                default:
+                    {
+                        relations = 2;
+                        break;
+                    }
+            }
+
+
+            ZoneName.Inlines.AddRange(mainWindow.DecorateText("@" +relations +"@"+region.GetName()+"@"));
+            ZoneName.ToolTip = mainWindow.ToolTipThemer(region.GetDescription());
             if (region.HasBar())
             {
                 Button button = new Button();
@@ -77,7 +104,8 @@ namespace Kenshi_DnD
                 button.Height = 50;
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
-
+                button.Click += GoToShop;
+                itemsInShop = region.GoToShop(myAdventure, rnd);
                 ActionsPanel.Children.Add(button);
 
             }
@@ -137,7 +165,10 @@ namespace Kenshi_DnD
                     BarItems.RowDefinitions.Add(row);
                     Button button = new Button();
                     button.Tag = heroesInBar[i];
-                    button.Content = heroesInBar[i].GetNameAndTitle();
+                    TextBlock textBlock = new TextBlock();
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText(heroesInBar[i].GetNameAndTitle() + " - " + 
+                        heroesInBar[i].CompetencyToString() +"\n@2@" + heroesInBar[i].GetCompetencyCost() +"$@"));
+                    button.Content = textBlock;
                     button.FontSize = 17;
                     button.Margin = new Thickness(10, 20, 30, 20);
                     button.MinHeight = 40;
@@ -178,7 +209,58 @@ namespace Kenshi_DnD
         
         private void GoToShop(object sender, EventArgs e)
         {
+            CloseCurrentGrid(null, null);
+            ShopGrid.Visibility = Visibility.Visible;
 
+            BuyButton.IsEnabled = false;
+            BuyButton.Content = "¡Bienvenido a la tienda de " + region.GetName() + "!";
+            ShopItems.Children.Clear();
+            bool boughtEverything = true;
+            if (itemsInShop != null)
+            {
+                for (int i = 0; i < itemsInShop.Length; i++)
+                {
+
+                    if(itemsInShop[i] != null)
+                    {
+                        RowDefinition row = new RowDefinition();
+                        row.Height = new GridLength(1, GridUnitType.Auto);
+                        ShopItems.RowDefinitions.Add(row);
+                        Button button = new Button();
+                        button.Tag = itemsInShop[i];
+                        TextBlock textBlock = new TextBlock();
+                        textBlock.FontSize = 17;
+                        textBlock.Inlines.AddRange(mainWindow.DecorateText(itemsInShop[i].GetName() + " - " + itemsInShop[i].RarityToString()
+                            + "\n@2@" + itemsInShop[i].GetValue() +"$@"));
+                        button.Content = textBlock;
+                        button.Margin = new Thickness(10, 20, 30, 20);
+                        button.MinHeight = 40;
+                        button.Padding = new Thickness(5);
+                        button.ToolTip = mainWindow.HeaderToolTipThemer(itemsInShop[i].GetName(), itemsInShop[i].ToString());
+                        button.Click += SelectShopItem;
+                        button.Background = new SolidColorBrush(Colors.WhiteSmoke);
+
+                        boughtEverything = false;
+
+                        Grid.SetRow(button, i);
+                        ShopItems.Children.Add(button);
+                    }
+                   
+                }
+                if (boughtEverything)
+                {
+                    RowDefinition row = new RowDefinition();
+                    row.Height = new GridLength(1, GridUnitType.Star);
+                    ShopItems.RowDefinitions.Add(row);
+
+                    TextBlock textBlock = new TextBlock();
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText("Lo compraste @916@TODO@, vuelva pronto..."));
+                    textBlock.Margin = new Thickness(4, 10, 4, 10);
+                    Grid.SetRow(textBlock, 0);
+                    ShopItems.Children.Add(textBlock);
+
+                }
+            }
         }
         private void GoToLimbHospital(object sender, EventArgs e)
         {
@@ -191,6 +273,75 @@ namespace Kenshi_DnD
         private void GoToRangedShop(object sender, EventArgs e)
         {
 
+        }
+        private void SelectShopItem(object sender, EventArgs e)
+        {
+            if (selectedShopItemButton != null)
+            {
+                selectedShopItemButton.ClearValue(Button.BorderBrushProperty);
+                selectedShopItemButton.ClearValue(Button.BorderThicknessProperty);
+                selectedShopItemButton.ClearValue(Button.BackgroundProperty);
+            }
+
+            selectedShopItemButton = ((Button)sender);
+           
+            BuyButton.IsEnabled = true;
+
+            BuyButton.Content = "¿Comprar " + ((Item)(selectedShopItemButton.Tag)).GetName() + "?";
+            selectedShopItemButton.BorderBrush = Brushes.DarkGreen;
+            selectedShopItemButton.BorderThickness = new Thickness(3);
+            selectedShopItemButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
+        }
+        private void BuyShopItem(object sender, EventArgs e)
+        {
+            if (selectedShopItemButton == null)
+            {
+                MessageBox.Show("Debes elegir un objeto que comprar");
+                return;
+            }
+            Item selectedItem = (Item)selectedShopItemButton.Tag;
+
+
+            if (myAdventure.GetCats() < selectedItem.GetValue())
+            {
+                MessageBox.Show("No tienes suficiente dinero para comprar " + selectedItem.GetName());
+                return;
+            }
+            
+            BuyButton.Background = new SolidColorBrush(Colors.LightGreen);
+            BuyButton.Content = "✔ Compra realizada\n¡Muchas gracias!";
+            myAdventure.BuyItem(selectedItem);
+            ShopItems.Children.Remove(selectedShopItemButton);
+            BuyButton.IsEnabled = false;
+            selectedShopItemButton = null;
+
+            for (int i = 0; i < itemsInShop.Length; i += 1)
+            {
+                if (itemsInShop[i] == selectedItem)
+                {
+                    itemsInShop[i] = null;
+                    break;
+                }
+            }
+            UpdateCats();
+
+            if (ShopItems.Children.Count == 0)
+            {
+                Debug.WriteLine("Shop is empty");
+                ShopItems.RowDefinitions.Clear();
+                RowDefinition row = new RowDefinition();
+                row.Height = new GridLength(1, GridUnitType.Star);
+                ShopItems.RowDefinitions.Add(row);
+
+                TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("Lo compraste @916@TODO@, vuelva pronto..."));
+                textBlock.Margin = new Thickness(4, 10, 4, 10);
+                Grid.SetRow(textBlock, 0);
+                ShopItems.Children.Add(textBlock);
+            }
+           
+
+            Debug.WriteLine("Item bought");
         }
         private void SelectHero(object sender, EventArgs e)
         {

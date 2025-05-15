@@ -51,7 +51,41 @@
         {
             return agility;
         }
-        
+        public StatModifier GetCopy()
+        {
+            return new StatModifier(bruteForce,dexterity,hp,resistance,agility);
+        }
+        public void UpgradeStat(Stats.Stat stat, int upgrade)
+        {
+            switch (stat)
+            {
+                case Stats.Stat.BruteForce:
+                    {
+                        bruteForce += upgrade;
+                        break;
+                    }
+                case Stats.Stat.Dexterity:
+                    {
+                        dexterity += upgrade;
+                        break;
+                    }
+                case Stats.Stat.HP:
+                    {
+                        hp += upgrade;
+                        break;
+                    }
+                case Stats.Stat.Resistance:
+                    {
+                        resistance += upgrade;
+                        break;
+                    }
+                case Stats.Stat.Agility:
+                    {
+                        agility += upgrade;
+                        break;
+                    }
+            }
+        }
         public override string ToString()
         {
             return
