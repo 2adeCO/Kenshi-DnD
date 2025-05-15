@@ -23,13 +23,25 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Grid x:Name="PlayerInfo" Grid.Row="0" Background="#FF8B5A2B">
-                
+            <Grid x:Name="PlayerInfo" Grid.Row="0">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#D2B48C" Offset="0.0"/>
+                        <!-- arena, mapa -->
+
+                        <GradientStop Color="#8B5A2B" Offset="0.7"/>
+                        <!-- pergamino, reliquia -->
+
+                        <GradientStop Color="#5C4033" Offset="1.0"/>
+                        <!-- tesoro, sol poniente -->
+
+                    </LinearGradientBrush>
+                </Grid.Background>
+               
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
                         <TextBlock x:Name="PlayerFaction" FontSize="16" FontWeight="Bold" 
                                     Padding="10" Background="WhiteSmoke"></TextBlock>
-
                     </Border>
 
                     <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="3">
@@ -47,9 +59,12 @@
                               ></ComboBox>
                 </StackPanel>
             </Grid>
-            <StackPanel x:Name="PlayerSquad" Grid.Row="1" Orientation="Horizontal">
-                
+            <Border BorderBrush="Black" BorderThickness="0,1,0,1" Grid.Row="1">
+                <StackPanel x:Name="PlayerSquad" Grid.Row="1" Orientation="Horizontal">
+
                 </StackPanel>
+            </Border>
+            
             <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                 <Grid x:Name="SquadEditor" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -61,7 +76,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Grid x:Name="SquadEditorItems" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                    <Grid x:Name="SquadEditorItems" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,5,2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
@@ -93,23 +108,26 @@
             
 
         </Grid>
-        <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="1,2,1,2" Grid.Row="1">
+        <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="0,1,0,1" Grid.Row="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <TextBox x:Name="InfoLog">
                 </TextBox>
             </ScrollViewer>
             
         </Border>
-        <StackPanel x:Name="ActionsPanel" Grid.Column="0" Grid.RowSpan="2">
-            <StackPanel.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.9">
-                    <GradientStop Color="#D2B48C" Offset="0" />
-                    <GradientStop Color="#8B5A2B" Offset="0.7"/>
-                    <GradientStop Color="#5C4033" Offset="1.0"/>
-                </LinearGradientBrush>
-            </StackPanel.Background>
+        <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0,0,1,0">
+            <StackPanel x:Name="ActionsPanel" >
+                <StackPanel.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.9">
+                        <GradientStop Color="#D2B48C" Offset="0" />
+                        <GradientStop Color="#8B5A2B" Offset="0.7"/>
+                        <GradientStop Color="#5C4033" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+
+            </StackPanel>
+        </Border>
         
-        </StackPanel>
         <Button Content="Irse" FontSize="20" 
                 Click="GoToMap"
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom" 
@@ -126,7 +144,7 @@
                 </Grid.ColumnDefinitions>
                 
                 
-                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,1,0">
+                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#4B2E2B" Offset="0.0"/>
