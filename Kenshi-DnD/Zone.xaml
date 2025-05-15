@@ -79,10 +79,11 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Grid x:Name="SquadEditorItems" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,5,2">
+                    <Grid x:Name="SquadEditorItems" Grid.Row="0" Grid.Column="0"
+                          Grid.ColumnSpan="3" Margin="5,10,5,2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
@@ -90,23 +91,38 @@
 
                     </Grid>
                     <TextBox x:Name="squadEditorTextBox"
+                          HorizontalContentAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             FontSize="20"
                           Text="" 
-                          Margin="5,20,5,2"
+                             Background="WhiteSmoke"
+                          Margin="2,20,5,10"
                           Grid.Column="0"
                           Grid.Row="1"
                           TextChanged="OnlyNumsAndLetters" />
                     <Button Content="Crear squad"
                          Click="CreateSquad"
-                         Margin="5,20,5,2"
+                             FontSize="14"
+                             Width="150"
+                         Margin="2,20,5,10"
                          Background="WhiteSmoke"
-                         Height="40"
+                            BorderBrush="#40000000"
+                            BorderThickness="2"
+                         
+                            HorizontalAlignment="Right"
                          Grid.Column="1"
                          Grid.Row="1" ></Button>
                     <Button Content="Eliminar Squad"
                      Click="DeleteSquad"
-                     Margin="5,20,5,2"
+                            Width="150"
+                            
+                     Margin="5,20,5,10"
+                             FontSize="14"
                      Background="WhiteSmoke"
+                            BorderBrush="#40000000"
+                        BorderThickness="2"
                      Height="40"
+                            HorizontalAlignment="Left"
                      Grid.Column="2"
                      Grid.Row="1" ></Button>
                  </Grid>

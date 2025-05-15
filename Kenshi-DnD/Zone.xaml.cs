@@ -463,22 +463,32 @@ namespace Kenshi_DnD
         {
             SquadEditorItems.Children.Clear();
             SquadEditorItems.ColumnDefinitions.Clear();
+
+            squadEditorTextBox.TextChanged -= OnlyNumsAndLetters;
             squadEditorTextBox.Text = myAdventure.GetCurrentSquadName();
+            squadEditorTextBox.TextChanged += OnlyNumsAndLetters;
             Hero[] heroes =  myAdventure.GetHeroes();
             int index = 0;
-            for (int i = 0; i < (heroes.Length / 2) + 1; i+=1  )
-            { 
-                ColumnDefinition col = new ColumnDefinition();
-                col.Width = new GridLength(1, GridUnitType.Star);
-
-                SquadEditorItems.ColumnDefinitions.Add(col);
+            for (int i = 0; i < (myAdventure.GetHeroesCount() / 2) + 1; i+=1  )
+            {
+                
                
 
                 if (heroes[index] != null)
                 {
+                    Debug.WriteLine("col created");
+
+                    ColumnDefinition col = new ColumnDefinition();
+                    col.Width = new GridLength(1, GridUnitType.Star);
+
+                    SquadEditorItems.ColumnDefinitions.Add(col);
+
                     Button button = new Button();
                     button.ToolTip = mainWindow.HeaderToolTipThemer(heroes[index].GetName(), heroes[index].ToString());
                     ToolTipService.SetInitialShowDelay(button, 100);
+                    button.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    button.MaxWidth = 300;
+                    button.FontSize = 20;
                     button.Content = heroes[index].GetName();
                     button.Padding = new Thickness(5);
                     button.Margin = new Thickness(5, 2, 5, 2);
@@ -504,6 +514,9 @@ namespace Kenshi_DnD
                         Button button2 = new Button();
                         button2.ToolTip = mainWindow.HeaderToolTipThemer(heroes[index].GetName(), heroes[index].ToString());
                         ToolTipService.SetInitialShowDelay(button2, 100);
+                        button2.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        button2.MaxWidth = 300;
+                        button2.FontSize = 20;
                         button2.Content = heroes[index].GetName();
                         button2.Padding = new Thickness(5);
                         button2.Margin = new Thickness(5, 2, 5, 2);
@@ -526,8 +539,13 @@ namespace Kenshi_DnD
 
                         SquadEditorItems.Children.Add(button2);
                     }
-                    
+                    else
+                    {
+                        break;
+                    }
+
                 }
+                else { break; }
                 
             }
         }
@@ -574,6 +592,7 @@ namespace Kenshi_DnD
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
             SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
             UpdatePlayerGrid();
+            UpdateSquadEditor(null, null);
         }
         private void DeleteSquad(object sender, EventArgs e)
         {

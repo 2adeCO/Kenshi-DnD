@@ -336,6 +336,20 @@ namespace Kenshi_DnD
         {
             return color;
         }
+        public int GetHeroesCount()
+        {
+            int count = 0;
+
+            for(int i = 0; i < heroes.Length; i += 1)
+            {
+                if (heroes[i] != null)
+                {
+                    count += 1;
+                }
+            }
+            Debug.WriteLine("Count of heroes: " + count);
+            return count;
+        }
         public Hero[] GetHeroes()
         {
             return heroes;
