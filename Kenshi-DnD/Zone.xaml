@@ -81,6 +81,13 @@
                          Height="40"
                          Grid.Column="1"
                          Grid.Row="1" ></Button>
+                    <Button Content="Eliminar Squad"
+                     Click="DeleteSquad"
+                     Margin="5,20,5,2"
+                     Background="WhiteSmoke"
+                     Height="40"
+                     Grid.Column="2"
+                     Grid.Row="1" ></Button>
                  </Grid>
             </ScrollViewer>
             

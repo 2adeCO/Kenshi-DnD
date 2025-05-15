@@ -419,19 +419,38 @@ namespace Kenshi_DnD
                 MessageBox.Show("No puedes crear más de 12 escuadrones");
                 return; 
             }
-            myAdventure.SetCurrentSquad(squadName);
-
-            Debug.WriteLine("Squad Created" + " " + squadName);
+            
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
-            SquadAlignmentsCombobox.SelectedItem = squadName;
+            SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
             UpdatePlayerGrid();
+        }
+        private void DeleteSquad(object sender, EventArgs e)
+        {
+            if(myAdventure.GetSquadCount() == 1)
+            {
+                MessageBox.Show("No puedes borrar tu única squad\nCrea otra primero.");
+                return ;
+            }
+            string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
+            myAdventure.DeleteSquad(squadKey);
+
+            SquadAlignmentsCombobox.ItemsSource = null;
+            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
+            SquadAlignmentsCombobox.SelectedItem = myAdventure.GetSavedSquads().First().Key;
+            
+            myAdventure.SetCurrentSquad((string)SquadAlignmentsCombobox.SelectedItem);
+            UpdatePlayerGrid();
+            UpdateSquadEditor(null, null);
         }
         private void ChangeSquad(object sender, EventArgs e)
         {
-            string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
-            myAdventure.SetCurrentSquad(squadKey);
-            UpdatePlayerGrid();
-            UpdateSquadEditor(null, null);
+            if (SquadAlignmentsCombobox.ItemsSource != null)
+            {
+                string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
+                myAdventure.SetCurrentSquad(squadKey);
+                UpdatePlayerGrid();
+                UpdateSquadEditor(null, null);
+            }
         }
         private void GoToMap(object sender, EventArgs e)
         {
@@ -491,12 +510,15 @@ namespace Kenshi_DnD
             string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
 
             Hero[] squadToChangeName = myAdventure.GetSavedSquads()[squadKey];
-            myAdventure.GetSavedSquads().Remove(squadKey);
-            myAdventure.GetSavedSquads().Add(textBox.Text, squadToChangeName);
-            
-
+            myAdventure.DeleteSquad(squadKey);
+            myAdventure.CreateSquad(result) ;
+            for(int i = 0; i < myAdventure.GetSquadCount(); i += 1)
+            {
+                Debug.WriteLine(myAdventure.GetSavedSquads().ElementAt(i));
+            }
+            SquadAlignmentsCombobox.ItemsSource = null;
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
-            SquadAlignmentsCombobox.SelectedItem = squadEditorTextBox.Text;
+            SquadAlignmentsCombobox.SelectedItem = result;
         }
     }
 }

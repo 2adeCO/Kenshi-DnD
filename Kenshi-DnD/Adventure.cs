@@ -190,8 +190,8 @@ namespace Kenshi_DnD
                     return savedSquads.ElementAt(i).Key;
                 }
             }
-            Debug.WriteLine("GetCurrentSquadName failed");
-            return null;
+            Debug.WriteLine("GetCurrentSquadName failed, returning first key");
+            return savedSquads.First().Key;
         }
         public Hero[] GetCurrentSquad()
         {
@@ -277,8 +277,27 @@ namespace Kenshi_DnD
             {
                 newSquad[i] = currentSquad[i];
             }
-
+            while (savedSquads.ContainsKey(squadName))
+                {
+                squadName += " copia";
+                }
+           
             savedSquads.Add(squadName, newSquad);
+            SetCurrentSquad(squadName);
+            Debug.WriteLine("Squad created " + squadName);
+        }
+        public void DeleteSquad(string squadName)
+        {
+            if (savedSquads.ContainsKey(squadName))
+            {
+                Debug.WriteLine("Squad successfully deleted : " + squadName);
+                savedSquads.Remove(squadName);
+
+            }
+            else
+            {
+                Debug.WriteLine("Squad not found to delete?");
+            }
         }
         public void SetCurrentSquad(string squadName)
         {
