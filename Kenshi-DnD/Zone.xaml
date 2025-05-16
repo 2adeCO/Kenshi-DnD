@@ -181,22 +181,33 @@
                             <!-- Sombra ahumada -->
                         </LinearGradientBrush>
                     </Border.Background>
-                    <Grid x:Name="BarActions" Grid.Column="0" VerticalAlignment="Center">
+                    <Grid x:Name="BarActions" Grid.Column="0" >
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" 
+                        <Border Grid.Row="0" BorderBrush="Black" VerticalAlignment="Top" 
+                                                          
+                                BorderThickness="3" Margin="15,60,45,10" CornerRadius="2">
+                            <TextBlock Text="Bar" FontSize="50" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            Padding="20,10,20,10" Background="#80FFFFFF"></TextBlock>
+                        </Border>
+                        <Rectangle Grid.Row="1" Stroke="Black" Fill="Black" HorizontalAlignment="Stretch" 
+                                   Margin="15,60,45,20" Height="3"></Rectangle>
+                        <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" Background="#80FFFFFF"
                             Height="50"
-                            Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,20,50,20"></Button>
-                                        <Button Content="Pasar la noche por 100 cats" Grid.Row="1"
+                            Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"></Button>
+                                        <Button Content="Pasar la noche por 100 cats" Grid.Row="3"
                             Height="50" Padding="15"
-                                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                                HorizontalAlignment="Stretch" Margin="20,20,50,20" Background="#80FFFFFF"
                         ></Button>
-                                        <Button Content="Irse del bar" Grid.Row="2"
+                                        <Button Content="Irse del bar" Grid.Row="4"
                                 HorizontalAlignment="Stretch" Margin="20,20,50,20"
-                            Height="50"
+                            Height="50" Background="#80FFFFFF"
                             Click="CloseCurrentGrid"
                             />
 
@@ -239,7 +250,7 @@
             </Grid>
 
             <!-- Tienda -->
-            <Grid x:Name="ShopGrid" Visibility="Visible">
+            <Grid x:Name="ShopGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <!-- Para botones -->
@@ -259,23 +270,39 @@
                             <!-- Sombra de lona -->
                         </LinearGradientBrush>
                     </Border.Background>
-                    <Grid x:Name="ShopActions" Grid.Column="0" VerticalAlignment="Center">
+                    <Grid x:Name="ShopActions" Grid.Column="0">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="BuyButton" Content="Elige que comprar" Click="BuyShopItem"
-                Height="50"
-                Grid.Row="0" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
-                        <Button Content="Vender por chatarra" Grid.Row="1"
-                Height="50" Padding="15"
-                HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
-                        <Button Content="Salir de la tienda" Grid.Row="2"
-                Height="50"
-                HorizontalAlignment="Stretch" Margin="20,20,50,20"
-                Click="CloseCurrentGrid"/>
+
+                        <Border Grid.Row="0" BorderBrush="Black" VerticalAlignment="Top"
+            BorderThickness="3" Margin="15,60,45,10" CornerRadius="2">
+                            <TextBlock Text="Tienda" FontSize="50" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                   Padding="20,10,20,10" Background="#80FFFFFF"/>
+                        </Border>
+
+                        <Rectangle Grid.Row="1" Stroke="Black" Fill="Black" HorizontalAlignment="Stretch"
+               Margin="15,60,45,20" Height="3"/>
+
+                        <Button x:Name="BuyButton" Content="Elige qué comprar" Click="BuyShopItem"
+            Height="50" Background="#80FFFFFF"
+            Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Vender por chatarra" Grid.Row="3"
+            Height="50" Padding="15" Background="#80FFFFFF"
+            HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Salir de la tienda" Grid.Row="4"
+            Height="50" Background="#80FFFFFF"
+            HorizontalAlignment="Stretch" Margin="20,20,50,20"
+            Click="CloseCurrentGrid"/>
                     </Grid>
+
                 </Border>
 
                 <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
