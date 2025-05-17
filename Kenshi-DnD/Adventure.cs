@@ -165,15 +165,32 @@ namespace Kenshi_DnD
         public void BuyItem(Item item)
         {
             int cost = item.GetValue();
-
-            if (cats < cost)
-            {
-                Debug.WriteLine("Cost too high to buy item");
-                return;
-            }
             cats -= cost;
-            playerInventory.AddItem(item.GetCopy());
+            bool consumible = false;
+            if (item is MeleeItem)
+            {
+                {
+                    MeleeItem meleeItem = (MeleeItem)item;
+                    if (meleeItem.BreaksOnUse())
+                    {
+                        consumible = true;
+                    }
+                }
 
+                if (item.GetRarity() == Rarity.Rarities.Meitou || item.GetRarity() == Rarity.Rarities.Edgewalker && !consumible)
+                {
+                    for (int i = 0; i < alreadyObtainedItems.Length; i += 1)
+                    {
+                        if (alreadyObtainedItems[i] == null)
+                        {
+                            alreadyObtainedItems[i] = item;
+                            break;
+                        }
+                    }
+                }
+                playerInventory.AddItem(item.GetCopy());
+
+            }
         }
         public void HireHero(Hero hero)
         {

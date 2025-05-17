@@ -366,7 +366,7 @@
                         <Rectangle Grid.Row="1" Stroke="#444" Fill="#444" HorizontalAlignment="Stretch"
                        Margin="15,60,45,20" Height="3"/>
 
-                        <Button x:Name="BuyContrabandItemButton" Content="Consultar mercancía" Click="BuyContrabandItem"
+                        <Button x:Name="BuyContrabandItemButton" Content="" Click="BuyContrabandItem"
                     Height="50" Background="#55222222" Foreground="#CCCCCC"
                     Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                         
@@ -374,7 +374,7 @@
 Height="50" Background="#55222222" Foreground="#CCCCCC"
 Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
-                        <Button Content="Cerrar trato" Grid.Row="4"
+                        <Button Content="Pensártelo" Grid.Row="4"
                     Height="50" Background="#55222222" Foreground="#CCCCCC"
                     HorizontalAlignment="Stretch" Margin="20,20,50,20"
                     Click="CloseCurrentGrid"/>
@@ -385,27 +385,96 @@ Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                     <ScrollViewer.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#2D2A2E" Offset="0.0"/>
-                            <!-- Sombra sucia -->
+                           
                             <GradientStop Color="#443D3C" Offset="0.3"/>
-                            <!-- Tela vieja -->
+                            
                             <GradientStop Color="#5A4F4B" Offset="0.6"/>
-                            <!-- Óxido y grasa -->
+                            
                             <GradientStop Color="#2E2B2C" Offset="1.0"/>
-                            <!-- Desgaste urbano -->
+                            
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
 
                     <Grid x:Name="ContrabandMarketItems" VerticalAlignment="Center" Visibility="Collapsed">
-                        <!-- Aquí se llenarán los objetos del mercado negro -->
                     </Grid>
                 </ScrollViewer>
             </Grid>
 
 
             <!-- Armas a distancia -->
+            <!-- Tienda de Armas a Distancia (Estilo Ciudades Unidas) -->
             <Grid x:Name="RangedShopGrid" Visibility="Collapsed">
-                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Panel de acciones -->
+                <Border Grid.Column="0" BorderBrush="#334" BorderThickness="2,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#1A1E24" Offset="0.0"/>
+                            <!-- Oscuro militar -->
+                            <GradientStop Color="#2E343F" Offset="0.4"/>
+                            <!-- Gris táctico -->
+                            <GradientStop Color="#3F4C5C" Offset="0.8"/>
+                            <!-- Metal templado -->
+                            <GradientStop Color="#1A1E24" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid x:Name="RangedShopActions" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="#667" VerticalAlignment="Top"
+                BorderThickness="2" Margin="15,60,45,10" CornerRadius="4">
+                            <TextBlock Text="Campo de tiro" FontSize="44" TextAlignment="Center"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                   Padding="20,10,20,10" Background="#AA1A1E24" Foreground="#EEEEEE"/>
+                        </Border>
+
+                        <Rectangle Grid.Row="1" Stroke="#556" Fill="#556" HorizontalAlignment="Stretch"
+               Margin="15,60,45,20" Height="3"/>
+
+                        <Button x:Name="BuyRangedItemButton" Content="" Click="BuyRangedItem"
+                Height="50" Background="#55334455" Foreground="#E0E0E0"
+                Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        <Button x:Name="AccessRangedShopButton" Content="Pagar entrada de 500$" Click="AccessRangedShop"
+Height="50" Background="#55334455" Foreground="#E0E0E0"
+Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Salir" Grid.Row="4" ToolTip="Luego podrás volver siempre y cuando no te salgas del juego o entres en combate."
+                Height="50" Background="#55334455" Foreground="#E0E0E0"
+                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                Click="CloseCurrentGrid"/>
+                    </Grid>
+                </Border>
+
+                <!-- Panel de objetos -->
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#23272E" Offset="0.0"/>
+                            <!-- Oscuro pulido -->
+                            <GradientStop Color="#3A414E" Offset="0.4"/>
+                            <!-- Intermedio acero -->
+                            <GradientStop Color="#505C6C" Offset="0.8"/>
+                            <!-- Luz institucional -->
+                            <GradientStop Color="#2D333C" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+
+                    <Grid x:Name="RangedShopItems" VerticalAlignment="Center" Visibility="Collapsed">
+                    </Grid>
+                </ScrollViewer>
             </Grid>
+
         </Grid>
     </Grid>
 

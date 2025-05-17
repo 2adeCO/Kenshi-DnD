@@ -18,6 +18,8 @@ namespace Kenshi_DnD
         bool hasContrabandMarket;
         bool hasRangedShop;
 
+        bool hasAccessToRangedShop;
+        bool canBuyRangedItems;
         bool updateToken;
 
         Hero[] heroesInBar;
@@ -39,6 +41,23 @@ namespace Kenshi_DnD
             this.hasLimbHospital = hasLimbHospital;
             this.hasContrabandMarket = hasContrabandMarket;
             this.hasRangedShop = hasRangedShop;
+            hasAccessToRangedShop = false;
+        }
+        public bool CanBuyRangedItems()
+        {
+            return canBuyRangedItems;
+        }
+        public void SetCanBuyRangedItems(bool canBuyRangedItems)
+        {
+            this.canBuyRangedItems = canBuyRangedItems;
+        }
+        public bool HasAccessToRangedShop()
+        {
+            return hasAccessToRangedShop;
+        }
+        public void SetAccessToRangedShop(bool hasAccessToRangedShop)
+        {
+            this.hasAccessToRangedShop = hasAccessToRangedShop;
         }
         public bool ConsumeToken()
         {
@@ -160,7 +179,10 @@ namespace Kenshi_DnD
             for( int i = 0; i < myAdventure.GetAllRegions().Length; i += 1)
             {
                 myAdventure.GetAllRegions()[i].GainToken();
+                myAdventure.GetAllRegions()[i].hasAccessToRangedShop = false;
+                myAdventure.GetAllRegions()[i].canBuyRangedItems = true;
             }
+            
         }
         public Hero[] GetHeroesInBar()
         {
@@ -286,6 +308,68 @@ namespace Kenshi_DnD
             }
             this.contrabandMarket = itemsInContraband;
         }
+        public void GoToRangedShop(Adventure myAdventure, Random rnd)
+        {
+            Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
+            Item[] allItems = myAdventure.GetAllItems();
+            for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
+            {
+                Item itemInShop = null;
+                int rarityDecider = rnd.Next(0, 4);
+                Rarity.Rarities rarity;
+                switch (rarityDecider)
+                {
+                    case 0:
+                        {
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                    case 1:
+                        {
+                            rarity = Rarity.Rarities.RustCovered;
+                            break;
+                        }
+
+                    case 2:
+                        {
+                            rarity = Rarity.Rarities.Catun;
+                            break;
+                        }
+                    case 3:
+                        {
+                            rarity = Rarity.Rarities.Mk;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                do
+                {
+                    int itemIndex = rnd.Next(0, allItems.Length);
+                    if (allItems[itemIndex] is not MeleeItem)
+                    {
+                        itemInShop = allItems[itemIndex];
+                    }
+
+                } while (itemInShop == null);
+
+                itemsInShop[i] = itemInShop.GetCopy();
+                itemsInShop[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInShop[i].GetName());
+            }
+            this.rangedShop = itemsInShop;
+        }
+        public Item[] GetRangedShop()
+        {
+            Debug.WriteLine("Ranged shop returned !");
+            return rangedShop;
+        }
+
         public Item[] GetContrabandMarket()
         {
             Debug.WriteLine("Contraband market returned !");
