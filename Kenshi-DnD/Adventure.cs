@@ -21,6 +21,7 @@ namespace Kenshi_DnD
         DateTime startDate;
         DateTime hoursPlayed;
 
+
         Dice myDice;
 
         Hero[] heroes;
@@ -29,7 +30,7 @@ namespace Kenshi_DnD
 
 
         PlayerInventory playerInventory;
-        List<Item> alreadyObtainedItems;
+        Item[] alreadyObtainedItems;
 
         Faction[] allFactions;
         Region[] allRegions;
@@ -55,7 +56,6 @@ namespace Kenshi_DnD
             this.color = factionColor;
             heroes = new Hero[MAX_HEROES];
             heroes[0] = hero;
-
             savedSquads = new Dictionary<string, Hero[]> { };
             //Adds the first squad, which is the one that is created when the game starts
             savedSquads.Add("Mi primera squad", new Hero[MAX_SQUAD_LENGTH]);
@@ -63,7 +63,7 @@ namespace Kenshi_DnD
             currentSquad = savedSquads["Mi primera squad"];
 
             playerInventory = new PlayerInventory();
-            alreadyObtainedItems = new List<Item>();
+            alreadyObtainedItems = new Item[allItems.Length * 2];
             Debug.WriteLine(id);
             this.allFactions = allFactions;
             this.allRegions = allRegions;
@@ -132,6 +132,10 @@ namespace Kenshi_DnD
             // output: My_First_Adventure2000123456
             return name + continent + zeroes + randomNum;
         }
+        public Item[] GetAlreadyObtainedItems()
+        {
+            return alreadyObtainedItems;
+        }
         public string GetId()
         {
             return id;
@@ -147,6 +151,15 @@ namespace Kenshi_DnD
         public Dice GetDice()
         {
             return myDice;
+        }
+        public bool SpendIfHasEnough(int cost)
+        {
+            if(cost <= cats)
+            {
+                cats -= cost;
+                return true;
+            }
+            return false;
         }
         public void BuyItem(Item item)
         {

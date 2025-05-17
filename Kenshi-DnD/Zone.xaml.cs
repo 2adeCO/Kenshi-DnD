@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Mysqlx.Session;
+using MySqlX.XDevAPI.Common;
 
 namespace Kenshi_DnD
 {
@@ -53,7 +55,10 @@ namespace Kenshi_DnD
             UpdatePlayerGrid();
             
             CreateActions();
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@"));
 
+            SleepButton.Content = textBlock;
 
 
 
@@ -83,8 +88,16 @@ namespace Kenshi_DnD
 
             ZoneName.Inlines.AddRange(mainWindow.DecorateText("@" +relations +"@"+region.GetName()+"@"));
             ZoneName.ToolTip = mainWindow.ToolTipThemer(region.GetDescription());
+
+            bool reloadShops = region.ConsumeToken();
+
             if (region.HasBar())
             {
+                if(reloadShops)
+                {
+                    region.GoToBar(myAdventure, rnd);
+                }
+
                 Button button = new Button();
                 button.Content = "Ir al bar";
                 button.Margin = new Thickness(4, 30, 4, 30);
@@ -92,12 +105,16 @@ namespace Kenshi_DnD
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
                 button.Click += GoToBar;
-                heroesInBar = region.GoToBar(myAdventure, rnd);
+                heroesInBar = region.GetHeroesInBar();
                 ActionsPanel.Children.Add(button);
 
             }
             if (region.HasShop())
             {
+                if(reloadShops)
+                {
+                    region.GoToShop(myAdventure, rnd);
+                }
                 Button button = new Button();
                 button.Content = "Ir a la tienda";
                 button.Margin = new Thickness(4, 30, 4, 30);
@@ -105,7 +122,7 @@ namespace Kenshi_DnD
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
                 button.Click += GoToShop;
-                itemsInShop = region.GoToShop(myAdventure, rnd);
+                itemsInShop = region.GetShop();
                 ActionsPanel.Children.Add(button);
 
             }
@@ -401,6 +418,18 @@ namespace Kenshi_DnD
             
             Debug.WriteLine("Hired");
         }
+        private void SleepInBar(object sender, EventArgs e)
+        {
+
+            if (myAdventure.GetCats() < region.GetSleepCost(myAdventure))
+            {
+                MessageBox.Show("No tienes suficiente dinero para dormir en el bar");
+                return;
+            }
+            region.SleepInBar(myAdventure, region.GetSleepCost(myAdventure));
+            UpdateCats();
+            Debug.WriteLine("Slept in bar");
+        }
         private void UpdatePlayerGrid()
         {
             PlayerSquad.Children.Clear();
@@ -550,8 +579,6 @@ namespace Kenshi_DnD
             }
         }
 
-      
-
         private void AddOrRemoveFromSquad(object sender,EventArgs e)
         {
             Button button = (Button)sender;
@@ -678,12 +705,16 @@ namespace Kenshi_DnD
                 textBox.CaretIndex = result.Length;
             }
 
+           UpdateTextbox(result);
+        }
+        private void UpdateTextbox(string result)
+        {
             string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
 
             Hero[] squadToChangeName = myAdventure.GetSavedSquads()[squadKey];
             myAdventure.DeleteSquad(squadKey);
-            myAdventure.CreateSquad(result) ;
-            for(int i = 0; i < myAdventure.GetSquadCount(); i += 1)
+            myAdventure.CreateSquad(result);
+            for (int i = 0; i < myAdventure.GetSquadCount(); i += 1)
             {
                 Debug.WriteLine(myAdventure.GetSavedSquads().ElementAt(i));
             }

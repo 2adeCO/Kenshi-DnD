@@ -201,8 +201,8 @@
                         <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" Background="#80FFFFFF"
                             Height="50"
                             Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"></Button>
-                                        <Button Content="Pasar la noche por 100 cats" Grid.Row="3"
-                            Height="50" Padding="15"
+                                        <Button x:Name="SleepButton" Content="" Grid.Row="3"
+                            Height="50" Padding="5" Click="SleepInBar"
                                 HorizontalAlignment="Stretch" Margin="20,20,50,20" Background="#80FFFFFF"
                         ></Button>
                                         <Button Content="Irse del bar" Grid.Row="4"

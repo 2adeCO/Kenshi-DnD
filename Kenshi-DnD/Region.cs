@@ -17,6 +17,14 @@ namespace Kenshi_DnD
         bool hasLimbHospital;
         bool hasContrabandMarket;
         bool hasRangedShop;
+
+        bool updateToken;
+
+        Hero[] heroesInBar;
+        Item[] shop;
+        Limb[] limbHospital;
+        Item[] contrabandMarket;
+        Item[] rangedShop;
         List<Faction> factions;
         const int DEFAULT_SHOP_SIZE = 3;
 
@@ -25,11 +33,28 @@ namespace Kenshi_DnD
             this.name = name;
             this.description = description;
             factions = new List<Faction>();
+            updateToken = true ;
             this.hasBar = hasBar;
             this.hasShop = hasShop;
             this.hasLimbHospital = hasLimbHospital;
             this.hasContrabandMarket = hasContrabandMarket;
             this.hasRangedShop = hasRangedShop;
+        }
+        public bool ConsumeToken()
+        {
+            if (updateToken)
+            {
+                updateToken = false;
+                return true;
+            }
+            return false;
+        }
+        public void GainToken()
+        {
+            if (!updateToken)
+            {
+                updateToken = true;
+            }
         }
         public void AddFaction(Faction faction)
         {
@@ -53,7 +78,7 @@ namespace Kenshi_DnD
         public bool HasContrabandMarket() { return hasContrabandMarket; }
         public bool HasRangedShop() { return hasRangedShop; }
 
-        public Hero[] GoToBar(Adventure myAdventure, Random rnd)
+        public void GoToBar(Adventure myAdventure, Random rnd)
         {
             //This makes 20 the max number of possible heroes, as max relations is 100
             int numberOfHeroes = rnd.Next(0, (GetRelations() / 5) + 1);
@@ -86,15 +111,62 @@ namespace Kenshi_DnD
                     Debug.WriteLine(heroesInBar[i].GetNameAndTitle());
 
                 }
-                return heroesInBar;
+                this.heroesInBar = heroesInBar;
             }
             else
             {
-                return null;
+                this.heroesInBar = null;
             }
 
         }
-        public Item[] GoToShop(Adventure myAdventure, Random rnd)
+        public int GetSleepCost(Adventure myAdventure)
+        {
+            Hero[] heroes = myAdventure.GetHeroes();
+            int cost = 0;
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i].GetHp() != heroes[i].GetToughness())
+                    {
+                        cost += 10;
+                    }
+                }
+            }
+            if (cost == 0)
+            {
+                cost = 10;
+            }
+
+            return cost;
+        }
+        public void SleepInBar(Adventure myAdventure, int cost)
+        {
+            Hero[] heroes = myAdventure.GetHeroes();
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i].GetHp() != heroes[i].GetToughness())
+                    {
+                        heroes[i].Heal(10);
+                        heroes[i].GainXp(1);
+                    }
+                }
+            }
+            myAdventure.SpendIfHasEnough(cost);
+
+            Debug.WriteLine("Slept in bar, cost: " + cost);
+            for( int i = 0; i < myAdventure.GetAllRegions().Length; i += 1)
+            {
+                myAdventure.GetAllRegions()[i].GainToken();
+            }
+        }
+        public Hero[] GetHeroesInBar()
+        {
+            return heroesInBar;
+        }
+        public void GoToShop(Adventure myAdventure, Random rnd)
         {
             Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
             Item[] allItems = myAdventure.GetAllItems();
@@ -146,21 +218,87 @@ namespace Kenshi_DnD
 
                 itemsInShop[i] = itemInShop.GetCopy();
                 itemsInShop[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInShop[i].GetName());
             }
-            return itemsInShop;
+            this.shop = itemsInShop;
         }
-        //public Item[] GoToContrabandMarket(Adventure myAdventure, Random rnd)
+        public Item[] GetShop()
+        {
+            Debug.WriteLine("Shop returned !");
+            return shop;
+        }
+        public void GoToContrabandMarket(Adventure myAdventure, Random rnd)
+        {
+            Item[] itemsInContraband = new Item[DEFAULT_SHOP_SIZE];
+            Item[] allItems = myAdventure.GetAllItems();
+            for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
+            {
+                Item itemInContraband = null;
+                int rarityDecider = rnd.Next(0, 2);
+                Rarity.Rarities rarity;
+                switch (rarityDecider)
+                {
+
+                    case 0:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+
+                    case 1:
+                        {
+                            rarity = Rarity.Rarities.Meitou;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                do
+                {
+                    int itemIndex = rnd.Next(0, allItems.Length);
+                    Item item = allItems[itemIndex].GetCopy();
+                    item.SetRarity(rarity);
+                    if (!HasAlreadyBeenObtained(myAdventure,item))
+                    {
+                        itemInContraband = allItems[itemIndex];
+                    }
+
+                } while (itemInContraband == null);
+
+                itemsInContraband[i] = itemInContraband.GetCopy();
+                itemsInContraband[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInContraband[i].GetName());
+            }
+            this.contrabandMarket = itemsInContraband;
+        }
+        //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
         //{
 
-            //}
-            //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
-            //{
+        //}
+        //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
+        //{
 
-            //}
-            //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
-            //{
-
-            //}
+        //}
+        private bool HasAlreadyBeenObtained(Adventure myAdventure,Item item)
+        {
+            Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
+            for (int i = 0; i < obtainedItems.Length; i++)
+            {
+                if (obtainedItems[i].GetName() == item.GetName())
+                {
+                    if(obtainedItems[i].RarityToString() == item.RarityToString())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public int GetRelations()
         {
             int relations = 0;
