@@ -234,7 +234,7 @@ namespace Kenshi_DnD
             for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
             {
                 Item itemInContraband = null;
-                int rarityDecider = rnd.Next(0, 2);
+                int rarityDecider = rnd.Next(0, 4);
                 Rarity.Rarities rarity;
                 switch (rarityDecider)
                 {
@@ -246,6 +246,16 @@ namespace Kenshi_DnD
                         }
 
                     case 1:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case 2:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case 3:
                         {
                             rarity = Rarity.Rarities.Meitou;
                             break;

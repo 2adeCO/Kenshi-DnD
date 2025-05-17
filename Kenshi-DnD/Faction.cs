@@ -11,16 +11,17 @@ namespace Kenshi_DnD
         string factionDescription;
         int factionColor;
         int relations;
-        
+        bool respectByFighting;
 
-        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor) 
+        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting) 
         { 
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
             this.relations = relations;
             this.factionColor = factionColor;
-            
+            this.respectByFighting = respectByFighting;
+
         }
         
         public void SetFactionName(string factionName)

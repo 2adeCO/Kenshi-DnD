@@ -10,7 +10,7 @@ create table Factions(
     description varchar(500),
     baseRelations int not null,
     color int not null,
-    imagePath varchar(100)
+    respectByFighting bool not null
 );
 
 drop table if exists regions;
@@ -100,6 +100,7 @@ CREATE TABLE enemies (
     health INT not null,
     strength INT not null,
     resistance INT not null,
+    agility int not null,
     immunity enum('None', 'ResistantToRanged','ImmuneToRanged','ImmuneToRangedAndResistantToMelee',
     'ResistantToMelee','ImmuneToMelee','ImmuneToMeleeAndResistantToRanged','ResistantToBoth'),
 	xp int not null,

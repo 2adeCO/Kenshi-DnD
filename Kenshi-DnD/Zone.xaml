@@ -369,8 +369,12 @@
                         <Button x:Name="BuyContrabandItemButton" Content="Consultar mercancía" Click="BuyContrabandItem"
                     Height="50" Background="#55222222" Foreground="#CCCCCC"
                     Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        
+                        <Button x:Name="AccessContrabandMarketButton" Content="Pagar 'peaje' por 1000$" Click="AccessContrabandMarket"
+Height="50" Background="#55222222" Foreground="#CCCCCC"
+Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
-                        <Button Content="Cerrar trato" Grid.Row="3"
+                        <Button Content="Cerrar trato" Grid.Row="4"
                     Height="50" Background="#55222222" Foreground="#CCCCCC"
                     HorizontalAlignment="Stretch" Margin="20,20,50,20"
                     Click="CloseCurrentGrid"/>
@@ -391,7 +395,7 @@
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
 
-                    <Grid x:Name="ContrabandMarketItems" VerticalAlignment="Center">
+                    <Grid x:Name="ContrabandMarketItems" VerticalAlignment="Center" Visibility="Collapsed">
                         <!-- Aquí se llenarán los objetos del mercado negro -->
                     </Grid>
                 </ScrollViewer>

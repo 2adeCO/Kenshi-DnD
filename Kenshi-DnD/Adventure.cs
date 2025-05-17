@@ -156,9 +156,10 @@ namespace Kenshi_DnD
         {
             if(cost <= cats)
             {
-                cats -= cost;
+                this.cats -= cost;
                 return true;
             }
+            Debug.WriteLine("Not enough money");
             return false;
         }
         public void BuyItem(Item item)

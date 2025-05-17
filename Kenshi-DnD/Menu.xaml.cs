@@ -674,7 +674,7 @@ namespace Kenshi_DnD
                 for(int i = 0; i < numberOfFactions; i += 1)
                 {
                     reader.Read();
-                    factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),reader.GetInt32(3), reader.GetInt32(4));
+                    factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),reader.GetInt32(3), reader.GetInt32(4),reader.GetBoolean(5));
                 }
                 reader.Close();
 

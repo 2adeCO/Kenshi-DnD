@@ -39,7 +39,7 @@ namespace Kenshi_DnD
         Item[] itemsInContrabandMarket;
         Button selectedContrabandItemButton;
 
-
+        const int CONTRABAND_MARKET_ACCESS_PRICE= 1000;
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
             InitializeComponent();
@@ -131,7 +131,6 @@ namespace Kenshi_DnD
             }
             if (region.HasContrabandMarket())
             {
-                region.GoToContrabandMarket(myAdventure, rnd);
                 Button button = new Button();
                 button.Content = "Ir al mercado clandestino";
                 button.Margin = new Thickness(4, 30, 4, 30);
@@ -139,7 +138,6 @@ namespace Kenshi_DnD
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
                 button.Click += GoToContrabandMarket;
-                itemsInContrabandMarket = region.GetContrabandMarket();
                 ActionsPanel.Children.Add(button);
 
             }
@@ -292,7 +290,6 @@ namespace Kenshi_DnD
         {
             CloseCurrentGrid(null, null);
             ContrabandMarketGrid.Visibility = Visibility.Visible;
-
             BuyContrabandItemButton.IsEnabled = false;
             BuyContrabandItemButton.Content = "Bienvenido al mercado de " + region.GetName() + "... nadie te ha visto entrar.";
             ContrabandMarketItems.Children.Clear();
@@ -380,7 +377,7 @@ namespace Kenshi_DnD
         {
             if (selectedShopItemButton == null)
             {
-                MessageBox.Show("Primero elige algo del mercado, forastero.");
+                MessageBox.Show("Primero elige algo del mercado.");
                 return;
             }
 
@@ -393,7 +390,7 @@ namespace Kenshi_DnD
             }
 
             BuyContrabandItemButton.Background = new SolidColorBrush(Colors.DarkSeaGreen);
-            BuyContrabandItemButton.Content = "✔ Intercambio hecho\nMantén la boca cerrada...";
+            BuyContrabandItemButton.Content = "✔ Intercambio hecho\nAhora vete...";
             myAdventure.BuyItem(selectedItem);
             ContrabandMarketItems.Children.Remove(selectedShopItemButton);
             BuyContrabandItemButton.IsEnabled = false;
@@ -409,27 +406,48 @@ namespace Kenshi_DnD
             }
 
             UpdateCats();
+            
+            ContrabandMarketItems.Visibility = Visibility.Collapsed;
+            AccessContrabandMarketButton.IsEnabled = true;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@912@Ahora vete.@\n @111@A no ser de que tengas más cats(" + CONTRABAND_MARKET_ACCESS_PRICE + ") de sobra@."));
+            AccessContrabandMarketButton.Content = textBlock;
+            //if (ContrabandMarketItems.Children.Count == 0)
+            //{
+            //    Debug.WriteLine("Contraband market is empty");
+            //    ContrabandMarketItems.RowDefinitions.Clear();
+            //    RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+            //    ContrabandMarketItems.RowDefinitions.Add(row);
 
-            if (ContrabandMarketItems.Children.Count == 0)
-            {
-                Debug.WriteLine("Contraband market is empty");
-                ContrabandMarketItems.RowDefinitions.Clear();
-                RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-                ContrabandMarketItems.RowDefinitions.Add(row);
+            //    TextBlock textBlock = new TextBlock
+            //    {
+            //        Margin = new Thickness(4, 10, 4, 10)
+            //    };
+            //    textBlock.Inlines.AddRange(mainWindow.DecorateText("Te llevaste lo mejor, @916@todo se acabó@... vuelve cuando haya más 'mercancía'."));
 
-                TextBlock textBlock = new TextBlock
-                {
-                    Margin = new Thickness(4, 10, 4, 10)
-                };
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("Te llevaste lo mejor, @916@todo se acabó@... vuelve cuando haya más 'mercancía'."));
-
-                Grid.SetRow(textBlock, 0);
-                ContrabandMarketItems.Children.Add(textBlock);
-            }
+            //    Grid.SetRow(textBlock, 0);
+            //    ContrabandMarketItems.Children.Add(textBlock);
+            //}
 
             Debug.WriteLine("Contraband item bought");
         }
-
+        private void AccessContrabandMarket(object sender, EventArgs e)
+        {
+            if (!myAdventure.SpendIfHasEnough(CONTRABAND_MARKET_ACCESS_PRICE))
+            {
+                MessageBox.Show("No tienes suficiente dinero para acceder al mercado clandestino.");
+                return;
+            }
+            UpdateCats();
+            ContrabandMarketItems.Visibility = Visibility.Visible;
+            AccessContrabandMarketButton.IsEnabled = false;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("Ya sabes el trato, @111@1 solo \nobjeto@ por acceso."));
+            AccessContrabandMarketButton.Content = textBlock;
+            region.GoToContrabandMarket(myAdventure, rnd);
+            itemsInContrabandMarket = region.GetContrabandMarket();
+            GoToContrabandMarket(null,null);
+        }
         private void SelectShopItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton != null)
