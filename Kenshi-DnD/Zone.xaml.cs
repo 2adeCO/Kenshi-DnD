@@ -36,6 +36,9 @@ namespace Kenshi_DnD
         Item[] itemsInShop;
         Button selectedShopItemButton;
 
+        Item[] itemsInContrabandMarket;
+        Button selectedContrabandItemButton;
+
 
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure,Region currentRegion)
         {
@@ -128,13 +131,15 @@ namespace Kenshi_DnD
             }
             if (region.HasContrabandMarket())
             {
+                region.GoToContrabandMarket(myAdventure, rnd);
                 Button button = new Button();
                 button.Content = "Ir al mercado clandestino";
                 button.Margin = new Thickness(4, 30, 4, 30);
                 button.Height = 50;
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
-
+                button.Click += GoToContrabandMarket;
+                itemsInContrabandMarket = region.GetContrabandMarket();
                 ActionsPanel.Children.Add(button);
 
             }
@@ -285,12 +290,146 @@ namespace Kenshi_DnD
         }
         private void GoToContrabandMarket(object sender, EventArgs e)
         {
+            CloseCurrentGrid(null, null);
+            ContrabandMarketGrid.Visibility = Visibility.Visible;
 
+            BuyContrabandItemButton.IsEnabled = false;
+            BuyContrabandItemButton.Content = "Bienvenido al mercado de " + region.GetName() + "... nadie te ha visto entrar.";
+            ContrabandMarketItems.Children.Clear();
+
+            bool boughtEverything = true;
+
+            if (itemsInContrabandMarket != null)
+            {
+                for (int i = 0; i < itemsInContrabandMarket.Length; i++)
+                {
+                    if (itemsInContrabandMarket[i] != null)
+                    {
+                        RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) };
+                        ContrabandMarketItems.RowDefinitions.Add(row);
+
+                        Button button = new Button
+                        {
+                            Tag = itemsInContrabandMarket[i],
+                            Margin = new Thickness(10, 20, 30, 20),
+                            MinHeight = 40,
+                            Padding = new Thickness(5),
+                            Background = new SolidColorBrush(Color.FromRgb(50, 50, 50)), // Oscuro, sucio
+                            Foreground = Brushes.WhiteSmoke,
+                            ToolTip = mainWindow.HeaderToolTipThemer(itemsInContrabandMarket[i].GetName(), itemsInContrabandMarket[i].ToString())
+                        };
+
+                        TextBlock textBlock = new TextBlock { FontSize = 17 };
+                        textBlock.Inlines.AddRange(mainWindow.DecorateText(
+                            itemsInContrabandMarket[i].GetName() + " - " + itemsInContrabandMarket[i].RarityToString() +
+                            "\n@2@" + itemsInContrabandMarket[i].GetValue() + " cats@"));
+
+                        button.Content = textBlock;
+                        button.Click += SelectContrabandItem;
+
+                        Grid.SetRow(button, i);
+                        ContrabandMarketItems.Children.Add(button);
+
+                        boughtEverything = false;
+                    }
+                }
+
+                if (boughtEverything)
+                {
+                    RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+                    ContrabandMarketItems.RowDefinitions.Add(row);
+
+                    TextBlock textBlock = new TextBlock
+                    {
+                        Margin = new Thickness(4, 10, 4, 10)
+                    };
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText(
+                        "Ya se llevaron @916@todo lo valioso@... vuelve más tarde, o no vuelvas."));
+
+                    Grid.SetRow(textBlock, 0);
+                    ContrabandMarketItems.Children.Add(textBlock);
+                }
+            }
         }
+
         private void GoToRangedShop(object sender, EventArgs e)
         {
 
         }
+        private void SelectContrabandItem(object sender, EventArgs e)
+        {
+            if (selectedShopItemButton != null)
+            {
+                selectedShopItemButton.ClearValue(Button.BorderBrushProperty);
+                selectedShopItemButton.ClearValue(Button.BorderThicknessProperty);
+                selectedShopItemButton.ClearValue(Button.BackgroundProperty);
+            }
+
+            selectedShopItemButton = (Button)sender;
+
+            BuyContrabandItemButton.IsEnabled = true;
+
+            Item selectedItem = (Item)selectedShopItemButton.Tag;
+            BuyContrabandItemButton.Content = $"¿Adquirir \"{selectedItem.GetName()}\" del mercado negro?";
+            selectedShopItemButton.BorderBrush = Brushes.DarkOliveGreen;
+            selectedShopItemButton.BorderThickness = new Thickness(3);
+            selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B3B2A")); // color más sucio y oscuro
+        }
+
+        private void BuyContrabandItem(object sender, EventArgs e)
+        {
+            if (selectedShopItemButton == null)
+            {
+                MessageBox.Show("Primero elige algo del mercado, forastero.");
+                return;
+            }
+
+            Item selectedItem = (Item)selectedShopItemButton.Tag;
+
+            if (myAdventure.GetCats() < selectedItem.GetValue())
+            {
+                MessageBox.Show($"No tienes suficientes cats para conseguir {selectedItem.GetName()}.");
+                return;
+            }
+
+            BuyContrabandItemButton.Background = new SolidColorBrush(Colors.DarkSeaGreen);
+            BuyContrabandItemButton.Content = "✔ Intercambio hecho\nMantén la boca cerrada...";
+            myAdventure.BuyItem(selectedItem);
+            ContrabandMarketItems.Children.Remove(selectedShopItemButton);
+            BuyContrabandItemButton.IsEnabled = false;
+            selectedShopItemButton = null;
+
+            for (int i = 0; i < itemsInShop.Length; i++)
+            {
+                if (itemsInShop[i] == selectedItem)
+                {
+                    itemsInShop[i] = null;
+                    break;
+                }
+            }
+
+            UpdateCats();
+
+            if (ContrabandMarketItems.Children.Count == 0)
+            {
+                Debug.WriteLine("Contraband market is empty");
+                ContrabandMarketItems.RowDefinitions.Clear();
+                RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+                ContrabandMarketItems.RowDefinitions.Add(row);
+
+                TextBlock textBlock = new TextBlock
+                {
+                    Margin = new Thickness(4, 10, 4, 10)
+                };
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("Te llevaste lo mejor, @916@todo se acabó@... vuelve cuando haya más 'mercancía'."));
+
+                Grid.SetRow(textBlock, 0);
+                ContrabandMarketItems.Children.Add(textBlock);
+            }
+
+            Debug.WriteLine("Contraband item bought");
+        }
+
         private void SelectShopItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton != null)

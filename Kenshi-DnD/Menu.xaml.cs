@@ -43,20 +43,16 @@ namespace Kenshi_DnD
         {
             changingSliders = true;
             InitializeComponent();
+            this.mainWindow = mainWindow;
             this.allRaces = SqlGetRaces();
             this.cursors = cursors;
             this.controller = controller;
-            this.mainWindow = mainWindow;
             this.rnd = rnd;
             TitleText.Inlines.Clear();
             TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
             remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4 ;
             remainingPointsText.Text = remainingPoints.ToString();
 
-
-            SqlConnectionTest();
-            SqlGetFactions();
-            SqlGetItems();
 
             adventureName.Text = "AventuraDe" + DEFAULT_HERO_NAME;
             factionName.Text = DEFAULT_FACTION_NAME;
@@ -651,37 +647,11 @@ namespace Kenshi_DnD
 
             return adventureGrid;
         }
-        private void SqlConnectionTest()
-        {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
-            MySqlCommand command = new MySqlCommand("SELECT * FROM factions;", connection);
-            MySqlDataReader reader;
-
-
-            try
-            {
-                connection.Open();
-                reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Debug.WriteLine(reader.GetString(1) + " " + reader.GetString(2));
-                }
-                reader.Close();
-
-            }
-            catch (MySqlException ex)
-            {
-                Debug.WriteLine("MySql wanted to crash");
-                connection.Close();
-            }
-            connection.Close();
-
-        }
+        
         private Faction[] SqlGetFactions()
         {
 
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
             MySqlDataReader reader;
             int numberOfFactions = 0;
@@ -720,7 +690,7 @@ namespace Kenshi_DnD
         }
         private Item[] SqlGetItems()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command;
             MySqlDataReader reader;
             int numberOfItems = 0;
@@ -792,7 +762,7 @@ namespace Kenshi_DnD
         }
         private Limb[] SqlGetLimbs()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from limbs;",connection);
             MySqlDataReader reader;
             Limb[] limbs;
@@ -832,7 +802,7 @@ namespace Kenshi_DnD
         }
         private Region[] SqlGetRegions()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from regions;", connection);
             MySqlDataReader reader;
             Region[] regions;
@@ -884,7 +854,7 @@ namespace Kenshi_DnD
         }
         private Race[] SqlGetRaces()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from races;", connection);
             MySqlDataReader reader;
             Race[] races;
@@ -924,7 +894,7 @@ namespace Kenshi_DnD
         }
         private Monster[] SqlGetEnemies()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from enemies;", connection);
             MySqlDataReader reader;
             Faction[] factions = SqlGetFactions();
@@ -965,7 +935,7 @@ namespace Kenshi_DnD
         }
         private string[] SqlGetNames()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from names;", connection);
             MySqlDataReader reader;
             string[] names;
@@ -1000,7 +970,7 @@ namespace Kenshi_DnD
         }
         private string[] SqlGetTitles()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("select count(*) from titles;", connection);
             MySqlDataReader reader;
             string[] titles;

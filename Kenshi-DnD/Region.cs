@@ -276,6 +276,11 @@ namespace Kenshi_DnD
             }
             this.contrabandMarket = itemsInContraband;
         }
+        public Item[] GetContrabandMarket()
+        {
+            Debug.WriteLine("Contraband market returned !");
+            return contrabandMarket;
+        }
         //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
         //{
 
@@ -289,11 +294,14 @@ namespace Kenshi_DnD
             Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
             for (int i = 0; i < obtainedItems.Length; i++)
             {
-                if (obtainedItems[i].GetName() == item.GetName())
+                if(obtainedItems[i] != null)
                 {
-                    if(obtainedItems[i].RarityToString() == item.RarityToString())
+                    if (obtainedItems[i].GetName() == item.GetName())
                     {
-                        return true;
+                        if (obtainedItems[i].RarityToString() == item.RarityToString())
+                        {
+                            return true;
+                        }
                     }
                 }
             }
