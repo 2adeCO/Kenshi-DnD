@@ -28,6 +28,7 @@ namespace Kenshi_DnD
         Item[] contrabandMarket;
         Item[] rangedShop;
         List<Faction> factions;
+        const int DEFAULT_LIMB_HOSPITAL_SIZE = 2;
         const int DEFAULT_SHOP_SIZE = 3;
 
         public Region(string name, string description, bool hasBar, bool hasShop, bool hasLimbHospital, bool hasContrabandMarket, bool hasRangedShop)
@@ -137,6 +138,71 @@ namespace Kenshi_DnD
                 this.heroesInBar = null;
             }
 
+        }
+        public void GoToHospital(Adventure myAdventure, Random rnd)
+        {
+            limbHospital = new Limb[DEFAULT_LIMB_HOSPITAL_SIZE];
+            Limb[] allLimbs = myAdventure.GetAllLimbs();
+            for (int i = 0; i < DEFAULT_LIMB_HOSPITAL_SIZE; i++)
+            {
+                int rarityDecider = rnd.Next(0, 20);
+                Rarity.Rarities rarity;
+                //Chances:
+                //Junk: 5 in 20
+                //RustCovered: 5 in 20
+                //Catun: 4 in 20
+                //Mk: 3 in 20
+                //Edgewalker: 2 in 20
+                //Meitou: 1 in 20
+                switch (rarityDecider)
+                {
+                    case <5: 
+                        {
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                    case <10:
+                        {
+                            rarity = Rarity.Rarities.RustCovered;
+                            break;
+                        }
+                    case <14:
+                        {
+                            rarity = Rarity.Rarities.Catun;
+                            break;
+                        }
+                    case <17:
+                        {
+                            rarity = Rarity.Rarities.Mk;
+                            break;
+                        }
+                    case <19:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case <20:
+                        {
+                            rarity = Rarity.Rarities.Meitou;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                Limb limb = allLimbs[rnd.Next(0, allLimbs.Length)].GetCopy();
+                Debug.WriteLine(limb.GetName());
+                limb.SetRarity(rarity);
+                limbHospital[i] = limb;
+            }
+        }
+        public Limb[] GetLimbHospital()
+        {
+            return limbHospital;
         }
         public int GetSleepCost(Adventure myAdventure)
         {
@@ -514,7 +580,7 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < limbs.Length; i += 1)
             {
-                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0);
+                limbs[i] = new Limb("Extremidad normal", 0,0, 0, 0, 0, 0);
             }
             return limbs;
         }

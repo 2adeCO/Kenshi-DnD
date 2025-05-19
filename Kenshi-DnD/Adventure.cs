@@ -221,6 +221,35 @@ namespace Kenshi_DnD
                 }
             }
         }
+        public Hero[] GetAmputees()
+        {
+
+            int count = 0;
+            for(int i = 0; i < heroes.Length; i += 1)
+            {
+                if (heroes[i] != null)
+                {
+                    if(heroes[i].IsAmputee())
+                    {
+                        count += 1;
+                    }
+                }
+            }
+            Hero[] amputees = new Hero[count];
+            count = 0;
+            for (int i = 0; i < heroes.Length; i += 1)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i].IsAmputee())
+                    {
+                        amputees[count] = heroes[i];
+                        count += 1;
+                    }
+                }
+            }
+            return amputees;
+        }
         public Dictionary<string,Hero[]> GetSavedSquads()
         {
             return savedSquads;

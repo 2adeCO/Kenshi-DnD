@@ -289,12 +289,12 @@ INSERT INTO stats (bruteForce, dexterity, hp, resistance, agility) VALUES
 (4, 4, 0, 1, 1),   
 (-2, -2, 2, 8, -2),
 (1, 6, 0, -1, -2); 
-INSERT INTO limbs (name, stats_id) VALUES
-('Pierna ágil', 52),
-('Extremidad de metal', 53),
-('Extremidad de Kung-Fu', 54),
-('Extremidad Antigolpes', 55),
-('Brazo de francotirador', 56);
+INSERT INTO limbs (name,value, stats_id) VALUES
+('Pierna ágil',1000, 52),
+('Extremidad de metal',1200, 53),
+('Extremidad de Kung-Fu',1500, 54),
+('Extremidad Antigolpes',1000, 55),
+('Brazo de francotirador',1500, 56);
 
 
 -- Reino Animal

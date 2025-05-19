@@ -284,6 +284,17 @@ namespace Kenshi_DnD
             
             
         }
+        public bool IsAmputee()
+        {
+            for (int i = 0; i < limbs.Length; i += 1)
+            {
+                if (limbs[i] == null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public bool CanUseItem(Item item)
         {
             int limbsAvailable = 0;
@@ -534,7 +545,7 @@ namespace Kenshi_DnD
                 } while (randomLimb == null);
             }
 
-            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0):randomLimb;
+            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0,0):randomLimb;
         }
         public string FreeAllItems()
         {
@@ -555,7 +566,7 @@ namespace Kenshi_DnD
         }
         public string Meet()
         {
-            return $"{backgroundStory}\n" + ToString() + "\n Me uniré a tu aventura por " +  GetCompetencyCost();
+            return $"{backgroundStory}\n" + ToString() + "\nMe uniré a tu aventura por " +  GetCompetencyCost();
         }
         public int GetCompetencyCost()
         {

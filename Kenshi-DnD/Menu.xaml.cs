@@ -487,7 +487,7 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < limbs.Length; i += 1)
             {
-                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0);
+                limbs[i] = new Limb("Extremidad normal", 0,0, 0, 0, 0, 0);
             }
             return limbs;
         }
@@ -777,7 +777,7 @@ namespace Kenshi_DnD
 
                 reader.Close();
 
-                command = new MySqlCommand("SELECT limbs.name, stats.bruteForce, stats.dexterity, stats.hp, stats.resistance, stats.agility FROM limbs inner join stats" +
+                command = new MySqlCommand("SELECT limbs.name,limbs.value, stats.bruteForce, stats.dexterity, stats.hp, stats.resistance, stats.agility FROM limbs inner join stats" +
                     " on limbs.stats_id = stats.id;", connection);
 
                 reader = command.ExecuteReader();
@@ -786,8 +786,9 @@ namespace Kenshi_DnD
                 for(int i = 0; i < numOfLimbs; i += 1)
                 {
                     reader.Read();
-                    limbs[i] = new Limb(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3),
-                        reader.GetInt32(4), reader.GetInt32(5));
+                    limbs[i] = new Limb(reader.GetString(0),reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4),
+                        reader.GetInt32(5), reader.GetInt32(6));
+                    Debug.WriteLine(reader.GetString(0));
                 }
                 reader.Close();
                 connection.Close();
@@ -919,7 +920,7 @@ namespace Kenshi_DnD
                 for (int i = 0; i < numOfEnemies; i += 1)
                 {
                     reader.Read();
-                    enemies[i] = new Monster(reader.GetString(0), reader.GetInt32(1), factions[reader.GetInt32(2)],reader.GetInt32(3),
+                    enemies[i] = new Monster(reader.GetString(0), reader.GetInt32(1), factions[reader.GetInt32(2) - 1],reader.GetInt32(3),
                         reader.GetInt32(4),reader.GetInt32(5),reader.GetString(6),reader.GetInt32(7),reader.GetInt32(8),reader.GetBoolean(9)) ;
                 }
                 reader.Close();

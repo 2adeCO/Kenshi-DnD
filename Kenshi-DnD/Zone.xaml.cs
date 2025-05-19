@@ -29,7 +29,7 @@ namespace Kenshi_DnD
 
         Item[] itemsInRangedShop;
 
-
+        Limb[] limbsInHospital;
 
 
         const int CONTRABAND_MARKET_ACCESS_PRICE = 1000;
@@ -56,7 +56,6 @@ namespace Kenshi_DnD
             textBlock.Inlines.AddRange(mainWindow.DecorateText("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@"));
 
             SleepButton.Content = textBlock;
-
 
 
         }
@@ -137,13 +136,29 @@ namespace Kenshi_DnD
             }
             if (region.HasLimbHospital())
             {
+                if(reloadShops)
+                {
+                    region.GoToHospital(myAdventure, rnd);
+                }
                 Button button = new Button();
                 button.Content = "Ir al mecánico de extremidades";
                 button.Margin = new Thickness(4, 30, 4, 30);
                 button.Height = 50;
                 button.FontSize = 18;
                 button.HorizontalAlignment = HorizontalAlignment.Stretch;
-
+                if(myAdventure.GetAmputees().Length == 0)
+                {
+                    HeroComboBox.Visibility = Visibility.Collapsed;
+                    PutLimbButton.IsEnabled = false;
+                    HospitalItems.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    HeroComboBox.ItemsSource = myAdventure.GetAmputees();
+                    HeroComboBox.SelectedIndex = 0;
+                }
+                button.Click += GoToLimbHospital;
+                limbsInHospital = region.GetLimbHospital();
                 ActionsPanel.Children.Add(button);
 
             }
@@ -160,13 +175,13 @@ namespace Kenshi_DnD
                         RangedShopItems.Visibility = Visibility.Visible;
                         AccessRangedShopButton.IsEnabled = false;
                         TextBlock textBlock = new TextBlock();
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Tienes acceso autorizado.@\n@111@Una sola compra@ @9@por entrada.@"));
+                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Venga pasa.@\n@111@Nada de delatarme@"));
                         AccessRangedShopButton.Content = textBlock;
                     }
                     
                 }
 
-                    Button button = new Button();
+                Button button = new Button();
                 button.Content = "Ir al campo de tiro";
                 button.Margin = new Thickness(4, 30, 4, 30);
                 button.Height = 50;
@@ -189,6 +204,7 @@ namespace Kenshi_DnD
             TextBlock textBlockSalute = new TextBlock();
             textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@Bienvenido al bar de " + region.GetName() +"@"));
             HireButton.Content = textBlockSalute;
+            BarItems.Children.Clear();
             if (heroesInBar != null)
             {
                 for (int i = 0; i < heroesInBar.Length; i++)
@@ -300,7 +316,67 @@ namespace Kenshi_DnD
         }
         private void GoToLimbHospital(object sender, EventArgs e)
         {
-
+            CloseCurrentGrid(null,null);
+            HospitalGrid.Visibility = Visibility.Visible;
+            PutLimbButton.IsEnabled = false;
+            TextBlock textBlockSalute = new TextBlock();
+            if(myAdventure.GetAmputees().Length == 0)
+            {
+                textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@¿Qué haces aquí?\nYa vendrás@"));
+            }
+            else
+            {
+                textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@¿Necesitas un parche, guerrero?@"));
+            }
+            PutLimbButton.Content = textBlockSalute;
+            HospitalItems.Children.Clear();
+            if(limbsInHospital != null)
+            {
+                for (int i = 0; i < limbsInHospital.Length; i++)
+                {
+                    Debug.WriteLine("Limb: " + limbsInHospital[i].GetName());
+                    if (limbsInHospital[i] != null)
+                    {
+                        RowDefinition row = new RowDefinition();
+                        row.Height = new GridLength(1, GridUnitType.Auto);
+                        HospitalItems.RowDefinitions.Add(row);
+                        Button button = new Button();
+                        button.Tag = limbsInHospital[i];
+                        TextBlock textBlock = new TextBlock() {FontSize = 17 };
+                        textBlock.Inlines.AddRange(mainWindow.DecorateText(limbsInHospital[i].GetName() + " - " +
+                            limbsInHospital[i].RarityToString() + "\n@2@" + limbsInHospital[i].GetValue() + "$@"));
+                        button.Content = textBlock;
+                        button.Margin = new Thickness(10, 20, 30, 20);
+                        button.MinHeight = 40;
+                        button.Padding = new Thickness(5);
+                       
+                        button.ToolTip = mainWindow.HeaderToolTipThemer(limbsInHospital[i].GetName(), limbsInHospital[i].ToString());
+                        button.Click += SelectLimb;
+                        button.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                        Grid.SetRow(button, i);
+                        HospitalItems.Children.Add(button);
+                    }
+                }
+            }
+        }
+        private void SelectLimb(object sender,EventArgs e)
+        {
+            if (selectedShopItemButton != null)
+            {
+                selectedShopItemButton.ClearValue(Button.BorderBrushProperty);
+                selectedShopItemButton.ClearValue(Button.BorderThicknessProperty);
+                selectedShopItemButton.ClearValue(Button.BackgroundProperty);
+                selectedShopItemButton.Background = new SolidColorBrush(Colors.WhiteSmoke);
+            }
+            selectedShopItemButton = (Button)sender;
+            PutLimbButton.IsEnabled = true;
+            Limb selectedLimb = (Limb)selectedShopItemButton.Tag;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@¿Quieres 'instalarte'@ @916@{selectedLimb.GetName()}@ @9@?@"));
+            PutLimbButton.Content = textBlock;
+            selectedShopItemButton.BorderBrush = Brushes.SteelBlue;
+            selectedShopItemButton.BorderThickness = new Thickness(3);
+            selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334455"));
         }
         private void GoToContrabandMarket(object sender, EventArgs e)
         {
@@ -355,43 +431,45 @@ namespace Kenshi_DnD
 
         private void GoToRangedShop(object sender, EventArgs e)
         {
-
+            // Closes all other grids
             CloseCurrentGrid(null, null);
+            // Makes the grid visible
             RangedShopGrid.Visibility = Visibility.Visible;
+            // Disables the buy button
             BuyRangedItemButton.IsEnabled = false;
+            // Sets the content of the buy button
             TextBlock textBlockSalute = new TextBlock();
             if(region.HasAccessToRangedShop())
             {
                 if (region.CanBuyRangedItems())
                 {
-                    textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@Bienvenido al campo de tiro de " + region.GetName() + "@"));
-
+                    textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@Pues... hazlo rápido...@"));
                 }
                 else
                 {
-                    textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@Vuelve en un tiempo@"));
-
+                    textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@2@No tardes en irte.@"));
                 }
             }
             else
             {
-                textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@Paga la entrada para entrar@"));
+                textBlockSalute.Inlines.AddRange(mainWindow.DecorateText("@9@No puedes entrar aquí, plebeyo.@"));
             }
             BuyRangedItemButton.Content = textBlockSalute;
+            // Resets the grid's items
             RangedShopItems.Children.Clear();
 
-
+            //Checks if the array of items is null
             if (itemsInRangedShop != null)
             {
-
-
+                //Generates one row and button for each item
                 for (int i = 0; i < itemsInRangedShop.Length; i++)
                 {
                     if (itemsInRangedShop[i] != null)
                     {
+                        // Creates a row for each item
                         RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) };
                         RangedShopItems.RowDefinitions.Add(row);
-
+                        // Creates a button for each item
                         Button button = new Button
                         {
                             Tag = itemsInRangedShop[i],
@@ -402,18 +480,18 @@ namespace Kenshi_DnD
                             Foreground = Brushes.WhiteSmoke,
                             ToolTip = mainWindow.HeaderToolTipThemer(itemsInRangedShop[i].GetName(), itemsInRangedShop[i].ToString())
                         };
-
+                        // Fills the button with the item name, rarity and value
                         TextBlock textBlock = new TextBlock { FontSize = 17 };
                         textBlock.Inlines.AddRange(mainWindow.DecorateText(
                             itemsInRangedShop[i].GetName() + " - " + itemsInRangedShop[i].RarityToString() +
-                            "\n@2@" + itemsInRangedShop[i].GetValue() + " cats@"));
-
+                            "\n@2@" + itemsInRangedShop[i].GetValue() + " $@"));
                         button.Content = textBlock;
+                        // Sets the button's click event
                         if (region.CanBuyRangedItems())
                         {
                             button.Click += SelectRangedItem;
                         }
-
+                        // Places the button in the grid
                         Grid.SetRow(button, i);
                         RangedShopItems.Children.Add(button);
 
@@ -441,10 +519,12 @@ namespace Kenshi_DnD
             BuyRangedItemButton.IsEnabled = true;
 
             Item selectedItem = (Item)selectedShopItemButton.Tag;
-            BuyRangedItemButton.Content = $"¿Comprar {selectedItem.GetName()} del arsenal?";
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@¿Comprar@ @914@{selectedItem.GetName()}@ @9@del arsenal?@"));
+            BuyRangedItemButton.Content = textBlock;
             selectedShopItemButton.BorderBrush = Brushes.SteelBlue;
             selectedShopItemButton.BorderThickness = new Thickness(3);
-            selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334455")); // tono profesional
+            selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334455"));
         }
 
         private void BuyRangedItem(object sender, EventArgs e)
@@ -463,8 +543,10 @@ namespace Kenshi_DnD
                 return;
             }
 
-            BuyRangedItemButton.Background = new SolidColorBrush(Colors.LightSteelBlue);
-            BuyRangedItemButton.Content = "✔ Compra realizada";
+            BuyRangedItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#55334455"));
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Ya tienes lo que querías.@\n@111@¿No?@"));
+            BuyRangedItemButton.Content = textBlock;
             myAdventure.BuyItem(selectedItem);
             RangedShopItems.Children.Remove(selectedShopItemButton);
             BuyRangedItemButton.IsEnabled = false;
@@ -482,8 +564,8 @@ namespace Kenshi_DnD
             UpdateCats();
 
            
-            TextBlock textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText("@222@Gracias por tu compra.@\n@111@Solo una transacción por acceso@."));
+            textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@920@Muy bien.@\n@112@Pero no tocarás nada más@."));
             AccessRangedShopButton.Content = textBlock;
             region.SetCanBuyRangedItems(false);
             region.GoToRangedShop(myAdventure, rnd);
@@ -493,21 +575,30 @@ namespace Kenshi_DnD
 
         private void AccessRangedShop(object sender, EventArgs e)
         {
+            // If the player has enough money, access the ranged shop
             if (!myAdventure.SpendIfHasEnough(RANGED_SHOP_ACCESS_PRICE))
             {
                 MessageBox.Show("No tienes suficiente dinero para acceder al arsenal.");
                 return;
             }
+            // Open the access to the shop as open
             region.SetAccessToRangedShop(true);
+            // Update the cats on screen
             UpdateCats();
+            // Set the shop items as visible
             RangedShopItems.Visibility = Visibility.Visible;
+            // Disable the access button
             AccessRangedShopButton.IsEnabled = false;
+            // Reset the items in the shop
             region.GoToRangedShop(myAdventure,rnd);
             itemsInRangedShop = region.GetRangedShop();
+            // Set the content of the access button
             TextBlock textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Tienes acceso autorizado.@\n@111@Una sola compra@ @9@por entrada.@"));
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Haré la vista gorda.@\n@111@Pero no te quitaré los ojos@"));
             AccessRangedShopButton.Content = textBlock;
+            // Make the player able to buy one item
             region.SetCanBuyRangedItems(true);
+            // Generate the item buttons in the shop
             GoToRangedShop(null, null);
         }
 
@@ -526,7 +617,9 @@ namespace Kenshi_DnD
             BuyContrabandItemButton.IsEnabled = true;
 
             Item selectedItem = (Item)selectedShopItemButton.Tag;
-            BuyContrabandItemButton.Content = $"¿Adquirir \"{selectedItem.GetName()}\" del mercado negro?";
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText($"@914@¿Adquirir@ @916@\"{selectedItem.GetName()}\"@ @914@del mercado negro?@"));
+            BuyContrabandItemButton.Content = textBlock;
             selectedShopItemButton.BorderBrush = Brushes.DarkOliveGreen;
             selectedShopItemButton.BorderThickness = new Thickness(3);
             selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B3B2A")); 
@@ -548,8 +641,11 @@ namespace Kenshi_DnD
                 return;
             }
 
-            BuyContrabandItemButton.Background = new SolidColorBrush(Colors.DarkSeaGreen);
-            BuyContrabandItemButton.Content = "✔ Intercambio hecho\nAhora vete...";
+            BuyContrabandItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#55222222"));
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@218@✔ Intercambio hecho@\n@9@Ahora vete...@"));
+
+            BuyContrabandItemButton.Content = textBlock;
             myAdventure.BuyItem(selectedItem);
             ContrabandMarketItems.Children.Remove(selectedShopItemButton);
             BuyContrabandItemButton.IsEnabled = false;
@@ -568,25 +664,9 @@ namespace Kenshi_DnD
 
             ContrabandMarketItems.Visibility = Visibility.Collapsed;
             AccessContrabandMarketButton.IsEnabled = true;
-            TextBlock textBlock = new TextBlock();
+            textBlock = new TextBlock();
             textBlock.Inlines.AddRange(mainWindow.DecorateText("@912@Ahora vete.@\n@111@A no ser de que tengas más cats(" + CONTRABAND_MARKET_ACCESS_PRICE + ") de sobra@."));
             AccessContrabandMarketButton.Content = textBlock;
-            //if (ContrabandMarketItems.Children.Count == 0)
-            //{
-            //    Debug.WriteLine("Contraband market is empty");
-            //    ContrabandMarketItems.RowDefinitions.Clear();
-            //    RowDefinition row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-            //    ContrabandMarketItems.RowDefinitions.Add(row);
-
-            //    TextBlock textBlock = new TextBlock
-            //    {
-            //        Margin = new Thickness(4, 10, 4, 10)
-            //    };
-            //    textBlock.Inlines.AddRange(mainWindow.DecorateText("Te llevaste lo mejor, @916@todo se acabó@... vuelve cuando haya más 'mercancía'."));
-
-            //    Grid.SetRow(textBlock, 0);
-            //    ContrabandMarketItems.Children.Add(textBlock);
-            //}
 
             Debug.WriteLine("Contraband item bought");
         }
@@ -601,7 +681,7 @@ namespace Kenshi_DnD
             ContrabandMarketItems.Visibility = Visibility.Visible;
             AccessContrabandMarketButton.IsEnabled = false;
             TextBlock textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText("Ya sabes el trato, @111@1 solo \nobjeto@ por acceso."));
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Ya sabes el trato,@ @111@1 solo \nobjeto@ @9@por acceso.@"));
             AccessContrabandMarketButton.Content = textBlock;
             region.GoToContrabandMarket(myAdventure, rnd);
             itemsInContrabandMarket = region.GetContrabandMarket();
@@ -736,22 +816,36 @@ namespace Kenshi_DnD
         }
         private void SleepInBar(object sender, EventArgs e)
         {
-
+            // Checks if the player has enough money to sleep in the bar
             if (myAdventure.GetCats() < region.GetSleepCost(myAdventure))
             {
                 MessageBox.Show("No tienes suficiente dinero para dormir en el bar");
                 return;
             }
+            // Cures 10 HP to all heroes with less than max HP
             region.SleepInBar(myAdventure, region.GetSleepCost(myAdventure));
+            // Updates the money on the screen
             UpdateCats();
-            AccessRangedShopButton.IsEnabled = true;
-            RangedShopItems.Visibility = Visibility.Collapsed;
-            AccessRangedShopButton.Content = "Pagar entrada de 500$";
-            region.GoToBar(myAdventure,rnd);
-            heroesInBar = region.GetHeroesInBar();
-            region.GoToShop(myAdventure, rnd);
-            itemsInShop = region.GetShop();
 
+
+            // Makes the access button to the shop clickable again
+            AccessRangedShopButton.IsEnabled = true;
+
+            // Hides the items
+            RangedShopItems.Visibility = Visibility.Collapsed;
+            // Updates the button text
+            AccessRangedShopButton.Content = "Sobornar segurata por 500$";
+
+            // Updates the region's heroes and items
+            region.GoToBar(myAdventure,rnd);
+            region.GoToShop(myAdventure, rnd);
+            // Updates the arrays
+            heroesInBar = region.GetHeroesInBar();
+            itemsInShop = region.GetShop();
+            // Updates the bar
+            GoToBar(null, null);
+
+            region.ConsumeToken();
             Debug.WriteLine("Slept in bar");
         }
         private void UpdatePlayerGrid()

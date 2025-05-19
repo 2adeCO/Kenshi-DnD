@@ -2,6 +2,7 @@
 
 namespace Kenshi_DnD
 {
+    [Serializable]
     public class Monster : ITurnable
     {
         string name;

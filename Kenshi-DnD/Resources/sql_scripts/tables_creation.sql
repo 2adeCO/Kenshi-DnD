@@ -88,6 +88,7 @@ drop table if exists limbs;
 create table limbs(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
+    value int not null,
     stats_id int UNIQUE not null,
     
     foreign key(stats_id) references stats(id)
