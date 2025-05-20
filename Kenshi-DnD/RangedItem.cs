@@ -91,8 +91,9 @@ namespace Kenshi_DnD
         {
             StatModifier statCopy = statToModify.GetCopy();
 
-            Item copy = new RangedItem(name,description,value,resellValue,limbsNeeded,difficulty,ammo, statCopy);
-            return copy;
+            Item itemCopy = new RangedItem(name,description,value,resellValue,limbsNeeded,difficulty,ammo, statCopy);
+            itemCopy.SetRarity(rarity);
+            return itemCopy;
         }
         public override string ToString()
         {

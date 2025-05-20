@@ -50,6 +50,7 @@ namespace Kenshi_DnD
             SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
             Debug.WriteLine("Selected item: " + (string)SquadAlignmentsCombobox.SelectedItem);
             UpdatePlayerGrid();
+            UpdateInventoryGrid();
 
             CreateActions();
             TextBlock textBlock = new TextBlock();
@@ -847,6 +848,110 @@ namespace Kenshi_DnD
 
             region.ConsumeToken();
             Debug.WriteLine("Slept in bar");
+        }
+        private void UpdateInventoryGrid()
+        {
+            InventoryItems.Children.Clear();
+
+            Item[] consumableItems = myAdventure.GetInventory().GetConsumables(0);
+            Item[] meleeItems = myAdventure.GetInventory().GetMelee(0);
+            Item[] rangedItems = myAdventure.GetInventory().GetRanged(0);
+
+            for (int i = 0; i < consumableItems.Length; i += 1)
+            {
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Orientation = Orientation.Vertical;
+                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+                label.Content = consumableItems[i].GetName();
+                label.ToolTip = mainWindow.HeaderToolTipThemer(consumableItems[i].GetName(), consumableItems[i].ToString());
+                
+                ToolTipService.SetInitialShowDelay(label, 100);
+                stackPanel.Children.Add(label);
+                TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + consumableItems[i].GetResellValue() + "$@"));
+                textBlock.ToolTip = "Valor de reventa";
+                stackPanel.Children.Add(textBlock);
+
+                Button button = new Button();
+                button.Content = stackPanel;
+
+                Border border = new Border();
+                border.Margin = new Thickness(2, 8, 20, 8);
+                border.BorderBrush = mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor());
+                border.BorderThickness = new Thickness(2);
+                border.VerticalAlignment = VerticalAlignment.Center;
+                border.Child = button;
+                InventoryItems.Children.Add(border);
+            }
+
+            for (int i = 0; i < meleeItems.Length; i += 1)
+            {
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Orientation = Orientation.Vertical;
+                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+                label.Content = meleeItems[i].GetName();
+                label.ToolTip = mainWindow.HeaderToolTipThemer(meleeItems[i].GetName(), meleeItems[i].ToString());
+
+                ToolTipService.SetInitialShowDelay(label, 100);
+                stackPanel.Children.Add(label);
+                TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + meleeItems[i].GetResellValue() + "$@"));
+                textBlock.ToolTip = "Valor de reventa";
+                stackPanel.Children.Add(textBlock);
+
+                Button button = new Button();
+                button.Content = stackPanel;
+
+                Border border = new Border();
+                border.Margin = new Thickness(2, 8, 20, 8);
+                border.BorderBrush = mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor());
+                border.BorderThickness = new Thickness(2);
+                border.VerticalAlignment = VerticalAlignment.Center;
+                border.Child = button;
+
+                InventoryItems.Children.Add(border);
+            }
+            for (int i = 0; i < rangedItems.Length; i += 1)
+            {
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Orientation = Orientation.Vertical;
+                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
+                label.Content = rangedItems[i].GetName();
+                label.ToolTip = mainWindow.HeaderToolTipThemer(rangedItems[i].GetName(), rangedItems[i].ToString());
+
+                ToolTipService.SetInitialShowDelay(label, 100);
+                stackPanel.Children.Add(label);
+                TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + rangedItems[i].GetResellValue() + "$@"));
+                textBlock.ToolTip = "Valor de reventa";
+                stackPanel.Children.Add(textBlock);
+
+                Button button = new Button();
+                button.Content = stackPanel;
+
+                Border border = new Border();
+                border.Margin = new Thickness(2, 8, 20, 8);
+                border.BorderBrush = mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor());
+                border.BorderThickness = new Thickness(2);
+                border.VerticalAlignment = VerticalAlignment.Center;
+                border.Child = button;
+
+                InventoryItems.Children.Add(border);
+            }
+
+
+        }
+        private void OpenInventory(object sender, EventArgs e)
+        {
+            if (InventoryGrid.Visibility == Visibility.Visible)
+            {
+                InventoryGrid.Visibility = Visibility.Collapsed;
+                InventoryButton.Content = "Abrir inventario";
+                return;
+            }
+            InventoryGrid.Visibility = Visibility.Visible;
+            InventoryButton.Content = "Cerrar inventario";
+            UpdateInventoryGrid();
         }
         private void UpdatePlayerGrid()
         {

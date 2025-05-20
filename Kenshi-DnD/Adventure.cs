@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -191,7 +192,22 @@ namespace Kenshi_DnD
                 playerInventory.AddItem(item.GetCopy());
 
             }
-        }
+            else
+            {
+                if (item.GetRarity() == Rarity.Rarities.Meitou || item.GetRarity() == Rarity.Rarities.Edgewalker)
+                {
+                    for (int i = 0; i < alreadyObtainedItems.Length; i += 1)
+                    {
+                        if (alreadyObtainedItems[i] == null)
+                        {
+                            alreadyObtainedItems[i] = item;
+                            break;
+                        }
+                    }
+                }
+                playerInventory.AddItem(item.GetCopy());
+            }
+        } 
         public void HireHero(Hero hero)
         {
             int cost = hero.GetCompetencyCost();

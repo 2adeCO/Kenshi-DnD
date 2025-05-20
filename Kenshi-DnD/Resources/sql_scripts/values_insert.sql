@@ -1,7 +1,6 @@
 use kenshi_dnd_db;
 
-INSERT INTO factions (name, description, baseRelations,color) VALUES
-INSERT INTO Factions (name, description, baseRelations,color,respectByFighting) VALUES
+INSERT INTO factions (name, description, baseRelations,color,respectByFighting) VALUES
 ('La Nación Sagrada', 'La Nación Sagrada es una teocracia fanática que venera a Okran,
  su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua, 
  a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología 

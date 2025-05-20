@@ -78,6 +78,7 @@
             StatModifier statCopy = GetStatToModify().GetCopy();
 
             Item itemCopy = new MeleeItem(name, description, value, resellValue, limbsNeeded, canRevive, statCopy, breaksOnUse);
+            itemCopy.SetRarity(rarity);
 
             return itemCopy;
         }
