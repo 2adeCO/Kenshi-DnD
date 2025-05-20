@@ -2,9 +2,9 @@ drop database if exists Kenshi_DnD_DB;
 create database Kenshi_DnD_DB;
 Use Kenshi_DnD_DB;
 
-drop table if exists Factions;
+drop table if exists factions;
 
-create table Factions(
+create table factions(
 	id Int auto_increment primary key,
     name varchar(50) not null,
     description varchar(500),
@@ -12,7 +12,20 @@ create table Factions(
     color int not null,
     imagePath varchar(100)
 );
-
+drop table if exists hostilities;
+create table hostilities(
+	id int primary key auto_increment,
+    hostility enum('OkranReligion','CorruptOligarchy','StrengthTest','HiveCastOuts','Survival') not null
+);
+drop table if exists faction_hostility;
+create table faction_hostility(
+	idFaction int not null,
+	idHostility int not null,
+    
+    primary key(idFaction,idHostility),
+    foreign key(idFaction) references factions(id),
+    foreign key(idHostility) references hostilities(id)
+);
 drop table if exists regions;
 create table regions(
 	id int auto_increment primary key ,

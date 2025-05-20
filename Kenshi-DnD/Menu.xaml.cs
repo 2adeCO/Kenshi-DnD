@@ -698,16 +698,30 @@ namespace Kenshi_DnD
             
             
                 factions = new Faction[numberOfFactions];
-                command = new MySqlCommand("SELECT * FROM factions;", connection);
+                command = new MySqlCommand("SELECT * from factions;", connection);
                 reader = command.ExecuteReader();
 
                 for(int i = 0; i < numberOfFactions; i += 1)
                 {
                     reader.Read();
                     factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),reader.GetInt32(3), reader.GetInt32(4));
+                    
                 }
                 reader.Close();
-
+                for (int i = 0; i < numberOfFactions; i += 1)
+                {
+                    string getHostilityCommand = ("Select hostilities.hostility from hostilities " +
+                        "inner join faction_hostility on faction_hostility.idHostility = hostilities.id " +
+                        "where faction_hostility.idFaction = " + i + 1 +";");
+                    command = new MySqlCommand(getHostilityCommand);
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        factions[i].AddHostility(reader.GetString(0));
+                    }
+                    reader.Close();
+                }
+                reader.Close();
                 connection.Close();
             }
             catch (MySqlException ex)

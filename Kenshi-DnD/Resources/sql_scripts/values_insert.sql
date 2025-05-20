@@ -1,6 +1,6 @@
 use kenshi_dnd_db;
 
-INSERT INTO Factions (name, description, baseRelations,color) VALUES
+INSERT INTO factions (name, description, baseRelations,color) VALUES
 ('La Nación Sagrada', 'La Nación Sagrada es una teocracia fanática que venera a Okran,
  su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua, 
  a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología 
@@ -30,7 +30,22 @@ INSERT INTO regions(name, description, hasBar, hasShop, hasLimbHospital, hasCont
 ('Reino Shek', 'El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral', true, true, false, false, false),
 ('Pantano', 'Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla', true, true, true, true, false);
 
+ insert into hostilities(hostility) values 
+ ('OkranReligion'), -- Will attack everyone NOT Greenlander, and with robotical limbs
+ ('CorruptOligarchy'), -- Might attack low income players, calculated by cats / hero
+ ('StrengthTest'), -- Wants to fight powerful heroes, and will gain relations upon fighting them
+ ('HiveCastOuts'), -- Will attack players with Hives
+ ('Survival'); -- Will attack everything as a means to survive or gain money
  
+ insert into faction_hostility(idFaction,idHostility) values
+ (1,1),
+ (2,2),
+ (8,2),
+ (3,3),
+ (5,4),
+ (4,5),
+ (6,5),
+ (7,5);
  
  insert into region_faction(regionId,factionId) values
  -- Norte de la isla: Esclavistas, canibales
