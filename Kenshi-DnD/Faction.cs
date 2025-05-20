@@ -15,25 +15,19 @@ namespace Kenshi_DnD
         List<Hostilities.Hostility> hostilities;
         bool respectByFighting;
 
-        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting) 
-        List<Hostilities.Hostility> hostilities;
-        
-
-        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor) 
-        
+        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting)
+        {         
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
             this.relations = relations;
             this.factionColor = factionColor;
             this.respectByFighting = respectByFighting;
-
-            hostilities = new List<Hostilities.Hostility>();
+              hostilities = new List<Hostilities.Hostility>();
         }
-        
-        public void SetFactionName(string factionName)
+        public int GetFactionId()
         {
-            this.factionName = factionName;
+            return factionId;
         }
         public string GetFactionName()
         {
