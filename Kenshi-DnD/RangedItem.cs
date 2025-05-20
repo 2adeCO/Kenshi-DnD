@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Windows.Markup;
+using System.Xml.Linq;
 
 namespace Kenshi_DnD
 {
@@ -36,39 +37,55 @@ namespace Kenshi_DnD
         public override void SetRarity(Rarity.Rarities rarity)
         {
             this.rarity = rarity;
-
+            double costMultiplier = 1.0;
             int buff = 0;
 
             switch (rarity)
             {
                 case Rarity.Rarities.Junk:
                     {
-                        buff = 1; break;
+                        costMultiplier = 1.0;
+                        buff = 1;
+                        break;
                     }
                 case Rarity.Rarities.RustCovered:
                     {
-                        buff = 2; break;
+                        costMultiplier = 1.10;
+                        buff = 2;
+                        break;
                     }
                 case Rarity.Rarities.Catun:
                     {
-                        buff = 3; break;
+                        costMultiplier = 1.25;
+                        buff = 3;
+                        break;
                     }
                 case Rarity.Rarities.Mk:
                     {
-                        buff = 4; break;
+                        costMultiplier = 1.50;
+                        buff = 4;
+                        break;
                     }
                 case Rarity.Rarities.Edgewalker:
                     {
-                        buff = 5; break;
+                        costMultiplier = 1.75;
+                        buff = 5;
+                        break;
                     }
                 case Rarity.Rarities.Meitou:
                     {
-                        buff = 6; break;
+                        costMultiplier = 2.0;
+                        buff = 6;
+                        break;
                     }
             }
-            
+
             statToModify.UpgradeStat(Stats.Stat.Dexterity, buff);
-            
+            difficulty = difficulty + buff;
+
+            value = (int)(value * costMultiplier);
+            resellValue = (int)(value * 0.5);
+
         }
         public override Item GetCopy()
         {

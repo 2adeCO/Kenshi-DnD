@@ -17,14 +17,12 @@ public partial class MainWindow : Window
     {
         Cursor[] cursors;
         Random rnd;
-        Race[] allRaces;
         public MainWindow()
         {
             InitializeComponent();
             LoadCursors();
             rnd = new Random();
-            allRaces = new Race[] {new Race("Humano",0,0,0,0,0),new Race("Greenlander",0,0,0,0,0),new Race("Scorchlander",0,0,0,0,0),
-                new Race("Hive",0,0,0,0,0),new Race("Prince",0,0,0,0,0),new Race("Soldier",0,0,0,0,0), new Race("Worker",0,0,0,0,0)};
+            
             PageController.Content = new Menu(this,PageController, cursors, rnd);
         }
         public void LoadCursors()
@@ -220,6 +218,36 @@ public partial class MainWindow : Window
             toolTip.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#2b2b2b"));
             toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
             return toolTip;
+        }
+        public string GetSqlConnectionString()
+        {
+            try
+            {
+                if (Path.Exists("./Resources/config/sqlconfig.txt"))
+                {
+                    string[] lines = File.ReadAllLines("./Resources/config/sqlconfig.txt");
+                    StreamReader sr = new StreamReader("./Resources/config/sqlconfig.txt");
+                    string mySqlConnectionString = sr.ReadLine();
+                    while (mySqlConnectionString[0] == '#')
+                    {
+                        mySqlConnectionString = sr.ReadLine();
+                    }
+                    sr.Close();
+                    return mySqlConnectionString;
+                }
+                else
+                {
+                    throw new Exception("File not found");
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                MessageBox.Show("La base de datos no está bien configuarada. El programa fallará si intentas guardar una nueva partida.");
+                return "";
+            }
+            
+            
         }
     }
 }

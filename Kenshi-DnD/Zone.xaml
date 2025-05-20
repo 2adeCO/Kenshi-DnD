@@ -27,14 +27,8 @@
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Color="#D2B48C" Offset="0.0"/>
-                        <!-- arena, mapa -->
-
                         <GradientStop Color="#8B5A2B" Offset="0.7"/>
-                        <!-- pergamino, reliquia -->
-
                         <GradientStop Color="#5C4033" Offset="1.0"/>
-                        <!-- tesoro, sol poniente -->
-
                     </LinearGradientBrush>
                 </Grid.Background>
                 <Grid.ColumnDefinitions>
@@ -201,8 +195,8 @@
                         <Button x:Name="HireButton"  Content="Contratar" Click="HireHero" Background="#80FFFFFF"
                             Height="50"
                             Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"></Button>
-                                        <Button Content="Pasar la noche por 100 cats" Grid.Row="3"
-                            Height="50" Padding="15"
+                                        <Button x:Name="SleepButton" Content="" Grid.Row="3"
+                            Height="50" Padding="5" Click="SleepInBar"
                                 HorizontalAlignment="Stretch" Margin="20,20,50,20" Background="#80FFFFFF"
                         ></Button>
                                         <Button Content="Irse del bar" Grid.Row="4"
@@ -237,17 +231,70 @@
             <!-- Hospital -->
             <Grid x:Name="HospitalGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid x:Name="HospitalActions" Grid.Row="0">
-                    
-                </Grid>
 
-                <Grid x:Name="HospitalItems" Grid.Row="1">
-                    
-                </Grid>
+                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#3E3E3E" Offset="0.0"/>
+                            <GradientStop Color="#6F5F4F" Offset="0.3"/>
+                            <GradientStop Color="#A0835B" Offset="0.6"/>
+                            <GradientStop Color="#2B2B2B" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid x:Name="HospitalActions" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="Black" VerticalAlignment="Top"
+BorderThickness="3" Margin="15,60,45,10" CornerRadius="2">
+                            <TextBlock Text="Mecánico de prótesis" FontSize="50" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+       Padding="20,10,20,10" Background="#80FFFFFF"/>
+                        </Border>
+
+                        <Rectangle Grid.Row="1" Stroke="Black" Fill="Black" HorizontalAlignment="Stretch"
+   Margin="15,60,45,20" Height="3"/>
+
+                        <Button x:Name="PutLimbButton" Content="¿Necesitas un parche, guerrero?" 
+Height="50" Background="#80FFFFFF"
+Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <ComboBox x:Name="HeroComboBox" SelectedValue="Trata a tus héroes heridos." Grid.Row="3"
+                        Height="50" Padding="15" Background="#80FFFFFF"
+                        HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Salir del lugar" Grid.Row="4"
+Height="50" Background="#80FFFFFF"
+HorizontalAlignment="Stretch" Margin="20,20,50,20"
+Click="CloseCurrentGrid"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#8B7D6B" Offset="0.0"/>
+                            <GradientStop Color="#BFAE9F" Offset="0.3"/>
+                            <GradientStop Color="#D6C7B2" Offset="0.6"/>
+                            <GradientStop Color="#9C8972" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+
+                    <Grid x:Name="HospitalItems" VerticalAlignment="Center">
+
+                    </Grid>
+                </ScrollViewer>
             </Grid>
+
 
             <!-- Tienda -->
             <Grid x:Name="ShopGrid" Visibility="Collapsed">
@@ -324,15 +371,153 @@
                 </ScrollViewer>
             </Grid>
 
-            <!-- Contrabando -->
+            <!-- Mercado de contrabando -->
             <Grid x:Name="ContrabandMarketGrid" Visibility="Collapsed">
-                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Para botones -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Para el ScrollViewer -->
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" BorderBrush="#222" BorderThickness="1,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#1C1C1C" Offset="0.0"/>
+                            <!-- Sombra profunda -->
+                            <GradientStop Color="#2E2E2E" Offset="0.3"/>
+                            <!-- Metal oxidado -->
+                            <GradientStop Color="#3F3B36" Offset="0.6"/>
+                            <!-- Paredes sucias -->
+                            <GradientStop Color="#151515" Offset="1.0"/>
+                            <!-- Rincón oculto -->
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid x:Name="ContrabandMarketActions" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="#444" VerticalAlignment="Top"
+                    BorderThickness="2" Margin="15,60,45,10" CornerRadius="2">
+                            <TextBlock Text="Mercado Negro" FontSize="50" TextAlignment="Center"
+                           HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                           Padding="20,10,20,10" Background="#AA101010" Foreground="#DDDDDD"/>
+                        </Border>
+
+                        <Rectangle Grid.Row="1" Stroke="#444" Fill="#444" HorizontalAlignment="Stretch"
+                       Margin="15,60,45,20" Height="3"/>
+
+                        <Button x:Name="BuyContrabandItemButton" Content="" Click="BuyContrabandItem"
+                    Height="50" Background="#55222222" Foreground="#CCCCCC"
+                    Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        
+                        <Button x:Name="AccessContrabandMarketButton" Content="Pagar 'peaje' por 1000$" Click="AccessContrabandMarket"
+Height="50" Background="#55222222" Foreground="#CCCCCC"
+Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Pensártelo" Grid.Row="4"
+                    Height="50" Background="#55222222" Foreground="#CCCCCC"
+                    HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                    Click="CloseCurrentGrid"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2D2A2E" Offset="0.0"/>
+                           
+                            <GradientStop Color="#443D3C" Offset="0.3"/>
+                            
+                            <GradientStop Color="#5A4F4B" Offset="0.6"/>
+                            
+                            <GradientStop Color="#2E2B2C" Offset="1.0"/>
+                            
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+
+                    <Grid x:Name="ContrabandMarketItems" VerticalAlignment="Center" Visibility="Collapsed">
+                    </Grid>
+                </ScrollViewer>
             </Grid>
 
-            <!-- Armas a distancia -->
+
+            <!-- Galería de tiro-->
             <Grid x:Name="RangedShopGrid" Visibility="Collapsed">
-                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Panel de acciones -->
+                <Border Grid.Column="0" BorderBrush="#334" BorderThickness="2,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#1A1E24" Offset="0.0"/>
+                            <!-- Oscuro militar -->
+                            <GradientStop Color="#2E343F" Offset="0.4"/>
+                            <!-- Gris táctico -->
+                            <GradientStop Color="#3F4C5C" Offset="0.8"/>
+                            <!-- Metal templado -->
+                            <GradientStop Color="#1A1E24" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid x:Name="RangedShopActions" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="#667" VerticalAlignment="Top"
+                BorderThickness="2" Margin="15,60,45,10" CornerRadius="4">
+                            <TextBlock Text="Club privado de tiro" FontSize="44" TextAlignment="Center"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                   Padding="20,10,20,10" Background="#AA1A1E24" Foreground="#EEEEEE"/>
+                        </Border>
+
+                        <Rectangle Grid.Row="1" Stroke="#556" Fill="#556" HorizontalAlignment="Stretch"
+               Margin="15,60,45,20" Height="3"/>
+
+                        <Button x:Name="BuyRangedItemButton" Content="" Click="BuyRangedItem"
+                Height="50" Background="#55334455" Foreground="#E0E0E0"
+                Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+                        <Button x:Name="AccessRangedShopButton" Content="Sobornar al segurata con 500$..." Click="AccessRangedShop"
+                        Height="50" Background="#55334455" Foreground="#E0E0E0"
+                        Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Salir" Grid.Row="4" ToolTip="Luego podrás volver siempre y cuando no te salgas del juego o entres en combate."
+                Height="50" Background="#55334455" Foreground="#E0E0E0"
+                HorizontalAlignment="Stretch" Margin="20,20,50,20"
+                Click="CloseCurrentGrid"/>
+                    </Grid>
+                </Border>
+
+                <!-- Panel de objetos -->
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#23272E" Offset="0.0"/>
+                            <GradientStop Color="#3A414E" Offset="0.4"/>
+                            <GradientStop Color="#505C6C" Offset="0.8"/>
+                            <GradientStop Color="#2D333C" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+
+                    <Grid x:Name="RangedShopItems" VerticalAlignment="Center" Visibility="Collapsed">
+                    </Grid>
+                </ScrollViewer>
             </Grid>
+
         </Grid>
     </Grid>
 

@@ -51,7 +51,7 @@
         {
             return agility;
         }
-        public StatModifier GetCopy()
+        public virtual StatModifier GetCopy()
         {
             return new StatModifier(bruteForce,dexterity,hp,resistance,agility);
         }

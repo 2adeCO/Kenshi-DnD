@@ -1,0 +1,3 @@
+﻿# Here you can modify the database path, use the following format, replacing the values in {} with your own:
+# Server={server};Database={database};user={user};port={port};password={password}
+server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root

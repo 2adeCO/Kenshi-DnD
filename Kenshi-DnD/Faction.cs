@@ -13,15 +13,21 @@ namespace Kenshi_DnD
         int factionColor;
         int relations;
         List<Hostilities.Hostility> hostilities;
+        bool respectByFighting;
+
+        public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting) 
+        List<Hostilities.Hostility> hostilities;
         
 
         public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor) 
-        { 
+        
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
             this.relations = relations;
             this.factionColor = factionColor;
+            this.respectByFighting = respectByFighting;
+
             hostilities = new List<Hostilities.Hostility>();
         }
         

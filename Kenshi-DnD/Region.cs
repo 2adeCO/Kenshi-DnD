@@ -17,7 +17,18 @@ namespace Kenshi_DnD
         bool hasLimbHospital;
         bool hasContrabandMarket;
         bool hasRangedShop;
+
+        bool hasAccessToRangedShop;
+        bool canBuyRangedItems;
+        bool updateToken;
+
+        Hero[] heroesInBar;
+        Item[] shop;
+        Limb[] limbHospital;
+        Item[] contrabandMarket;
+        Item[] rangedShop;
         List<Faction> factions;
+        const int DEFAULT_LIMB_HOSPITAL_SIZE = 2;
         const int DEFAULT_SHOP_SIZE = 3;
 
         public Region(string name, string description, bool hasBar, bool hasShop, bool hasLimbHospital, bool hasContrabandMarket, bool hasRangedShop)
@@ -25,11 +36,45 @@ namespace Kenshi_DnD
             this.name = name;
             this.description = description;
             factions = new List<Faction>();
+            updateToken = true ;
             this.hasBar = hasBar;
             this.hasShop = hasShop;
             this.hasLimbHospital = hasLimbHospital;
             this.hasContrabandMarket = hasContrabandMarket;
             this.hasRangedShop = hasRangedShop;
+            hasAccessToRangedShop = false;
+        }
+        public bool CanBuyRangedItems()
+        {
+            return canBuyRangedItems;
+        }
+        public void SetCanBuyRangedItems(bool canBuyRangedItems)
+        {
+            this.canBuyRangedItems = canBuyRangedItems;
+        }
+        public bool HasAccessToRangedShop()
+        {
+            return hasAccessToRangedShop;
+        }
+        public void SetAccessToRangedShop(bool hasAccessToRangedShop)
+        {
+            this.hasAccessToRangedShop = hasAccessToRangedShop;
+        }
+        public bool ConsumeToken()
+        {
+            if (updateToken)
+            {
+                updateToken = false;
+                return true;
+            }
+            return false;
+        }
+        public void GainToken()
+        {
+            if (!updateToken)
+            {
+                updateToken = true;
+            }
         }
         public void AddFaction(Faction faction)
         {
@@ -53,7 +98,7 @@ namespace Kenshi_DnD
         public bool HasContrabandMarket() { return hasContrabandMarket; }
         public bool HasRangedShop() { return hasRangedShop; }
 
-        public Hero[] GoToBar(Adventure myAdventure, Random rnd)
+        public void GoToBar(Adventure myAdventure, Random rnd)
         {
             //This makes 20 the max number of possible heroes, as max relations is 100
             int numberOfHeroes = rnd.Next(0, (GetRelations() / 5) + 1);
@@ -86,15 +131,130 @@ namespace Kenshi_DnD
                     Debug.WriteLine(heroesInBar[i].GetNameAndTitle());
 
                 }
-                return heroesInBar;
+                this.heroesInBar = heroesInBar;
             }
             else
             {
-                return null;
+                this.heroesInBar = null;
             }
 
         }
-        public Item[] GoToShop(Adventure myAdventure, Random rnd)
+        public void GoToHospital(Adventure myAdventure, Random rnd)
+        {
+            limbHospital = new Limb[DEFAULT_LIMB_HOSPITAL_SIZE];
+            Limb[] allLimbs = myAdventure.GetAllLimbs();
+            for (int i = 0; i < DEFAULT_LIMB_HOSPITAL_SIZE; i++)
+            {
+                int rarityDecider = rnd.Next(0, 20);
+                Rarity.Rarities rarity;
+                //Chances:
+                //Junk: 5 in 20
+                //RustCovered: 5 in 20
+                //Catun: 4 in 20
+                //Mk: 3 in 20
+                //Edgewalker: 2 in 20
+                //Meitou: 1 in 20
+                switch (rarityDecider)
+                {
+                    case <5: 
+                        {
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                    case <10:
+                        {
+                            rarity = Rarity.Rarities.RustCovered;
+                            break;
+                        }
+                    case <14:
+                        {
+                            rarity = Rarity.Rarities.Catun;
+                            break;
+                        }
+                    case <17:
+                        {
+                            rarity = Rarity.Rarities.Mk;
+                            break;
+                        }
+                    case <19:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case <20:
+                        {
+                            rarity = Rarity.Rarities.Meitou;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                Limb limb = allLimbs[rnd.Next(0, allLimbs.Length)].GetCopy();
+                Debug.WriteLine(limb.GetName());
+                limb.SetRarity(rarity);
+                limbHospital[i] = limb;
+            }
+        }
+        public Limb[] GetLimbHospital()
+        {
+            return limbHospital;
+        }
+        public int GetSleepCost(Adventure myAdventure)
+        {
+            Hero[] heroes = myAdventure.GetHeroes();
+            int cost = 0;
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i].GetHp() != heroes[i].GetToughness())
+                    {
+                        cost += 10;
+                    }
+                }
+            }
+            if (cost == 0)
+            {
+                cost = 10;
+            }
+
+            return cost;
+        }
+        public void SleepInBar(Adventure myAdventure, int cost)
+        {
+            Hero[] heroes = myAdventure.GetHeroes();
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i].GetHp() != heroes[i].GetToughness())
+                    {
+                        heroes[i].Heal(10);
+                        heroes[i].GainXp(1);
+                    }
+                }
+            }
+            myAdventure.SpendIfHasEnough(cost);
+
+            Debug.WriteLine("Slept in bar, cost: " + cost);
+            for( int i = 0; i < myAdventure.GetAllRegions().Length; i += 1)
+            {
+                myAdventure.GetAllRegions()[i].GainToken();
+                myAdventure.GetAllRegions()[i].hasAccessToRangedShop = false;
+                myAdventure.GetAllRegions()[i].canBuyRangedItems = true;
+            }
+            
+        }
+        public Hero[] GetHeroesInBar()
+        {
+            return heroesInBar;
+        }
+        public void GoToShop(Adventure myAdventure, Random rnd)
         {
             Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
             Item[] allItems = myAdventure.GetAllItems();
@@ -146,21 +306,167 @@ namespace Kenshi_DnD
 
                 itemsInShop[i] = itemInShop.GetCopy();
                 itemsInShop[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInShop[i].GetName());
             }
-            return itemsInShop;
+            this.shop = itemsInShop;
         }
-        //public Item[] GoToContrabandMarket(Adventure myAdventure, Random rnd)
+        public Item[] GetShop()
+        {
+            Debug.WriteLine("Shop returned !");
+            return shop;
+        }
+        public void GoToContrabandMarket(Adventure myAdventure, Random rnd)
+        {
+            Item[] itemsInContraband = new Item[DEFAULT_SHOP_SIZE];
+            Item[] allItems = myAdventure.GetAllItems();
+            for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
+            {
+                Item itemInContraband = null;
+                int rarityDecider = rnd.Next(0, 4);
+                Rarity.Rarities rarity;
+                switch (rarityDecider)
+                {
+
+                    case 0:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+
+                    case 1:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case 2:
+                        {
+                            rarity = Rarity.Rarities.Edgewalker;
+                            break;
+                        }
+                    case 3:
+                        {
+                            rarity = Rarity.Rarities.Meitou;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                do
+                {
+                    int itemIndex = rnd.Next(0, allItems.Length);
+                    Item item = allItems[itemIndex].GetCopy();
+                    item.SetRarity(rarity);
+                    if (!HasAlreadyBeenObtained(myAdventure,item))
+                    {
+                        itemInContraband = allItems[itemIndex];
+                    }
+
+                } while (itemInContraband == null);
+
+                itemsInContraband[i] = itemInContraband.GetCopy();
+                itemsInContraband[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInContraband[i].GetName());
+            }
+            this.contrabandMarket = itemsInContraband;
+        }
+        public void GoToRangedShop(Adventure myAdventure, Random rnd)
+        {
+            Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
+            Item[] allItems = myAdventure.GetAllItems();
+            for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
+            {
+                Item itemInShop = null;
+                int rarityDecider = rnd.Next(0, 4);
+                Rarity.Rarities rarity;
+                switch (rarityDecider)
+                {
+                    case 0:
+                        {
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                    case 1:
+                        {
+                            rarity = Rarity.Rarities.RustCovered;
+                            break;
+                        }
+
+                    case 2:
+                        {
+                            rarity = Rarity.Rarities.Catun;
+                            break;
+                        }
+                    case 3:
+                        {
+                            rarity = Rarity.Rarities.Mk;
+                            break;
+                        }
+                    default:
+                        {
+                            //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                            Debug.WriteLine("Region didn't know what rarity to put");
+                            rarity = Rarity.Rarities.Junk;
+                            break;
+                        }
+                }
+                do
+                {
+                    int itemIndex = rnd.Next(0, allItems.Length);
+                    if (allItems[itemIndex] is not MeleeItem)
+                    {
+                        itemInShop = allItems[itemIndex];
+                    }
+
+                } while (itemInShop == null);
+
+                itemsInShop[i] = itemInShop.GetCopy();
+                itemsInShop[i].SetRarity(rarity);
+                Debug.WriteLine(itemsInShop[i].GetName());
+            }
+            this.rangedShop = itemsInShop;
+        }
+        public Item[] GetRangedShop()
+        {
+            Debug.WriteLine("Ranged shop returned !");
+            return rangedShop;
+        }
+
+        public Item[] GetContrabandMarket()
+        {
+            Debug.WriteLine("Contraband market returned !");
+            return contrabandMarket;
+        }
+        //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
         //{
 
-            //}
-            //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
-            //{
+        //}
+        //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
+        //{
 
-            //}
-            //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
-            //{
-
-            //}
+        //}
+        private bool HasAlreadyBeenObtained(Adventure myAdventure,Item item)
+        {
+            Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
+            for (int i = 0; i < obtainedItems.Length; i++)
+            {
+                if(obtainedItems[i] != null)
+                {
+                    if (obtainedItems[i].GetName() == item.GetName())
+                    {
+                        if (obtainedItems[i].RarityToString() == item.RarityToString())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
         public int GetRelations()
         {
             int relations = 0;
@@ -274,7 +580,7 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < limbs.Length; i += 1)
             {
-                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0);
+                limbs[i] = new Limb("Extremidad normal", 0,0, 0, 0, 0, 0);
             }
             return limbs;
         }

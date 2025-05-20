@@ -33,6 +33,7 @@ namespace Kenshi_DnD
         public override string ToString()
         {
             return
+                   description + "\n" +
                    "Valor: " + value + "\n" +
                    "Valor de reventa: " + resellValue + "\n" +
                    "Peso (Cantidad de miembros necesitados): " + limbsNeeded + "\n" +
@@ -40,6 +41,10 @@ namespace Kenshi_DnD
                    statToModify.ToString();
         }
         public abstract void SetRarity(Rarity.Rarities rarity);
+        public Rarity.Rarities GetRarity()
+        {
+            return rarity;
+        }
         public abstract Item GetCopy();
         
         public void UnUse()
