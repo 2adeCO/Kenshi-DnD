@@ -362,8 +362,8 @@ Click="CloseCurrentGrid"/>
             Height="50" Background="#80FFFFFF"
             Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
-                        <Button Content="Vender por chatarra" Grid.Row="3"
-            Height="50" Padding="15" Background="#80FFFFFF"
+                        <Button x:Name="SellButton" Click="SellItem" Content="Vender un objeto" Grid.Row="3"
+            Height="50" Padding="15" Background="#80FFFFFF" IsEnabled="False"
             HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
                         <Button Content="Salir de la tienda" Grid.Row="4"

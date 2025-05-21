@@ -12,18 +12,6 @@
         {
             items.Add(item);
         }
-        public int SellItem(Item item)
-        {
-            for (int i = 0; i < items.Count; i+=1)
-            {
-                if (items[i].Equals(item))
-                {
-                    items.RemoveAt(i);
-                    return item.GetResellValue();
-                }
-            }
-            return 0;
-        }
         public bool ContainsItem(Item item)
         {
             for (int i = 0; i < items.Count; i+=1)

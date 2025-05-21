@@ -163,6 +163,13 @@ namespace Kenshi_DnD
             Debug.WriteLine("Not enough money");
             return false;
         }
+        public void SellItem(Item item)
+        {
+            int cost = item.GetResellValue();
+            cats += cost;
+
+            playerInventory.RemoveItem(item);
+        }
         public void BuyItem(Item item)
         {
             int cost = item.GetValue();

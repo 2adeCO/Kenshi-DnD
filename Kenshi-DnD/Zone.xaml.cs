@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -24,8 +25,9 @@ namespace Kenshi_DnD
         Item[] itemsInShop;
         Button selectedShopItemButton;
 
-        Item[] itemsInContrabandMarket;
+        Button selectedItemToSellButton;
 
+        Item[] itemsInContrabandMarket;
 
         Item[] itemsInRangedShop;
 
@@ -176,14 +178,21 @@ namespace Kenshi_DnD
                         RangedShopItems.Visibility = Visibility.Visible;
                         AccessRangedShopButton.IsEnabled = false;
                         TextBlock textBlock = new TextBlock();
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Venga pasa.@\n@111@Nada de delatarme@"));
+                        if (region.CanBuyRangedItems())
+                        {
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Venga pasa.@\n@111@Nada de delatarme@"));
+                        }
+                        else
+                        {
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@Ya tienes lo que querías.@\n@111@¿No?@"));
+                        }
                         AccessRangedShopButton.Content = textBlock;
                     }
                     
                 }
 
                 Button button = new Button();
-                button.Content = "Ir al campo de tiro";
+                button.Content = "Ir al club de tiro";
                 button.Margin = new Thickness(4, 30, 4, 30);
                 button.Height = 50;
                 button.FontSize = 18;
@@ -314,6 +323,34 @@ namespace Kenshi_DnD
 
                 }
             }
+        }
+        private void SellItem(object sender, EventArgs e) 
+        { 
+            if(selectedItemToSellButton == null)
+            {
+                MessageBox.Show("Primero selecciona un objeto a vender.");
+                return;
+            }
+            Item item = (Item)selectedItemToSellButton.Tag;
+            myAdventure.SellItem(item);
+            SellButton.IsEnabled = false;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@Un placer hacer negocios con usted@\n@2@+{item.GetResellValue}$@"));
+            SellButton.Content = textBlock;
+            selectedItemToSellButton = null;
+            UpdateCats();
+            UpdateInventoryGrid();
+        }
+
+        private void SelectSellItem(object sender, EventArgs e)
+        {
+            selectedItemToSellButton = (Button)sender;
+            SellButton.IsEnabled = true;
+            Item selectedItem = (Item)selectedItemToSellButton.Tag;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@¿Vender@ @916@{selectedItem.GetName()}@ @9@?@"));
+            SellButton.Content = textBlock;
+            UpdateInventoryGrid();
         }
         private void GoToLimbHospital(object sender, EventArgs e)
         {
@@ -857,128 +894,95 @@ namespace Kenshi_DnD
             Item[] meleeItems = myAdventure.GetInventory().GetMelee(0);
             Item[] rangedItems = myAdventure.GetInventory().GetRanged(0);
 
-            for (int i = 0; i < consumableItems.Length; i += 1)
-            {
-                StackPanel stackPanel = new StackPanel();
-                stackPanel.Orientation = Orientation.Vertical;
-                
-                TextBlock textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@"+consumableItems[i].GetName()+"@"));
-                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(consumableItems[i].GetName(), consumableItems[i].ToString());
-                
-                ToolTipService.SetInitialShowDelay(textBlock, 100);
-                stackPanel.Children.Add(textBlock);
-                textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + consumableItems[i].GetResellValue() + "$@"));
-                textBlock.ToolTip = "Valor de reventa";
-                stackPanel.Children.Add(textBlock);
-
-                Button button = new Button();
-                button.Content = stackPanel;
-                button.BorderThickness = new Thickness(0);
-                LinearGradientBrush linearBrush = new LinearGradientBrush();
-                linearBrush.StartPoint = new Point(0, 0);
-                linearBrush.EndPoint = new Point(1, 0);
-
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor()).Color, 0));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor()).Color, 1));
-
-                button.Background = linearBrush;
-
-                Border border = new Border();
-                border.Margin = new Thickness(2, 8, 20, 8);
-                border.BorderBrush = mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(3);
-                border.VerticalAlignment = VerticalAlignment.Center;
-                border.CornerRadius = new CornerRadius(5);
-                border.Child = button;
-                InventoryItems.Children.Add(border);
-            }
-
-            for (int i = 0; i < meleeItems.Length; i += 1)
-            {
-                StackPanel stackPanel = new StackPanel();
-                stackPanel.Orientation = Orientation.Vertical;
-                TextBlock textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + meleeItems[i].GetName() + "@"));
-                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(meleeItems[i].GetName(), meleeItems[i].ToString());
-
-                ToolTipService.SetInitialShowDelay(textBlock, 100);
-                stackPanel.Children.Add(textBlock);
-                textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + meleeItems[i].GetResellValue() + "$@"));
-                textBlock.ToolTip = "Valor de reventa";
-                stackPanel.Children.Add(textBlock);
-
-                Button button = new Button();
-                button.Content = stackPanel;
-                button.BorderThickness = new Thickness(0);
-
-                LinearGradientBrush linearBrush = new LinearGradientBrush();
-                linearBrush.StartPoint = new Point(0, 0);
-                linearBrush.EndPoint = new Point(1, 0);
-
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor()).Color, 0));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor()).Color, 1));
-
-                button.Background = linearBrush;
-
-                Border border = new Border();
-                border.Margin = new Thickness(2, 8, 20, 8);
-                border.BorderBrush = mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(3);
-                border.VerticalAlignment = VerticalAlignment.Center;
-                border.CornerRadius = new CornerRadius(5);
-                border.Child = button;
-
-                InventoryItems.Children.Add(border);
-            }
-            for (int i = 0; i < rangedItems.Length; i += 1)
-            {
-                StackPanel stackPanel = new StackPanel();
-                stackPanel.Orientation = Orientation.Vertical;
-                TextBlock textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + rangedItems[i].GetName() + "@"));
-                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(rangedItems[i].GetName(), rangedItems[i].ToString());
-
-                ToolTipService.SetInitialShowDelay(textBlock, 100);
-                stackPanel.Children.Add(textBlock);
-                textBlock = new TextBlock();
-                textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + rangedItems[i].GetResellValue() + "$@"));
-                textBlock.ToolTip = "Valor de reventa";
-                stackPanel.Children.Add(textBlock);
-
-                Button button = new Button();
-                button.Content = stackPanel;
-                button.BorderThickness = new Thickness(0);
-                LinearGradientBrush linearBrush = new LinearGradientBrush();
-                linearBrush.StartPoint = new Point(0, 0);
-                linearBrush.EndPoint = new Point(1, 0);
-
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor()).Color, 0));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
-                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
-                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor()).Color, 1));
-
-                button.Background = linearBrush;
-
-                Border border = new Border();
-                border.Margin = new Thickness(2, 8, 20, 8);
-                border.BorderBrush = mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(3);
-                border.VerticalAlignment = VerticalAlignment.Center;
-                border.CornerRadius = new CornerRadius(5);
-                border.Child = button;
-
-                InventoryItems.Children.Add(border);
-            }
-
-
+            AddItemsToInventoryGrid(consumableItems);
+            AddItemsToInventoryGrid(meleeItems);
+            AddItemsToInventoryGrid(rangedItems);
         }
+
+        private void AddItemsToInventoryGrid(Item[] items)
+        {
+            for (int i = 0; i < items.Length; i++)
+            {
+                Item currentItem = items[i];
+
+                StackPanel stackPanel = new StackPanel { Orientation = Orientation.Vertical };
+
+                TextBlock nameTextBlock = new TextBlock();
+                nameTextBlock.ToolTip = mainWindow.HeaderToolTipThemer(currentItem.GetName(), currentItem.ToString());
+
+                if (selectedItemToSellButton != null && currentItem == selectedItemToSellButton.Tag)
+                {
+                    nameTextBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + currentItem.GetName() + " a la venta@"));
+                }
+                else
+                {
+                    nameTextBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + currentItem.GetName() + "@"));
+                }
+
+                ToolTipService.SetInitialShowDelay(nameTextBlock, 100);
+                stackPanel.Children.Add(nameTextBlock);
+
+                TextBlock valueTextBlock = new TextBlock();
+                valueTextBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + currentItem.GetResellValue() + "$@"));
+                valueTextBlock.ToolTip = "Valor de reventa";
+
+                if (selectedItemToSellButton != null && currentItem == selectedItemToSellButton.Tag)
+                {
+                    valueTextBlock.FontSize = 20;
+                }
+
+                stackPanel.Children.Add(valueTextBlock);
+
+                Button button = new Button
+                {
+                    Content = stackPanel,
+                    BorderThickness = new Thickness(0),
+                    Tag = currentItem
+                };
+
+                LinearGradientBrush linearBrush = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0)
+                };
+
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(currentItem.GetRarityColor()).Color, 0));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(currentItem.GetRarityColor()).Color, 1));
+
+                button.Background = linearBrush;
+
+                if (region.HasShop())
+                {
+                    button.Click += SelectSellItem;
+                }
+
+
+                Border border = new Border
+                {
+                    Margin = new Thickness(2, 8, 20, 8),
+                    BorderThickness = new Thickness(3),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    CornerRadius = new CornerRadius(5),
+                    Child = button
+                };
+
+                if (selectedItemToSellButton != null && currentItem == selectedItemToSellButton.Tag)
+                {
+                    border.Padding = new Thickness(2);
+                    border.BorderBrush = Brushes.Black;
+                    border.Background = Brushes.Black;
+                }
+                else
+                {
+                    border.BorderBrush = mainWindow.GetBrushByNum(currentItem.GetRarityColor());
+                }
+
+                InventoryItems.Children.Add(border);
+            }
+        }
+
         private void OpenInventory(object sender, EventArgs e)
         {
             if (InventoryGrid.Visibility == Visibility.Visible)
