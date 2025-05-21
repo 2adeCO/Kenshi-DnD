@@ -75,7 +75,7 @@ namespace Kenshi_DnD
                 case Rarity.Rarities.Meitou:
                     {
                         costMultiplier = 2.0;
-                        buff = 6;
+                            buff = 6;
                         break;
                     }
             }

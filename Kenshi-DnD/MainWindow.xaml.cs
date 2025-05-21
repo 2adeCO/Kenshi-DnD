@@ -202,10 +202,6 @@ public partial class MainWindow : Window
             toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
             return toolTip;
 
-
-
-
-
         }
         public ToolTip ToolTipThemer(string content)
         {

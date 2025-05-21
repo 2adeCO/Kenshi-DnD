@@ -22,7 +22,6 @@ namespace Kenshi_DnD
         DateTime startDate;
         DateTime hoursPlayed;
 
-
         Dice myDice;
 
         Hero[] heroes;
@@ -155,7 +154,7 @@ namespace Kenshi_DnD
         }
         public bool SpendIfHasEnough(int cost)
         {
-            if(cost <= cats)
+            if(cost <= cats && cost >= 0)
             {
                 this.cats -= cost;
                 return true;

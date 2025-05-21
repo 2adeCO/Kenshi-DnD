@@ -109,8 +109,8 @@ namespace Kenshi_DnD
                 
                 for (int i = 0; i < numberOfHeroes; i++)
                 {
-                    int rarity = rnd.Next(0, 10);
-                    switch (rarity)
+                    int experience = rnd.Next(0, 10);
+                    switch (experience)
                     {
                         case < 5:
                             {
@@ -227,6 +227,11 @@ namespace Kenshi_DnD
         }
         public void SleepInBar(Adventure myAdventure, int cost)
         {
+            if (!myAdventure.SpendIfHasEnough(cost))
+            {
+                return;
+            }
+
             Hero[] heroes = myAdventure.GetHeroes();
             for (int i = 0; i < heroes.Length; i++)
             {
@@ -239,7 +244,6 @@ namespace Kenshi_DnD
                     }
                 }
             }
-            myAdventure.SpendIfHasEnough(cost);
 
             Debug.WriteLine("Slept in bar, cost: " + cost);
             for( int i = 0; i < myAdventure.GetAllRegions().Length; i += 1)
@@ -327,18 +331,7 @@ namespace Kenshi_DnD
                 switch (rarityDecider)
                 {
 
-                    case 0:
-                        {
-                            rarity = Rarity.Rarities.Edgewalker;
-                            break;
-                        }
-
-                    case 1:
-                        {
-                            rarity = Rarity.Rarities.Edgewalker;
-                            break;
-                        }
-                    case 2:
+                    case <3:
                         {
                             rarity = Rarity.Rarities.Edgewalker;
                             break;

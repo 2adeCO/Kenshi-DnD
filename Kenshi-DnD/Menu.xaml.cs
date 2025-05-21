@@ -1048,6 +1048,11 @@ namespace Kenshi_DnD
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
                 return null; // En caso de error, retorna null
+            }catch (ArgumentException ex)
+            {
+                Debug.WriteLine("MySQL error: " + ex.Message);
+                connection.Close(); // Cierra la conexión en caso de error
+                return null; // En caso de error, retorna null
             }
             return backgrounds;
         }

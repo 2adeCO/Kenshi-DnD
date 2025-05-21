@@ -254,10 +254,7 @@ namespace Kenshi_DnD
         {
             this.hp = hp;
         }
-        public void SetBackgroundStory(string backgroundStory)
-        {
-            this.backgroundStory = backgroundStory;
-        }
+        
         public void SetRecruitmentDate(DateTime recruitmentDate)
         {
             this.recruitmentDate = recruitmentDate;
