@@ -144,6 +144,7 @@ namespace Kenshi_DnD
         {
             return playerInventory;
         }
+
         public int GetCats()
         {
             return cats;

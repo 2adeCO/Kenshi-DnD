@@ -861,25 +861,38 @@ namespace Kenshi_DnD
             {
                 StackPanel stackPanel = new StackPanel();
                 stackPanel.Orientation = Orientation.Vertical;
-                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
-                label.Content = consumableItems[i].GetName();
-                label.ToolTip = mainWindow.HeaderToolTipThemer(consumableItems[i].GetName(), consumableItems[i].ToString());
                 
-                ToolTipService.SetInitialShowDelay(label, 100);
-                stackPanel.Children.Add(label);
                 TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@"+consumableItems[i].GetName()+"@"));
+                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(consumableItems[i].GetName(), consumableItems[i].ToString());
+                
+                ToolTipService.SetInitialShowDelay(textBlock, 100);
+                stackPanel.Children.Add(textBlock);
+                textBlock = new TextBlock();
                 textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + consumableItems[i].GetResellValue() + "$@"));
                 textBlock.ToolTip = "Valor de reventa";
                 stackPanel.Children.Add(textBlock);
 
                 Button button = new Button();
                 button.Content = stackPanel;
+                button.BorderThickness = new Thickness(0);
+                LinearGradientBrush linearBrush = new LinearGradientBrush();
+                linearBrush.StartPoint = new Point(0, 0);
+                linearBrush.EndPoint = new Point(1, 0);
+
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor()).Color, 0));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor()).Color, 1));
+
+                button.Background = linearBrush;
 
                 Border border = new Border();
                 border.Margin = new Thickness(2, 8, 20, 8);
                 border.BorderBrush = mainWindow.GetBrushByNum(consumableItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(2);
+                border.BorderThickness = new Thickness(3);
                 border.VerticalAlignment = VerticalAlignment.Center;
+                border.CornerRadius = new CornerRadius(5);
                 border.Child = button;
                 InventoryItems.Children.Add(border);
             }
@@ -888,25 +901,38 @@ namespace Kenshi_DnD
             {
                 StackPanel stackPanel = new StackPanel();
                 stackPanel.Orientation = Orientation.Vertical;
-                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
-                label.Content = meleeItems[i].GetName();
-                label.ToolTip = mainWindow.HeaderToolTipThemer(meleeItems[i].GetName(), meleeItems[i].ToString());
-
-                ToolTipService.SetInitialShowDelay(label, 100);
-                stackPanel.Children.Add(label);
                 TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + meleeItems[i].GetName() + "@"));
+                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(meleeItems[i].GetName(), meleeItems[i].ToString());
+
+                ToolTipService.SetInitialShowDelay(textBlock, 100);
+                stackPanel.Children.Add(textBlock);
+                textBlock = new TextBlock();
                 textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + meleeItems[i].GetResellValue() + "$@"));
                 textBlock.ToolTip = "Valor de reventa";
                 stackPanel.Children.Add(textBlock);
 
                 Button button = new Button();
                 button.Content = stackPanel;
+                button.BorderThickness = new Thickness(0);
+
+                LinearGradientBrush linearBrush = new LinearGradientBrush();
+                linearBrush.StartPoint = new Point(0, 0);
+                linearBrush.EndPoint = new Point(1, 0);
+
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor()).Color, 0));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor()).Color, 1));
+
+                button.Background = linearBrush;
 
                 Border border = new Border();
                 border.Margin = new Thickness(2, 8, 20, 8);
                 border.BorderBrush = mainWindow.GetBrushByNum(meleeItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(2);
+                border.BorderThickness = new Thickness(3);
                 border.VerticalAlignment = VerticalAlignment.Center;
+                border.CornerRadius = new CornerRadius(5);
                 border.Child = button;
 
                 InventoryItems.Children.Add(border);
@@ -915,25 +941,37 @@ namespace Kenshi_DnD
             {
                 StackPanel stackPanel = new StackPanel();
                 stackPanel.Orientation = Orientation.Vertical;
-                System.Windows.Controls.Label label = new System.Windows.Controls.Label();
-                label.Content = rangedItems[i].GetName();
-                label.ToolTip = mainWindow.HeaderToolTipThemer(rangedItems[i].GetName(), rangedItems[i].ToString());
-
-                ToolTipService.SetInitialShowDelay(label, 100);
-                stackPanel.Children.Add(label);
                 TextBlock textBlock = new TextBlock();
+                textBlock.Inlines.AddRange(mainWindow.DecorateText("@916@" + rangedItems[i].GetName() + "@"));
+                textBlock.ToolTip = mainWindow.HeaderToolTipThemer(rangedItems[i].GetName(), rangedItems[i].ToString());
+
+                ToolTipService.SetInitialShowDelay(textBlock, 100);
+                stackPanel.Children.Add(textBlock);
+                textBlock = new TextBlock();
                 textBlock.Inlines.AddRange(mainWindow.DecorateText("Valor: @2@" + rangedItems[i].GetResellValue() + "$@"));
                 textBlock.ToolTip = "Valor de reventa";
                 stackPanel.Children.Add(textBlock);
 
                 Button button = new Button();
                 button.Content = stackPanel;
+                button.BorderThickness = new Thickness(0);
+                LinearGradientBrush linearBrush = new LinearGradientBrush();
+                linearBrush.StartPoint = new Point(0, 0);
+                linearBrush.EndPoint = new Point(1, 0);
+
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor()).Color, 0));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.3));
+                linearBrush.GradientStops.Add(new GradientStop(Colors.White, 0.7));
+                linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor()).Color, 1));
+
+                button.Background = linearBrush;
 
                 Border border = new Border();
                 border.Margin = new Thickness(2, 8, 20, 8);
                 border.BorderBrush = mainWindow.GetBrushByNum(rangedItems[i].GetRarityColor());
-                border.BorderThickness = new Thickness(2);
+                border.BorderThickness = new Thickness(3);
                 border.VerticalAlignment = VerticalAlignment.Center;
+                border.CornerRadius = new CornerRadius(5);
                 border.Child = button;
 
                 InventoryItems.Children.Add(border);
@@ -1134,13 +1172,13 @@ namespace Kenshi_DnD
         {
 
             string squadName = squadEditorTextBox.Text + " copia";
-            if (myAdventure.GetSquadCount() < 12)
+            if (myAdventure.GetSquadCount() < 10)
             {
                 myAdventure.CreateSquad(squadName);
             }
             else
             {
-                MessageBox.Show("No puedes crear más de 12 escuadrones");
+                MessageBox.Show("No puedes crear más de 10 escuadrones");
                 return;
             }
 
