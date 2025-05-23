@@ -256,7 +256,7 @@ INSERT INTO stats (bruteForce, dexterity, hp, resistance, agility) VALUES
 ( 3, 0, 5, 3, 0),  
 ( 0, 0, 0, 2, -1), 
 ( 0, 1, 0, 0, 2),  
-( 0, 0, 0, 3, 0),  
+( 0, 0, 0, 3, -2),  
 ( 0, 0, 0, 4, -2), 
 (-2,-2,-2,-2,6);
 

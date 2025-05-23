@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kenshi_DnD"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
+        Title="Kenshi_DND" Height="720" Width="1280">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>

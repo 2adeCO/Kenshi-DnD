@@ -338,6 +338,7 @@ namespace Kenshi_DnD
             textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@Un placer hacer negocios con usted@\n@2@+{item.GetResellValue}$@"));
             SellButton.Content = textBlock;
             selectedItemToSellButton = null;
+            region.ImproveRelations(1);
             UpdateCats();
             UpdateInventoryGrid();
         }
@@ -599,6 +600,8 @@ namespace Kenshi_DnD
                 }
             }
 
+            region.ImproveRelations(1);
+            UpdateInventoryGrid();
             UpdateCats();
 
            
@@ -697,7 +700,8 @@ namespace Kenshi_DnD
                     break;
                 }
             }
-
+            region.ImproveRelations(1);
+            UpdateInventoryGrid();
             UpdateCats();
 
             ContrabandMarketItems.Visibility = Visibility.Collapsed;
@@ -774,6 +778,8 @@ namespace Kenshi_DnD
                     break;
                 }
             }
+            region.ImproveRelations(1);
+            UpdateInventoryGrid();
             UpdateCats();
 
             if (ShopItems.Children.Count == 0)
@@ -844,6 +850,7 @@ namespace Kenshi_DnD
             myAdventure.HireHero(selectedHero);
             HireButton.IsEnabled = false;
             UpdateSquadEditor(null, null);
+            region.ImproveRelations(1);
             UpdateCats();
             selectedHeroButton.Background = new SolidColorBrush(Colors.LightGreen);
             selectedHeroButton.Content = selectedHero.GetName() + " (Contratado)";

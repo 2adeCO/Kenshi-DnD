@@ -57,6 +57,10 @@ namespace Kenshi_DnD
                     return Immunities.Immunity.None;
             }
         }
+        public Monster GetCopy()
+        {
+            return new Monster(name, hp, faction, strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
+        }
         public string GetName()
         {
             return "@"+ faction.GetFactionColor() + "@" + name +"@";

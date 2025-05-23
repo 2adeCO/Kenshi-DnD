@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Security.RightsManagement;
 
 namespace Kenshi_DnD
 {
@@ -241,9 +242,13 @@ namespace Kenshi_DnD
         {
             this.name = name;
         }
-        public void SetTitle(string title)
+        public Race GetRace()
         {
-            this.title = title;
+            return race;
+        }
+        public Race GetSubrace()
+        {
+            return subrace;
         }
         public void SetToughness(int toughness)
         {

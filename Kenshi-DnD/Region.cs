@@ -44,6 +44,20 @@ namespace Kenshi_DnD
             this.hasRangedShop = hasRangedShop;
             hasAccessToRangedShop = false;
         }
+        public void AffectsRelations(Adventure myAdventure)
+        {
+            for (int i = 0; i < factions.Count; i += 1)
+            {
+                factions[i].AffectRelations(myAdventure);
+            }
+        }
+        public void ImproveRelations(int amount)
+        {
+            for (int i = 0; i < factions.Count; i += 1)
+            {
+                factions[i].ImproveRelations(amount);
+            }
+        }
         public bool CanBuyRangedItems()
         {
             return canBuyRangedItems;
@@ -434,14 +448,7 @@ namespace Kenshi_DnD
             Debug.WriteLine("Contraband market returned !");
             return contrabandMarket;
         }
-        //public Item[] GoToRangedShop(Adventure myAdventure, Random rnd)
-        //{
-
-        //}
-        //public Limb[] GoToLimbHospital(Adventure myAdventure, Random rnd)
-        //{
-
-        //}
+      
         private bool HasAlreadyBeenObtained(Adventure myAdventure,Item item)
         {
             Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
@@ -577,7 +584,26 @@ namespace Kenshi_DnD
             }
             return limbs;
         }
+        public override string ToString()
+        {
+            string factionInfo = "";
+            for (int i = 0; i < factions.Count; i += 1)
+            {
+                factionInfo += "Relación con " + factions[i].GetFactionName() + ": " + factions[i].GetRelation() + "\n"
+                    + factions[i].GetFactionDescription() + "\n" +
+                    factions[i].HostilityToString() + "\n";
+            }
 
+
+            return description + "\n" +
+                   ((hasBar) ? ("Bar\n") : ("")) +
+                   ((hasShop) ? ("Tienda general\n") : ("")) +
+                   ((hasLimbHospital) ? ("Mecánico de extremidades\n") : ("")) +
+                   ((hasRangedShop) ? ("Club de tiro privado\n") : ("")) +
+                   ((hasContrabandMarket) ? ("Mercado de contrabando\n") : ("")) +
+                   factionInfo;
+                   
+        }
     }
         
 }

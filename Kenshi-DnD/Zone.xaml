@@ -17,7 +17,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="PlayerGrid" Grid.Column="1" Grid.Row="0">
+        <Grid x:Name="PlayerGrid" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -176,7 +176,7 @@
             
         </Button>
 
-        <Grid Grid.Column="2" Grid.RowSpan="2">
+        <Grid Grid.Column="2" Grid.Row="1">
             <!-- Bar -->
             <Grid x:Name="BarGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
@@ -199,7 +199,7 @@
                     </Border.Background>
                     <Grid x:Name="BarActions" Grid.Column="0" >
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
@@ -341,16 +341,15 @@ Click="CloseCurrentGrid"/>
                     </Border.Background>
                     <Grid x:Name="ShopActions" Grid.Column="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-
                         <Border Grid.Row="0" BorderBrush="Black" VerticalAlignment="Top"
-            BorderThickness="3" Margin="15,60,45,10" CornerRadius="2">
+            BorderThickness="3" Margin="15,60,45,10" CornerRadius="4">
                             <TextBlock Text="Tienda" FontSize="50" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                    Padding="20,10,20,10" Background="#80FFFFFF"/>
                         </Border>

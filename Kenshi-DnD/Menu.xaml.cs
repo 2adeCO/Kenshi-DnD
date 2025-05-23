@@ -79,11 +79,7 @@ namespace Kenshi_DnD
 
             IsAdventureValid(null, null);
         }
-        public void GoToCombat(object sender, EventArgs e)
-        {
-
-            controller.Content = new CombatWindow(mainWindow, cursors, rnd, myAdventure, null);
-        }
+        
         
         public void OpenAdventureMaker(object sender, EventArgs e)
         {

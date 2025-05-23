@@ -21,6 +21,7 @@ namespace Kenshi_DnD
     public partial class CombatWindow : UserControl
     {
         MainWindow mainWindow;
+        ContentControl controller;
         Cursor[] cursors;
         DispatcherTimer timer;
         int seconds;
@@ -31,17 +32,17 @@ namespace Kenshi_DnD
         Monster[] monsters;
         Random rnd;
         ITurnable currentAttacker;
-        public CombatWindow(MainWindow mainWindow, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
+        public CombatWindow(MainWindow mainWindow,ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
         {
             InitializeComponent();
             //Starts a timer
-
             seconds = 0;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
             this.mainWindow = mainWindow;
+            this.controller = controller;
             this.cursors = cursors;
             this.Cursor = cursors[0];
             this.rnd = rnd;
