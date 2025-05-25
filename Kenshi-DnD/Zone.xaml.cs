@@ -19,6 +19,8 @@ namespace Kenshi_DnD
         Adventure myAdventure;
         Region region;
 
+        ComboBox factionToFight;
+
         Hero[] heroesInBar;
         Button selectedHeroButton;
 
@@ -226,12 +228,16 @@ namespace Kenshi_DnD
                 textBlock.Inlines.AddRange(mainWindow.DecorateText(region.GetFactions()[i].GetFactionName()));
                 comboBox.Items.Add(textBlock);
             }
+            comboBox.SelectedIndex = 0;
+            factionToFight = comboBox;
             stackPanel.Children.Add(comboBox);
             ActionsPanel.Children.Add(stackPanel);
         }
         private void LookForAFight(object sender, EventArgs e)
         {
+            Faction faction = (Faction)((TextBlock)factionToFight.SelectedItem).Tag;
             
+            controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, myAdventure,mainWindow.GenerateMonsters(myAdventure,faction,rnd));
         }
         private void GoToBar(object sender, EventArgs e)
         {

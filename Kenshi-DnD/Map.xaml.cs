@@ -91,7 +91,7 @@ namespace Kenshi_DnD
                 else
                 {
                     controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, 
-                        GenerateMonsters(SelectAggressor(adventure,rnd,selectedRegion),rnd));
+                        mainWindow.GenerateMonsters(adventure,SelectAggressor(adventure,rnd,selectedRegion),rnd));
                 }
             }
             else
@@ -113,50 +113,6 @@ namespace Kenshi_DnD
                     zones[i].StrokeThickness = 1;
                 }
             }
-        }
-        private Monster[] GenerateMonsters(Faction faction, Random rnd)
-        {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
-            MySqlCommand command = new MySqlCommand("SELECT count(*) " +
-                "FROM enemies e " +
-                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
-            connection.Open();
-            MySqlDataReader reader = command.ExecuteReader();
-            reader.Read();
-            Monster[] monsters = new Monster[reader.GetInt32(0)];
-            reader.Close();
-            command = new MySqlCommand(
-                "SELECT e.name,e.health,e.factionId,e.strength,e.resistance,e.agility,e.immunity,e.maxCatDrop,e.xp,e.canDropItem " +
-                "FROM enemies e " +
-                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
-            reader = command.ExecuteReader();
-            for (int i = 0; i < monsters.Length; i++)
-            {
-                reader.Read();
-                string name = reader.GetString(0);           
-                int hp = reader.GetInt32(1);                 
-                int factionId = reader.GetInt32(2);          
-                int strength = reader.GetInt32(3);           
-                int resistance = reader.GetInt32(4);         
-                int agility = reader.GetInt32(5);            
-                string immunity = reader.GetString(6);       
-                int cats = reader.GetInt32(7);               
-                int xpDrop = reader.GetInt32(8);             
-                bool canDropItem = reader.GetBoolean(9);     
-
-                monsters[i] = new Monster(name, hp, adventure.GetAllFactions()[factionId-1], strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
-            }
-            reader.Close();
-            connection.Close();
-            int numMonsters = rnd.Next(1, 5);
-            Monster[] monstersToReturn = new Monster[numMonsters];
-            for (int i = 0; i < numMonsters; i++)
-            {
-                Monster monster = monsters[rnd.Next(0, monsters.Length)];
-                monstersToReturn[i] = monster.GetCopy();
-            }
-            return monstersToReturn;
-
         }
         private Faction SelectAggressor(Adventure adventure,Random rnd,Region region)
         {
