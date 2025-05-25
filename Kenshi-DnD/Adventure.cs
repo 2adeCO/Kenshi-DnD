@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace Kenshi_DnD
 {
@@ -26,8 +28,8 @@ namespace Kenshi_DnD
 
         Hero[] heroes;
         Hero[] currentSquad;
-        
 
+        Region currentRegion;
 
         PlayerInventory playerInventory;
         Item[] alreadyObtainedItems;
@@ -131,6 +133,14 @@ namespace Kenshi_DnD
             // 
             // output: My_First_Adventure2000123456
             return name + continent + zeroes + randomNum;
+        }
+        public Region GetCurrentRegion()
+        {
+            return currentRegion;
+        }
+        public void SetCurrentRegion(Region region)
+        {
+            currentRegion = region;
         }
         public Item[] GetAlreadyObtainedItems()
         {
@@ -330,7 +340,10 @@ namespace Kenshi_DnD
         }
         public void AddHeroInSquad(Hero hero)
         {
-            
+            if (IsInCurrentSquad(hero))
+            {
+                return;
+            }
             for (int i = 0; i < currentSquad.Length; i += 1)
             {
                 if (currentSquad[i] == null)
@@ -343,6 +356,10 @@ namespace Kenshi_DnD
         }
         public void RemoveHeroFromSquad(Hero hero)
         {
+            if (!IsInCurrentSquad(hero))
+            {
+                return;
+            }
             for (int i = 0; i < currentSquad.Length; i += 1)
             {
                 if (currentSquad[i] == hero)
@@ -354,18 +371,22 @@ namespace Kenshi_DnD
             }
             //This was made by autocomplete. However it is just perfect,
             //it just moves the rest of the heroes to the left when it encounters a null value
-            for (int i = 0; i < currentSquad.Length; i += 1)
+            int insertIndex = 0;
+            Hero[] compactedSquad = new Hero[currentSquad.Length];
+            for (int i = 0; i < currentSquad.Length; i++)
             {
-                if (currentSquad[i] == null)
+                if (currentSquad[i] != null)
                 {
-                    for (int j = i; j < currentSquad.Length - 1; j += 1)
-                    {
-                        currentSquad[j] = currentSquad[j + 1];
-                    }
-                    break;
+                    compactedSquad[insertIndex] = currentSquad[i];
+                    insertIndex++;
                 }
             }
+            string currentName = GetCurrentSquadName();
+            currentSquad = compactedSquad;
+            savedSquads[currentName] = currentSquad;
+
         }
+        
         public void CreateSquad(string squadName)
         {
             Hero[] newSquad = new Hero[MAX_SQUAD_LENGTH];

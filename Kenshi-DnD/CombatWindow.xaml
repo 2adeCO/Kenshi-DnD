@@ -181,7 +181,7 @@
 
 
         <Border BorderBrush="#2c2825" BorderThickness="3" Background="WhiteSmoke" Grid.Row="3" Grid.Column="1">
-            <ScrollViewer    VerticalScrollBarVisibility="Auto" >
+            <ScrollViewer x:Name="InfoLogScroll"   VerticalScrollBarVisibility="Auto" >
             <TextBlock x:Name="InfoLog" TextWrapping="Wrap" Margin="5,20,5,20" FontSize="12" >
             </TextBlock>
             </ScrollViewer>

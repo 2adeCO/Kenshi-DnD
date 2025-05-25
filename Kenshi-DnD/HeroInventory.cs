@@ -7,15 +7,15 @@
         {
         }
 
-        public string MakeAllItemsDisponible()
+        public string MakeAllItemsDisponible(Hero hero)
         {
             string itemNames = "";
             for (int i = 0; i < items.Count; i+=1)
             {
                 itemNames += items[i].GetName() + (i == items.Count - 1 ? "" : ", ");
-                items[i].UnUse();
-
+                items[i].SetAlreadyUsed(false);
             }
+            items.RemoveRange(0,items.Count);
 
             return itemNames;
         }

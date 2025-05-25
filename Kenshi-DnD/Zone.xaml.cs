@@ -202,8 +202,36 @@ namespace Kenshi_DnD
                 ActionsPanel.Children.Add(button);
 
             }
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Vertical;
+            
+            Button buttonFight = new Button();
+            buttonFight.Content = "Buscar pelea";
+            buttonFight.ToolTip = mainWindow.ToolTipThemer("Perderás relaciones con las facciones de la zona.");
+            buttonFight.Margin = new Thickness(4, 30, 4, 4);
+            buttonFight.Height = 50;
+            buttonFight.FontSize = 18;
+            buttonFight.HorizontalAlignment = HorizontalAlignment.Stretch;
+            buttonFight.Click += LookForAFight;
+            stackPanel.Children.Add(buttonFight);
 
 
+            ComboBox comboBox = new ComboBox();
+            comboBox.Margin = new Thickness(4, 0, 4, 0);
+            comboBox.Height = 30;
+            for (int i = 0; i < region.GetFactions().Count; i += 1)
+            {
+                TextBlock textBlock = new TextBlock();
+                textBlock.Tag = region.GetFactions()[i];
+                textBlock.Inlines.AddRange(mainWindow.DecorateText(region.GetFactions()[i].GetFactionName()));
+                comboBox.Items.Add(textBlock);
+            }
+            stackPanel.Children.Add(comboBox);
+            ActionsPanel.Children.Add(stackPanel);
+        }
+        private void LookForAFight(object sender, EventArgs e)
+        {
+            
         }
         private void GoToBar(object sender, EventArgs e)
         {
@@ -889,6 +917,7 @@ namespace Kenshi_DnD
             itemsInShop = region.GetShop();
             // Updates the bar
             GoToBar(null, null);
+            UpdatePlayerGrid();
 
             region.ConsumeToken();
             Debug.WriteLine("Slept in bar");
@@ -1072,9 +1101,6 @@ namespace Kenshi_DnD
             int index = 0;
             for (int i = 0; i < (myAdventure.GetHeroesCount() / 2) + 1; i += 1)
             {
-
-
-
                 if (heroes[index] != null)
                 {
                     Debug.WriteLine("col created");

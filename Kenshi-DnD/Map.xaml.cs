@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +32,7 @@ namespace Kenshi_DnD
         Cursor[] cursors;
         Random rnd;
 
+        const int PEACE_ROLLS_NEEDED = 3;
         public Map(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure)
         {
             InitializeComponent();
@@ -78,15 +81,17 @@ namespace Kenshi_DnD
             Region region = (Region)rectangle.Tag;
             if (region == selectedRegion)
             {
+                adventure.SetCurrentRegion(region);
                 selectedRegion.AffectsRelations(adventure);
                 // Player rolls average relations / 10 (1-10), and if is higher than 3, he avoids the encounter
-                if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10,rnd) > 3)
+                if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10,rnd) >= PEACE_ROLLS_NEEDED)
                 {
                     controller.Content = new Zone(mainWindow, controller, cursors, rnd, adventure, selectedRegion);
                 }
                 else
                 {
-                    controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, GenerateMonsters(selectedRegion,rnd));
+                    controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, 
+                        GenerateMonsters(SelectAggressor(adventure,rnd,selectedRegion),rnd));
                 }
             }
             else
@@ -109,21 +114,21 @@ namespace Kenshi_DnD
                 }
             }
         }
-        private Monster[] GenerateMonsters(Region region, Random rnd)
+        private Monster[] GenerateMonsters(Faction faction, Random rnd)
         {
             MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command = new MySqlCommand("SELECT count(*) " +
-                "FROM enemies e JOIN factions f ON e.factionId = f.id JOIN region_faction rf ON f.id = rf.factionId JOIN regions r ON rf.regionId = r.id " +
-                "WHERE r.name = \"" + region.GetName() + "\"", connection);
+                "FROM enemies e " +
+                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
             connection.Open();
             MySqlDataReader reader = command.ExecuteReader();
             reader.Read();
             Monster[] monsters = new Monster[reader.GetInt32(0)];
             reader.Close();
             command = new MySqlCommand(
-                "SELECT e.name,e.health,e.factionId,e.strength,e.resistance,e.agility,e.immunity,e.maxCatDrop,e.xp,e.canDropItem,r.id " +
-                "FROM enemies e JOIN factions f ON e.factionId = f.id JOIN region_faction rf ON f.id = rf.factionId JOIN regions r ON rf.regionId = r.id " +
-                "WHERE r.name = \"" + region.GetName() + "\"", connection);
+                "SELECT e.name,e.health,e.factionId,e.strength,e.resistance,e.agility,e.immunity,e.maxCatDrop,e.xp,e.canDropItem " +
+                "FROM enemies e " +
+                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
             reader = command.ExecuteReader();
             for (int i = 0; i < monsters.Length; i++)
             {
@@ -138,7 +143,6 @@ namespace Kenshi_DnD
                 int cats = reader.GetInt32(7);               
                 int xpDrop = reader.GetInt32(8);             
                 bool canDropItem = reader.GetBoolean(9);     
-                int regionId = reader.GetInt32(10);
 
                 monsters[i] = new Monster(name, hp, adventure.GetAllFactions()[factionId-1], strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
             }
@@ -154,6 +158,30 @@ namespace Kenshi_DnD
             return monstersToReturn;
 
         }
+        private Faction SelectAggressor(Adventure adventure,Random rnd,Region region)
+        {
+            List<Faction> factions = region.GetFactions();
 
+            for (int i = 0; i < factions.Count; i++)
+            {
+                if (adventure.GetDice().PlayDice(factions[i].GetRelation() / 10, rnd) < PEACE_ROLLS_NEEDED)
+                {
+                    return factions[i];
+                }
+            }
+            Faction mostHostileFaction = factions[0];
+            for (int i = 1; i < factions.Count; i++)
+            {
+                if (factions[i].GetRelation() < mostHostileFaction.GetRelation())
+                {
+                    mostHostileFaction = factions[i];
+                }
+            }
+            return mostHostileFaction;
+        }
+        private void SaveAdventure(object sender, EventArgs e)
+        {
+            mainWindow.SaveAdventure(adventure);
+        }
     }
 }

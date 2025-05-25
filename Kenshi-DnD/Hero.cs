@@ -551,7 +551,19 @@ namespace Kenshi_DnD
         }
         public string FreeAllItems()
         {
-            return personalInventory.MakeAllItemsDisponible();
+            int count = 0;
+            for(int i = 0; i < limbs.Length; i += 1)
+            {
+                if(limbs[i] != null)
+                {
+                    if (limbs[i].GetBeingUsed())
+                    {
+                        count++;
+                    }
+                }
+            }
+            FreeLimbs(count);
+            return personalInventory.MakeAllItemsDisponible(this);
         }
         public string GetNameAndTitle()
         {

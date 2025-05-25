@@ -19,7 +19,7 @@
         {
             if (fighter.IsAlive()) 
             {
-                attackProgress += fighter.GetAgility();
+                attackProgress += fighter.GetAgility() < 1 ? 1 : fighter.GetAgility();
             }
         }
         public bool IsTurnComplete()

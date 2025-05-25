@@ -22,6 +22,7 @@ namespace Kenshi_DnD
     {
         MainWindow mainWindow;
         ContentControl controller;
+        Adventure myAdventure;
         Cursor[] cursors;
         DispatcherTimer timer;
         int seconds;
@@ -46,6 +47,7 @@ namespace Kenshi_DnD
             this.cursors = cursors;
             this.Cursor = cursors[0];
             this.rnd = rnd;
+            this.myAdventure = myAdventure;
 
             myInventory = myAdventure.GetInventory();
             this.heroes = myAdventure.GetCurrentSquad();
@@ -820,14 +822,13 @@ namespace Kenshi_DnD
                 Grid.SetRow(border, 1);
                 NextTurnGrid.Children.Add(border);
             }
-
-            
         }
         private void UpdateLogUI(string message)
         {
             CurrentCombatInfo.Inlines.Clear();
             CurrentCombatInfo.Inlines.AddRange(mainWindow.DecorateText(message));
             InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
+            InfoLogScroll.ScrollToEnd();
         }
         public async Task UpdateLogUI(string message, int ms)
         {
@@ -867,18 +868,27 @@ namespace Kenshi_DnD
                     }
                 case 1:
                     {
+                        FreeInventoryFromAllHeroes();
                         GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
+                        mainWindow.PageController.Content = new Zone(mainWindow, controller, cursors, rnd, myAdventure, myAdventure.GetCurrentRegion());
                         break;
                     }
                 case -1:
                     {
+                        FreeInventoryFromAllHeroes();
                         GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Menu(mainWindow, mainWindow.PageController, cursors, rnd);
+                        mainWindow.PageController.Content = new Map(mainWindow, mainWindow.PageController, cursors, rnd, myAdventure);
                         break;
                     }
+            }
+        }
+        private void FreeInventoryFromAllHeroes()
+        {
+            for(int i = 0; i < heroes.Length; i += 1)
+            {
+                heroes[i].FreeAllItems();
             }
         }
         private bool IsParentX(TreeViewItem item, TreeView parentToCheck)

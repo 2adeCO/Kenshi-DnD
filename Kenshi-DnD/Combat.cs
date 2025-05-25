@@ -120,6 +120,10 @@ namespace Kenshi_DnD
             else
             {
                 Hero victim = DecideVictim();
+                if(victim == null)
+                {
+                    return;
+                }
                 await window.UpdateLogUI(GetCurrentAttacker().GetName() + " pone los ojos en " + victim.GetName(), 400);
                 await MonsterAttacks((Monster)attacker, victim);
             }
@@ -774,6 +778,11 @@ namespace Kenshi_DnD
                     Debug.WriteLine("Victim counted " + i);
                     count+=1;
                 }
+            }
+            if(count == 0)
+            {
+                UpdateGameState();
+                return null;
             }
             Hero[] heroesToAttack = new Hero[count];
             count = 0;

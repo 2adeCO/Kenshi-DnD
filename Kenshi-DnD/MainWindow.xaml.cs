@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml.Schema;
+using System.Runtime.Serialization.Formatters.Binary;
 namespace Kenshi_DnD
 {
     /// <summary>
@@ -244,6 +245,17 @@ public partial class MainWindow : Window
             }
             
             
+        }
+        public void SaveAdventure(Adventure adventure)
+        {
+
+#pragma warning disable SYSLIB0011
+            FileStream fileStream = new FileStream("./saves/" + adventure.GetId() + ".adventure", FileMode.Create);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, adventure);
+#pragma warning restore SYSLIB0011
+            fileStream.Close();
+            MessageBox.Show("Partida guardada exitosamente");
         }
     }
 }
