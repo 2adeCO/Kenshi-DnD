@@ -899,7 +899,10 @@ namespace Kenshi_DnD
             region.SleepInBar(myAdventure, region.GetSleepCost(myAdventure));
             // Updates the money on the screen
             UpdateCats();
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@"));
 
+            SleepButton.Content = textBlock;
 
             // Makes the access button to the shop clickable again
             AccessRangedShopButton.IsEnabled = true;
