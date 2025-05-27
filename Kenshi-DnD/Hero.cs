@@ -435,6 +435,10 @@ namespace Kenshi_DnD
                     }
             }
         }
+        public int GetXpPoints()
+        {
+            return xpPoints;
+        }
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())
@@ -449,6 +453,10 @@ namespace Kenshi_DnD
         public bool Hurt(int hurtHp)
         {
             //
+            if(hurtHp < 0)
+            {
+                hurtHp = 0;
+            }
             bool leveledUp = GainXp(hurtHp / PART_DAMAGE_AS_XP);
             if(GetHp() - hurtHp < 0)
             {
@@ -564,6 +572,20 @@ namespace Kenshi_DnD
             }
             FreeLimbs(count);
             return personalInventory.MakeAllItemsDisponible(this);
+        }
+        public void UpgradeStat(Stats.Stat statToUpgrade)
+        {
+            xpPoints -= 1;
+            heroStats.UpgradeStat(statToUpgrade, 1);
+            if(statToUpgrade == Stats.Stat.HP)
+            {
+                toughness += 1;
+                Heal(1);
+            }
+        }
+        public bool HasPointsToSpend()
+        {
+            return xpPoints > 0;
         }
         public string GetNameAndTitle()
         {

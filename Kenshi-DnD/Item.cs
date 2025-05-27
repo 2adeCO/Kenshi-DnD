@@ -129,7 +129,7 @@ namespace Kenshi_DnD
                     }
                 case Rarity.Rarities.Meitou:
                     {
-                        return "@6@Meitu@";
+                        return "@5@Meitu@";
                     }
                 default:
                     {
@@ -164,7 +164,7 @@ namespace Kenshi_DnD
                     }
                 case Rarity.Rarities.Meitou:
                     {
-                        return 6;
+                        return 5;
                     }
                 default:
                     {

@@ -386,7 +386,10 @@ namespace Kenshi_DnD
             savedSquads[currentName] = currentSquad;
 
         }
-        
+        public bool CanHire()
+        {
+            return GetHeroesCount() < MAX_HEROES;
+        }
         public void CreateSquad(string squadName)
         {
             Hero[] newSquad = new Hero[MAX_SQUAD_LENGTH];

@@ -866,17 +866,17 @@ namespace Kenshi_DnD
                 MessageBox.Show("Debes elegir un héroe al que contratar");
                 return;
             }
+            if (!myAdventure.CanHire())
+            {
+                MessageBox.Show("Has superado el límite de héroes");
+                return;
+            }
             Hero selectedHero = (Hero)selectedHeroButton.Tag;
 
 
-            if (myAdventure.GetCats() < selectedHero.GetCompetencyCost())
+            if (!myAdventure.SpendIfHasEnough(selectedHero.GetCompetencyCost()))
             {
                 MessageBox.Show("No tienes suficiente dinero para contratar a " + selectedHero.GetName());
-                return;
-            }
-            if (selectedHero.IsHired())
-            {
-                MessageBox.Show("Ya has contratado a " + selectedHero.GetName());
                 return;
             }
             HireButton.Background = new SolidColorBrush(Colors.LightGreen);
@@ -1074,6 +1074,50 @@ namespace Kenshi_DnD
                 {
                     stackPanel.Background = Brushes.Gray;
                 }
+                if (currentHeroes[i].HasPointsToSpend())
+                {
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Tag = currentHeroes[i];
+                    comboBox.Margin = new Thickness(4, 5, 4, 1);
+
+                    ComboBoxItem comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = "Fuerza bruta";
+                    comboBoxItem.Tag = Stats.Stat.BruteForce;
+                    comboBox.Items.Add(comboBoxItem);
+
+                    comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = "Destreza";
+                    comboBoxItem.Tag = Stats.Stat.Dexterity;
+                    comboBox.Items.Add(comboBoxItem);
+
+                    comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = "Constitución";
+                    comboBoxItem.Tag = Stats.Stat.HP;
+                    comboBox.Items.Add(comboBoxItem);
+
+                    comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = "Resistencia";
+                    comboBoxItem.Tag = Stats.Stat.Resistance;
+                    comboBox.Items.Add(comboBoxItem);
+
+                    comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = "Agilidad";
+                    comboBoxItem.Tag = Stats.Stat.Agility;
+                    comboBox.Items.Add(comboBoxItem);
+
+                    comboBox.SelectedIndex = 0;
+
+                    Button button = new Button();
+                    button.Content = "Mejorar estadística";
+                    button.ToolTip = mainWindow.ToolTipThemer(currentHeroes[i].GetName()
+                        + " tiene " + currentHeroes[i].GetXpPoints() + " puntos restantes");
+                    button.Tag = comboBox;
+                    button.Click += LevelHero;
+                    button.Margin = new Thickness(5, 0, 5, 1);
+
+                    stackPanel.Children.Add(comboBox);
+                    stackPanel.Children.Add(button);
+                }
                 Border border = new Border();
                 border.Margin = new Thickness(2, 8, 20, 8);
                 border.BorderBrush = Brushes.Black;
@@ -1082,9 +1126,17 @@ namespace Kenshi_DnD
                 border.VerticalAlignment = VerticalAlignment.Center;
                 PlayerSquad.Children.Add(border);
             }
+        }
+        private void LevelHero(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            ComboBox comboBox = (ComboBox)button.Tag;
+            Hero hero = (Hero)comboBox.Tag;
+            ComboBoxItem comboBoxItem = (ComboBoxItem)comboBox.SelectedItem;
+            Stats.Stat statToUpgrade = (Stats.Stat)comboBoxItem.Tag;
 
-
-
+            hero.UpgradeStat(statToUpgrade);
+            UpdatePlayerGrid();
         }
         private void OpenSquadEditor(object sender, EventArgs e)
         {
@@ -1108,7 +1160,7 @@ namespace Kenshi_DnD
             squadEditorTextBox.TextChanged += OnlyNumsAndLetters;
             Hero[] heroes = myAdventure.GetHeroes();
             int index = 0;
-            for (int i = 0; i < (myAdventure.GetHeroesCount() / 2) + 1; i += 1)
+            for (int i = 0; i < (myAdventure.GetHeroesCount() / 2); i += 1)
             {
                 if (heroes[index] != null)
                 {
