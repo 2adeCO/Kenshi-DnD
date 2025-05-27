@@ -52,7 +52,7 @@ namespace Kenshi_DnD
             myInventory = myAdventure.GetInventory();
             this.heroes = myAdventure.GetCurrentSquad();
             this.monsters = monsters;
-            myCombat = new Combat(heroes, monsters, myAdventure.GetDice(), myInventory,rnd, this);
+            myCombat = new Combat(heroes, monsters, myAdventure,rnd, this);
 
             currentAttacker = myCombat.GetCurrentAttacker();
 

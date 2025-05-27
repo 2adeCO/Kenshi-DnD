@@ -78,6 +78,10 @@ namespace Kenshi_DnD
         {
             this.faction = faction;
         }
+        public bool CanDropItem()
+        {
+            return canDropItem;
+        }
         public bool IsAlive()
         {
             return (this.hp > 0);

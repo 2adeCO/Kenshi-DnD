@@ -120,9 +120,12 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < factions.Count; i++)
             {
-                if (adventure.GetDice().PlayDice(factions[i].GetRelation() / 10, rnd) < PEACE_ROLLS_NEEDED)
+                if (factions[i].GetRelation() < 50)
                 {
-                    return factions[i];
+                    if (adventure.GetDice().PlayDice(factions[i].GetRelation() / 10, rnd) < PEACE_ROLLS_NEEDED)
+                    {
+                        return factions[i];
+                    }
                 }
             }
             Faction mostHostileFaction = factions[0];

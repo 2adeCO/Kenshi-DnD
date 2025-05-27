@@ -126,29 +126,18 @@
                      Grid.Row="1" ></Button>
                  </Grid>
             </ScrollViewer>
-            <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <Grid x:Name="InventoryGrid" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    
-                    <UniformGrid x:Name="InventoryItems" Grid.Row="0" Grid.Column="0"
-                     Grid.ColumnSpan="3" Margin="5,10,5,2"
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" Visibility="Collapsed" 
+                          MaxHeight="100" x:Name="InventoryScroll">
+                <UniformGrid x:Name="InventoryItems"
+                             Grid.ColumnSpan="3" Margin="5,10,5,2"
                      Columns="4" />
-                    <TextBlock x:Name="InventoryItemTextblock" Grid.Column="1" Grid.Row="1"></TextBlock>
-                </Grid>
             </ScrollViewer>
 
 
         </Grid>
         <Border Grid.Column="1" BorderBrush="Black"  BorderThickness="0,1,0,1" Grid.Row="1">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <TextBlock x:Name="InfoLog">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" x:Name="InfoLogScroll">
+                <TextBlock x:Name="InfoLog" TextWrapping="Wrap" Padding="10" FontSize="16">
                 </TextBlock>
             </ScrollViewer>
             

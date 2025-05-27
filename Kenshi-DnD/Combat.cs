@@ -8,6 +8,7 @@ namespace Kenshi_DnD
     class Combat
     {
         CombatWindow window;
+        Adventure myAdventure;
         Hero[] heroes;
         Monster[] enemies;
         Dice myDice;
@@ -19,16 +20,17 @@ namespace Kenshi_DnD
         Random rnd;
         int combatState;
         int turnIndex;
-        public Combat(Hero[] newHeroes, Monster[] newEnemies, Dice myDice, Inventory myInventory, Random random, CombatWindow window)
+        public Combat(Hero[] newHeroes, Monster[] newEnemies, Adventure myAdventure, Random random, CombatWindow window)
         {
             this.window = window;
             combatState = 0;
             rnd = random;
-            this.myInventory = myInventory;
+            this.myAdventure = myAdventure;
+            this.myInventory = myAdventure.GetInventory();
             turnIndex = 0;
             this.heroes = newHeroes;
             this.enemies = newEnemies;
-            this.myDice = myDice;
+            this.myDice = myAdventure.GetDice();
 
             everyTurn = new List<Turn>();
             for (int i = 0; i < heroes.Length; i+=1)
@@ -312,12 +314,21 @@ namespace Kenshi_DnD
 
             if (!defender.IsAlive())
             {
-                //Need to implement a way to loot random items
-                //if(defender.GetItemDrop() != null)
-                //{
-                //    await window.UpdateLogUI("Se encontró " + defender.GetItemDrop().GetName() + " en el cadáver...",800);
-                //    myInventory.AddItem(defender.GetItemDrop());
-                //}
+                if (defender.CanDropItem())
+                {
+                    Item itemDropped = GenerateItem();
+
+                    if (itemDropped != null)
+                    {
+                        await window.UpdateLogUI("Se encontró " + itemDropped.GetName() + " en el cadáver...", 800);
+                        myInventory.AddItem(itemDropped);
+                    }
+                    else
+                    {
+                        await window.UpdateLogUI("No tiene ninguna pertenencia...", 800);
+                    }
+
+                }
                 if (defender.GetXpDrop() == 0)
                 {
 					await window.UpdateLogUI("No se consiguió nada de experiencia", 300);
@@ -464,7 +475,7 @@ namespace Kenshi_DnD
                     }
                     else
                     {
-                        int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defenderAgility / 2)), rnd);
+                        int diceNum = myDice.PlayDice(attackerStat - (rangedItems[i].GetDifficulty() + (defenderAgility / 4)), rnd);
                         await window.UpdateDicesUI(myDice.GetRollHistory(),0);
 
                         if (diceNum >= rangedItems[i].GetDifficulty())
@@ -839,6 +850,51 @@ namespace Kenshi_DnD
                 }
             }
 
+        }
+        private Item GenerateItem()
+        {
+            Item itemToDrop = null;
+            int rarityDecider = rnd.Next(0, 20);
+            Rarity.Rarities rarity;
+            switch (rarityDecider)
+            {
+                case <10:
+                    {
+                        return null;
+                    }
+                case < 15:
+                    {
+                        rarity = Rarity.Rarities.Junk;
+                        break;
+                    }
+                case <18:
+                    {
+                        rarity = Rarity.Rarities.RustCovered;
+                        break;
+                    }
+
+                case <20:
+                    {
+                        rarity = Rarity.Rarities.Catun;
+                        break;
+                    }
+                case 20:
+                    {
+                        rarity = Rarity.Rarities.Mk;
+                        break;
+                    }
+                default:
+                    {
+                        //Shouldn't ever trigger this case, however VS makes me put it. I'll put a Debug.WriteLine just in case
+                        Debug.WriteLine("Region didn't know what rarity to put");
+                        rarity = Rarity.Rarities.Junk;
+                        break;
+                    }
+            }
+            itemToDrop = myAdventure.GetAllItems()[rnd.Next(0, myAdventure.GetAllItems().Length)];
+            itemToDrop = itemToDrop.GetCopy();
+            itemToDrop.SetRarity(rarity);
+            return itemToDrop;
         }
         private List<ITurnable> SortByAgility(List<ITurnable> list)
         {
