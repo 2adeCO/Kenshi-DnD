@@ -320,7 +320,7 @@ namespace Kenshi_DnD
 
                     if (itemDropped != null)
                     {
-                        await window.UpdateLogUI("Se encontró " + itemDropped.GetName() + " en el cadáver...", 800);
+                        await window.UpdateLogUI("Se encontró @"+ itemDropped.GetRarityColor() + "@" + itemDropped.GetName() + "@ en el cadáver...", 800);
                         myInventory.AddItem(itemDropped);
                     }
                     else

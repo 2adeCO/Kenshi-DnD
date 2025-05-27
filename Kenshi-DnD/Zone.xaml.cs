@@ -10,6 +10,7 @@ namespace Kenshi_DnD
     /// <summary>
     /// Lógica de interacción para Zone.xaml
     /// </summary>
+    [Serializable]
     public partial class Zone : UserControl
     {
         MainWindow mainWindow;
