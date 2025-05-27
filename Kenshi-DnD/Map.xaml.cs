@@ -138,6 +138,16 @@ namespace Kenshi_DnD
             }
             return mostHostileFaction;
         }
+        private void ExitGame(object sender, RoutedEventArgs e)
+        {
+
+            if(MessageBox.Show("Estás a punto de salir del juego.\nPerderás el progreso no guardado", "Salir del juego", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
+            {
+                return;
+            }
+            mainWindow.StopPlaying();
+            controller.Content = new Menu(mainWindow, controller, cursors, rnd);
+        }
         private void SaveAdventure(object sender, EventArgs e)
         {
             mainWindow.SaveAdventure(adventure);

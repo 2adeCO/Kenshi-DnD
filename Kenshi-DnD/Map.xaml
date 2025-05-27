@@ -11,8 +11,9 @@
         <Canvas Width="600" Height="600">
             <Image Source="/Resources/img/map.jpg" Width="600" Height="600" Canvas.Left="0" Canvas.Top="0"/>
 
-            <Button Click="SaveAdventure" Background="White" Content="Guardar Partida" Canvas.Left="427" Canvas.Top="3" HorizontalAlignment="Center" VerticalAlignment="Top" Width="173" Height="48"></Button>
-            <Rectangle x:Name="UnitedCitiesZone" Width="189" Height="258" Canvas.Left="305" Canvas.Top="61" Stroke="Black" StrokeThickness="1" Fill="#400000FF" MouseLeftButtonDown="SelectZone"/>
+            <Button Click="SaveAdventure" BorderBrush="Black" BorderThickness="2" Background="White" Content="Guardar Partida" Canvas.Left="427" Canvas.Top="3" HorizontalAlignment="Center" VerticalAlignment="Top" Width="173" Height="48"></Button>
+            <Button Click="ExitGame" BorderBrush="Black" BorderThickness="2" Background="White" Content="Salir del juego" Canvas.Left="489" Canvas.Top="51" HorizontalAlignment="Left" VerticalAlignment="Center" Width="111" Height="48"></Button>
+            <Rectangle x:Name="UnitedCitiesZone" Width="184" Height="258" Canvas.Left="305" Canvas.Top="61" Stroke="Black" StrokeThickness="1" Fill="#400000FF" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <Rectangle x:Name="HolyNationZone" Width="139" Height="174" Canvas.Left="161" Canvas.Top="126" Stroke="Black" StrokeThickness="1" Fill="#40FF0000" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <Rectangle x:Name="ShekKingdomZone" Width="84" Height="124" Canvas.Left="84" Canvas.Top="319" Stroke="Black" StrokeThickness="1" Fill="#40FF0000" MouseLeftButtonDown="SelectZone"/>
             <Rectangle x:Name="WestHiveZone" Width="104" Height="80" Canvas.Left="57" Canvas.Top="239" Stroke="Black" StrokeThickness="1" Fill="#40FFD700" MouseLeftButtonDown="SelectZone" HorizontalAlignment="Left" VerticalAlignment="Top"/>

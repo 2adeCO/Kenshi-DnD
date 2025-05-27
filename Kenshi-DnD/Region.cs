@@ -22,7 +22,6 @@ namespace Kenshi_DnD
         bool canBuyRangedItems;
         bool updateToken;
 
-        Zone myZone;
 
         Hero[] heroesInBar;
         Item[] shop;
@@ -46,10 +45,6 @@ namespace Kenshi_DnD
             this.hasRangedShop = hasRangedShop;
             hasAccessToRangedShop = false;
         }
-        public void SetZone(Zone myZone)
-        {
-            this.myZone = myZone;
-        }
         public void AffectsRelations(Adventure myAdventure)
         {
             for (int i = 0; i < factions.Count; i += 1)
@@ -57,7 +52,7 @@ namespace Kenshi_DnD
                 factions[i].AffectRelations(myAdventure);
             }
         }
-        public void ImproveRelations(int amount)
+        public void ImproveRelations(int amount, Zone myZone)
         {
             for (int i = 0; i < factions.Count; i += 1)
             {
@@ -246,7 +241,7 @@ namespace Kenshi_DnD
 
             return cost;
         }
-        public void SleepInBar(Adventure myAdventure, int cost)
+        public void SleepInBar(Adventure myAdventure, int cost, Zone myZone)
         {
             if (!myAdventure.SpendIfHasEnough(cost))
             {

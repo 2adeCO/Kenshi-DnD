@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Threading;
 
 namespace Kenshi_DnD
 {
@@ -22,7 +23,7 @@ namespace Kenshi_DnD
         int cats;
         int color;
         DateTime startDate;
-        DateTime hoursPlayed;
+        TimeSpan hoursPlayed;
 
         Dice myDice;
 
@@ -53,7 +54,7 @@ namespace Kenshi_DnD
             this.cats = startingCats;
             this.myDice = myDice;
             startDate = DateTime.Now;
-            hoursPlayed = DateTime.Now;
+            hoursPlayed = new TimeSpan(0, 0, 0);
             this.factionName = factionName;
             this.color = factionColor;
             heroes = new Hero[MAX_HEROES];
@@ -93,7 +94,7 @@ namespace Kenshi_DnD
             string formattedName = "";
             for (int i = 0; i < name.Length; i += 1)
             {
-                if (name[i] == ' ')
+                if (char.IsWhiteSpace(name[i]))
                 {
                     formattedName += "_";
                 }
@@ -132,7 +133,7 @@ namespace Kenshi_DnD
             // number generated: 123456
             // 
             // output: My_First_Adventure2000123456
-            return name + continent + zeroes + randomNum;
+            return formattedName + continent + zeroes + randomNum;
         }
         public Region GetCurrentRegion()
         {
@@ -154,7 +155,6 @@ namespace Kenshi_DnD
         {
             return playerInventory;
         }
-
         public int GetCats()
         {
             return cats;
@@ -465,11 +465,15 @@ namespace Kenshi_DnD
         {
             return startDate;
         }
-        public DateTime GetTimePlayed()
+        public TimeSpan GetTimePlayed()
         {
             return hoursPlayed;
         }
-
+       
+        public void AddSecondToAdventure()
+        {
+            hoursPlayed += new TimeSpan(0, 0, 1);
+        }
         public Item[] GetAllItems()
         {
             return allItems;

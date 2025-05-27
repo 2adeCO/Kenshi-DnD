@@ -42,7 +42,6 @@ namespace Kenshi_DnD
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Region currentRegion)
         {
             InitializeComponent();
-            currentRegion.SetZone(this);
             this.mainWindow = mainWindow;
             this.controller = controller;
             this.cursors = cursors;
@@ -392,7 +391,7 @@ namespace Kenshi_DnD
             textBlock.Inlines.AddRange(mainWindow.DecorateText($"@9@Un placer hacer negocios con usted@\n@2@+{item.GetResellValue}$@"));
             SellButton.Content = textBlock;
             selectedItemToSellButton = null;
-            region.ImproveRelations(1);
+            region.ImproveRelations(1,this);
             UpdateCats();
             UpdateInventoryGrid();
         }
@@ -662,7 +661,7 @@ namespace Kenshi_DnD
                 }
             }
 
-            region.ImproveRelations(1);
+            region.ImproveRelations(1, this);
             UpdateInventoryGrid();
             UpdateCats();
 
@@ -766,7 +765,7 @@ namespace Kenshi_DnD
                     break;
                 }
             }
-            region.ImproveRelations(1);
+            region.ImproveRelations(1, this);
             UpdateInventoryGrid();
             UpdateCats();
 
@@ -847,7 +846,7 @@ namespace Kenshi_DnD
                     break;
                 }
             }
-            region.ImproveRelations(1);
+            region.ImproveRelations(1, this);
             UpdateInventoryGrid();
             UpdateCats();
 
@@ -889,7 +888,7 @@ namespace Kenshi_DnD
             HireButton.IsEnabled = true;
             Hero hero = (Hero)selectedHeroButton.Tag;
             UpdateLog(hero.GetNameAndTitle() + "\n" + hero.Meet());
-            HireButton.Content = "¿Contratar a " + hero.GetName() +" ?";
+            HireButton.Content = "¿Contratar a " + hero.GetName() +"?";
             selectedHeroButton.BorderBrush = Brushes.DarkGreen;
             selectedHeroButton.BorderThickness = new Thickness(3);
             selectedHeroButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
@@ -920,13 +919,14 @@ namespace Kenshi_DnD
             myAdventure.HireHero(selectedHero);
             HireButton.IsEnabled = false;
             UpdateSquadEditor(null, null);
-            region.ImproveRelations(1);
+            region.ImproveRelations(1, this);
             UpdateCats();
             selectedHeroButton.Background = new SolidColorBrush(Colors.LightGreen);
             selectedHeroButton.Content = selectedHero.GetName() + " (Contratado)";
             selectedHeroButton.IsEnabled = false;
             selectedHeroButton = null;
 
+            UpdateLog("¡" +selectedHero.GetNameAndTitle() + " se unió a la aventura!");
             Debug.WriteLine("Hired");
         }
         private void SleepInBar(object sender, EventArgs e)
@@ -938,7 +938,7 @@ namespace Kenshi_DnD
                 return;
             }
             // Cures 10 HP to all heroes with less than max HP
-            region.SleepInBar(myAdventure, region.GetSleepCost(myAdventure));
+            region.SleepInBar(myAdventure, region.GetSleepCost(myAdventure),this);
             // Updates the money on the screen
             UpdateCats();
             TextBlock textBlock = new TextBlock();

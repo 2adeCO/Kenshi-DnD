@@ -224,6 +224,7 @@ namespace Kenshi_DnD
 
             if (adventure != null)
             {
+                mainWindow.StartPlaying(adventure);
                 controller.Content = new Map(mainWindow, controller,cursors, rnd, adventure);
             }
             else
@@ -615,9 +616,16 @@ namespace Kenshi_DnD
             adventureGrid.Background = Brushes.LightGray;
             adventureGrid.Height = 120;
 
+            Debug.WriteLine(adventure.GetId());
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(mainWindow.DecorateText("Aventura: " + adventure.GetId() + "\n" +
+                "Horas jugadas: " + adventure.GetTimePlayed() + "\n" +
+                "Dado: " + adventure.GetDice().ToString() + "\n" +
+                "Cats: " + adventure.GetCats() + "$"));
 
             Button button = new Button();
-            button.Content = adventure.GetId() + "\nDado: " + adventure.GetDice().ToString() + "\nCats: " + adventure.GetCats() + "$";
+            button.Content = textBlock;
             button.HorizontalAlignment = HorizontalAlignment.Stretch;
             button.Background = linearBrush;
             button.Tag = adventure;

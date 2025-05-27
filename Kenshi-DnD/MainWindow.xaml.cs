@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml.Schema;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Threading;
 namespace Kenshi_DnD
 {
     /// <summary>
@@ -18,13 +19,36 @@ public partial class MainWindow : Window
     {
         Cursor[] cursors;
         Random rnd;
+        DispatcherTimer timer;
         public MainWindow()
         {
             InitializeComponent();
             LoadCursors();
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
             rnd = new Random();
             
             PageController.Content = new Menu(this,PageController, cursors, rnd);
+        }
+        private void AddSecondsToAdventureTime(Adventure adventure)
+        {
+            adventure.AddSecondToAdventure();
+        }
+        public void StartPlaying(Adventure adventure)
+        {
+            timer.Start();
+            timer.Tick += (s, e) =>
+            {
+                AddSecondsToAdventureTime(adventure);
+            };
+        }
+        public void StopPlaying()
+        {
+            timer.Stop();
+            timer.Tick -= (s, e) =>
+            {
+                AddSecondsToAdventureTime(null);
+            };
         }
         public void LoadCursors()
         {
