@@ -51,7 +51,7 @@ namespace Kenshi_DnD
             UpdateCats();
             PlayerFaction.Inlines.AddRange(mainWindow.DecorateText(myAdventure.GetFactionName()));
             PlayerGrid.Background = mainWindow.GetBrushByNum(myAdventure.GetColor());
-            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
+            SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys.ToList();
             SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
             Debug.WriteLine("Selected item: " + (string)SquadAlignmentsCombobox.SelectedItem);
             UpdatePlayerGrid();
@@ -1196,7 +1196,7 @@ namespace Kenshi_DnD
             squadEditorTextBox.TextChanged += OnlyNumsAndLetters;
             Hero[] heroes = myAdventure.GetHeroes();
             int index = 0;
-            for (int i = 0; i < (myAdventure.GetHeroesCount() / 2); i += 1)
+            for (int i = 0; i < (myAdventure.GetHeroesCount() / 2) + 1; i += 1)
             {
                 if (heroes[index] != null)
                 {
@@ -1225,6 +1225,7 @@ namespace Kenshi_DnD
                         button.Background = new SolidColorBrush(Colors.WhiteSmoke);
                     }
                     button.Click += AddOrRemoveFromSquad;
+                    button.MouseRightButtonUp += UnhireHero;
                     button.BorderBrush = new SolidColorBrush(Colors.Black);
                     button.BorderThickness = new Thickness(1);
                     button.Tag = heroes[index];
@@ -1253,6 +1254,7 @@ namespace Kenshi_DnD
                             button2.Background = new SolidColorBrush(Colors.WhiteSmoke);
                         }
                         button2.Click += AddOrRemoveFromSquad;
+                        button2.MouseRightButtonUp += UnhireHero;
                         button2.BorderBrush = new SolidColorBrush(Colors.Black);
                         button2.BorderThickness = new Thickness(1);
                         button2.Tag = heroes[index];
@@ -1273,7 +1275,30 @@ namespace Kenshi_DnD
 
             }
         }
+        private void UnhireHero(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            Hero hero = (Hero)button.Tag;
+            if(myAdventure.GetHeroesCount() == 1 || myAdventure.IsInCurrentSquad(hero) && myAdventure.GetCurrentSquad().Length == 1)
+            {
+                MessageBox.Show("No puedes despedir a tu único héroe.");
+                return;
+            }
+            if (MessageBox.Show("¿Quieres realmente echar a " + hero.GetName() + "?", "Echar a héroe", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                == MessageBoxResult.Yes)
+            {
+                myAdventure.UnhireHero(hero);
 
+                SquadAlignmentsCombobox.ItemsSource = null;
+                SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys.ToList();
+                SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
+                UpdateSquadEditor(null,null);
+                UpdatePlayerGrid();
+                UpdateLog(hero.GetName() + " se marchó... Pero te dejó un regalo de @2@" + hero.GetCompetencyCost() + "@");
+                UpdateCats();
+            }
+
+        }
         private void AddOrRemoveFromSquad(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -1316,8 +1341,10 @@ namespace Kenshi_DnD
                 return;
             }
 
+            SquadAlignmentsCombobox.ItemsSource = null;
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
-            SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
+            Debug.WriteLine("selected item : " + myAdventure.GetCurrentSquadName());
+            SquadAlignmentsCombobox.SelectedItem = squadName;
             UpdatePlayerGrid();
             UpdateSquadEditor(null, null);
         }

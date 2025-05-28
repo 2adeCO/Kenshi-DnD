@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace Kenshi_DnD
 {
@@ -29,6 +20,7 @@ namespace Kenshi_DnD
 
         Hero[] heroes;
         Hero[] currentSquad;
+        string currentSquadName;
 
         Region currentRegion;
 
@@ -47,7 +39,7 @@ namespace Kenshi_DnD
         const int MAX_HEROES = 12;
         const int MAX_SQUADS = 10;
         const int MAX_SQUAD_LENGTH = 4;
-        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats,string factionName,int factionColor, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, string factionName, int factionColor, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
             string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
             this.id = GenerateId(name, rnd);
@@ -64,7 +56,7 @@ namespace Kenshi_DnD
             savedSquads.Add("Mi primera squad", new Hero[MAX_SQUAD_LENGTH]);
             savedSquads["Mi primera squad"][0] = hero;
             currentSquad = savedSquads["Mi primera squad"];
-
+            currentSquadName = "Mi primera squad";
             playerInventory = new PlayerInventory();
             alreadyObtainedItems = new Item[allItems.Length * 2];
             Debug.WriteLine(id);
@@ -109,12 +101,13 @@ namespace Kenshi_DnD
             {
                 numberCount += 1;
                 temp /= 10;
-            };
+            }
+            ;
             // Calculates the zeroes remaining
             numberCount = MINIMUM_NUMBER_LENGTH - numberCount;
 
             //Adds the remaining zeroes for aesthetic purpose
-            for (int i = 0; i < numberCount; i+=1)
+            for (int i = 0; i < numberCount; i += 1)
             {
                 zeroes += "0";
             }
@@ -165,7 +158,7 @@ namespace Kenshi_DnD
         }
         public bool SpendIfHasEnough(int cost)
         {
-            if(cost <= cats && cost >= 0)
+            if (cost <= cats && cost >= 0)
             {
                 this.cats -= cost;
                 return true;
@@ -224,28 +217,19 @@ namespace Kenshi_DnD
                 }
                 playerInventory.AddItem(item.GetCopy());
             }
-        } 
+        }
         public void HireHero(Hero hero)
         {
-            int cost = hero.GetCompetencyCost();
 
-            int countOfHeros = 0;
-
-            for(int i = 0; i < heroes.Length; i += 1)
+            if ( GetHeroesCount() >= MAX_HEROES || hero.IsHired())
             {
-                if (heroes[i] != null) { countOfHeros += 1; }
-            }
-
-            if(cats < cost || countOfHeros >= MAX_HEROES || hero.IsHired())
-            {
-                Debug.WriteLine("Cost too high o too much heroes or is already hired");
+                Debug.WriteLine("too much heroes or is already hired");
                 return;
             }
-            
-            cats -= cost;
-            for(int i = 0; i < heroes.Length; i++)
+
+            for (int i = 0; i < heroes.Length; i++)
             {
-                if(heroes[i] == null)
+                if (heroes[i] == null)
                 {
                     Debug.WriteLine("Hired in adventure");
                     hero.Hire();
@@ -254,15 +238,102 @@ namespace Kenshi_DnD
                 }
             }
         }
+        public void UnhireHero(Hero hero)
+        {
+            for (int i = 0; i < heroes.Length; i += 1)
+            {
+                if (heroes[i] != null)
+                {
+                    if (heroes[i] == hero)
+                    {
+                        heroes[i] = null;
+                        break;
+                    }
+                }
+            }
+            int insertIndex = 0;
+            Hero[] compactedHeroes = new Hero[heroes.Length];
+
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                if (heroes[i] != null)
+                {
+                    compactedHeroes[insertIndex] = heroes[i];
+                    insertIndex++;
+                }
+            }
+            heroes = compactedHeroes;
+            Debug.WriteLine("Squad count: " + GetSavedSquads().Count);
+            List<string> keys = savedSquads.Keys.ToList();
+            for (int i = 0; i < keys.Count; i++)
+            {
+
+                Hero[] squad = savedSquads[keys[i]];
+                bool removed = false;
+                // Removes the hero from all squads
+                for (int j = 0; j < squad.Length; j++)
+                {
+                    if (squad[j] != null)
+                    {
+                        if (squad[j] == hero)
+                        {
+                            squad[j] = null;
+                            removed = true;
+                        }
+                    }
+                }
+                // If removed, compacts the array
+                if (removed)
+                {
+                    Debug.WriteLine("Removed a hero that was in a squad");
+                    bool empty = true;
+                    insertIndex = 0;
+                    Hero[] compactedSquad = new Hero[squad.Length];
+                    for (int j = 0; j < squad.Length; j += 1)
+                    {
+                        if (squad[j] != null)
+                        {
+                            compactedSquad[insertIndex] = squad[j];
+                            insertIndex++;
+                            empty = false;
+                        }
+                    }
+                    if (empty)
+                    {
+                        if (savedSquads[keys[i]] == currentSquad)
+                        {
+                            if (i == 0) 
+                            {
+                                SetCurrentSquad(keys[i + 1]);
+                            }
+                            else
+                            {
+                                SetCurrentSquad(keys[0]);
+                            }
+                        }
+                        Debug.WriteLine("Squad is empty: " + keys[i]);
+                        
+                        DeleteSquad(keys[i]);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Updating value");
+                        savedSquads[keys[i]] = compactedSquad;
+                    }
+                }
+                cats += hero.GetCompetencyCost();
+
+            }
+        }
         public Hero[] GetAmputees()
         {
 
             int count = 0;
-            for(int i = 0; i < heroes.Length; i += 1)
+            for (int i = 0; i < heroes.Length; i += 1)
             {
                 if (heroes[i] != null)
                 {
-                    if(heroes[i].IsAmputee())
+                    if (heroes[i].IsAmputee())
                     {
                         count += 1;
                     }
@@ -283,26 +354,18 @@ namespace Kenshi_DnD
             }
             return amputees;
         }
-        public Dictionary<string,Hero[]> GetSavedSquads()
+        public Dictionary<string, Hero[]> GetSavedSquads()
         {
             return savedSquads;
         }
         public string GetCurrentSquadName()
         {
-            for(int i = 0; i < savedSquads.Count; i += 1)
-            {
-                if (savedSquads.ElementAt(i).Value == currentSquad)
-                {
-                    return savedSquads.ElementAt(i).Key;
-                }
-            }
-            Debug.WriteLine("GetCurrentSquadName failed, returning first key");
-            return savedSquads.First().Key;
+            return currentSquadName;
         }
         public Hero[] GetCurrentSquad()
         {
             int count = 0;
-            for(int i = 0; i < currentSquad.Length; i += 1)
+            for (int i = 0; i < currentSquad.Length; i += 1)
             {
                 if (currentSquad[i] != null)
                 {
@@ -321,14 +384,14 @@ namespace Kenshi_DnD
                 }
                 iterator += 1;
 
-            }while (count != heroesToReturn.Length);
+            } while (count != heroesToReturn.Length);
 
             return heroesToReturn;
         }
         public bool IsInCurrentSquad(Hero hero)
         {
             bool found = false;
-            for(int i = 0; i < currentSquad.Length; i+=1)
+            for (int i = 0; i < currentSquad.Length; i += 1)
             {
                 if (currentSquad[i] == hero)
                 {
@@ -398,10 +461,10 @@ namespace Kenshi_DnD
                 newSquad[i] = currentSquad[i];
             }
             while (savedSquads.ContainsKey(squadName))
-                {
+            {
                 squadName += " copia";
-                }
-           
+            }
+
             savedSquads.Add(squadName, newSquad);
             SetCurrentSquad(squadName);
             Debug.WriteLine("Squad created " + squadName);
@@ -421,14 +484,9 @@ namespace Kenshi_DnD
         }
         public void SetCurrentSquad(string squadName)
         {
-            for (int i = 0; i < savedSquads.Count; i += 1)
-            {
-                if (savedSquads.ElementAt(i).Key == squadName)
-                {
-                    currentSquad = savedSquads.ElementAt(i).Value;
-                    break;
-                }
-            }
+            currentSquad = savedSquads[squadName];
+            currentSquadName = squadName;
+            Debug.WriteLine("Current squad:" + squadName);
         }
         public int GetSquadCount()
         {
@@ -437,7 +495,7 @@ namespace Kenshi_DnD
 
         public string GetFactionName()
         {
-            return "@" + color + "@" + factionName +"@";
+            return "@" + color + "@" + factionName + "@";
         }
         public int GetColor()
         {
@@ -447,7 +505,7 @@ namespace Kenshi_DnD
         {
             int count = 0;
 
-            for(int i = 0; i < heroes.Length; i += 1)
+            for (int i = 0; i < heroes.Length; i += 1)
             {
                 if (heroes[i] != null)
                 {
@@ -469,7 +527,7 @@ namespace Kenshi_DnD
         {
             return hoursPlayed;
         }
-       
+
         public void AddSecondToAdventure()
         {
             hoursPlayed += new TimeSpan(0, 0, 1);
@@ -510,6 +568,6 @@ namespace Kenshi_DnD
         {
             return names;
         }
-        
+
     }
 }
