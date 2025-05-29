@@ -40,7 +40,7 @@ namespace Kenshi_DnD
                    "Rareza: " + RarityToString() + "\n" +
                    statToModify.ToString();
         }
-        public abstract void SetRarity(Rarity.Rarities rarity);
+        public abstract void UpgradeRarity(Rarity.Rarities rarity);
         public Rarity.Rarities GetRarity()
         {
             return rarity;
@@ -137,6 +137,10 @@ namespace Kenshi_DnD
                     }
 
             }
+        }
+        public void SetRarity(Rarity.Rarities rarity)
+        {
+            this.rarity = rarity;
         }
         public int GetRarityColor()
         {

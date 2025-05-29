@@ -45,11 +45,11 @@ namespace Kenshi_DnD
             this.hasRangedShop = hasRangedShop;
             hasAccessToRangedShop = false;
         }
-        public void AffectsRelations(Adventure myAdventure)
+        public void AffectsRelations(Adventure myAdventure,Random rnd)
         {
             for (int i = 0; i < factions.Count; i += 1)
             {
-                factions[i].AffectRelations(myAdventure);
+                factions[i].AffectRelations(myAdventure,rnd);
             }
         }
         public void ImproveRelations(int amount, Zone myZone)
@@ -57,7 +57,7 @@ namespace Kenshi_DnD
             for (int i = 0; i < factions.Count; i += 1)
             {
                 myZone.UpdateLog("¡La relación con " + factions[i].GetFactionName() + " mejoró " +  amount + "!");
-                factions[i].ImproveRelations(amount);
+                factions[i].AddOrSubtractRelation(amount);
             }
         }
         public bool CanBuyRangedItems()
@@ -325,7 +325,7 @@ namespace Kenshi_DnD
                 } while (itemInShop == null);
 
                 itemsInShop[i] = itemInShop.GetCopy();
-                itemsInShop[i].SetRarity(rarity);
+                itemsInShop[i].UpgradeRarity(rarity);
                 Debug.WriteLine(itemsInShop[i].GetName());
             }
             this.shop = itemsInShop;
@@ -378,7 +378,7 @@ namespace Kenshi_DnD
                 } while (itemInContraband == null);
 
                 itemsInContraband[i] = itemInContraband.GetCopy();
-                itemsInContraband[i].SetRarity(rarity);
+                itemsInContraband[i].UpgradeRarity(rarity);
                 Debug.WriteLine(itemsInContraband[i].GetName());
             }
             this.contrabandMarket = itemsInContraband;
@@ -434,7 +434,7 @@ namespace Kenshi_DnD
                 } while (itemInShop == null);
 
                 itemsInShop[i] = itemInShop.GetCopy();
-                itemsInShop[i].SetRarity(rarity);
+                itemsInShop[i].UpgradeRarity(rarity);
                 Debug.WriteLine(itemsInShop[i].GetName());
             }
             this.rangedShop = itemsInShop;
@@ -492,7 +492,7 @@ namespace Kenshi_DnD
         }
         private Hero GenerateRandomHero(Adventure myAdventure,Random rnd,Competency.StartCompetency competency)
         {
-            int points = 5;
+            int points = 3;
             int level = 0;
             switch (competency)
             {

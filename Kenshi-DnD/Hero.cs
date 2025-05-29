@@ -538,8 +538,8 @@ namespace Kenshi_DnD
             {
                 if (limbs[i] != null)
                 {
+                    Debug.WriteLine("Has Limb: " + limbs[i].GetName());
                     atLeastOne = true;
-                    break;
                 }
             }
             Limb randomLimb = null;
@@ -548,6 +548,7 @@ namespace Kenshi_DnD
                 do
                 {
                     int randomIndex = rnd.Next(0, limbs.Length);
+                    Debug.WriteLine("Random limb index of "+ limbs.Length + " : "+ randomIndex);
                     if (limbs[randomIndex]!= null)
                     {
                         randomLimb = limbs[randomIndex];
@@ -602,7 +603,11 @@ namespace Kenshi_DnD
         }
         public string Meet()
         {
-            return $"{backgroundStory}\n" + ToString() + "\nMe uniré a tu aventura por " +  GetCompetencyCost();
+            return $"{backgroundStory}" 
+                + "\n-------------------\n" + 
+                ToString() 
+                + "\n-------------------\n" + 
+                "Me uniré a tu aventura por " +  GetCompetencyCost();
         }
         public int GetCompetencyCost()
         {

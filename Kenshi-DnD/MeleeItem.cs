@@ -15,9 +15,9 @@
         {
             return "¡El héroe usa " + "@" + GetRarityColor() + "@" + name + "@!";
         }
-        public override void SetRarity(Rarity.Rarities rarity)
+        public override void UpgradeRarity(Rarity.Rarities rarity)
         {
-            this.rarity = rarity;
+            SetRarity(rarity);
             double costMultiplier = 1.0;
             int buff = 0;
 
@@ -26,37 +26,37 @@
                 case Rarity.Rarities.Junk:
                     { 
                         costMultiplier = 1.0;  
-                        buff = 1;
+                        buff = 0;
                         break;
                     }
                 case Rarity.Rarities.RustCovered:
                     {
                         costMultiplier = 1.10; 
-                        buff = 2;
+                        buff = 1;
                         break;
                     }
                 case Rarity.Rarities.Catun:
                     {
                         costMultiplier = 1.25; 
-                        buff = 3;
+                        buff = 2;
                         break;
                     }
                 case Rarity.Rarities.Mk:
                     {
                         costMultiplier = 1.50; 
-                        buff = 4;
+                        buff = 3;
                         break;
                     }
                 case Rarity.Rarities.Edgewalker:
                     {
                         costMultiplier = 1.75; 
-                        buff = 5;
+                        buff = 4;
                         break;
                     }
                 case Rarity.Rarities.Meitou:
                     {
                         costMultiplier = 2.0;   
-                        buff = 6;
+                        buff = 5;
                         break;
                     }
             }
@@ -73,6 +73,7 @@
             value = (int)(value * costMultiplier);
             resellValue = (int)(value * 0.5); 
         }
+        
         public override Item GetCopy()
         {
             StatModifier statCopy = GetStatToModify().GetCopy();

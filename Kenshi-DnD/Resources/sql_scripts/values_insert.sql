@@ -215,12 +215,12 @@ INSERT INTO items (name, description, value, resellValue, type, weight, stats_id
 ('Harpoon Gun', 'Arma pesada de defensa estática.', 2000, 1500, 'ranged', 4, 35);
 
 
-INSERT INTO rangedItems (item_id, difficulty, ammo) VALUES
-(21, 1, 10),   
-(22, 2, 15),   
-(23, 4, 8),    
-(24, 5, 6),    
-(25, 3, 12);   
+INSERT INTO rangedItems (item_id, difficulty, maxAmmo) VALUES
+(21, 1, 15),   
+(22, 2, 20),   
+(23, 4, 10),    
+(24, 5, 8),    
+(25, 3, 16);   
 
 
 
@@ -312,42 +312,53 @@ INSERT INTO limbs (name,value, stats_id) VALUES
 ('Brazo de francotirador',1500, 56);
 
 
--- Reino Animal
 INSERT INTO enemies (factionId, name, health, strength, resistance, agility, immunity, xp, maxCatDrop, canDropItem) VALUES
-(6, 'Perro Salvaje', 4, 3, 2, 7, 'ResistantToMelee', 50, 0, false),
-(6, 'Garral Joven', 6, 5, 4, 8, 'ResistantToMelee', 75, 0, false),
+-- Reino Animal (6)
+(6, 'Cabra', 3, 4, 1, 4, 'None', 25, 0, false),
+(6, 'Garral Joven', 6, 5, 3, 8, 'ResistantToMelee', 75, 0, false),
 (6, 'Bicho de las Dunas', 5, 4, 3, 6, 'ResistantToBoth', 100, 0, false),
+(6, 'Perro huesudo', 4, 3, 2, 6, 'None', 60, 0, false),
+(6, 'Garral', 6, 6, 4, 7, 'ImmuneToMelee', 150, 0, false),
 
--- Caníbales
-(4, 'Caníbal Desnutrido', 3, 2, 2, 5, 'None', 50, 100, true),
-(4, 'Caníbal Cazador', 4, 3, 2, 6, 'None', 75, 100, true),
-(4, 'Chaman Caníbal', 5, 2, 3, 4, 'ResistantToRanged', 120, 150, true),
+-- Caníbales (4)
+(4, 'Caníbal Desnutrido', 3, 2, 2, 5, 'None', 50, 50, true),
+(4, 'Caníbal Cazador', 4, 3, 2, 6, 'None', 75, 75, true),
+(4, 'Chamán Caníbal', 5, 2, 3, 4, 'ResistantToRanged', 120, 100, true),
+(4, 'Jefe Caníbal', 6, 5, 4, 5, 'ResistantToBoth', 250, 200, true),
+(4, 'Caníbal Loco', 4, 4, 2, 6, 'None', 90, 80, true),
 
--- Bandidos Famélicos
-(7, 'Bandido Famélico', 2, 2, 2, 5, 'None', 50, 100, true),
-(7, 'Líder Bandido Famélico', 3, 3, 3, 5, 'None', 100, 150, true),
+-- Bandidos Famélicos (7)
+(7, 'Bandido Famélico', 2, 2, 2, 5, 'None', 40, 30, true),
+(7, 'Bandido Famélico Fuerte', 3, 3, 2, 5, 'None', 60, 50, true),
+(7, 'Líder Bandido Famélico', 3, 3, 3, 5, 'None', 80, 75, true),
 
--- La Nación Sagrada
-(1, 'Paladín Sagrado', 6, 6, 5, 4, 'ResistantToBoth', 1000, 1000, true),
-(1, 'Inquisidor', 8, 7, 6, 3, 'ImmuneToRanged', 2000, 2000, true),
+-- La Nación Sagrada (1)
+(1, 'Recluta de Okran', 4, 3, 3, 4, 'None', 300, 300, true),
+(1, 'Fanático de Okran', 4, 4, 3, 5, 'None', 400, 400, true),
+(1, 'Paladín Sagrado', 6, 6, 4, 4, 'ResistantToBoth', 1000, 1000, true),
+(1, 'Inquisidor', 8, 7, 5, 3, 'ImmuneToRanged', 2000, 2000, true),
 
--- Ciudades Unidas
+-- Ciudades Unidas (2)
 (2, 'Soldado de las Ciudades Unidas', 5, 5, 4, 5, 'ResistantToMelee', 800, 800, true),
-(2, 'Guardia de Seguridad', 6, 6, 5, 4, 'ImmuneToMeleeAndResistantToRanged', 1000, 1200, true),
+(2, 'Guardia de Seguridad', 6, 6, 4, 4, 'ImmuneToMeleeAndResistantToRanged', 1000, 1200, true),
+(2, 'Oficial de Patrulla', 6, 6, 4, 4, 'ResistantToBoth', 950, 1000, true),
 
--- Reino Shek
+-- Reino Shek (3)
 (3, 'Guerrero Shek', 5, 6, 5, 5, 'ResistantToBoth', 800, 1000, true),
-(3, 'Campeón Shek', 7, 7, 6, 4, 'ImmuneToMelee', 1500, 1500, true),
+(3, 'Veterano Shek', 6, 6, 5, 5, 'ResistantToBoth', 1000, 1200, true),
+(3, 'Campeón Shek', 6, 7, 6, 4, 'ImmuneToMelee', 1500, 1500, true),
 
--- Enjambre del Oeste
-(5, 'Errante del Enjambre', 3, 3, 3, 6, 'None', 200, 200, true),
-(5, 'Guerrero del Enjambre', 4, 5, 4, 7, 'ResistantToRanged', 400, 400, true),
-(5, 'Comerciante del Enjambre', 3, 2, 3, 5, 'None', 150, 600, true),
+-- Enjambre del Oeste (5)
+(5, 'Errante del Enjambre', 3, 3, 3, 6, 'None', 200, 100, true),
+(5, 'Guerrero del Enjambre', 4, 5, 4, 7, 'ResistantToRanged', 400, 300, true),
+(5, 'Príncipe del Enjambre', 5, 4, 4, 6, 'None', 500, 400, true),
+(5, 'Artillero del Enjambre', 3, 3, 3, 5, 'None', 350, 250, true),
 
--- Esclavistas
+-- Esclavistas (8)
 (8, 'Cazador Esclavista', 4, 4, 3, 6, 'None', 600, 500, true),
 (8, 'Mercader Esclavista', 3, 3, 2, 4, 'None', 300, 400, true),
-(8, 'Capataz Esclavista', 5, 5, 4, 5, 'ImmuneToRanged', 1000, 800, true);
+(8, 'Capataz Esclavista', 5, 5, 3, 5, 'ImmuneToRanged', 1000, 800, true),
+(8, 'Esclavista Veterano', 6, 6, 4, 4, 'ResistantToBoth', 1200, 1000, true);
 
 
 INSERT INTO names (name) VALUES
@@ -402,12 +413,111 @@ INSERT INTO names (name) VALUES
 ('Zan'),
 ('Twinkle');
 
-insert into titles (title) values
-('El probado 1'),
-('El probado 2'),
-('El probado 3');
+INSERT INTO titles (title) VALUES
+('El Lobo'),
+('La Espina'),
+('El Rápido'),
+('La Hoja'),
+('El Fuerte'),
+('La Tormenta'),
+('El Silencio'),
+('La Sombra'),
+('El Sabio'),
+('El Fénix'),
+('El Viejo Lobo'),
+('La Mano Justa'),
+('El Errante'),
+('La Furia'),
+('El Ojo Frío'),
+('La Voz Gris'),
+('El Sable'),
+('El Hierro'),
+('La Piedra'),
+('El Último'),
+('El Flojo'),
+('La Rata'),
+('El Tullido'),
+('El Tuerto'),
+('La Carga'),
+('El Estorbo'),
+('El Rencor'),
+('La Sanguijuela'),
+('El Perdido'),
+('La Sombra Rota'),
+('El Mudo'),
+('La Peste'),
+('El Cobarde'),
+('La Ruina'),
+('El Sin Nombre'),
+('La Mancha'),
+('El Fracasado'),
+('El Chiflado'),
+('La Vergüenza'),
+('El Muerto en Vida');
 
-insert into backgrounds (background) values
-('la descripción 1'),
-('El descripción 2'),
-('El descripción 3');
+
+INSERT INTO backgrounds (background) VALUES
+('Ex-esclavo del Gremio de la Cadena. Lleva las marcas aún en la espalda. Silencioso, pero letal con la lanza.'),
+('Expulsado de los monjes de polvo por beber sangre en lugar de agua. Dice que fue por fe, pero nadie le cree.'),
+('Antigua mercenaria de las Llamas Rojas. Perdió su escuadrón y desde entonces bebe más de lo que duerme.'),
+('Cazador de bandidos venido a menos. Perdió una pierna, pero la remplazó con metal y rabia.'),
+('Crió ratas del desierto durante diez años. Las comía. También las entrenaba. Dice que aprendió paciencia.'),
+('Ex-guardia de ciudad caída. Se llevó la armadura, y la culpa. Quiere redención, o algo que se le parezca.'),
+('Fue carnicero, hasta que las carnes empezaron a moverse. Desde entonces solo corta cosas que sangren.'),
+('Nacido en las ruinas. Nunca ha visto una ciudad. Pelea como si cada día fuera el último, porque para él lo es.'),
+('Hermano menor de un señor de la guerra. Se negó a matar por poder y huyó. Ahora mata por comida.'),
+('Superviviente de un convoy perdido en las arenas. Fue el único que regresó, y no habla de cómo.'),
+('Hija de una comerciante y un asesino. Sabe negociar y apuñalar por igual. Cobra por ambos servicios.'),
+('Criado por bandidos, luego traicionado por ellos. Ahora caza a los suyos por deporte y oro.'),
+('Poeta fracasado, luchador inesperado. Escribe versos en la sangre que derrama.'),
+('Fue esclavo gladiador durante seis años. Cuando lo soltaron, mató al dueño. No ha parado desde entonces.'),
+('Nadie sabe su nombre real. Dice que fue sombra de un rey, y ahora busca su propia historia.'),
+('Comió carne humana durante una hambruna. No le enorgullece, pero tampoco se disculpa.'),
+('Hombre tranquilo, manos violentas. Nunca grita, nunca corre. Mata despacio, pero seguro.'),
+('Expulsada de tres bandas por "problemas de actitud". Ella dice que era la única cuerda.'),
+('Cree que una voz le habla desde las montañas. Le obedece. A veces esa voz tiene razón.'),
+('Peleó con un palo hasta que le dieron una espada. Siguió usando el palo. "Más confiable", dice.'),
+('Fue minero en las Tierras Negras. Un derrumbe lo dejó atrapado una semana. Desde entonces, odia los túneles y ama el cielo.'),
+('Ladrón reformado, o eso dice. Todavía camina como si tuviera que escapar en cualquier momento.'),
+('Creció en una caravana de mercaderes nómadas. Perdió a su familia por fuego cruzado. Desde entonces, solo viaja solo.'),
+('Dice haber sido criado por un anciano espadachín ciego. Pelea como si el mundo fuera niebla.'),
+('Sirvió como guardia en un burdel de frontera. Aprendió más sobre gente que sobre lucha. Pero también aprendió a pelear.'),
+('Era aprendiz de médico. Un error mató a un niño. No volvió a tocar vendas, solo espadas.'),
+('Vivió entre caníbales durante tres años. Nunca dice si fue prisionero o parte de la tribu.'),
+('Camina con muletas, pero pelea como si no las necesitara. Dice que cada golpe le recuerda por qué sigue vivo.'),
+('Limpió cadáveres en el campo de batalla desde los doce años. Un día, agarró un arma y no soltó más ninguna.'),
+('Habla solo. A veces ríe, a veces llora. A veces su "otro yo" pelea mejor que él.'),
+('Se unió a un culto por amor. Salió cuando el amor fue sacrificado. Guarda una cicatriz en el pecho, y otra en el alma.'),
+('Era carcelero. Dejó libre a un prisionero inocente. Perdió el trabajo, pero ganó conciencia. Ahora busca justicia a su manera.'),
+('Cazador de bestias que perdió la vista de un ojo. “Ahora solo veo lo importante”, dice mientras apunta.'),
+('Viajó con músicos ambulantes. Tocaba el tambor. Ahora solo toca tambores de guerra.'),
+('Fue criado para ser noble, pero se negó a mandar. Prefirió vivir entre polvo y barro que dar órdenes injustas.'),
+('Tuvo un hijo. Lo perdió en una redada. Desde entonces, no se le ha visto sonreír.'),
+('Era cocinero en una fortaleza. Envenenó a los invasores. Desde entonces cocina para soldados… y asesinos.'),
+('Aprendió a luchar viendo peleas de gallos. Dice que todo lo que sabe lo aprendió de un ave furiosa.'),
+('Trabajó como enterrador. Enterró enemigos y amigos por igual. Dice que cada muerte lo hizo más fuerte.'),
+('Tenía una promesa, una causa, un líder. Ya no le queda nada de eso. Solo una espada y ganas de seguir.'),
+('Estuvo encerrado en Rebirth durante cinco años. Aprendió a sobrevivir comiendo piedras… o algo parecido.'),
+('Caminó solo desde Mongrel hasta Black Scratch. No por valentía, sino porque no quedaba nadie más.'),
+('Defendió un puesto comercial en The Hook durante el asedio de los Skin Bandits. Sobrevivió a costa de los otros.'),
+('Fue maestro de espadas en World''s End. Dejó todo atrás tras un duelo perdido que aún sueña cada noche.'),
+('Limpió sangre en las arenas de gladiadores de Sho-Battai. Ahora cobra por derramarla, no por limpiarla.'),
+('Vivió en las minas de Clownsteady sin ver el cielo durante años. Ahora no entra en cuevas, ni aunque haya oro.'),
+('Sirvió como escolta de caravanas entre Heft y Stoat. La mitad de su rostro quedó en una emboscada. La otra mitad sonríe.'),
+('Perdió un brazo en los campos de Vain. No quiere hablar del cómo. Solo quiere una nueva oportunidad.'),
+('Fue traicionado por sus propios aliados cerca de Blister Hill. Desde entonces, duerme con un ojo abierto y una daga bajo el cuello.'),
+('Pasó una temporada en las ruinas de la Nube Roja. Dice que no encontró enemigos… solo recuerdos.'),
+('Estuvo al servicio de un noble de Brink. Vio el lujo pudrirse desde adentro. Ahora prefiere el polvo bajo las botas.'),
+('Habitó en las sombras de Stack, fingiendo fe para no arder. Hoy solo cree en su espada.'),
+('Durante años, rastreó esclavistas cerca de Port North. No por justicia, sino por venganza.'),
+('Vigiló las puertas de Heng en los días de disturbio. Aprendió que los muros no detienen la traición.'),
+('Abandonó una torre de investigación en Black Desert City. Dice que la ciencia no basta cuando el mundo se cae a pedazos.'),
+('Cruzó el Mar de Acido con un grupo. Solo volvió uno. Nunca dijo qué ocurrió, pero ya no teme al dolor.'),
+('Construyó una cabaña cerca de Leviathan Coast. Vivió en paz hasta que algo lo obligó a volver a empuñar el filo.'),
+('Presenció una ejecución en Okran''s Shield. No fue la víctima… pero ese día murió algo en él.'),
+('Exploró las ruinas bajo Bast. Lo que encontró no puede decirlo, pero desde entonces duerme mal.'),
+('Sirvió a un líder de Deadcat. Lo traicionaron. Ahora trabaja solo, y no pregunta mucho.');
+
+
+
+

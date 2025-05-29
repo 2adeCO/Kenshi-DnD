@@ -7,10 +7,12 @@ namespace Kenshi_DnD
     class RangedItem : Item
     {
         int difficulty;
+        int maxAmmo;
         int ammo;
         public RangedItem(string name, string description, int value, int resellValue, int limbsNeeded, int difficulty, int ammo, StatModifier statToModify)
             : base(name, description, value, resellValue, limbsNeeded, statToModify)
         {
+            this.maxAmmo = ammo;
             this.ammo = ammo;
             this.difficulty = difficulty;
         }
@@ -22,21 +24,29 @@ namespace Kenshi_DnD
         {
             return difficulty;
         }
-        public void AddAmmo(int ammo)
+        public bool IsFull()
         {
-            this.ammo += ammo;
+            return ammo == maxAmmo;
         }
         public int GetAmmo()
         {
             return ammo;
         }
+        public string GetAmmoAndMaxAmmo()
+        {
+            return ammo + "/" + maxAmmo;
+        }
+        public void FillAmmo()
+        {
+            this.ammo = maxAmmo; 
+        }
         public void ShootAmmo()
         {
             this.ammo -= 1;
         }
-        public override void SetRarity(Rarity.Rarities rarity)
+        public override void UpgradeRarity(Rarity.Rarities rarity)
         {
-            this.rarity = rarity;
+            SetRarity(rarity);
             double costMultiplier = 1.0;
             int buff = 0;
 
@@ -45,43 +55,42 @@ namespace Kenshi_DnD
                 case Rarity.Rarities.Junk:
                     {
                         costMultiplier = 1.0;
-                        buff = 1;
                         break;
                     }
                 case Rarity.Rarities.RustCovered:
                     {
                         costMultiplier = 1.10;
-                        buff = 2;
+                        buff = 1;
                         break;
                     }
                 case Rarity.Rarities.Catun:
                     {
                         costMultiplier = 1.25;
-                        buff = 3;
+                        buff = 2;
                         break;
                     }
                 case Rarity.Rarities.Mk:
                     {
                         costMultiplier = 1.50;
-                        buff = 4;
+                        buff = 3;
                         break;
                     }
                 case Rarity.Rarities.Edgewalker:
                     {
                         costMultiplier = 1.75;
-                        buff = 5;
+                        buff = 4;
                         break;
                     }
                 case Rarity.Rarities.Meitou:
                     {
                         costMultiplier = 2.0;
-                            buff = 6;
+                            buff = 5;
                         break;
                     }
             }
 
             statToModify.UpgradeStat(Stats.Stat.Dexterity, buff);
-            difficulty = difficulty + buff;
+            difficulty += buff / 2;
 
             value = (int)(value * costMultiplier);
             resellValue = (int)(value * 0.5);
@@ -91,7 +100,7 @@ namespace Kenshi_DnD
         {
             StatModifier statCopy = statToModify.GetCopy();
 
-            Item itemCopy = new RangedItem(name,description,value,resellValue,limbsNeeded,difficulty,ammo, statCopy);
+            Item itemCopy = new RangedItem(name,description,value,resellValue,limbsNeeded,difficulty,maxAmmo, statCopy);
             itemCopy.SetRarity(rarity);
             return itemCopy;
         }

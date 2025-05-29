@@ -74,7 +74,7 @@ namespace Kenshi_DnD
             }
             
         }
-        public void AffectRelations(Adventure myAdventure)
+        public void AffectRelations(Adventure myAdventure, Random rnd)
         {
             int relationsLoss = 0;
             for (int i = 0; i < hostilities.Count; i++)
@@ -88,7 +88,7 @@ namespace Kenshi_DnD
                             {
                                 if(heroes[j].GetSubrace().GetName() != "Greenlander")
                                 {
-                                    relationsLoss += 5;
+                                    relationsLoss -= 5;
                                 }
                                 for(int k = 0; k < heroes[j].GetLimbs().Length; k += 1)
                                 {
@@ -98,6 +98,11 @@ namespace Kenshi_DnD
                                     }
                                 }
                             }
+                            if(relationsLoss == 0)
+                            {
+                                AddOrSubtractRelation(10);
+                            }
+
                             break;
                         }
                     case Hostilities.Hostility.CorruptOligarchy:
@@ -105,6 +110,10 @@ namespace Kenshi_DnD
                             if(myAdventure.GetCats() / myAdventure.GetHeroesCount() < 200)
                             {
                                 relationsLoss += 5;
+                            }
+                            else
+                            {
+                                AddOrSubtractRelation(5);
                             }
                             break;
                         }
@@ -115,8 +124,12 @@ namespace Kenshi_DnD
                             {
                                 if (heroes[j].GetLevel() > 10)
                                 {
-                                    relationsLoss += 5;
+                                    relationsLoss -= 5;
                                 }
+                            }
+                            if(relationsLoss == 0)
+                            {
+                                AddOrSubtractRelation(5);
                             }
                             break;
                         }
@@ -127,14 +140,32 @@ namespace Kenshi_DnD
                             {
                                 if (heroes[j].GetRace().GetName() == "Enjambre")
                                 {
-                                    relationsLoss += 10;
+                                    relationsLoss -= 10;
                                 }
                             }
+                            if(relationsLoss == 0)
+                            {
+                                AddOrSubtractRelation(5);
+                            }
+
                             break;
                         }
                     case Hostilities.Hostility.Survival:
                         {
-                            relationsLoss += 5;
+                            int mightNotSeePlayer = rnd.Next(0, 3);
+                            switch (mightNotSeePlayer)
+                            {
+                                case < 2:
+                                    {
+                                        relationsLoss -= 5;
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        AddOrSubtractRelation(2);
+                                        break;
+                                    }
+                            }
                             break;
                         }
                     default:
@@ -145,18 +176,23 @@ namespace Kenshi_DnD
                 }
             }
             
-            relations -= relationsLoss;
-            if (relations < 0)
-            {
-                relations = 0;
-            }
+            AddOrSubtractRelation(relationsLoss);
+           
         }
-        public void ImproveRelations(int amount)
+        public bool GetRespectByFighting()
+        {
+            return respectByFighting;
+        }
+        public void AddOrSubtractRelation(int amount)
         {
             relations += amount;
             if (relations > 100)
             {
                 relations = 100;
+            }
+            if(relations < 0)
+            {
+                relations = 0;
             }
         }
         public string HostilityToString()

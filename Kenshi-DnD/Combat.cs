@@ -198,9 +198,9 @@ namespace Kenshi_DnD
 
             if(myDice.PlayDice(looterStat,rnd) > 3)
             {
-                corpse.FreeAllItems();
+                string itemRecovered = corpse.FreeAllItems();
                 await window.UpdateLogUI(hero.GetName() + " revolvió el cuerpo inconsciente de " + corpse.GetName() +
-                    " y consiguió recuperar: " + corpse.FreeAllItems(), 0);
+                    " y consiguió recuperar: " + itemRecovered == "" ? " Ninguno" : itemRecovered , 0);
 
 
             }
@@ -251,11 +251,12 @@ namespace Kenshi_DnD
             Debug.WriteLine("hits/4: " +hits / 4);
 			if (hits > defender.GetToughness() / 2)
 			{
+                await window.UpdateLogUI("Ha sido muy doloroso", 400);
                 Debug.WriteLine("Might lose an arm");
-				if (myDice.PlayDice(hits / 4, rnd) > 2)
+				if (myDice.PlayDice(hits / 2, rnd) > 2)
 				{
-					Limb limbLost = defender.RemoveLimb(rnd.Next(0, 5));
-					await window.UpdateLogUI("El " + limbLost.GetName() + " de " + defender.GetName() + " @120@voló por los aires@...",0);
+					Limb limbLost = defender.RemoveLimb(rnd.Next(0, 4));
+					await window.UpdateLogUI("La " + limbLost.GetName() + " de " + defender.GetName() + " @120@voló por los aires@...",0);
                     await window.UpdateDicesUI(myDice.GetRollHistory(), 1200);
 				}
 			}
@@ -438,7 +439,7 @@ namespace Kenshi_DnD
         private async Task RangeAttack(Hero attacker, Monster defender)
         {
             Debug.WriteLine(attacker.GetName() + " attacks " + defender.GetName());
-            int defenderStat = defender.GetResistance();
+            int defenderStat = defender.GetResistance() / 2;
             int defenderHealth = defender.GetHp();
             int defenderAgility = defender.GetAgility();
             int attackerStat = attacker.GetStat(Stats.Stat.Dexterity);
@@ -553,7 +554,8 @@ namespace Kenshi_DnD
                     {
                         Limb limbUsed = attacker.GetRandomLimb(rnd);
 
-                        int limbStat = limbUsed.GetBruteForce() + limbUsed.GetDexterity();
+                        int limbStat = limbUsed.GetBruteForce() + limbUsed.GetDexterity() == 0 ?
+                            1 : limbUsed.GetBruteForce() + limbUsed.GetDexterity();
 
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
@@ -603,7 +605,8 @@ namespace Kenshi_DnD
 
                         for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
-                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
+                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity() == 0 ?
+                            1 : limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
@@ -661,7 +664,8 @@ namespace Kenshi_DnD
                         int limbStat = 0;
                         for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
-                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
+                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity() == 0 ?
+                            1 : limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 
@@ -718,7 +722,8 @@ namespace Kenshi_DnD
                         int limbStat = 0;
                         for (int i = 0; i < limbsUsed.Length; i+=1)
                         {
-                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
+                            limbStat += limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity() == 0 ?
+                            1 : limbsUsed[i].GetBruteForce() + limbsUsed[i].GetDexterity();
                         }
                         int hitChances = attacker.GetStat(Stats.Stat.Agility);
 

@@ -32,7 +32,7 @@ namespace Kenshi_DnD
         int remainingPoints;
         const int DEFAULT_DICE_SIDES = 6;
         const int DEFAULT_DICE_MIN_WIN = 4;
-        const int DEFAULT_POINTS_ON_HERO_MAKER = 14;
+        const int DEFAULT_POINTS_ON_HERO_MAKER = 7;
         const string DEFAULT_FACTION_NAME = "El club famelico";
         const string DEFAULT_HERO_NAME = "Beep";
         const string DEFAULT_HERO_TITLE = "El Elegido";
@@ -54,7 +54,7 @@ namespace Kenshi_DnD
             remainingPointsText.Text = remainingPoints.ToString();
 
 
-            adventureName.Text = "AventuraDe" + DEFAULT_HERO_NAME;
+            adventureName.Text = "Aventura De " + DEFAULT_HERO_NAME;
             factionName.Text = DEFAULT_FACTION_NAME;
             factionColor.ItemsSource = new string[] { "Rojo", "Verde", "Azul", "Morado", "Dorado", "Naranja", "Gris azulado", "Gris", "Negro" };
             factionColor.SelectedItem = "Rojo";
@@ -67,9 +67,9 @@ namespace Kenshi_DnD
 
             changingSliders = false;
             characterRace.ItemsSource = RacesDictionary.RacesAndSubraces.Keys;
-            characterRace.SelectedItem = "Humano";
-            characterSubrace.ItemsSource = RacesDictionary.RacesAndSubraces["Humano"];
-            characterSubrace.SelectedItem = "Greenlander";
+            characterRace.SelectedItem = "Enjambre";
+            characterSubrace.ItemsSource = RacesDictionary.RacesAndSubraces["Enjambre"];
+            characterSubrace.SelectedItem = "Dron Soldado";
 
             bruteForceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
@@ -239,26 +239,14 @@ namespace Kenshi_DnD
             string adventurePath = "./saves/" + adventure.GetId() + ".adventure";
             if (File.Exists(adventurePath))
             {
-                MessageBox.Show("¿Quieres eliminar la aventura " + adventure.GetId() + "? Pulsa de nuevo para eliminarla.");
-                button.Click -= DeleteAdventureWarning;
-                button.Click += DeleteAdventure;
+                if (MessageBox.Show("¿Quieres eliminar la aventura " + adventure.GetId() + "? Pulsa de nuevo para eliminarla.",
+                    "Borrar " + adventure.GetId(), MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    File.Delete(adventurePath);
+                    AdventureChooserMenu.Children.Remove((Grid)button.Parent);
+                    MessageBox.Show("Aventura eliminada.");
+                }
             } else
-            {
-                MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
-            }
-        }
-        private void DeleteAdventure(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-            Adventure adventure = (Adventure)button.Tag;
-            string adventurePath = "./saves/" + adventure.GetId() + ".adventure";
-            if (File.Exists(adventurePath))
-            {
-                File.Delete(adventurePath);
-                AdventureChooserMenu.Children.Remove((Grid)button.Parent);
-                MessageBox.Show("Aventura eliminada.");
-            }
-            else
             {
                 MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
             }
@@ -747,7 +735,7 @@ namespace Kenshi_DnD
                 reader.Close(); // Cierra el reader después de leer MeleeItems
 
                 // Obtener RangedItems
-                command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, ri.ammo, ri.difficulty, stats.bruteForce, " +
+                command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, ri.difficulty, ri.maxAmmo, stats.bruteForce, " +
                     "stats.dexterity, stats.hp, stats.resistance, stats.agility " +
                     "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
                     "INNER JOIN rangeditems ri ON ri.item_id = i.id;", connection);

@@ -80,9 +80,10 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid x:Name="SquadEditorItems" Grid.Row="0" Grid.Column="0"
-                          Grid.ColumnSpan="3" Margin="5,10,5,2">
+                          Grid.ColumnSpan="4" Margin="5,10,5,2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"></RowDefinition>
                             <RowDefinition Height="auto"></RowDefinition>
@@ -99,6 +100,10 @@
                           Grid.Column="0"
                           Grid.Row="1"
                           TextChanged="OnlyNumsAndLetters" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" 
+                               Background="White" Padding="10" Margin="2,20,5,10">
+                        <Run Text="Con RMB puedes despedir a un héroe" FontWeight="Bold"></Run>
+                    </TextBlock>
                     <Button Content="Crear squad"
                          Click="CreateSquad"
                              FontSize="14"
@@ -109,7 +114,7 @@
                             BorderThickness="2"
                          
                             HorizontalAlignment="Right"
-                         Grid.Column="1"
+                         Grid.Column="2"
                          Grid.Row="1" ></Button>
                     <Button Content="Eliminar Squad"
                      Click="DeleteSquad"
@@ -122,7 +127,7 @@
                         BorderThickness="2"
                      Height="40"
                             HorizontalAlignment="Left"
-                     Grid.Column="2"
+                     Grid.Column="4"
                      Grid.Row="1" ></Button>
                  </Grid>
             </ScrollViewer>
@@ -275,7 +280,7 @@ BorderThickness="3" Margin="15,60,45,10" CornerRadius="2">
                         <Rectangle Grid.Row="1" Stroke="Black" Fill="Black" HorizontalAlignment="Stretch"
    Margin="15,60,45,20" Height="3"/>
 
-                        <Button x:Name="PutLimbButton" Content="¿Necesitas un parche, guerrero?" 
+                        <Button x:Name="PutLimbButton" Content="¿Necesitas un parche, guerrero?" Click="PutLimb"
 Height="50" Background="#80FFFFFF"
 Grid.Row="2" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
@@ -485,6 +490,7 @@ Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
@@ -505,7 +511,11 @@ Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                         Height="50" Background="#55334455" Foreground="#E0E0E0"
                         Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
 
-                        <Button Content="Salir" Grid.Row="4" ToolTip="Luego podrás volver siempre y cuando no te salgas del juego o entres en combate."
+                        <Button x:Name="FillAmmoButton" Content="" Click="FillAmmo" IsEnabled="False" Visibility="Collapsed"
+                        Height="50" Background="#55334455" Foreground="#E0E0E0"
+                        Grid.Row="4" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
+
+                        <Button Content="Salir" Grid.Row="5" ToolTip="Luego podrás volver siempre y cuando no te salgas del juego o entres en combate."
                 Height="50" Background="#55334455" Foreground="#E0E0E0"
                 HorizontalAlignment="Stretch" Margin="20,20,50,20"
                 Click="CloseCurrentGrid"/>

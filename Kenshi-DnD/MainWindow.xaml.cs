@@ -325,5 +325,11 @@ public partial class MainWindow : Window
             return monstersToReturn;
 
         }
+        public TextBlock GenerateTextblock(string content)
+        {
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.AddRange(DecorateText(content));
+            return textBlock;
+        }
     }
 }

@@ -552,9 +552,12 @@ namespace Kenshi_DnD
         {
             return allRegions;
         }
-        public Monster[] GetAllMonsters()
+        public void GainToken()
         {
-            return allMonsters;
+            for(int i = 0; i < allRegions.Length; i += 1)
+            {                
+               allRegions[i].GainToken();
+            }
         }
         public string[] GetTitles()
         {

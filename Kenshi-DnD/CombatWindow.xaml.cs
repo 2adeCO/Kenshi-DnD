@@ -871,7 +871,17 @@ namespace Kenshi_DnD
                         FreeInventoryFromAllHeroes();
                         GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
-                        mainWindow.PageController.Content = new Zone(mainWindow, controller, cursors, rnd, myAdventure, myAdventure.GetCurrentRegion());
+                        myAdventure.GainToken();
+                        Faction faction = monsters[0].GetFaction();
+                        if (faction.GetRespectByFighting())
+                        {
+                            faction.AddOrSubtractRelation(50);
+                        }
+                        else
+                        {
+                            faction.AddOrSubtractRelation(-20);
+                        }
+                            mainWindow.PageController.Content = new Zone(mainWindow, controller, cursors, rnd, myAdventure, myAdventure.GetCurrentRegion());
                         break;
                     }
                 case -1:
@@ -879,6 +889,17 @@ namespace Kenshi_DnD
                         FreeInventoryFromAllHeroes();
                         GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
+                        myAdventure.GainToken();
+                        Faction faction = monsters[0].GetFaction();
+                        if (faction.GetRespectByFighting())
+                        {
+                            faction.AddOrSubtractRelation(-20);
+                        }
+                        else
+                        {
+                            // Player gains relations if the faction is able to win him to avoid the player getting into fights he can't win for a while
+                            faction.AddOrSubtractRelation(30);
+                        }
                         mainWindow.PageController.Content = new Map(mainWindow, mainWindow.PageController, cursors, rnd, myAdventure);
                         break;
                     }
@@ -1092,7 +1113,7 @@ namespace Kenshi_DnD
             if(item is RangedItem)
             {
                 RangedItem rangedItem = (RangedItem)item;
-                name += $" [{rangedItem.GetAmmo()}]"; 
+                name += $" [{rangedItem.GetAmmoAndMaxAmmo()}]"; 
             }
             Border border = new Border();
             border.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e3e4c9"));

@@ -82,7 +82,7 @@ namespace Kenshi_DnD
             if (region == selectedRegion)
             {
                 adventure.SetCurrentRegion(region);
-                selectedRegion.AffectsRelations(adventure);
+                selectedRegion.AffectsRelations(adventure, rnd);
                 // Player rolls average relations / 10 (1-10), and if is higher than 3, he avoids the encounter
                 if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10,rnd) >= PEACE_ROLLS_NEEDED)
                 {

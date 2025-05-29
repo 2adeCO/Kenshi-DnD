@@ -85,7 +85,7 @@ drop table if exists rangedItems;
 create table rangedItems(
 	item_id int primary key,
     difficulty int not null,
-    ammo int not null,
+    maxAmmo int not null,
     
     foreign key (item_id) references items(id)
 );
@@ -136,7 +136,7 @@ CREATE TABLE titles (
 drop table if exists backgrounds;
 CREATE TABLE backgrounds (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    background VARCHAR(100) NOT NULL
+    background VARCHAR(200) NOT NULL
 );
 
 
