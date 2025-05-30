@@ -517,7 +517,3 @@ INSERT INTO backgrounds (background) VALUES
 ('Presenció una ejecución en Okran''s Shield. No fue la víctima… pero ese día murió algo en él.'),
 ('Exploró las ruinas bajo Bast. Lo que encontró no puede decirlo, pero desde entonces duerme mal.'),
 ('Sirvió a un líder de Deadcat. Lo traicionaron. Ahora trabaja solo, y no pregunta mucho.');
-
-
-
-
