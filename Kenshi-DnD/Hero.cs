@@ -599,6 +599,7 @@ namespace Kenshi_DnD
                 $"Experiencia: {experience}\n" +
                 $"Raza: {race.GetName()}\n" +
                 $"{(subrace.GetName() != "Puro" ? $"Subraza: {subrace.GetName()}\n" : "")}"
+                + ((IsAmputee() ) ? ("Le faltan miembros... Acude al mecánico de extremidades...\n") : (""))
                 + GetAllStats().ToString();
         }
         public string Meet()

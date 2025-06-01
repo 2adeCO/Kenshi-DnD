@@ -24,6 +24,7 @@
     <None Remove="Resources\cursors\Tooth_Pick.webp.cur" />
     <None Remove="Resources\img\bonepeople.jpg" />
     <None Remove="Resources\img\map.jpg" />
+    <None Remove="Resources\xml\kenshidata.xml" />
     <None Remove="saves\saves.txt" />
   </ItemGroup>
 
@@ -69,6 +70,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\img\map.jpg" />
+    <Content Include="Resources\xml\kenshidata.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   

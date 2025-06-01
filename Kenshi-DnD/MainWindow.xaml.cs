@@ -20,10 +20,12 @@ public partial class MainWindow : Window
         Cursor[] cursors;
         Random rnd;
         DispatcherTimer timer;
+        bool usingXML;
         public MainWindow()
         {
             InitializeComponent();
             LoadCursors();
+            usingXML = false;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             rnd = new Random();
@@ -258,17 +260,22 @@ public partial class MainWindow : Window
                 }
                 else
                 {
-                    throw new Exception("File not found");
+                    throw new DBNotFoundException();
                 }
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
-                MessageBox.Show("La base de datos no está bien configuarada. El programa fallará si intentas guardar una nueva partida.");
+                MessageBox.Show(e.Message);
+                usingXML = true;
                 return "";
             }
             
             
+        }
+        public bool UseXml()
+        {
+            return usingXML;
         }
         public void SaveAdventure(Adventure adventure)
         {

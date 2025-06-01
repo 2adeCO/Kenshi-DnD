@@ -8,6 +8,9 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Text.Json;
+using System.Linq;
+using System.Xml.Linq;
+using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -75,7 +78,11 @@ namespace Kenshi_DnD
             dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
-            
+            Item[] items = XmlGetItems();
+            for(int i = 0; i < items.Length; i += 1)
+            {
+                Debug.WriteLine(items[i].ToString());
+            }
 
             IsAdventureValid(null, null);
         }
@@ -642,15 +649,21 @@ namespace Kenshi_DnD
         
         private Faction[] SqlGetFactions()
         {
+            
+            if(mainWindow.UseXml())
+            {
+                return XmlGetFactions();
+            }
 
             MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
-            MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
-            MySqlDataReader reader;
-            int numberOfFactions = 0;
             Faction[] factions = null;
-
             try
             {
+                 MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
+                 MySqlDataReader reader;
+                int numberOfFactions = 0;
+
+            
                 connection.Open();
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -690,10 +703,52 @@ namespace Kenshi_DnD
                 connection.Close();
                 return null;
             }
+            catch(DBNotFoundException ex)
+            {
+                Debug.WriteLine("MySql wanted to crash, but it was not found");
+                connection.Close();
+
+            }
+            
             return factions;
+        }
+        private Faction[] XmlGetFactions()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+                    Faction[] factions = xmlFile.Root.Elements("factions")
+                        .Select((f,index) => new Faction(
+                            index,
+                            f.Element("name").Value,
+                            f.Element("description").Value,
+                            int.Parse(f.Element("baseRelations").Value),
+                            int.Parse(f.Element("color").Value),
+                            bool.Parse(f.Element("respectByFighting").Value))
+                        ).ToArray();
+                    return factions;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+            
         }
         private Item[] SqlGetItems()
         {
+            if (mainWindow.UseXml())
+            {
+                return XmlGetItems();
+            }
             MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
             MySqlCommand command;
             MySqlDataReader reader;
@@ -762,6 +817,58 @@ namespace Kenshi_DnD
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
                 return null; // En caso de error, retorna null
+            }
+        }
+        private Item[] XmlGetItems()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+
+
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    StatModifier[] stats = xmlFile.Root.Elements("stats")
+                        .Select(s => new StatModifier(
+                            int.Parse(s.Element("bruteForce").Value),
+                            int.Parse(s.Element("dexterity").Value),
+                            int.Parse(s.Element("hp").Value),
+                            int.Parse(s.Element("resistance").Value),
+                            int.Parse(s.Element("agility").Value))).ToArray();
+
+                    Item[] items = xmlFile.Root.Elements("items")
+                        .Select((i, index) => i.Element("type").Value == "melee" ?
+                            (Item)new MeleeItem(
+                                i.Element("name").Value,
+                                i.Element("description").Value,
+                                int.Parse(i.Element("value").Value),
+                                int.Parse(i.Element("resellValue").Value),
+                                int.Parse(i.Element("weight").Value),
+                                xmlFile.Root.Elements("meleeItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => bool.Parse(s.Element("canRevive").Value)).FirstOrDefault(),
+                                stats[int.Parse(i.Element("stats_id").Value) - 1],
+                                xmlFile.Root.Elements("meleeItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => bool.Parse(s.Element("breaksOnUse").Value)).FirstOrDefault()) :
+                            (Item)new RangedItem(
+                                i.Element("name").Value,
+                                i.Element("description").Value,
+                                int.Parse(i.Element("value").Value),
+                                int.Parse(i.Element("resellValue").Value),
+                                int.Parse(i.Element("weight").Value),
+                                xmlFile.Root.Elements("rangedItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => int.Parse(s.Element("difficulty").Value)).FirstOrDefault(),
+                                xmlFile.Root.Elements("rangedItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => int.Parse(s.Element("maxAmmo").Value)).FirstOrDefault(),
+                                stats[int.Parse(i.Element("stats_id").Value) - 1]
+                        )).ToArray();
+                    return items;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
             }
         }
         private Limb[] SqlGetLimbs()

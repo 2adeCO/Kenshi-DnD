@@ -519,6 +519,9 @@ namespace Kenshi_DnD
             }
             UpdateLog(hero.GetName() + " sufre de dolor durante unos largos 20 minutos, ¡Pero ahora tiene su " + limb.GetName() + " bien reluciente!");
             hero.PutLimb(limb);
+            HospitalItems.Children.Remove(selectedShopItemButton);
+            PutLimbButton.IsEnabled = false;
+            selectedShopItemButton = null;
             UpdateCats();
             GoToLimbHospital(null,null);
             UpdatePlayerGrid();
@@ -1032,26 +1035,8 @@ namespace Kenshi_DnD
             textBlock.Inlines.AddRange(mainWindow.DecorateText("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@"));
 
             SleepButton.Content = textBlock;
-
-            // Makes the access button to the shop clickable again
-            AccessRangedShopButton.IsEnabled = true;
-
-            // Hides the items
-            RangedShopItems.Visibility = Visibility.Collapsed;
-            // Updates the button text
-            AccessRangedShopButton.Content = "Sobornar segurata por 500$";
-
-            // Updates the region's heroes and items
-            region.GoToBar(myAdventure,rnd);
-            region.GoToShop(myAdventure, rnd);
-            // Updates the arrays
-            heroesInBar = region.GetHeroesInBar();
-            itemsInShop = region.GetShop();
-            // Updates the bar
-            GoToBar(null, null);
             UpdatePlayerGrid();
 
-            region.ConsumeToken();
             Debug.WriteLine("Slept in bar");
         }
         private void UpdateInventoryGrid()
