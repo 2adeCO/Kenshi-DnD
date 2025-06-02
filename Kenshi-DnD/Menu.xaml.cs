@@ -78,10 +78,10 @@ namespace Kenshi_DnD
             dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
-            Item[] items = XmlGetItems();
+            string[] items = XmlGetNames();
             for(int i = 0; i < items.Length; i += 1)
             {
-                Debug.WriteLine(items[i].ToString());
+                Debug.WriteLine(items[i]);
             }
 
             IsAdventureValid(null, null);
@@ -649,13 +649,13 @@ namespace Kenshi_DnD
         
         private Faction[] SqlGetFactions()
         {
-            
+            string connectionString = mainWindow.GetSqlConnectionString();
             if(mainWindow.UseXml())
             {
                 return XmlGetFactions();
             }
 
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+            MySqlConnection connection = new MySqlConnection(connectionString);
             Faction[] factions = null;
             try
             {
@@ -728,6 +728,18 @@ namespace Kenshi_DnD
                             int.Parse(f.Element("color").Value),
                             bool.Parse(f.Element("respectByFighting").Value))
                         ).ToArray();
+
+                    XElement[] fh = xmlFile.Root.Elements("faction_hostility").ToArray();
+
+                    for(int i = 0; i < fh.Length; i += 1)
+                    {
+                        int factionId = int.Parse(fh[i].Element("idFaction").Value);
+                        string hostility = xmlFile.Root.Elements("hostilities").Where(h=> int.Parse(h.Element("id").Value) == 
+                        int.Parse(fh[i].Element("idHostility").Value)).Select(h => h.Element("hostility").Value).FirstOrDefault();
+
+                        factions[factionId - 1].AddHostility(hostility);
+                    }
+
                     return factions;
                 }
                 else
@@ -745,11 +757,13 @@ namespace Kenshi_DnD
         }
         private Item[] SqlGetItems()
         {
+            string connectionString = mainWindow.GetSqlConnectionString();
             if (mainWindow.UseXml())
             {
                 return XmlGetItems();
             }
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command;
             MySqlDataReader reader;
             int numberOfItems = 0;
@@ -825,11 +839,9 @@ namespace Kenshi_DnD
             {
                 if (File.Exists("./Resources/xml/kenshidata.xml"))
                 {
-
-
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
 
-                    StatModifier[] stats = xmlFile.Root.Elements("stats")
+                    StatModifier[] stats = xmlFile.Root.Element("stats").Elements("stat")
                         .Select(s => new StatModifier(
                             int.Parse(s.Element("bruteForce").Value),
                             int.Parse(s.Element("dexterity").Value),
@@ -837,25 +849,29 @@ namespace Kenshi_DnD
                             int.Parse(s.Element("resistance").Value),
                             int.Parse(s.Element("agility").Value))).ToArray();
 
-                    Item[] items = xmlFile.Root.Elements("items")
-                        .Select((i, index) => i.Element("type").Value == "melee" ?
+                    Item[] items = xmlFile.Root.Element("items").Elements("item")
+                        .Select((i) => i.Element("type").Value == "melee" ?
                             (Item)new MeleeItem(
                                 i.Element("name").Value,
                                 i.Element("description").Value,
                                 int.Parse(i.Element("value").Value),
                                 int.Parse(i.Element("resellValue").Value),
                                 int.Parse(i.Element("weight").Value),
-                                xmlFile.Root.Elements("meleeItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => bool.Parse(s.Element("canRevive").Value)).FirstOrDefault(),
+                                xmlFile.Root.Element("meleeItems").Elements("meleeItem").Where(s => int.Parse(s.Element("item_id").Value) == int.Parse(i.Element("id").Value))
+                                .Select(s => bool.Parse(s.Element("canRevive").Value)).FirstOrDefault(),
                                 stats[int.Parse(i.Element("stats_id").Value) - 1],
-                                xmlFile.Root.Elements("meleeItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => bool.Parse(s.Element("breaksOnUse").Value)).FirstOrDefault()) :
+                                xmlFile.Root.Element("meleeItems").Elements("meleeItem").Where(s => int.Parse(s.Element("item_id").Value) == int.Parse(i.Element("id").Value))
+                                .Select(s => bool.Parse(s.Element("breaksOnUse").Value)).FirstOrDefault()) :
                             (Item)new RangedItem(
                                 i.Element("name").Value,
                                 i.Element("description").Value,
                                 int.Parse(i.Element("value").Value),
                                 int.Parse(i.Element("resellValue").Value),
                                 int.Parse(i.Element("weight").Value),
-                                xmlFile.Root.Elements("rangedItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => int.Parse(s.Element("difficulty").Value)).FirstOrDefault(),
-                                xmlFile.Root.Elements("rangedItems").Where(s => int.Parse(s.Element("item_id").Value) == index + 1).Select(s => int.Parse(s.Element("maxAmmo").Value)).FirstOrDefault(),
+                                xmlFile.Root.Element("rangedItems").Elements("rangedItem").Where(s => int.Parse(s.Element("item_id").Value) == int.Parse(i.Element("id").Value))
+                                .Select(s => int.Parse(s.Element("difficulty").Value)).FirstOrDefault(),
+                                xmlFile.Root.Element("rangedItems").Elements("rangedItem").Where(s => int.Parse(s.Element("item_id").Value) == int.Parse(i.Element("id").Value))
+                                .Select(s => int.Parse(s.Element("maxAmmo").Value)).FirstOrDefault(),
                                 stats[int.Parse(i.Element("stats_id").Value) - 1]
                         )).ToArray();
                     return items;
@@ -873,7 +889,14 @@ namespace Kenshi_DnD
         }
         private Limb[] SqlGetLimbs()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetLimbs();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from limbs;",connection);
             MySqlDataReader reader;
             Limb[] limbs;
@@ -912,9 +935,50 @@ namespace Kenshi_DnD
             }
             return limbs;
         }
+        private Limb[] XmlGetLimbs()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Limb[] limbs = xmlFile.Root.Element("limbs").Elements("limb").Select(l => new Limb(
+                        l.Element("name").Value,
+                        int.Parse(l.Element("value").Value),
+                        xmlFile.Root.Element("stats").Elements("stat").Where(s => int.Parse(s.Element("id").Value) == int.Parse(l.Element("stats_id").Value))
+                        .Select(s => int.Parse(s.Element("bruteForce").Value)).FirstOrDefault(),
+                        xmlFile.Root.Element("stats").Elements("stat").Where(s => int.Parse(s.Element("id").Value) == int.Parse(l.Element("stats_id").Value))
+                        .Select(s => int.Parse(s.Element("dexterity").Value)).FirstOrDefault(),
+                        xmlFile.Root.Element("stats").Elements("stat").Where(s => int.Parse(s.Element("id").Value) == int.Parse(l.Element("stats_id").Value))
+                        .Select(s => int.Parse(s.Element("hp").Value)).FirstOrDefault(),
+                        xmlFile.Root.Element("stats").Elements("stat").Where(s => int.Parse(s.Element("id").Value) == int.Parse(l.Element("stats_id").Value))
+                        .Select(s => int.Parse(s.Element("resistance").Value)).FirstOrDefault(),
+                         xmlFile.Root.Element("stats").Elements("stat").Where(s => int.Parse(s.Element("id").Value) == int.Parse(l.Element("stats_id").Value))
+                        .Select(s => int.Parse(s.Element("agility").Value)).FirstOrDefault()
+                        )).ToArray();
+                    return limbs;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private Region[] SqlGetRegions()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetRegions();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from regions;", connection);
             MySqlDataReader reader;
             Region[] regions;
@@ -964,9 +1028,57 @@ namespace Kenshi_DnD
             return regions;
 
         }
+        private Region[] XmlGetRegions()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Region[] regions = xmlFile.Root.Elements("regions").Select(r => new Region(
+                        r.Element("name").Value, r.Element("description").Value,
+                        bool.Parse(r.Element("hasBar").Value),
+                        bool.Parse(r.Element("hasShop").Value),
+                        bool.Parse(r.Element("hasLimbHospital").Value),
+                        bool.Parse(r.Element("hasContrabandMarket").Value),
+                        bool.Parse(r.Element("hasRangedShop").Value)
+                        )).ToArray();
+                    Faction[] factions = XmlGetFactions();
+
+
+                    XElement[] rf = xmlFile.Root.Elements("region_faction").ToArray();
+                    for (int i  = 0; i < rf.Length; i += 1)
+                    {
+                        
+                        int regionId = int.Parse(rf[i].Element("regionId").Value);
+                        int factionId = int.Parse(rf[i].Element("factionId").Value);
+
+                        regions[regionId -1].AddFaction(factions[factionId -1]);
+                    }
+                    
+                    return regions;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private Race[] SqlGetRaces()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetRaces();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from races;", connection);
             MySqlDataReader reader;
             Race[] races;
@@ -1004,9 +1116,54 @@ namespace Kenshi_DnD
             }
             return races;
         }
+        private Race[] XmlGetRaces()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    StatModifier[] stats = xmlFile.Root.Element("stats").Elements("stat")
+                        .Select(s => new StatModifier(
+                            int.Parse(s.Element("bruteForce").Value),
+                            int.Parse(s.Element("dexterity").Value),
+                            int.Parse(s.Element("hp").Value),
+                            int.Parse(s.Element("resistance").Value),
+                            int.Parse(s.Element("agility").Value))).ToArray();
+
+                    Race[] races = xmlFile.Root.Elements("races")
+                        .Select(r =>
+                            new Race(
+                                r.Element("name").Value,
+                                stats[int.Parse(r.Element("stats_id").Value) -1].GetBruteForce(),
+                                stats[int.Parse(r.Element("stats_id").Value) -1].GetDexterity(),
+                                stats[int.Parse(r.Element("stats_id").Value) -1].GetHp(),
+                                stats[int.Parse(r.Element("stats_id").Value) -1].GetResistance(),
+                                stats[int.Parse(r.Element("stats_id").Value) -1].GetAgility()
+                                )).ToArray();
+                    return races;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private Monster[] SqlGetEnemies()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetEnemies();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from enemies;", connection);
             MySqlDataReader reader;
             Faction[] factions = SqlGetFactions();
@@ -1045,9 +1202,46 @@ namespace Kenshi_DnD
             }
             return enemies;
         }
+        private Monster[] XmlGetEnemies()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Faction[] factions = XmlGetFactions();
+
+                    Monster[] monsters = xmlFile.Root.Element("enemies").Elements("enemy").Select(m => new Monster(
+                        m.Element("name").Value, int.Parse(m.Element("health").Value), factions[int.Parse(m.Element("factionId").Value) -1],
+                        int.Parse(m.Element("strength").Value), int.Parse(m.Element("resistance").Value),int.Parse(m.Element("agility").Value),
+                        m.Element("immunity").Value, int.Parse(m.Element("maxCatDrop").Value), int.Parse(m.Element("xp").Value), 
+                        bool.Parse(m.Element("canDropItem").Value)
+                        )).ToArray();
+
+                    return monsters;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private string[] SqlGetNames()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetNames();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from names;", connection);
             MySqlDataReader reader;
             string[] names;
@@ -1080,9 +1274,40 @@ namespace Kenshi_DnD
             }
             return names;
         }
+        private string[] XmlGetNames()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Faction[] factions = XmlGetFactions();
+
+                    string[] names = xmlFile.Root.Elements("names").Select(n => n.Element("name").Value).ToArray();
+
+                    return names;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private string[] SqlGetTitles()
         {
-            MySqlConnection connection = new MySqlConnection(mainWindow.GetSqlConnectionString());
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetTitles();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from titles;", connection);
             MySqlDataReader reader;
             string[] titles;
@@ -1115,9 +1340,40 @@ namespace Kenshi_DnD
             }
             return titles;
         }
+        private string[] XmlGetTitles()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Faction[] factions = XmlGetFactions();
+
+                    string[] titles = xmlFile.Root.Elements("titles").Select(n => n.Element("title").Value).ToArray();
+
+                    return titles;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
+        }
         private string[] SqlGetBackgrounds()
         {
-            MySqlConnection connection = new MySqlConnection("server=localhost;user=root;database=kenshi_dnd_db;port=3306;password=root");
+            string connectionString = mainWindow.GetSqlConnectionString();
+            if (mainWindow.UseXml())
+            {
+                return XmlGetBackgrounds();
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
             MySqlCommand command = new MySqlCommand("select count(*) from backgrounds;", connection);
             MySqlDataReader reader;
             string[] backgrounds;
@@ -1154,6 +1410,31 @@ namespace Kenshi_DnD
                 return null; // En caso de error, retorna null
             }
             return backgrounds;
+        }
+        private string[] XmlGetBackgrounds()
+        {
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Faction[] factions = XmlGetFactions();
+
+                    string[] backgrounds = xmlFile.Root.Elements("backgrounds").Select(n => n.Element("background").Value).ToArray();
+
+                    return backgrounds;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
         }
     }
 }

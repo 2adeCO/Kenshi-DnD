@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Xml.Schema;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Threading;
+using System.Xml.Linq;
 namespace Kenshi_DnD
 {
     /// <summary>
@@ -29,7 +30,7 @@ public partial class MainWindow : Window
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             rnd = new Random();
-            
+
             PageController.Content = new Menu(this,PageController, cursors, rnd);
         }
         private void AddSecondsToAdventureTime(Adventure adventure)
@@ -251,11 +252,15 @@ public partial class MainWindow : Window
                     string[] lines = File.ReadAllLines("./Resources/config/sqlconfig.txt");
                     StreamReader sr = new StreamReader("./Resources/config/sqlconfig.txt");
                     string mySqlConnectionString = sr.ReadLine();
-                    while (mySqlConnectionString[0] == '#')
+                    while (mySqlConnectionString[0] == '#' && !String.IsNullOrEmpty(mySqlConnectionString))
                     {
                         mySqlConnectionString = sr.ReadLine();
                     }
                     sr.Close();
+                    if (String.IsNullOrEmpty(mySqlConnectionString))
+                    {
+                        throw new DBNotFoundException();
+                    }
                     return mySqlConnectionString;
                 }
                 else
@@ -266,7 +271,6 @@ public partial class MainWindow : Window
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
-                MessageBox.Show(e.Message);
                 usingXML = true;
                 return "";
             }
@@ -290,46 +294,83 @@ public partial class MainWindow : Window
         }
         public Monster[] GenerateMonsters(Adventure adventure,Faction faction, Random rnd)
         {
-            MySqlConnection connection = new MySqlConnection(GetSqlConnectionString());
-            MySqlCommand command = new MySqlCommand("SELECT count(*) " +
-                "FROM enemies e " +
-                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
-            connection.Open();
-            MySqlDataReader reader = command.ExecuteReader();
-            reader.Read();
-            Monster[] monsters = new Monster[reader.GetInt32(0)];
-            reader.Close();
-            command = new MySqlCommand(
-                "SELECT e.name,e.health,e.factionId,e.strength,e.resistance,e.agility,e.immunity,e.maxCatDrop,e.xp,e.canDropItem " +
-                "FROM enemies e " +
-                "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
-            reader = command.ExecuteReader();
-            for (int i = 0; i < monsters.Length; i++)
-            {
-                reader.Read();
-                string name = reader.GetString(0);
-                int hp = reader.GetInt32(1);
-                int factionId = reader.GetInt32(2);
-                int strength = reader.GetInt32(3);
-                int resistance = reader.GetInt32(4);
-                int agility = reader.GetInt32(5);
-                string immunity = reader.GetString(6);
-                int cats = reader.GetInt32(7);
-                int xpDrop = reader.GetInt32(8);
-                bool canDropItem = reader.GetBoolean(9);
 
-                monsters[i] = new Monster(name, hp, adventure.GetAllFactions()[factionId - 1], strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
-            }
-            reader.Close();
-            connection.Close();
-            int numMonsters = rnd.Next(1, 5);
-            Monster[] monstersToReturn = new Monster[numMonsters];
-            for (int i = 0; i < numMonsters; i++)
+            string connectionString = GetSqlConnectionString();
+            if (!UseXml())
             {
-                Monster monster = monsters[rnd.Next(0, monsters.Length)];
-                monstersToReturn[i] = monster.GetCopy();
+                MySqlConnection connection = new MySqlConnection(connectionString);
+                MySqlCommand command = new MySqlCommand("SELECT count(*) " +
+                    "FROM enemies e " +
+                    "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
+                connection.Open();
+                MySqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                Monster[] monsters = new Monster[reader.GetInt32(0)];
+                reader.Close();
+                command = new MySqlCommand(
+                    "SELECT e.name,e.health,e.factionId,e.strength,e.resistance,e.agility,e.immunity,e.maxCatDrop,e.xp,e.canDropItem " +
+                    "FROM enemies e " +
+                    "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
+                reader = command.ExecuteReader();
+                for (int i = 0; i < monsters.Length; i++)
+                {
+                    reader.Read();
+                    string name = reader.GetString(0);
+                    int hp = reader.GetInt32(1);
+                    int factionId = reader.GetInt32(2);
+                    int strength = reader.GetInt32(3);
+                    int resistance = reader.GetInt32(4);
+                    int agility = reader.GetInt32(5);
+                    string immunity = reader.GetString(6);
+                    int cats = reader.GetInt32(7);
+                    int xpDrop = reader.GetInt32(8);
+                    bool canDropItem = reader.GetBoolean(9);
+
+                    monsters[i] = new Monster(name, hp, adventure.GetAllFactions()[factionId - 1], strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
+                }
+                reader.Close();
+                connection.Close();
+                int numMonsters = rnd.Next(1, 5);
+                Monster[] monstersToReturn = new Monster[numMonsters];
+                for (int i = 0; i < numMonsters; i++)
+                {
+                    Monster monster = monsters[rnd.Next(0, monsters.Length)];
+                    monstersToReturn[i] = monster.GetCopy();
+                }
+                return monstersToReturn;
             }
-            return monstersToReturn;
+            else
+            {
+                try
+                {
+                    if (File.Exists("./Resources/xml/kenshidata.xml"))
+                    {
+                        XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                        Monster[] monsterFromFaction = xmlFile.Root.Element("enemies").Elements("enemy").Where(e => 
+                        int.Parse(e.Element("factionId").Value) == faction.GetFactionId()).Select(m => new Monster(
+                        m.Element("name").Value, int.Parse(m.Element("health").Value), faction,
+                        int.Parse(m.Element("strength").Value), int.Parse(m.Element("resistance").Value), int.Parse(m.Element("agility").Value),
+                        m.Element("immunity").Value, int.Parse(m.Element("maxCatDrop").Value), int.Parse(m.Element("xp").Value),
+                        bool.Parse(m.Element("canDropItem").Value)
+                        )).ToArray();
+
+
+                        return monsterFromFaction;
+                    }
+                    else
+                    {
+                        throw new XMLNotFoundException();
+                    }
+                }
+                catch (XMLNotFoundException xmlError)
+                {
+                    MessageBox.Show(xmlError.Message);
+                    return null;
+                }
+
+            }
+            
 
         }
         public TextBlock GenerateTextblock(string content)

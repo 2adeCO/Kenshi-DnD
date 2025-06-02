@@ -1,13 +1,2198 @@
-﻿<?xml version="1.0" encoding="utf-8"?><root><factions><name>La Nación Sagrada</name><description>La Nación Sagrada es una teocracia fanática que venera a Okran,
- su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua, 
- a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología 
- con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.</description><baseRelations>80</baseRelations><color>6</color><respectByFighting>false</respectByFighting></factions><factions><name>Ciudades Unidas</name><description>Las Ciudades Unidas son un conglomerado de estados esclavistas y comerciantes, d
-ominados por una aristocracia corrupta. Su poder se basa en el comercio, la esclavitud y la riqueza. 
-La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.</description><baseRelations>80</baseRelations><color>4</color><respectByFighting>false</respectByFighting></factions><factions><name>Shek Kingdom</name><description>El Reino Shek está formado por una orgullosa raza de guerreros con cuerpos endurecidos por el combate.
- Su cultura gira en torno al honor, la fuerza y la superación personal. Desprecian la cobardía y valoran la muerte en batalla 
- por encima de todo.</description><baseRelations>90</baseRelations><color>1</color><respectByFighting>true</respectByFighting></factions><factions><name>Canibales</name><description>Los canibales habitan en tribus por todo el norte de la isla. Practican la antrofagía como ritual sagrado, 
- y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.</description><baseRelations>0</baseRelations><color>3</color><respectByFighting>false</respectByFighting></factions><factions><name>El Enjambre del Oeste</name><description>Sometidos a las feromónas de la Reina, los Enjambres actuan bajo una única voluntad. 
- El Enjambre del Oeste es una nación pacífica, y muy comercial. Mandan caravanas de enjambres a ambular el mundo en búsqueda de vender
- sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.</description><baseRelations>80</baseRelations><color>5</color><respectByFighting>false</respectByFighting></factions><factions><name>Reino Animal</name><description>En la isla hay una gran variedad de animales. Expuestos al mundo post-apocalíptico de la isla, buscan comida
- donde pueden. Esa comida podrías ser tú.</description><baseRelations>0</baseRelations><color>2</color><respectByFighting>false</respectByFighting></factions><factions><name>Bandidos famélicos</name><description>Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.</description><baseRelations>30</baseRelations><color>8</color><respectByFighting>true</respectByFighting></factions><factions><name>Esclavistas</name><description>Trabajan junto a las Ciudades Unidas y La Nación Sagrada para suplir su demanda de esclavos. Su modo de operación es simple, 
- trataran de derrotarte para después venderte.</description><baseRelations>10</baseRelations><color>7</color><respectByFighting>false</respectByFighting></factions><regions><name>Norte de la isla</name><description>No hay motivo por el que quieras estar aquí, más que para entrenar.</description><hasBar>false</hasBar><hasShop>false</hasShop><hasLimbHospital>false</hasLimbHospital><hasContrabandMarket>false</hasContrabandMarket><hasRangedShop>false</hasRangedShop></regions><regions><name>La Nación Sagrada</name><description>Serás atacado si no eres humano greenlander, y si lo eres, serás juzgado.</description><hasBar>true</hasBar><hasShop>true</hasShop><hasLimbHospital>false</hasLimbHospital><hasContrabandMarket>false</hasContrabandMarket><hasRangedShop>false</hasRangedShop></regions><regions><name>Ciudades Unidas</name><description>En un buen día, encontrarás mercaderes con grandes botínes, en uno malo, un noble querrá jugar a cazarte</description><hasBar>true</hasBar><hasShop>true</hasShop><hasLimbHospital>false</hasLimbHospital><hasContrabandMarket>false</hasContrabandMarket><hasRangedShop>true</hasRangedShop></regions><regions><name>Río del Enjambre del Oeste</name><description>Desean intercambiar bienes contigo, aunque la zona es conocida por tener una fauna peligrosa</description><hasBar>false</hasBar><hasShop>true</hasShop><hasLimbHospital>true</hasLimbHospital><hasContrabandMarket>false</hasContrabandMarket><hasRangedShop>false</hasRangedShop></regions><regions><name>Reino Shek</name><description>El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral</description><hasBar>true</hasBar><hasShop>true</hasShop><hasLimbHospital>false</hasLimbHospital><hasContrabandMarket>false</hasContrabandMarket><hasRangedShop>false</hasRangedShop></regions><regions><name>Pantano</name><description>Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla</description><hasBar>true</hasBar><hasShop>true</hasShop><hasLimbHospital>true</hasLimbHospital><hasContrabandMarket>true</hasContrabandMarket><hasRangedShop>false</hasRangedShop></regions><hostilities><hostility>OkranReligion</hostility></hostilities><hostilities><hostility>CorruptOligarchy</hostility></hostilities><hostilities><hostility>StrengthTest</hostility></hostilities><hostilities><hostility>HiveCastOuts</hostility></hostilities><hostilities><hostility>Survival</hostility></hostilities><faction_hostility><idFaction>1</idFaction><idHostility>1</idHostility></faction_hostility><faction_hostility><idFaction>2</idFaction><idHostility>2</idHostility></faction_hostility><faction_hostility><idFaction>8</idFaction><idHostility>2</idHostility></faction_hostility><faction_hostility><idFaction>3</idFaction><idHostility>3</idHostility></faction_hostility><faction_hostility><idFaction>5</idFaction><idHostility>4</idHostility></faction_hostility><faction_hostility><idFaction>4</idFaction><idHostility>5</idHostility></faction_hostility><faction_hostility><idFaction>6</idFaction><idHostility>5</idHostility></faction_hostility><faction_hostility><idFaction>7</idFaction><idHostility>5</idHostility></faction_hostility><region_faction><regionId>1</regionId><factionId>4</factionId></region_faction><region_faction><regionId>1</regionId><factionId>8</factionId></region_faction><region_faction><regionId>2</regionId><factionId>1</factionId></region_faction><region_faction><regionId>2</regionId><factionId>8</factionId></region_faction><region_faction><regionId>3</regionId><factionId>2</factionId></region_faction><region_faction><regionId>3</regionId><factionId>6</factionId></region_faction><region_faction><regionId>3</regionId><factionId>8</factionId></region_faction><region_faction><regionId>4</regionId><factionId>5</factionId></region_faction><region_faction><regionId>4</regionId><factionId>6</factionId></region_faction><region_faction><regionId>5</regionId><factionId>3</factionId></region_faction><region_faction><regionId>5</regionId><factionId>7</factionId></region_faction><region_faction><regionId>6</regionId><factionId>6</factionId></region_faction><region_faction><regionId>6</regionId><factionId>7</factionId></region_faction><stats><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>0</resistance><agility>0</agility></stats><stats><bruteForce>0</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>0</resistance><agility>2</agility></stats><stats><bruteForce>2</bruteForce><dexterity>1</dexterity><hp>2</hp><resistance>0</resistance><agility>1</agility></stats><stats><bruteForce>0</bruteForce><dexterity>4</dexterity><hp>-2</hp><resistance>0</resistance><agility>4</agility></stats><stats><bruteForce>5</bruteForce><dexterity>-2</dexterity><hp>6</hp><resistance>7</resistance><agility>-4</agility></stats><stats><bruteForce>3</bruteForce><dexterity>3</dexterity><hp>5</hp><resistance>3</resistance><agility>-2</agility></stats><stats><bruteForce>1</bruteForce><dexterity>2</dexterity><hp>1</hp><resistance>1</resistance><agility>1</agility></stats><stats><bruteForce>0</bruteForce><dexterity>3</dexterity><hp>0</hp><resistance>0</resistance><agility>3</agility></stats><stats><bruteForce>0</bruteForce><dexterity>3</dexterity><hp>-1</hp><resistance>0</resistance><agility>4</agility></stats><stats><bruteForce>3</bruteForce><dexterity>-1</dexterity><hp>3</hp><resistance>2</resistance><agility>-1</agility></stats><races><name>Puro</name><stats_id>1</stats_id></races><races><name>Humano</name><stats_id>2</stats_id></races><races><name>Greenlander</name><stats_id>3</stats_id></races><races><name>Scorchlander</name><stats_id>4</stats_id></races><races><name>Shek</name><stats_id>5</stats_id></races><races><name>Esqueleto</name><stats_id>6</stats_id></races><races><name>Enjambre</name><stats_id>7</stats_id></races><races><name>Dron Trabajador</name><stats_id>8</stats_id></races><races><name>Príncipe</name><stats_id>9</stats_id></races><races><name>Dron Soldado</name><stats_id>10</stats_id></races><Sheet8><bruteForce>3</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet8><Sheet8><bruteForce>7</bruteForce><dexterity>-2</dexterity><hp>0</hp><resistance>3</resistance><agility>-3</agility></Sheet8><Sheet8><bruteForce>1</bruteForce><dexterity>5</dexterity><hp>0</hp><resistance>0</resistance><agility>1</agility></Sheet8><Sheet8><bruteForce>4</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet8><Sheet8><bruteForce>6</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>4</resistance><agility>-3</agility></Sheet8><Sheet8><bruteForce>2</bruteForce><dexterity>3</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet8><Sheet8><bruteForce>3</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet8><Sheet8><bruteForce>5</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>2</resistance><agility>-2</agility></Sheet8><Sheet8><bruteForce>8</bruteForce><dexterity>-1</dexterity><hp>0</hp><resistance>3</resistance><agility>-4</agility></Sheet8><Sheet8><bruteForce>3</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet8><Sheet8><bruteForce>9</bruteForce><dexterity>-3</dexterity><hp>0</hp><resistance>3</resistance><agility>-5</agility></Sheet8><Sheet8><bruteForce>6</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>3</resistance><agility>-2</agility></Sheet8><Sheet8><bruteForce>3</bruteForce><dexterity>3</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet8><Sheet8><bruteForce>2</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>0</resistance><agility>1</agility></Sheet8><Sheet8><bruteForce>2</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet8><Sheet8><bruteForce>5</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>3</resistance><agility>-2</agility></Sheet8><Sheet8><bruteForce>6</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>4</resistance><agility>-3</agility></Sheet8><Sheet8><bruteForce>2</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet8><Sheet8><bruteForce>4</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet8><Sheet8><bruteForce>2</bruteForce><dexterity>-1</dexterity><hp>0</hp><resistance>1</resistance><agility>-2</agility></Sheet8><items><name>Ringed Saber</name><description>Una espada curva balanceada, común entre mercenarios.</description><value>500</value><resellValue>300</resellValue><type>melee</type><weight>2</weight><stats_id>11</stats_id></items><items><name>Fragment Axe</name><description>Un hacha inmensa que puede partir en dos a un enemigo.</description><value>1200</value><resellValue>800</resellValue><type>melee</type><weight>4</weight><stats_id>12</stats_id></items><items><name>Wakizashi</name><description>Hoja corta y ligera, excelente como arma secundaria.</description><value>250</value><resellValue>150</resellValue><type>melee</type><weight>1</weight><stats_id>13</stats_id></items><items><name>Hacker</name><description>Hoja recta y pesada diseñada para atravesar armaduras.</description><value>600</value><resellValue>400</resellValue><type>melee</type><weight>3</weight><stats_id>14</stats_id></items><items><name>Paladin’s Cross</name><description>Espada bendita usada por paladines. Muy pesada.</description><value>1800</value><resellValue>1200</resellValue><type>melee</type><weight>4</weight><stats_id>15</stats_id></items><items><name>Horse Chopper</name><description>Corta fácilmente extremidades, ligera y común.</description><value>400</value><resellValue>250</resellValue><type>melee</type><weight>2</weight><stats_id>16</stats_id></items><items><name>Desert Sabre</name><description>Hoja curva adaptada al combate en desiertos.</description><value>450</value><resellValue>300</resellValue><type>melee</type><weight>2</weight><stats_id>17</stats_id></items><items><name>Nodachi</name><description>Espada muy larga, buena para cargar en campo abierto.</description><value>800</value><resellValue>500</resellValue><type>melee</type><weight>2</weight><stats_id>18</stats_id></items><items><name>Falling Sun</name><description>Un mandoble inmenso capaz de aniquilar enemigos.</description><value>2000</value><resellValue>1500</resellValue><type>melee</type><weight>4</weight><stats_id>19</stats_id></items><items><name>Short Cleaver</name><description>Cuchilla de batalla pequeña pero brutal.</description><value>550</value><resellValue>350</resellValue><type>melee</type><weight>2</weight><stats_id>20</stats_id></items><items><name>Plank</name><description>Arma brutal hecha con un trozo de hierro reforzado.</description><value>1500</value><resellValue>1000</resellValue><type>melee</type><weight>4</weight><stats_id>21</stats_id></items><items><name>Combat Cleaver</name><description>Gran cuchilla utilizada en escaramuzas de élite.</description><value>900</value><resellValue>600</resellValue><type>melee</type><weight>3</weight><stats_id>22</stats_id></items><items><name>Topper</name><description>Arma sencilla, bien balanceada, común entre reclutas.</description><value>350</value><resellValue>200</resellValue><type>melee</type><weight>2</weight><stats_id>23</stats_id></items><items><name>Guardless Katana</name><description>Versión sin guardamano, más rápida pero vulnerable.</description><value>300</value><resellValue>180</resellValue><type>melee</type><weight>2</weight><stats_id>24</stats_id></items><items><name>Jitte</name><description>Diseñada para bloquear y controlar, no matar.</description><value>280</value><resellValue>160</resellValue><type>melee</type><weight>2</weight><stats_id>25</stats_id></items><items><name>Moon Cleaver</name><description>Pesada hoja con forma de luna, elegante y letal.</description><value>1100</value><resellValue>750</resellValue><type>melee</type><weight>4</weight><stats_id>26</stats_id></items><items><name>Heavy Jitte</name><description>Versión reforzada del jitte, más pesada.</description><value>500</value><resellValue>300</resellValue><type>melee</type><weight>3</weight><stats_id>27</stats_id></items><items><name>Katana</name><description>La clásica espada curva, versátil y efectiva.</description><value>600</value><resellValue>400</resellValue><type>melee</type><weight>3</weight><stats_id>28</stats_id></items><items><name>Crescent Scythe</name><description>Hoja curvada con mucho estilo, pero algo torpe.</description><value>850</value><resellValue>600</resellValue><type>melee</type><weight>3</weight><stats_id>29</stats_id></items><items><name>Iron Stick</name><description>Una simple barra de hierro improvisada.</description><value>100</value><resellValue>50</resellValue><type>melee</type><weight>1</weight><stats_id>30</stats_id></items><meleeItems><item_id>1</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>2</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>3</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>4</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>5</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>6</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>7</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>8</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>9</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>10</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>11</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>12</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>13</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>14</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>15</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>16</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>17</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>18</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>19</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><meleeItems><item_id>20</item_id><breaksOnUse>false</breaksOnUse><canRevive>false</canRevive></meleeItems><Sheet11><bruteForce>1</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>1</resistance><agility>0</agility></Sheet11><Sheet11><bruteForce>1</bruteForce><dexterity>5</dexterity><hp>0</hp><resistance>1</resistance><agility>1</agility></Sheet11><Sheet11><bruteForce>2</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet11><Sheet11><bruteForce>3</bruteForce><dexterity>3</dexterity><hp>0</hp><resistance>3</resistance><agility>-2</agility></Sheet11><Sheet11><bruteForce>4</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>4</resistance><agility>-3</agility></Sheet11><Sheet12><name>Spring Bat</name><description>Ballesta rudimentaria de corto alcance.</description><value>600</value><resellValue>400</resellValue><type>ranged</type><weight>2</weight><stats_id>31</stats_id></Sheet12><Sheet12><name>Toothpick</name><description>Ballesta ligera con buena velocidad de disparo.</description><value>750</value><resellValue>500</resellValue><type>ranged</type><weight>1</weight><stats_id>32</stats_id></Sheet12><Sheet12><name>Eagle’s Cross</name><description>Ballesta de largo alcance, muy precisa.</description><value>1200</value><resellValue>800</resellValue><type>ranged</type><weight>3</weight><stats_id>33</stats_id></Sheet12><Sheet12><name>Oldworld Bow MkII</name><description>Una ballesta militar mejorada de gran daño.</description><value>1500</value><resellValue>1000</resellValue><type>ranged</type><weight>4</weight><stats_id>34</stats_id></Sheet12><Sheet12><name>Harpoon Gun</name><description>Arma pesada de defensa estática.</description><value>2000</value><resellValue>1500</resellValue><type>ranged</type><weight>4</weight><stats_id>35</stats_id></Sheet12><rangedItems><item_id>21</item_id><difficulty>1</difficulty><maxAmmo>15</maxAmmo></rangedItems><rangedItems><item_id>22</item_id><difficulty>2</difficulty><maxAmmo>20</maxAmmo></rangedItems><rangedItems><item_id>23</item_id><difficulty>4</difficulty><maxAmmo>10</maxAmmo></rangedItems><rangedItems><item_id>24</item_id><difficulty>5</difficulty><maxAmmo>8</maxAmmo></rangedItems><rangedItems><item_id>25</item_id><difficulty>3</difficulty><maxAmmo>16</maxAmmo></rangedItems><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>5</hp><resistance>0</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>5</hp><resistance>4</resistance><agility>-2</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>10</hp><resistance>2</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>1</bruteForce><dexterity>1</dexterity><hp>2</hp><resistance>1</resistance><agility>1</agility></Sheet14><Sheet14><bruteForce>2</bruteForce><dexterity>2</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet14><Sheet14><bruteForce>2</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>0</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>2</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>0</resistance><agility>1</agility></Sheet14><Sheet14><bruteForce>2</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>0</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>2</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>3</bruteForce><dexterity>0</dexterity><hp>5</hp><resistance>3</resistance><agility>0</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>2</resistance><agility>-1</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>1</dexterity><hp>0</hp><resistance>0</resistance><agility>2</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>3</resistance><agility>-2</agility></Sheet14><Sheet14><bruteForce>0</bruteForce><dexterity>0</dexterity><hp>0</hp><resistance>4</resistance><agility>-2</agility></Sheet14><Sheet14><bruteForce>-2</bruteForce><dexterity>-2</dexterity><hp>-2</hp><resistance>-2</resistance><agility>6</agility></Sheet14><Sheet15><name>Primeros auxilios estándar</name><description>Kit básico de primeros auxilios. Se consume al usarse.</description><value>200</value><resellValue>100</resellValue><type>melee</type><weight>1</weight><stats_id>36</stats_id></Sheet15><Sheet15><name>Ferula basica</name><description>Inmoviliza miembros fracturados. Se consume al usarse.</description><value>150</value><resellValue>75</resellValue><type>melee</type><weight>1</weight><stats_id>37</stats_id></Sheet15><Sheet15><name>Primeros auxilios profesional</name><description>Restaura sangre rápidamente. Se consume al usarse.</description><value>300</value><resellValue>150</resellValue><type>melee</type><weight>1</weight><stats_id>38</stats_id></Sheet15><Sheet15><name>Mendrugo de pan</name><description>La única comida que sobrevivió el cataclismo.Se consume al usarse.</description><value>200</value><resellValue>50</resellValue><type>melee</type><weight>1</weight><stats_id>39</stats_id></Sheet15><Sheet15><name>Ron de sangre</name><description>Su nombre es un misterio, y su elaboración, también. Es capaz de revivir a un aliado. Se consume al usarse.</description><value>2000</value><resellValue>1000</resellValue><type>melee</type><weight>1</weight><stats_id>40</stats_id></Sheet15><Sheet15><name>Comida Simple</name><description>Comida básica que satisface el hambre y otorga un ligero aumento en la fuerza.</description><value>50</value><resellValue>25</resellValue><type>melee</type><weight>1</weight><stats_id>41</stats_id></Sheet15><Sheet15><name>Taza de agua</name><description>Agua potable que hidrata y mejora la resistencia física temporalmente.</description><value>10</value><resellValue>5</resellValue><type>melee</type><weight>1</weight><stats_id>42</stats_id></Sheet15><Sheet15><name>Wrap de carne</name><description>Parece carne cruda envuelta en tela, aumenta la energía y la agilidad.</description><value>80</value><resellValue>40</resellValue><type>melee</type><weight>1</weight><stats_id>43</stats_id></Sheet15><Sheet15><name>Comida cruda</name><description>Carne cruda, otorga un pequeño aumento de fuerza.</description><value>100</value><resellValue>50</resellValue><type>melee</type><weight>1</weight><stats_id>44</stats_id></Sheet15><Sheet15><name>Té herbal</name><description>Bebida herbal que mejora la calma y recarga la resistencia.</description><value>150</value><resellValue>75</resellValue><type>melee</type><weight>1</weight><stats_id>45</stats_id></Sheet15><Sheet15><name>Guiso</name><description>Un guiso que cubre bien el hambre y mejora la resistencia y fuerza.</description><value>200</value><resellValue>100</resellValue><type>melee</type><weight>2</weight><stats_id>46</stats_id></Sheet15><Sheet15><name>Cerveza de cáñamo</name><description>Cerveza artesanal que alivia el cansancio, pero reduce la agilidad.</description><value>120</value><resellValue>60</resellValue><type>melee</type><weight>1</weight><stats_id>47</stats_id></Sheet15><Sheet15><name>Dustwich</name><description>Un sándwich con polvo del desierto, ligeramente mejora la agilidad.</description><value>60</value><resellValue>30</resellValue><type>melee</type><weight>1</weight><stats_id>48</stats_id></Sheet15><Sheet15><name>Sake</name><description>Poca cosa pero matón, otorga un aumento de resistencia temporal a costa de equilibrio.</description><value>300</value><resellValue>150</resellValue><type>melee</type><weight>1</weight><stats_id>49</stats_id></Sheet15><Sheet15><name>Grog</name><description>Bebida alcohólica que aumenta la resistencia, pero reduce la agilidad.</description><value>250</value><resellValue>125</resellValue><type>melee</type><weight>1</weight><stats_id>50</stats_id></Sheet15><Sheet15><name>Hashish</name><description>Tremendamente ilegal, te dejará en con el corazón a mil.</description><value>700</value><resellValue>600</resellValue><type>melee</type><weight>1</weight><stats_id>51</stats_id></Sheet15><Sheet16><item_id>26</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>27</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>28</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>29</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>30</item_id><breaksOnUse>true</breaksOnUse><canRevive>true</canRevive></Sheet16><Sheet16><item_id>31</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>32</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>33</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>34</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>35</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>36</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>37</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>38</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>39</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>40</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet16><item_id>41</item_id><breaksOnUse>true</breaksOnUse><canRevive>false</canRevive></Sheet16><Sheet17><bruteForce>0</bruteForce><dexterity>2</dexterity><hp>2</hp><resistance>-2</resistance><agility>4</agility></Sheet17><Sheet17><bruteForce>4</bruteForce><dexterity>-2</dexterity><hp>4</hp><resistance>4</resistance><agility>-2</agility></Sheet17><Sheet17><bruteForce>4</bruteForce><dexterity>4</dexterity><hp>0</hp><resistance>1</resistance><agility>1</agility></Sheet17><Sheet17><bruteForce>-2</bruteForce><dexterity>-2</dexterity><hp>2</hp><resistance>8</resistance><agility>-2</agility></Sheet17><Sheet17><bruteForce>1</bruteForce><dexterity>6</dexterity><hp>0</hp><resistance>-1</resistance><agility>-2</agility></Sheet17><limbs><name>Pierna ágil</name><value>1000</value><stats_id>52</stats_id></limbs><limbs><name>Extremidad de metal</name><value>1200</value><stats_id>53</stats_id></limbs><limbs><name>Extremidad de Kung-Fu</name><value>1500</value><stats_id>54</stats_id></limbs><limbs><name>Extremidad Antigolpes</name><value>1000</value><stats_id>55</stats_id></limbs><limbs><name>Brazo de francotirador</name><value>1500</value><stats_id>56</stats_id></limbs><enemies><factionId>6</factionId><name>Cabra</name><health>3</health><strength>4</strength><resistance>1</resistance><agility>4</agility><immunity>None</immunity><xp>25</xp><maxCatDrop>0</maxCatDrop><canDropItem>false</canDropItem></enemies><enemies><factionId>6</factionId><name>Garral Joven</name><health>6</health><strength>5</strength><resistance>3</resistance><agility>8</agility><immunity>ResistantToMelee</immunity><xp>75</xp><maxCatDrop>0</maxCatDrop><canDropItem>false</canDropItem></enemies><enemies><factionId>6</factionId><name>Bicho de las Dunas</name><health>5</health><strength>4</strength><resistance>3</resistance><agility>6</agility><immunity>ResistantToBoth</immunity><xp>100</xp><maxCatDrop>0</maxCatDrop><canDropItem>false</canDropItem></enemies><enemies><factionId>6</factionId><name>Perro huesudo</name><health>4</health><strength>3</strength><resistance>2</resistance><agility>6</agility><immunity>None</immunity><xp>60</xp><maxCatDrop>0</maxCatDrop><canDropItem>false</canDropItem></enemies><enemies><factionId>6</factionId><name>Garral</name><health>6</health><strength>6</strength><resistance>4</resistance><agility>7</agility><immunity>ImmuneToMelee</immunity><xp>150</xp><maxCatDrop>0</maxCatDrop><canDropItem>false</canDropItem></enemies><enemies><factionId>4</factionId></enemies><names><name>Esata</name></names><names><name>Squin</name></names><names><name>Cat-Lon</name></names><names><name>Tinfist</name></names><names><name>Holy Phoenix</name></names><names><name>Okran</name></names><names><name>Simone</name></names><names><name>Bugmaster</name></names><names><name>Agnu</name></names><names><name>Beep</name></names><names><name>Seto</name></names><names><name>Miu</name></names><names><name>Ruka</name></names><names><name>Greenfinger</name></names><names><name>Rain the Giant</name></names><names><name>Kang</name></names><names><name>Burn</name></names><names><name>Sadneil</name></names><names><name>Oron</name></names><names><name>Moll</name></names><names><name>Longen</name></names><names><name>Soto</name></names><names><name>Nux</name></names><names><name>Crimper</name></names><names><name>Stobe</name></names><names><name>Dimak</name></names><names><name>Barka</name></names><names><name>Green</name></names><names><name>Sarn</name></names><names><name>Griffin</name></names><names><name>Chad</name></names><names><name>Owl</name></names><names><name>Grey</name></names><names><name>Bo</name></names><names><name>Mu</name></names><names><name>Bishop</name></names><names><name>Bull</name></names><names><name>Void</name></names><names><name>Caliburn</name></names><names><name>Ghost</name></names><names><name>Fang</name></names><names><name>Buzzo</name></names><names><name>Rane</name></names><names><name>Okra</name></names><names><name>Ray</name></names><names><name>Juno</name></names><names><name>Patch</name></names><names><name>Slug</name></names><names><name>Zan</name></names><names><name>Twinkle</name></names><titles><title>El Lobo</title></titles><titles><title>La Espina</title></titles><titles><title>El Rápido</title></titles><titles><title>La Hoja</title></titles><titles><title>El Fuerte</title></titles><titles><title>La Tormenta</title></titles><titles><title>El Silencio</title></titles><titles><title>La Sombra</title></titles><titles><title>El Sabio</title></titles><titles><title>El Fénix</title></titles><titles><title>El Viejo Lobo</title></titles><titles><title>La Mano Justa</title></titles><titles><title>El Errante</title></titles><titles><title>La Furia</title></titles><titles><title>El Ojo Frío</title></titles><titles><title>La Voz Gris</title></titles><titles><title>El Sable</title></titles><titles><title>El Hierro</title></titles><titles><title>La Piedra</title></titles><titles><title>El Último</title></titles><titles><title>El Flojo</title></titles><titles><title>La Rata</title></titles><titles><title>El Tullido</title></titles><titles><title>El Tuerto</title></titles><titles><title>La Carga</title></titles><titles><title>El Estorbo</title></titles><titles><title>El Rencor</title></titles><titles><title>La Sanguijuela</title></titles><titles><title>El Perdido</title></titles><titles><title>La Sombra Rota</title></titles><titles><title>El Mudo</title></titles><titles><title>La Peste</title></titles><titles><title>El Cobarde</title></titles><titles><title>La Ruina</title></titles><titles><title>El Sin Nombre</title></titles><titles><title>La Mancha</title></titles><titles><title>El Fracasado</title></titles><titles><title>El Chiflado</title></titles><titles><title>La Vergüenza</title></titles><titles><title>El Muerto en Vida</title></titles><backgrounds><background>Ex-esclavo del Gremio de la Cadena. Lleva las marcas aún en la espalda. Silencioso, pero letal con la lanza.</background></backgrounds><backgrounds><background>Expulsado de los monjes de polvo por beber sangre en lugar de agua. Dice que fue por fe, pero nadie le cree.</background></backgrounds><backgrounds><background>Antigua mercenaria de las Llamas Rojas. Perdió su escuadrón y desde entonces bebe más de lo que duerme.</background></backgrounds><backgrounds><background>Cazador de bandidos venido a menos. Perdió una pierna, pero la remplazó con metal y rabia.</background></backgrounds><backgrounds><background>Crió ratas del desierto durante diez años. Las comía. También las entrenaba. Dice que aprendió paciencia.</background></backgrounds><backgrounds><background>Ex-guardia de ciudad caída. Se llevó la armadura, y la culpa. Quiere redención, o algo que se le parezca.</background></backgrounds><backgrounds><background>Fue carnicero, hasta que las carnes empezaron a moverse. Desde entonces solo corta cosas que sangren.</background></backgrounds><backgrounds><background>Nacido en las ruinas. Nunca ha visto una ciudad. Pelea como si cada día fuera el último, porque para él lo es.</background></backgrounds><backgrounds><background>Hermano menor de un señor de la guerra. Se negó a matar por poder y huyó. Ahora mata por comida.</background></backgrounds><backgrounds><background>Superviviente de un convoy perdido en las arenas. Fue el único que regresó, y no habla de cómo.</background></backgrounds><backgrounds><background>Hija de una comerciante y un asesino. Sabe negociar y apuñalar por igual. Cobra por ambos servicios.</background></backgrounds><backgrounds><background>Criado por bandidos, luego traicionado por ellos. Ahora caza a los suyos por deporte y oro.</background></backgrounds><backgrounds><background>Poeta fracasado, luchador inesperado. Escribe versos en la sangre que derrama.</background></backgrounds><backgrounds><background>Fue esclavo gladiador durante seis años. Cuando lo soltaron, mató al dueño. No ha parado desde entonces.</background></backgrounds><backgrounds><background>Nadie sabe su nombre real. Dice que fue sombra de un rey, y ahora busca su propia historia.</background></backgrounds><backgrounds><background>Comió carne humana durante una hambruna. No le enorgullece, pero tampoco se disculpa.</background></backgrounds><backgrounds><background>Hombre tranquilo, manos violentas. Nunca grita, nunca corre. Mata despacio, pero seguro.</background></backgrounds><backgrounds><background>Expulsada de tres bandas por "problemas de actitud". Ella dice que era la única cuerda.</background></backgrounds><backgrounds><background>Cree que una voz le habla desde las montañas. Le obedece. A veces esa voz tiene razón.</background></backgrounds><backgrounds><background>Peleó con un palo hasta que le dieron una espada. Siguió usando el palo. "Más confiable", dice.</background></backgrounds><backgrounds><background>Fue minero en las Tierras Negras. Un derrumbe lo dejó atrapado una semana. Desde entonces, odia los túneles y ama el cielo.</background></backgrounds><backgrounds><background>Ladrón reformado, o eso dice. Todavía camina como si tuviera que escapar en cualquier momento.</background></backgrounds><backgrounds><background>Creció en una caravana de mercaderes nómadas. Perdió a su familia por fuego cruzado. Desde entonces, solo viaja solo.</background></backgrounds><backgrounds><background>Dice haber sido criado por un anciano espadachín ciego. Pelea como si el mundo fuera niebla.</background></backgrounds><backgrounds><background>Sirvió como guardia en un burdel de frontera. Aprendió más sobre gente que sobre lucha. Pero también aprendió a pelear.</background></backgrounds><backgrounds><background>Era aprendiz de médico. Un error mató a un niño. No volvió a tocar vendas, solo espadas.</background></backgrounds><backgrounds><background>Vivió entre caníbales durante tres años. Nunca dice si fue prisionero o parte de la tribu.</background></backgrounds><backgrounds><background>Camina con muletas, pero pelea como si no las necesitara. Dice que cada golpe le recuerda por qué sigue vivo.</background></backgrounds><backgrounds><background>Limpió cadáveres en el campo de batalla desde los doce años. Un día, agarró un arma y no soltó más ninguna.</background></backgrounds><backgrounds><background>Habla solo. A veces ríe, a veces llora. A veces su "otro yo" pelea mejor que él.</background></backgrounds><backgrounds><background>Se unió a un culto por amor. Salió cuando el amor fue sacrificado. Guarda una cicatriz en el pecho, y otra en el alma.</background></backgrounds><backgrounds><background>Era carcelero. Dejó libre a un prisionero inocente. Perdió el trabajo, pero ganó conciencia. Ahora busca justicia a su manera.</background></backgrounds><backgrounds><background>Cazador de bestias que perdió la vista de un ojo. “Ahora solo veo lo importante”, dice mientras apunta.</background></backgrounds><backgrounds><background>Viajó con músicos ambulantes. Tocaba el tambor. Ahora solo toca tambores de guerra.</background></backgrounds><backgrounds><background>Fue criado para ser noble, pero se negó a mandar. Prefirió vivir entre polvo y barro que dar órdenes injustas.</background></backgrounds><backgrounds><background>Tuvo un hijo. Lo perdió en una redada. Desde entonces, no se le ha visto sonreír.</background></backgrounds><backgrounds><background>Era cocinero en una fortaleza. Envenenó a los invasores. Desde entonces cocina para soldados… y asesinos.</background></backgrounds><backgrounds><background>Aprendió a luchar viendo peleas de gallos. Dice que todo lo que sabe lo aprendió de un ave furiosa.</background></backgrounds><backgrounds><background>Trabajó como enterrador. Enterró enemigos y amigos por igual. Dice que cada muerte lo hizo más fuerte.</background></backgrounds><backgrounds><background>Tenía una promesa, una causa, un líder. Ya no le queda nada de eso. Solo una espada y ganas de seguir.</background></backgrounds><backgrounds><background>Estuvo encerrado en Rebirth durante cinco años. Aprendió a sobrevivir comiendo piedras… o algo parecido.</background></backgrounds><backgrounds><background>Caminó solo desde Mongrel hasta Black Scratch. No por valentía, sino porque no quedaba nadie más.</background></backgrounds><backgrounds><background>Defendió un puesto comercial en The Hook durante el asedio de los Skin Bandits. Sobrevivió a costa de los otros.</background></backgrounds><backgrounds><background>Fue maestro de espadas en World's End. Dejó todo atrás tras un duelo perdido que aún sueña cada noche.</background></backgrounds><backgrounds><background>Limpió sangre en las arenas de gladiadores de Sho-Battai. Ahora cobra por derramarla, no por limpiarla.</background></backgrounds><backgrounds><background>Vivió en las minas de Clownsteady sin ver el cielo durante años. Ahora no entra en cuevas, ni aunque haya oro.</background></backgrounds><backgrounds><background>Sirvió como escolta de caravanas entre Heft y Stoat. La mitad de su rostro quedó en una emboscada. La otra mitad sonríe.</background></backgrounds><backgrounds><background>Perdió un brazo en los campos de Vain. No quiere hablar del cómo. Solo quiere una nueva oportunidad.</background></backgrounds><backgrounds><background>Fue traicionado por sus propios aliados cerca de Blister Hill. Desde entonces, duerme con un ojo abierto y una daga bajo el cuello.</background></backgrounds><backgrounds><background>Pasó una temporada en las ruinas de la Nube Roja. Dice que no encontró enemigos… solo recuerdos.</background></backgrounds><backgrounds><background>Estuvo al servicio de un noble de Brink. Vio el lujo pudrirse desde adentro. Ahora prefiere el polvo bajo las botas.</background></backgrounds><backgrounds><background>Habitó en las sombras de Stack, fingiendo fe para no arder. Hoy solo cree en su espada.</background></backgrounds><backgrounds><background>Durante años, rastreó esclavistas cerca de Port North. No por justicia, sino por venganza.</background></backgrounds><backgrounds><background>Vigiló las puertas de Heng en los días de disturbio. Aprendió que los muros no detienen la traición.</background></backgrounds><backgrounds><background>Abandonó una torre de investigación en Black Desert City. Dice que la ciencia no basta cuando el mundo se cae a pedazos.</background></backgrounds><backgrounds><background>Cruzó el Mar de Acido con un grupo. Solo volvió uno. Nunca dijo qué ocurrió, pero ya no teme al dolor.</background></backgrounds><backgrounds><background>Construyó una cabaña cerca de Leviathan Coast. Vivió en paz hasta que algo lo obligó a volver a empuñar el filo.</background></backgrounds><backgrounds><background>Presenció una ejecución en Okran's Shield. No fue la víctima… pero ese día murió algo en él.</background></backgrounds><backgrounds><background>Exploró las ruinas bajo Bast. Lo que encontró no puede decirlo, pero desde entonces duerme mal.</background></backgrounds><backgrounds><background>Sirvió a un líder de Deadcat. Lo traicionaron. Ahora trabaja solo, y no pregunta mucho.</background></backgrounds></root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<factions>
+		<id>1</id>
+		<name>La Nación Sagrada</name>
+		<description>
+			La Nación Sagrada es una teocracia fanática que venera a Okran,
+			su deidad solar. Sus leyes son estrictas y su sociedad rechaza la tecnología antigua,
+			a la que consideran una herejía. Gobernada por inquisidores y paladines, impone su ideología
+			con mano de hierro y persigue sin piedad a quienes consideran impuros. Solo consideran puros a Humanos Greenlanders.
+		</description>
+		<baseRelations>80</baseRelations>
+		<color>6</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<factions>
+		<id>2</id>
+		<name>Ciudades Unidas</name>
+		<description>Las Ciudades Unidas son un conglomerado de estados esclavistas y comerciantes, dominados por una aristocracia corrupta. Su poder se basa en el comercio, la esclavitud y la riqueza. La vida humana tiene poco valor si no puede generar ganancia, y la ley solo sirve a los poderosos.</description>
+		<baseRelations>80</baseRelations>
+		<color>4</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<factions>
+		<id>3</id>
+		<name>Shek Kingdom</name>
+		<description>El Reino Shek está formado por una orgullosa raza de guerreros con cuerpos endurecidos por el combate. Su cultura gira en torno al honor, la fuerza y la superación personal. Desprecian la cobardía y valoran la muerte en batalla por encima de todo.</description>
+		<baseRelations>90</baseRelations>
+		<color>1</color>
+		<respectByFighting>true</respectByFighting>
+	</factions>
+	<factions>
+		<id>4</id>
+		<name>Canibales</name>
+		<description>Los canibales habitan en tribus por todo el norte de la isla. Practican la antrofagía como ritual sagrado, y han perdido la capacidad del habla. No hacen excepciones, y te atacarán incluso si eres un esqueleto y no pueden comerte.</description>
+		<baseRelations>0</baseRelations>
+		<color>3</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<factions>
+		<id>5</id>
+		<name>El Enjambre del Oeste</name>
+		<description>Sometidos a las feromónas de la Reina, los Enjambres actúan bajo una única voluntad. El Enjambre del Oeste es una nación pacífica, y muy comercial. Mandan caravanas de enjambres a ambular el mundo en búsqueda de vender sus productos. Solo te atacarán si tienes un enjambre errante en tu facción.</description>
+		<baseRelations>80</baseRelations>
+		<color>5</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<factions>
+		<id>6</id>
+		<name>Reino Animal</name>
+		<description>En la isla hay una gran variedad de animales. Expuestos al mundo post-apocalíptico de la isla, buscan comida donde pueden. Esa comida podrías ser tú.</description>
+		<baseRelations>0</baseRelations>
+		<color>2</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<factions>
+		<id>7</id>
+		<name>Bandidos famélicos</name>
+		<description>Los bandidos de menos poder en toda la isla, buscarán a cualquiera al que linchar y robarle.</description>
+		<baseRelations>30</baseRelations>
+		<color>8</color>
+		<respectByFighting>true</respectByFighting>
+	</factions>
+	<factions>
+		<id>8</id>
+		<name>Esclavistas</name>
+		<description>Trabajan junto a las Ciudades Unidas y La Nación Sagrada para suplir su demanda de esclavos. Su modo de operación es simple, tratarán de derrotarte para después venderte.</description>
+		<baseRelations>10</baseRelations>
+		<color>7</color>
+		<respectByFighting>false</respectByFighting>
+	</factions>
+	<regions>
+		<id>1</id>
+		<name>Norte de la isla</name>
+		<description>No hay motivo por el que quieras estar aquí, más que para entrenar.</description>
+		<hasBar>false</hasBar>
+		<hasShop>false</hasShop>
+		<hasLimbHospital>false</hasLimbHospital>
+		<hasContrabandMarket>false</hasContrabandMarket>
+		<hasRangedShop>false</hasRangedShop>
+	</regions>
+	<regions>
+		<id>2</id>
+		<name>La Nación Sagrada</name>
+		<description>Serás atacado si no eres humano greenlander, y si lo eres, serás juzgado.</description>
+		<hasBar>true</hasBar>
+		<hasShop>true</hasShop>
+		<hasLimbHospital>false</hasLimbHospital>
+		<hasContrabandMarket>false</hasContrabandMarket>
+		<hasRangedShop>false</hasRangedShop>
+	</regions>
+	<regions>
+		<id>3</id>
+		<name>Ciudades Unidas</name>
+		<description>En un buen día, encontrarás mercaderes con grandes botínes, en uno malo, un noble querrá jugar a cazarte</description>
+		<hasBar>true</hasBar>
+		<hasShop>true</hasShop>
+		<hasLimbHospital>false</hasLimbHospital>
+		<hasContrabandMarket>false</hasContrabandMarket>
+		<hasRangedShop>true</hasRangedShop>
+	</regions>
+	<regions>
+		<id>4</id>
+		<name>Río del Enjambre del Oeste</name>
+		<description>Desean intercambiar bienes contigo, aunque la zona es conocida por tener una fauna peligrosa</description>
+		<hasBar>false</hasBar>
+		<hasShop>true</hasShop>
+		<hasLimbHospital>true</hasLimbHospital>
+		<hasContrabandMarket>false</hasContrabandMarket>
+		<hasRangedShop>false</hasRangedShop>
+	</regions>
+	<regions>
+		<id>5</id>
+		<name>Reino Shek</name>
+		<description>El reino más amistoso entre los reinos, solo querrán ponerse a prueba contigo por la gloria de Kral</description>
+		<hasBar>true</hasBar>
+		<hasShop>true</hasShop>
+		<hasLimbHospital>false</hasLimbHospital>
+		<hasContrabandMarket>false</hasContrabandMarket>
+		<hasRangedShop>false</hasRangedShop>
+	</regions>
+	<regions>
+		<id>6</id>
+		<name>Pantano</name>
+		<description>Encontrarás bienes exclusivos de contrabando en el lugar con más infecciones de toda la isla</description>
+		<hasBar>true</hasBar>
+		<hasShop>true</hasShop>
+		<hasLimbHospital>true</hasLimbHospital>
+		<hasContrabandMarket>true</hasContrabandMarket>
+		<hasRangedShop>false</hasRangedShop>
+	</regions>
+	<hostilities>
+		<id>1</id>
+		<hostility>OkranReligion</hostility>
+	</hostilities>
+	<hostilities>
+		<id>2</id>
+		<hostility>CorruptOligarchy</hostility>
+	</hostilities>
+	<hostilities>
+		<id>3</id>
+		<hostility>StrengthTest</hostility>
+	</hostilities>
+	<hostilities>
+		<id>4</id>
+		<hostility>HiveCastOuts</hostility>
+	</hostilities>
+	<hostilities>
+		<id>5</id>
+		<hostility>Survival</hostility>
+	</hostilities>
+	<faction_hostility>
+		<idFaction>1</idFaction>
+		<idHostility>1</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>2</idFaction>
+		<idHostility>2</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>8</idFaction>
+		<idHostility>2</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>3</idFaction>
+		<idHostility>3</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>5</idFaction>
+		<idHostility>4</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>4</idFaction>
+		<idHostility>5</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>6</idFaction>
+		<idHostility>5</idHostility>
+	</faction_hostility>
+	<faction_hostility>
+		<idFaction>7</idFaction>
+		<idHostility>5</idHostility>
+	</faction_hostility>
+	<region_faction>
+		<regionId>1</regionId>
+		<factionId>4</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>1</regionId>
+		<factionId>8</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>2</regionId>
+		<factionId>1</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>2</regionId>
+		<factionId>8</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>3</regionId>
+		<factionId>2</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>3</regionId>
+		<factionId>6</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>3</regionId>
+		<factionId>8</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>4</regionId>
+		<factionId>5</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>4</regionId>
+		<factionId>6</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>5</regionId>
+		<factionId>3</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>5</regionId>
+		<factionId>7</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>6</regionId>
+		<factionId>6</factionId>
+	</region_faction>
+	<region_faction>
+		<regionId>6</regionId>
+		<factionId>7</factionId>
+	</region_faction>
+	<stats>
+		<stat>
+			<id>1</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>2</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>2</agility>
+		</stat>
+		<stat>
+			<id>3</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>2</hp>
+			<resistance>0</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>4</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>-2</hp>
+			<resistance>0</resistance>
+			<agility>4</agility>
+		</stat>
+		<stat>
+			<id>5</id>
+			<bruteForce>5</bruteForce>
+			<dexterity>-2</dexterity>
+			<hp>6</hp>
+			<resistance>7</resistance>
+			<agility>-4</agility>
+		</stat>
+		<stat>
+			<id>6</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>5</hp>
+			<resistance>3</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>7</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>1</hp>
+			<resistance>1</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>8</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>3</agility>
+		</stat>
+		<stat>
+			<id>9</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>-1</hp>
+			<resistance>0</resistance>
+			<agility>4</agility>
+		</stat>
+		<stat>
+			<id>10</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>-1</dexterity>
+			<hp>3</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>11</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>12</id>
+			<bruteForce>7</bruteForce>
+			<dexterity>-2</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-3</agility>
+		</stat>
+		<stat>
+			<id>13</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>5</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>14</id>
+			<bruteForce>4</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>15</id>
+			<bruteForce>6</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>4</resistance>
+			<agility>-3</agility>
+		</stat>
+		<stat>
+			<id>16</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>17</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>18</id>
+			<bruteForce>5</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>19</id>
+			<bruteForce>8</bruteForce>
+			<dexterity>-1</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-4</agility>
+		</stat>
+		<stat>
+			<id>20</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>21</id>
+			<bruteForce>9</bruteForce>
+			<dexterity>-3</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-5</agility>
+		</stat>
+		<stat>
+			<id>22</id>
+			<bruteForce>6</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>23</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>24</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>25</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>26</id>
+			<bruteForce>5</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>27</id>
+			<bruteForce>6</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>4</resistance>
+			<agility>-3</agility>
+		</stat>
+		<stat>
+			<id>28</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>29</id>
+			<bruteForce>4</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>30</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>-1</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>31</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>32</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>5</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>33</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>34</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>3</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>35</id>
+			<bruteForce>4</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>4</resistance>
+			<agility>-3</agility>
+		</stat>
+		<stat>
+			<id>36</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>5</hp>
+			<resistance>0</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>37</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>5</hp>
+			<resistance>4</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>38</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>10</hp>
+			<resistance>2</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>39</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>2</hp>
+			<resistance>1</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>40</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>41</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>42</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>43</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>44</id>
+			<bruteForce>2</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>45</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>46</id>
+			<bruteForce>3</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>5</hp>
+			<resistance>3</resistance>
+			<agility>0</agility>
+		</stat>
+		<stat>
+			<id>47</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>2</resistance>
+			<agility>-1</agility>
+		</stat>
+		<stat>
+			<id>48</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>1</dexterity>
+			<hp>0</hp>
+			<resistance>0</resistance>
+			<agility>2</agility>
+		</stat>
+		<stat>
+			<id>49</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>3</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>50</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>0</dexterity>
+			<hp>0</hp>
+			<resistance>4</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>51</id>
+			<bruteForce>-2</bruteForce>
+			<dexterity>-2</dexterity>
+			<hp>-2</hp>
+			<resistance>-2</resistance>
+			<agility>6</agility>
+		</stat>
+		<stat>
+			<id>52</id>
+			<bruteForce>0</bruteForce>
+			<dexterity>2</dexterity>
+			<hp>2</hp>
+			<resistance>-2</resistance>
+			<agility>4</agility>
+		</stat>
+		<stat>
+			<id>53</id>
+			<bruteForce>4</bruteForce>
+			<dexterity>-2</dexterity>
+			<hp>4</hp>
+			<resistance>4</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>54</id>
+			<bruteForce>4</bruteForce>
+			<dexterity>4</dexterity>
+			<hp>0</hp>
+			<resistance>1</resistance>
+			<agility>1</agility>
+		</stat>
+		<stat>
+			<id>55</id>
+			<bruteForce>-2</bruteForce>
+			<dexterity>-2</dexterity>
+			<hp>2</hp>
+			<resistance>8</resistance>
+			<agility>-2</agility>
+		</stat>
+		<stat>
+			<id>56</id>
+			<bruteForce>1</bruteForce>
+			<dexterity>6</dexterity>
+			<hp>0</hp>
+			<resistance>-1</resistance>
+			<agility>-2</agility>
+		</stat>
+	</stats>
+	<races>
+		<name>Puro</name>
+		<stats_id>1</stats_id>
+	</races>
+	<races>
+		<name>Humano</name>
+		<stats_id>2</stats_id>
+	</races>
+	<races>
+		<name>Greenlander</name>
+		<stats_id>3</stats_id>
+	</races>
+	<races>
+		<name>Scorchlander</name>
+		<stats_id>4</stats_id>
+	</races>
+	<races>
+		<name>Shek</name>
+		<stats_id>5</stats_id>
+	</races>
+	<races>
+		<name>Esqueleto</name>
+		<stats_id>6</stats_id>
+	</races>
+	<races>
+		<name>Enjambre</name>
+		<stats_id>7</stats_id>
+	</races>
+	<races>
+		<name>Dron Trabajador</name>
+		<stats_id>8</stats_id>
+	</races>
+	<races>
+		<name>Príncipe</name>
+		<stats_id>9</stats_id>
+	</races>
+	<races>
+		<name>Dron Soldado</name>
+		<stats_id>10</stats_id>
+	</races>
+	<items>
+		<item>
+			<id>1</id>
+			<name>Ringed Saber</name>
+			<description>Una espada curva balanceada, común entre mercenarios.</description>
+			<value>500</value>
+			<resellValue>300</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>11</stats_id>
+		</item>
+		<item>
+			<id>2</id>
+			<name>Fragment Axe</name>
+			<description>Un hacha inmensa que puede partir en dos a un enemigo.</description>
+			<value>1200</value>
+			<resellValue>800</resellValue>
+			<type>melee</type>
+			<weight>4</weight>
+			<stats_id>12</stats_id>
+		</item>
+		<item>
+			<id>3</id>
+			<name>Wakizashi</name>
+			<description>Hoja corta y ligera, excelente como arma secundaria.</description>
+			<value>250</value>
+			<resellValue>150</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>13</stats_id>
+		</item>
+		<item>
+			<id>4</id>
+			<name>Hacker</name>
+			<description>Hoja recta y pesada diseñada para atravesar armaduras.</description>
+			<value>600</value>
+			<resellValue>400</resellValue>
+			<type>melee</type>
+			<weight>3</weight>
+			<stats_id>14</stats_id>
+		</item>
+		<item>
+			<id>5</id>
+			<name>Paladin’s Cross</name>
+			<description>Espada bendita usada por paladines. Muy pesada.</description>
+			<value>1800</value>
+			<resellValue>1200</resellValue>
+			<type>melee</type>
+			<weight>4</weight>
+			<stats_id>15</stats_id>
+		</item>
+		<item>
+			<id>6</id>
+			<name>Horse Chopper</name>
+			<description>Corta fácilmente extremidades, ligera y común.</description>
+			<value>400</value>
+			<resellValue>250</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>16</stats_id>
+		</item>
+		<item>
+			<id>7</id>
+			<name>Desert Sabre</name>
+			<description>Hoja curva adaptada al combate en desiertos.</description>
+			<value>450</value>
+			<resellValue>300</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>17</stats_id>
+		</item>
+		<item>
+			<id>8</id>
+			<name>Nodachi</name>
+			<description>Espada muy larga, buena para cargar en campo abierto.</description>
+			<value>800</value>
+			<resellValue>500</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>18</stats_id>
+		</item>
+		<item>
+			<id>9</id>
+			<name>Falling Sun</name>
+			<description>Un mandoble inmenso capaz de aniquilar enemigos.</description>
+			<value>2000</value>
+			<resellValue>1500</resellValue>
+			<type>melee</type>
+			<weight>4</weight>
+			<stats_id>19</stats_id>
+		</item>
+		<item>
+			<id>10</id>
+			<name>Short Cleaver</name>
+			<description>Cuchilla de batalla pequeña pero brutal.</description>
+			<value>550</value>
+			<resellValue>350</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>20</stats_id>
+		</item>
+		<item>
+			<id>11</id>
+			<name>Plank</name>
+			<description>Arma brutal hecha con un trozo de hierro reforzado.</description>
+			<value>1500</value>
+			<resellValue>1000</resellValue>
+			<type>melee</type>
+			<weight>4</weight>
+			<stats_id>21</stats_id>
+		</item>
+		<item>
+			<id>12</id>
+			<name>Combat Cleaver</name>
+			<description>Gran cuchilla utilizada en escaramuzas de élite.</description>
+			<value>900</value>
+			<resellValue>600</resellValue>
+			<type>melee</type>
+			<weight>3</weight>
+			<stats_id>22</stats_id>
+		</item>
+		<item>
+			<id>13</id>
+			<name>Topper</name>
+			<description>Arma sencilla, bien balanceada, común entre reclutas.</description>
+			<value>350</value>
+			<resellValue>200</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>23</stats_id>
+		</item>
+		<item>
+			<id>14</id>
+			<name>Guardless Katana</name>
+			<description>Versión sin guardamano, más rápida pero vulnerable.</description>
+			<value>300</value>
+			<resellValue>180</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>24</stats_id>
+		</item>
+		<item>
+			<id>15</id>
+			<name>Jitte</name>
+			<description>Diseñada para bloquear y controlar, no matar.</description>
+			<value>280</value>
+			<resellValue>160</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>25</stats_id>
+		</item>
+		<item>
+			<id>16</id>
+			<name>Moon Cleaver</name>
+			<description>Pesada hoja con forma de luna, elegante y letal.</description>
+			<value>1100</value>
+			<resellValue>750</resellValue>
+			<type>melee</type>
+			<weight>4</weight>
+			<stats_id>26</stats_id>
+		</item>
+		<item>
+			<id>17</id>
+			<name>Heavy Jitte</name>
+			<description>Versión reforzada del jitte, más pesada.</description>
+			<value>500</value>
+			<resellValue>300</resellValue>
+			<type>melee</type>
+			<weight>3</weight>
+			<stats_id>27</stats_id>
+		</item>
+		<item>
+			<id>18</id>
+			<name>Katana</name>
+			<description>La clásica espada curva, versátil y efectiva.</description>
+			<value>600</value>
+			<resellValue>400</resellValue>
+			<type>melee</type>
+			<weight>3</weight>
+			<stats_id>28</stats_id>
+		</item>
+		<item>
+			<id>19</id>
+			<name>Crescent Scythe</name>
+			<description>Hoja curvada con mucho estilo, pero algo torpe.</description>
+			<value>850</value>
+			<resellValue>600</resellValue>
+			<type>melee</type>
+			<weight>3</weight>
+			<stats_id>29</stats_id>
+		</item>
+		<item>
+			<id>20</id>
+			<name>Iron Stick</name>
+			<description>Una simple barra de hierro improvisada.</description>
+			<value>100</value>
+			<resellValue>50</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>30</stats_id>
+		</item>
+		<item>
+			<id>21</id>
+			<name>Spring Bat</name>
+			<description>Ballesta rudimentaria de corto alcance.</description>
+			<value>600</value>
+			<resellValue>400</resellValue>
+			<type>ranged</type>
+			<weight>2</weight>
+			<stats_id>31</stats_id>
+		</item>
+		<item>
+			<id>22</id>
+			<name>Toothpick</name>
+			<description>Ballesta ligera con buena velocidad de disparo.</description>
+			<value>750</value>
+			<resellValue>500</resellValue>
+			<type>ranged</type>
+			<weight>1</weight>
+			<stats_id>32</stats_id>
+		</item>
+		<item>
+			<id>23</id>
+			<name>Eagle’s Cross</name>
+			<description>Ballesta de largo alcance, muy precisa.</description>
+			<value>1200</value>
+			<resellValue>800</resellValue>
+			<type>ranged</type>
+			<weight>3</weight>
+			<stats_id>33</stats_id>
+		</item>
+		<item>
+			<id>24</id>
+			<name>Oldworld Bow MkII</name>
+			<description>Una ballesta militar mejorada de gran daño.</description>
+			<value>1500</value>
+			<resellValue>1000</resellValue>
+			<type>ranged</type>
+			<weight>4</weight>
+			<stats_id>34</stats_id>
+		</item>
+		<item>
+			<id>25</id>
+			<name>Harpoon Gun</name>
+			<description>Arma pesada de defensa estática.</description>
+			<value>2000</value>
+			<resellValue>1500</resellValue>
+			<type>ranged</type>
+			<weight>4</weight>
+			<stats_id>35</stats_id>
+		</item>
+		<item>
+			<id>26</id>
+			<name>Primeros auxilios estándar</name>
+			<description>Kit básico de primeros auxilios. Se consume al usarse.</description>
+			<value>200</value>
+			<resellValue>100</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>36</stats_id>
+		</item>
+		<item>
+			<id>27</id>
+			<name>Ferula basica</name>
+			<description>Inmoviliza miembros fracturados. Se consume al usarse.</description>
+			<value>150</value>
+			<resellValue>75</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>37</stats_id>
+		</item>
+		<item>
+			<id>28</id>
+			<name>Primeros auxilios profesional</name>
+			<description>Restaura sangre rápidamente. Se consume al usarse.</description>
+			<value>300</value>
+			<resellValue>150</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>38</stats_id>
+		</item>
+		<item>
+			<id>29</id>
+			<name>Mendrugo de pan</name>
+			<description>La única comida que sobrevivió el cataclismo.Se consume al usarse.</description>
+			<value>200</value>
+			<resellValue>50</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>39</stats_id>
+		</item>
+		<item>
+			<id>30</id>
+			<name>Ron de sangre</name>
+			<description>Su nombre es un misterio, y su elaboración, también. Es capaz de revivir a un aliado. Se consume al usarse.</description>
+			<value>2000</value>
+			<resellValue>1000</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>40</stats_id>
+		</item>
+		<item>
+			<id>31</id>
+			<name>Comida Simple</name>
+			<description>Comida básica que satisface el hambre y otorga un ligero aumento en la fuerza.</description>
+			<value>50</value>
+			<resellValue>25</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>41</stats_id>
+		</item>
+		<item>
+			<id>32</id>
+			<name>Taza de agua</name>
+			<description>Agua potable que hidrata y mejora la resistencia física temporalmente.</description>
+			<value>10</value>
+			<resellValue>5</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>42</stats_id>
+		</item>
+		<item>
+			<id>33</id>
+			<name>Wrap de carne</name>
+			<description>Parece carne cruda envuelta en tela, aumenta la energía y la agilidad.</description>
+			<value>80</value>
+			<resellValue>40</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>43</stats_id>
+		</item>
+		<item>
+			<id>34</id>
+			<name>Comida cruda</name>
+			<description>Carne cruda, otorga un pequeño aumento de fuerza.</description>
+			<value>100</value>
+			<resellValue>50</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>44</stats_id>
+		</item>
+		<item>
+			<id>35</id>
+			<name>Té herbal</name>
+			<description>Bebida herbal que mejora la calma y recarga la resistencia.</description>
+			<value>150</value>
+			<resellValue>75</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>45</stats_id>
+		</item>
+		<item>
+			<id>36</id>
+			<name>Guiso</name>
+			<description>Un guiso que cubre bien el hambre y mejora la resistencia y fuerza.</description>
+			<value>200</value>
+			<resellValue>100</resellValue>
+			<type>melee</type>
+			<weight>2</weight>
+			<stats_id>46</stats_id>
+		</item>
+		<item>
+			<id>37</id>
+			<name>Cerveza de cáñamo</name>
+			<description>Cerveza artesanal que alivia el cansancio, pero reduce la agilidad.</description>
+			<value>120</value>
+			<resellValue>60</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>47</stats_id>
+		</item>
+		<item>
+			<id>38</id>
+			<name>Dustwich</name>
+			<description>Un sándwich con polvo del desierto, ligeramente mejora la agilidad.</description>
+			<value>60</value>
+			<resellValue>30</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>48</stats_id>
+		</item>
+		<item>
+			<id>39</id>
+			<name>Sake</name>
+			<description>Poca cosa pero matón, otorga un aumento de resistencia temporal a costa de equilibrio.</description>
+			<value>300</value>
+			<resellValue>150</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>49</stats_id>
+		</item>
+		<item>
+			<id>40</id>
+			<name>Grog</name>
+			<description>Bebida alcohólica que aumenta la resistencia, pero reduce la agilidad.</description>
+			<value>250</value>
+			<resellValue>125</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>50</stats_id>
+		</item>
+		<item>
+			<id>41</id>
+			<name>Hashish</name>
+			<description>Tremendamente ilegal, te dejará en con el corazón a mil.</description>
+			<value>700</value>
+			<resellValue>600</resellValue>
+			<type>melee</type>
+			<weight>1</weight>
+			<stats_id>51</stats_id>
+		</item>
+	</items>
+	<meleeItems>
+	<meleeItem>
+		<item_id>1</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>2</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>3</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>4</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>5</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>6</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>7</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>8</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>9</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>10</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>11</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>12</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>13</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>14</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>15</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>16</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>17</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>18</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>19</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>20</item_id>
+		<breaksOnUse>false</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>26</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>27</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>28</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>29</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>30</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>true</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>31</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>32</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>33</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>34</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>35</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>36</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>37</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>38</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>39</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>40</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	<meleeItem>
+		<item_id>41</item_id>
+		<breaksOnUse>true</breaksOnUse>
+		<canRevive>false</canRevive>
+	</meleeItem>
+	</meleeItems>
+	<rangedItems>
+	<rangedItem>
+		<item_id>21</item_id>
+		<difficulty>1</difficulty>
+		<maxAmmo>15</maxAmmo>
+	</rangedItem>
+	<rangedItem>
+		<item_id>22</item_id>
+		<difficulty>2</difficulty>
+		<maxAmmo>20</maxAmmo>
+	</rangedItem>
+	<rangedItem>
+		<item_id>23</item_id>
+		<difficulty>4</difficulty>
+		<maxAmmo>10</maxAmmo>
+	</rangedItem>
+	<rangedItem>
+		<item_id>24</item_id>
+		<difficulty>5</difficulty>
+		<maxAmmo>8</maxAmmo>
+	</rangedItem>
+	<rangedItem>
+		<item_id>25</item_id>
+		<difficulty>3</difficulty>
+		<maxAmmo>16</maxAmmo>
+	</rangedItem>
+	</rangedItems>
+	<limbs>
+		<limb>
+			<name>Pierna ágil</name>
+			<value>1000</value>
+			<stats_id>52</stats_id>
+		</limb>
+		<limb>
+			<name>Extremidad de metal</name>
+			<value>1200</value>
+			<stats_id>53</stats_id>
+		</limb>
+		<limb>
+			<name>Extremidad de Kung-Fu</name>
+			<value>1500</value>
+			<stats_id>54</stats_id>
+		</limb>
+		<limb>
+			<name>Extremidad Antigolpes</name>
+			<value>1000</value>
+			<stats_id>55</stats_id>
+		</limb>
+		<limb>
+			<name>Brazo de francotirador</name>
+			<value>1500</value>
+			<stats_id>56</stats_id>
+		</limb>
+	</limbs>
+	<enemies>
+		<enemy>
+			<factionId>6</factionId>
+			<name>Cabra</name>
+			<health>3</health>
+			<strength>4</strength>
+			<resistance>1</resistance>
+			<agility>4</agility>
+			<immunity>None</immunity>
+			<xp>25</xp>
+			<maxCatDrop>0</maxCatDrop>
+			<canDropItem>false</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>6</factionId>
+			<name>Garral Joven</name>
+			<health>6</health>
+			<strength>5</strength>
+			<resistance>3</resistance>
+			<agility>8</agility>
+			<immunity>ResistantToMelee</immunity>
+			<xp>75</xp>
+			<maxCatDrop>0</maxCatDrop>
+			<canDropItem>false</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>6</factionId>
+			<name>Bicho de las Dunas</name>
+			<health>5</health>
+			<strength>4</strength>
+			<resistance>3</resistance>
+			<agility>6</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>100</xp>
+			<maxCatDrop>0</maxCatDrop>
+			<canDropItem>false</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>6</factionId>
+			<name>Perro huesudo</name>
+			<health>4</health>
+			<strength>3</strength>
+			<resistance>2</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>60</xp>
+			<maxCatDrop>0</maxCatDrop>
+			<canDropItem>false</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>6</factionId>
+			<name>Garral</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>4</resistance>
+			<agility>7</agility>
+			<immunity>ImmuneToMelee</immunity>
+			<xp>150</xp>
+			<maxCatDrop>0</maxCatDrop>
+			<canDropItem>false</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>4</factionId>
+			<name>Caníbal Desnutrido</name>
+			<health>3</health>
+			<strength>2</strength>
+			<resistance>2</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>50</xp>
+			<maxCatDrop>50</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>4</factionId>
+			<name>Caníbal Cazador</name>
+			<health>4</health>
+			<strength>3</strength>
+			<resistance>2</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>75</xp>
+			<maxCatDrop>75</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>4</factionId>
+			<name>Chamán Caníbal</name>
+			<health>5</health>
+			<strength>2</strength>
+			<resistance>3</resistance>
+			<agility>4</agility>
+			<immunity>ResistantToRanged</immunity>
+			<xp>120</xp>
+			<maxCatDrop>100</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>4</factionId>
+			<name>Jefe Caníbal</name>
+			<health>6</health>
+			<strength>5</strength>
+			<resistance>4</resistance>
+			<agility>5</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>250</xp>
+			<maxCatDrop>200</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>4</factionId>
+			<name>Caníbal Loco</name>
+			<health>4</health>
+			<strength>4</strength>
+			<resistance>2</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>90</xp>
+			<maxCatDrop>80</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>7</factionId>
+			<name>Bandido Famélico</name>
+			<health>2</health>
+			<strength>2</strength>
+			<resistance>2</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>40</xp>
+			<maxCatDrop>30</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>7</factionId>
+			<name>Bandido Famélico Fuerte</name>
+			<health>3</health>
+			<strength>3</strength>
+			<resistance>2</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>60</xp>
+			<maxCatDrop>50</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>7</factionId>
+			<name>Líder Bandido Famélico</name>
+			<health>3</health>
+			<strength>3</strength>
+			<resistance>3</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>80</xp>
+			<maxCatDrop>75</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>1</factionId>
+			<name>Recluta de Okran</name>
+			<health>4</health>
+			<strength>3</strength>
+			<resistance>3</resistance>
+			<agility>4</agility>
+			<immunity>None</immunity>
+			<xp>300</xp>
+			<maxCatDrop>300</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>1</factionId>
+			<name>Fanático de Okran</name>
+			<health>4</health>
+			<strength>4</strength>
+			<resistance>3</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>400</xp>
+			<maxCatDrop>400</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>1</factionId>
+			<name>Paladín Sagrado</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>4</resistance>
+			<agility>4</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>1000</xp>
+			<maxCatDrop>1000</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>1</factionId>
+			<name>Inquisidor</name>
+			<health>8</health>
+			<strength>7</strength>
+			<resistance>5</resistance>
+			<agility>3</agility>
+			<immunity>ImmuneToRanged</immunity>
+			<xp>2000</xp>
+			<maxCatDrop>2000</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>2</factionId>
+			<name>Soldado de las Ciudades Unidas</name>
+			<health>5</health>
+			<strength>5</strength>
+			<resistance>4</resistance>
+			<agility>5</agility>
+			<immunity>ResistantToMelee</immunity>
+			<xp>800</xp>
+			<maxCatDrop>800</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>2</factionId>
+			<name>Guardia de Seguridad</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>4</resistance>
+			<agility>4</agility>
+			<immunity>ImmuneToMeleeAndResistantToRanged</immunity>
+			<xp>1000</xp>
+			<maxCatDrop>1200</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>2</factionId>
+			<name>Oficial de Patrulla</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>4</resistance>
+			<agility>4</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>950</xp>
+			<maxCatDrop>1000</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>3</factionId>
+			<name>Guerrero Shek</name>
+			<health>5</health>
+			<strength>6</strength>
+			<resistance>5</resistance>
+			<agility>5</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>800</xp>
+			<maxCatDrop>1000</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>3</factionId>
+			<name>Veterano Shek</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>5</resistance>
+			<agility>5</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>1000</xp>
+			<maxCatDrop>1200</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>3</factionId>
+			<name>Campeón Shek</name>
+			<health>6</health>
+			<strength>7</strength>
+			<resistance>6</resistance>
+			<agility>4</agility>
+			<immunity>ImmuneToMelee</immunity>
+			<xp>1500</xp>
+			<maxCatDrop>1500</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>5</factionId>
+			<name>Errante del Enjambre</name>
+			<health>3</health>
+			<strength>3</strength>
+			<resistance>3</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>200</xp>
+			<maxCatDrop>100</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>5</factionId>
+			<name>Guerrero del Enjambre</name>
+			<health>4</health>
+			<strength>5</strength>
+			<resistance>4</resistance>
+			<agility>7</agility>
+			<immunity>ResistantToRanged</immunity>
+			<xp>400</xp>
+			<maxCatDrop>300</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>5</factionId>
+			<name>Príncipe del Enjambre</name>
+			<health>5</health>
+			<strength>4</strength>
+			<resistance>4</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>500</xp>
+			<maxCatDrop>400</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>5</factionId>
+			<name>Artillero del Enjambre</name>
+			<health>3</health>
+			<strength>3</strength>
+			<resistance>3</resistance>
+			<agility>5</agility>
+			<immunity>None</immunity>
+			<xp>350</xp>
+			<maxCatDrop>250</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>8</factionId>
+			<name>Cazador Esclavista</name>
+			<health>4</health>
+			<strength>4</strength>
+			<resistance>3</resistance>
+			<agility>6</agility>
+			<immunity>None</immunity>
+			<xp>600</xp>
+			<maxCatDrop>500</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>8</factionId>
+			<name>Mercader Esclavista</name>
+			<health>3</health>
+			<strength>3</strength>
+			<resistance>2</resistance>
+			<agility>4</agility>
+			<immunity>None</immunity>
+			<xp>300</xp>
+			<maxCatDrop>400</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>8</factionId>
+			<name>Capataz Esclavista</name>
+			<health>5</health>
+			<strength>5</strength>
+			<resistance>3</resistance>
+			<agility>5</agility>
+			<immunity>ImmuneToRanged</immunity>
+			<xp>1000</xp>
+			<maxCatDrop>800</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+		<enemy>
+			<factionId>8</factionId>
+			<name>Esclavista Veterano</name>
+			<health>6</health>
+			<strength>6</strength>
+			<resistance>4</resistance>
+			<agility>4</agility>
+			<immunity>ResistantToBoth</immunity>
+			<xp>1200</xp>
+			<maxCatDrop>1000</maxCatDrop>
+			<canDropItem>true</canDropItem>
+		</enemy>
+	</enemies>
+	<names>
+		<name>Esata</name>
+	</names>
+	<names>
+		<name>Squin</name>
+	</names>
+	<names>
+		<name>Cat-Lon</name>
+	</names>
+	<names>
+		<name>Tinfist</name>
+	</names>
+	<names>
+		<name>Holy Phoenix</name>
+	</names>
+	<names>
+		<name>Okran</name>
+	</names>
+	<names>
+		<name>Simone</name>
+	</names>
+	<names>
+		<name>Bugmaster</name>
+	</names>
+	<names>
+		<name>Agnu</name>
+	</names>
+	<names>
+		<name>Beep</name>
+	</names>
+	<names>
+		<name>Seto</name>
+	</names>
+	<names>
+		<name>Miu</name>
+	</names>
+	<names>
+		<name>Ruka</name>
+	</names>
+	<names>
+		<name>Greenfinger</name>
+	</names>
+	<names>
+		<name>Rain the Giant</name>
+	</names>
+	<names>
+		<name>Kang</name>
+	</names>
+	<names>
+		<name>Burn</name>
+	</names>
+	<names>
+		<name>Sadneil</name>
+	</names>
+	<names>
+		<name>Oron</name>
+	</names>
+	<names>
+		<name>Moll</name>
+	</names>
+	<names>
+		<name>Longen</name>
+	</names>
+	<names>
+		<name>Soto</name>
+	</names>
+	<names>
+		<name>Nux</name>
+	</names>
+	<names>
+		<name>Crimper</name>
+	</names>
+	<names>
+		<name>Stobe</name>
+	</names>
+	<names>
+		<name>Dimak</name>
+	</names>
+	<names>
+		<name>Barka</name>
+	</names>
+	<names>
+		<name>Green</name>
+	</names>
+	<names>
+		<name>Sarn</name>
+	</names>
+	<names>
+		<name>Griffin</name>
+	</names>
+	<names>
+		<name>Chad</name>
+	</names>
+	<names>
+		<name>Owl</name>
+	</names>
+	<names>
+		<name>Grey</name>
+	</names>
+	<names>
+		<name>Bo</name>
+	</names>
+	<names>
+		<name>Mu</name>
+	</names>
+	<names>
+		<name>Bishop</name>
+	</names>
+	<names>
+		<name>Bull</name>
+	</names>
+	<names>
+		<name>Void</name>
+	</names>
+	<names>
+		<name>Caliburn</name>
+	</names>
+	<names>
+		<name>Ghost</name>
+	</names>
+	<names>
+		<name>Fang</name>
+	</names>
+	<names>
+		<name>Buzzo</name>
+	</names>
+	<names>
+		<name>Rane</name>
+	</names>
+	<names>
+		<name>Okra</name>
+	</names>
+	<names>
+		<name>Ray</name>
+	</names>
+	<names>
+		<name>Juno</name>
+	</names>
+	<names>
+		<name>Patch</name>
+	</names>
+	<names>
+		<name>Slug</name>
+	</names>
+	<names>
+		<name>Zan</name>
+	</names>
+	<names>
+		<name>Twinkle</name>
+	</names>
+	<titles>
+		<title>El Lobo</title>
+	</titles>
+	<titles>
+		<title>La Espina</title>
+	</titles>
+	<titles>
+		<title>El Rápido</title>
+	</titles>
+	<titles>
+		<title>La Hoja</title>
+	</titles>
+	<titles>
+		<title>El Fuerte</title>
+	</titles>
+	<titles>
+		<title>La Tormenta</title>
+	</titles>
+	<titles>
+		<title>El Silencio</title>
+	</titles>
+	<titles>
+		<title>La Sombra</title>
+	</titles>
+	<titles>
+		<title>El Sabio</title>
+	</titles>
+	<titles>
+		<title>El Fénix</title>
+	</titles>
+	<titles>
+		<title>El Viejo Lobo</title>
+	</titles>
+	<titles>
+		<title>La Mano Justa</title>
+	</titles>
+	<titles>
+		<title>El Errante</title>
+	</titles>
+	<titles>
+		<title>La Furia</title>
+	</titles>
+	<titles>
+		<title>El Ojo Frío</title>
+	</titles>
+	<titles>
+		<title>La Voz Gris</title>
+	</titles>
+	<titles>
+		<title>El Sable</title>
+	</titles>
+	<titles>
+		<title>El Hierro</title>
+	</titles>
+	<titles>
+		<title>La Piedra</title>
+	</titles>
+	<titles>
+		<title>El Último</title>
+	</titles>
+	<titles>
+		<title>El Flojo</title>
+	</titles>
+	<titles>
+		<title>La Rata</title>
+	</titles>
+	<titles>
+		<title>El Tullido</title>
+	</titles>
+	<titles>
+		<title>El Tuerto</title>
+	</titles>
+	<titles>
+		<title>La Carga</title>
+	</titles>
+	<titles>
+		<title>El Estorbo</title>
+	</titles>
+	<titles>
+		<title>El Rencor</title>
+	</titles>
+	<titles>
+		<title>La Sanguijuela</title>
+	</titles>
+	<titles>
+		<title>El Perdido</title>
+	</titles>
+	<titles>
+		<title>La Sombra Rota</title>
+	</titles>
+	<titles>
+		<title>El Mudo</title>
+	</titles>
+	<titles>
+		<title>La Peste</title>
+	</titles>
+	<titles>
+		<title>El Cobarde</title>
+	</titles>
+	<titles>
+		<title>La Ruina</title>
+	</titles>
+	<titles>
+		<title>El Sin Nombre</title>
+	</titles>
+	<titles>
+		<title>La Mancha</title>
+	</titles>
+	<titles>
+		<title>El Fracasado</title>
+	</titles>
+	<titles>
+		<title>El Chiflado</title>
+	</titles>
+	<titles>
+		<title>La Vergüenza</title>
+	</titles>
+	<titles>
+		<title>El Muerto en Vida</title>
+	</titles>
+	<backgrounds>
+		<background>Ex-esclavo del Gremio de la Cadena. Lleva las marcas aún en la espalda. Silencioso, pero letal con la lanza.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Expulsado de los monjes de polvo por beber sangre en lugar de agua. Dice que fue por fe, pero nadie le cree.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Antigua mercenaria de las Llamas Rojas. Perdió su escuadrón y desde entonces bebe más de lo que duerme.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Cazador de bandidos venido a menos. Perdió una pierna, pero la remplazó con metal y rabia.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Crió ratas del desierto durante diez años. Las comía. También las entrenaba. Dice que aprendió paciencia.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Ex-guardia de ciudad caída. Se llevó la armadura, y la culpa. Quiere redención, o algo que se le parezca.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue carnicero, hasta que las carnes empezaron a moverse. Desde entonces solo corta cosas que sangren.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Nacido en las ruinas. Nunca ha visto una ciudad. Pelea como si cada día fuera el último, porque para él lo es.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Hermano menor de un señor de la guerra. Se negó a matar por poder y huyó. Ahora mata por comida.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Superviviente de un convoy perdido en las arenas. Fue el único que regresó, y no habla de cómo.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Hija de una comerciante y un asesino. Sabe negociar y apuñalar por igual. Cobra por ambos servicios.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Criado por bandidos, luego traicionado por ellos. Ahora caza a los suyos por deporte y oro.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Poeta fracasado, luchador inesperado. Escribe versos en la sangre que derrama.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue esclavo gladiador durante seis años. Cuando lo soltaron, mató al dueño. No ha parado desde entonces.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Nadie sabe su nombre real. Dice que fue sombra de un rey, y ahora busca su propia historia.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Comió carne humana durante una hambruna. No le enorgullece, pero tampoco se disculpa.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Hombre tranquilo, manos violentas. Nunca grita, nunca corre. Mata despacio, pero seguro.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Expulsada de tres bandas por "problemas de actitud". Ella dice que era la única cuerda.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Cree que una voz le habla desde las montañas. Le obedece. A veces esa voz tiene razón.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Peleó con un palo hasta que le dieron una espada. Siguió usando el palo. "Más confiable", dice.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue minero en las Tierras Negras. Un derrumbe lo dejó atrapado una semana. Desde entonces, odia los túneles y ama el cielo.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Ladrón reformado, o eso dice. Todavía camina como si tuviera que escapar en cualquier momento.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Creció en una caravana de mercaderes nómadas. Perdió a su familia por fuego cruzado. Desde entonces, solo viaja solo.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Dice haber sido criado por un anciano espadachín ciego. Pelea como si el mundo fuera niebla.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Sirvió como guardia en un burdel de frontera. Aprendió más sobre gente que sobre lucha. Pero también aprendió a pelear.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Era aprendiz de médico. Un error mató a un niño. No volvió a tocar vendas, solo espadas.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Vivió entre caníbales durante tres años. Nunca dice si fue prisionero o parte de la tribu.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Camina con muletas, pero pelea como si no las necesitara. Dice que cada golpe le recuerda por qué sigue vivo.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Limpió cadáveres en el campo de batalla desde los doce años. Un día, agarró un arma y no soltó más ninguna.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Habla solo. A veces ríe, a veces llora. A veces su "otro yo" pelea mejor que él.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Se unió a un culto por amor. Salió cuando el amor fue sacrificado. Guarda una cicatriz en el pecho, y otra en el alma.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Era carcelero. Dejó libre a un prisionero inocente. Perdió el trabajo, pero ganó conciencia. Ahora busca justicia a su manera.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Cazador de bestias que perdió la vista de un ojo. “Ahora solo veo lo importante”, dice mientras apunta.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Viajó con músicos ambulantes. Tocaba el tambor. Ahora solo toca tambores de guerra.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue criado para ser noble, pero se negó a mandar. Prefirió vivir entre polvo y barro que dar órdenes injustas.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Tuvo un hijo. Lo perdió en una redada. Desde entonces, no se le ha visto sonreír.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Era cocinero en una fortaleza. Envenenó a los invasores. Desde entonces cocina para soldados… y asesinos.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Aprendió a luchar viendo peleas de gallos. Dice que todo lo que sabe lo aprendió de un ave furiosa.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Trabajó como enterrador. Enterró enemigos y amigos por igual. Dice que cada muerte lo hizo más fuerte.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Tenía una promesa, una causa, un líder. Ya no le queda nada de eso. Solo una espada y ganas de seguir.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Estuvo encerrado en Rebirth durante cinco años. Aprendió a sobrevivir comiendo piedras… o algo parecido.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Caminó solo desde Mongrel hasta Black Scratch. No por valentía, sino porque no quedaba nadie más.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Defendió un puesto comercial en The Hook durante el asedio de los Skin Bandits. Sobrevivió a costa de los otros.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue maestro de espadas en World's End. Dejó todo atrás tras un duelo perdido que aún sueña cada noche.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Limpió sangre en las arenas de gladiadores de Sho-Battai. Ahora cobra por derramarla, no por limpiarla.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Vivió en las minas de Clownsteady sin ver el cielo durante años. Ahora no entra en cuevas, ni aunque haya oro.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Sirvió como escolta de caravanas entre Heft y Stoat. La mitad de su rostro quedó en una emboscada. La otra mitad sonríe.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Perdió un brazo en los campos de Vain. No quiere hablar del cómo. Solo quiere una nueva oportunidad.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Fue traicionado por sus propios aliados cerca de Blister Hill. Desde entonces, duerme con un ojo abierto y una daga bajo el cuello.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Pasó una temporada en las ruinas de la Nube Roja. Dice que no encontró enemigos… solo recuerdos.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Estuvo al servicio de un noble de Brink. Vio el lujo pudrirse desde adentro. Ahora prefiere el polvo bajo las botas.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Habitó en las sombras de Stack, fingiendo fe para no arder. Hoy solo cree en su espada.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Durante años, rastreó esclavistas cerca de Port North. No por justicia, sino por venganza.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Vigiló las puertas de Heng en los días de disturbio. Aprendió que los muros no detienen la traición.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Abandonó una torre de investigación en Black Desert City. Dice que la ciencia no basta cuando el mundo se cae a pedazos.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Cruzó el Mar de Acido con un grupo. Solo volvió uno. Nunca dijo qué ocurrió, pero ya no teme al dolor.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Construyó una cabaña cerca de Leviathan Coast. Vivió en paz hasta que algo lo obligó a volver a empuñar el filo.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Presenció una ejecución en Okran's Shield. No fue la víctima… pero ese día murió algo en él.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Exploró las ruinas bajo Bast. Lo que encontró no puede decirlo, pero desde entonces duerme mal.</background>
+	</backgrounds>
+	<backgrounds>
+		<background>Sirvió a un líder de Deadcat. Lo traicionaron. Ahora trabaja solo, y no pregunta mucho.</background>
+	</backgrounds>
+</root>
