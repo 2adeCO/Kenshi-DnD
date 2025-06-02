@@ -246,7 +246,7 @@ namespace Kenshi_DnD
             string adventurePath = "./saves/" + adventure.GetId() + ".adventure";
             if (File.Exists(adventurePath))
             {
-                if (MessageBox.Show("¿Quieres eliminar la aventura " + adventure.GetId() + "? Pulsa de nuevo para eliminarla.",
+                if (MessageBox.Show("¿Quieres eliminar la aventura " + adventure.GetId() + "?",
                     "Borrar " + adventure.GetId(), MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     File.Delete(adventurePath);
@@ -655,11 +655,12 @@ namespace Kenshi_DnD
                 return XmlGetFactions();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
+            MySqlConnection connection = null;
             Faction[] factions = null;
             try
             {
-                 MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
+                connection = new MySqlConnection(connectionString);
+                MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
                  MySqlDataReader reader;
                 int numberOfFactions = 0;
 
@@ -701,13 +702,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySql wanted to crash");
                 connection.Close();
-                return null;
-            }
-            catch(DBNotFoundException ex)
-            {
-                Debug.WriteLine("MySql wanted to crash, but it was not found");
-                connection.Close();
-
+                return XmlGetFactions();
             }
             
             return factions;
@@ -763,14 +758,15 @@ namespace Kenshi_DnD
                 return XmlGetItems();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
+            MySqlConnection connection = null;
             MySqlCommand command;
             MySqlDataReader reader;
             int numberOfItems = 0;
 
             try
             {
-                // Abre la conexión
+                connection = new MySqlConnection(connectionString);
+                // Opens the connection
                 connection.Open();
 
                 // Obtener la cantidad de items
@@ -830,7 +826,12 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetItems(); // En caso de error, retorna null
+            }
+            catch (DBNotFoundException ex)
+            {
+                connection.Close();
+                return XmlGetItems();
             }
         }
         private Item[] XmlGetItems()
@@ -896,14 +897,14 @@ namespace Kenshi_DnD
                 return XmlGetLimbs();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from limbs;",connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             Limb[] limbs;
 
             try
             {
-                
+                connection = new MySqlConnection(connectionString);
+                 MySqlCommand command = new MySqlCommand("select count(*) from limbs;",connection);
                 connection.Open();
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -931,7 +932,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetLimbs(); // En caso de error, retorna null
             }
             return limbs;
         }
@@ -978,13 +979,16 @@ namespace Kenshi_DnD
                 return XmlGetRegions();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from regions;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             Region[] regions;
             Faction[] factions = SqlGetFactions();
             try
             {
+
+                connection = new MySqlConnection(connectionString);
+                MySqlCommand command = new MySqlCommand("select count(*) from regions;", connection);
+                
                 connection.Open();
 
                 reader = command.ExecuteReader();
@@ -1023,7 +1027,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetRegions(); // En caso de error, retorna null
             }
             return regions;
 
@@ -1078,15 +1082,15 @@ namespace Kenshi_DnD
                 return XmlGetRaces();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from races;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             Race[] races;
 
             try
             {
-
+                connection = new MySqlConnection(connectionString);
                 connection.Open();
+                MySqlCommand command = new MySqlCommand("select count(*) from races;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 int numOfRaces = reader.GetInt32(0);
@@ -1112,7 +1116,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetRaces(); // En caso de error, retorna null
             }
             return races;
         }
@@ -1163,16 +1167,16 @@ namespace Kenshi_DnD
                 return XmlGetEnemies();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from enemies;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             Faction[] factions = SqlGetFactions();
             Monster[] enemies;
 
             try
             {
-
+                connection = new MySqlConnection(connectionString);
                 connection.Open();
+                MySqlCommand command = new MySqlCommand("select count(*) from enemies;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 int numOfEnemies = reader.GetInt32(0);
@@ -1198,7 +1202,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetEnemies(); // En caso de error, retorna null
             }
             return enemies;
         }
@@ -1241,14 +1245,15 @@ namespace Kenshi_DnD
                 return XmlGetNames();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from names;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             string[] names;
 
             try
             {
+                connection = new MySqlConnection(connectionString);
                 connection.Open();
+                MySqlCommand command = new MySqlCommand("select count(*) from names;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 int numOfNames = reader.GetInt32(0);
@@ -1270,7 +1275,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetNames(); // En caso de error, retorna null
             }
             return names;
         }
@@ -1307,14 +1312,15 @@ namespace Kenshi_DnD
                 return XmlGetTitles();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from titles;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             string[] titles;
 
             try
             {
+                connection = new MySqlConnection(connectionString);
                 connection.Open();
+                MySqlCommand command = new MySqlCommand("select count(*) from titles;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 int numOfNames = reader.GetInt32(0);
@@ -1336,7 +1342,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetTitles(); // En caso de error, retorna null
             }
             return titles;
         }
@@ -1373,14 +1379,15 @@ namespace Kenshi_DnD
                 return XmlGetBackgrounds();
             }
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlCommand command = new MySqlCommand("select count(*) from backgrounds;", connection);
+            MySqlConnection connection = null;
             MySqlDataReader reader;
             string[] backgrounds;
 
             try
             {
+                connection = new MySqlConnection(connectionString);
                 connection.Open();
+                MySqlCommand command = new MySqlCommand("select count(*) from backgrounds;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 int numOfNames = reader.GetInt32(0);
@@ -1389,7 +1396,6 @@ namespace Kenshi_DnD
                 backgrounds = new string[numOfNames];
                 command = new MySqlCommand("SELECT background FROM backgrounds ;", connection);
                 reader = command.ExecuteReader();
-
                 for (int i = 0; i < numOfNames; i += 1)
                 {
                     reader.Read();
@@ -1402,12 +1408,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
-            }catch (ArgumentException ex)
-            {
-                Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return null; // En caso de error, retorna null
+                return XmlGetNames(); // En caso de error, retorna null
             }
             return backgrounds;
         }

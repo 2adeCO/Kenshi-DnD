@@ -91,7 +91,7 @@ namespace Kenshi_DnD
                 else
                 {
                     controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, 
-                        mainWindow.GenerateMonsters(adventure,SelectAggressor(adventure,rnd,selectedRegion),rnd));
+                        mainWindow.SqlGenerateMonsters(adventure,SelectAggressor(adventure,rnd,selectedRegion),rnd));
                 }
             }
             else

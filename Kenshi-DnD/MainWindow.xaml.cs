@@ -292,13 +292,18 @@ public partial class MainWindow : Window
             fileStream.Close();
             MessageBox.Show("Partida guardada exitosamente");
         }
-        public Monster[] GenerateMonsters(Adventure adventure,Faction faction, Random rnd)
+        public Monster[] SqlGenerateMonsters(Adventure adventure, Faction faction, Random rnd)
         {
 
             string connectionString = GetSqlConnectionString();
-            if (!UseXml())
+            if (UseXml())
             {
-                MySqlConnection connection = new MySqlConnection(connectionString);
+                return XmlGenerateMonsters(adventure, faction, rnd);
+            }
+            MySqlConnection connection = null;
+            try
+            {
+                connection = new MySqlConnection(connectionString);
                 MySqlCommand command = new MySqlCommand("SELECT count(*) " +
                     "FROM enemies e " +
                     "WHERE e.factionId = \"" + faction.GetFactionId() + "\"", connection);
@@ -339,39 +344,49 @@ public partial class MainWindow : Window
                 }
                 return monstersToReturn;
             }
-            else
+            catch(MySqlException ex)
             {
-                try
-                {
-                    if (File.Exists("./Resources/xml/kenshidata.xml"))
-                    {
-                        XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
-
-                        Monster[] monsterFromFaction = xmlFile.Root.Element("enemies").Elements("enemy").Where(e => 
-                        int.Parse(e.Element("factionId").Value) == faction.GetFactionId()).Select(m => new Monster(
-                        m.Element("name").Value, int.Parse(m.Element("health").Value), faction,
-                        int.Parse(m.Element("strength").Value), int.Parse(m.Element("resistance").Value), int.Parse(m.Element("agility").Value),
-                        m.Element("immunity").Value, int.Parse(m.Element("maxCatDrop").Value), int.Parse(m.Element("xp").Value),
-                        bool.Parse(m.Element("canDropItem").Value)
-                        )).ToArray();
-
-
-                        return monsterFromFaction;
-                    }
-                    else
-                    {
-                        throw new XMLNotFoundException();
-                    }
-                }
-                catch (XMLNotFoundException xmlError)
-                {
-                    MessageBox.Show(xmlError.Message);
-                    return null;
-                }
-
+                connection.Close();
+                return XmlGenerateMonsters(adventure, faction, rnd);
             }
             
+        }
+        public Monster[] XmlGenerateMonsters(Adventure adventure, Faction faction, Random rnd)
+        {
 
+            try
+            {
+                if (File.Exists("./Resources/xml/kenshidata.xml"))
+                {
+                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
+
+                    Monster[] monsterFromFaction = xmlFile.Root.Element("enemies").Elements("enemy").Where(e =>
+                    int.Parse(e.Element("factionId").Value) == faction.GetFactionId()).Select(m => new Monster(
+                    m.Element("name").Value, int.Parse(m.Element("health").Value), faction,
+                    int.Parse(m.Element("strength").Value), int.Parse(m.Element("resistance").Value), int.Parse(m.Element("agility").Value),
+                    m.Element("immunity").Value, int.Parse(m.Element("maxCatDrop").Value), int.Parse(m.Element("xp").Value),
+                    bool.Parse(m.Element("canDropItem").Value)
+                    )).ToArray();
+
+                    int numMonsters = rnd.Next(1, 5);
+                    Monster[] monstersToReturn = new Monster[numMonsters];
+                    for (int i = 0; i < numMonsters; i++)
+                    {
+                        Monster monster = monsterFromFaction[rnd.Next(0, monsterFromFaction.Length)];
+                        monstersToReturn[i] = monster.GetCopy();
+                    }
+                    return monstersToReturn;
+                }
+                else
+                {
+                    throw new XMLNotFoundException();
+                }
+            }
+            catch (XMLNotFoundException xmlError)
+            {
+                MessageBox.Show(xmlError.Message);
+                return null;
+            }
         }
         public TextBlock GenerateTextblock(string content)
         {

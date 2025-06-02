@@ -268,7 +268,7 @@ namespace Kenshi_DnD
 
             Faction faction = (Faction)((TextBlock)factionToFight.SelectedItem).Tag;
             faction.AddOrSubtractRelation(-20);
-            controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, myAdventure,mainWindow.GenerateMonsters(myAdventure,faction,rnd));
+            controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, myAdventure,mainWindow.SqlGenerateMonsters(myAdventure,faction,rnd));
         }
         public void UpdateLog(string message)
         {
