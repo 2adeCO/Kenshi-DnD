@@ -62,13 +62,15 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <Label 
-            Grid.Column="0" Grid.Row="0"
-                FontSize="20"
-            Content="En Combate"
-            x:Name="GameStateUI"
-                    />
+            <Border Grid.Column="0" Grid.Row="0" Background="#80000000" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Label 
+                
+                    FontSize="20"
+                Content="En Combate"
+                x:Name="GameStateUI"
+                        />
+            </Border>
+            
 
             <Grid x:Name="NextTurnGrid" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" >
                 
@@ -77,24 +79,27 @@
             <Label
             Grid.Column="1" Grid.Row="1"  FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"
             x:Name="TimerUI"/>
+            <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom" Background="#40000000" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="2">
+                                    <Label 
+                    x:Name="Heroes" 
+                    Content="Héroes"
+    
+                    FontSize="32"
+                        />
+            </Border>
 
-            <Label 
-            Grid.Column="0" Grid.Row="1"
-            x:Name="HeroTest" 
-            Content="Héroes"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-            FontSize="32"
-                />
-
-            <Label 
+            <Border Grid.Column="3" Grid.Row="1" HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" Background="#40000000" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="2">
+                <Label 
             Grid.Column="2" Grid.Row="1"
-            x:Name="MonsterTest" 
+            x:Name="Monsters" 
             Content="Enemigos" 
                 FontSize="32"
             HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 />
+            </Border>
         </Grid>
 
             <Grid

@@ -53,7 +53,10 @@ namespace Kenshi_DnD
             this.heroes = myAdventure.GetCurrentSquad();
             this.monsters = monsters;
             myCombat = new Combat(heroes, monsters, myAdventure,rnd, this);
-
+            GameStateUI.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" +myAdventure.GetCurrentSquadName() + " de @" + myAdventure.GetFactionName()+" contra " 
+                + monsters[0].GetFaction().GetFactionName());
+            Heroes.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" + myAdventure.GetCurrentSquadName() + "@");
+            Monsters.Content = mainWindow.GenerateTextblock(monsters[0].GetFaction().GetFactionName() +" de " + myAdventure.GetCurrentRegion().GetName());
             currentAttacker = myCombat.GetCurrentAttacker();
 
             FillItemTrees();
@@ -76,7 +79,7 @@ namespace Kenshi_DnD
             if (myCombat.GetGameState() != 0)
             {
                 UpdateGameStateUI();
-                MessageBox.Show("Ya terminó el combate");
+                MessageBox.Show(myCombat.GetGameState() == 1 ? "¡Ganaste el combate!" : "¡Perdiste el combate!");
                 return;
             }
             if (currentAttacker is Hero && fighterTarget == null)
@@ -104,7 +107,7 @@ namespace Kenshi_DnD
             if (myCombat.GetGameState() != 0)
             {
                 UpdateGameStateUI();
-                MessageBox.Show("Ya terminó el combate");
+                MessageBox.Show(myCombat.GetGameState() == 1 ? "¡Ganaste el combate!" : "¡Perdiste el combate!");
                 return;
             }
             if (currentAttacker is Monster)
@@ -864,13 +867,11 @@ namespace Kenshi_DnD
 
                 case 0:
                     {
-                        GameStateUI.Content = "En combate";
                         break;
                     }
                 case 1:
                     {
                         FreeInventoryFromAllHeroes();
-                        GameStateUI.Content = "¡Combate ganado!";
                         timer.Stop();
                         myAdventure.GainToken();
                         Faction faction = monsters[0].GetFaction();
@@ -888,7 +889,6 @@ namespace Kenshi_DnD
                 case -1:
                     {
                         FreeInventoryFromAllHeroes();
-                        GameStateUI.Content = "¡Has sido abandonado a tu suerte!";
                         timer.Stop();
                         myAdventure.GainToken();
                         Faction faction = monsters[0].GetFaction();
