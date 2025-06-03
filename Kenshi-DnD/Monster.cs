@@ -106,6 +106,36 @@ namespace Kenshi_DnD
         {
             return hp;
         }
+        public int GetPossibleCats(Random rnd)
+        {
+            float catsMultiplier = 1.0f;
+            int possibility = rnd.Next(0, 20);
+            switch (possibility)
+            {
+                case < 12:
+                    {
+                        catsMultiplier = 0.25f;
+                        break;
+                    }
+                case < 16:
+                    {
+                        catsMultiplier = 0.5f;
+                        break;
+                    }
+                case < 19:
+                    {
+                        catsMultiplier = 0.75f;
+                        break;
+                    }
+                case < 20:
+                    {
+                        catsMultiplier = 1.0f;
+                        break;
+                    }
+
+            }
+            return (int)(cats * catsMultiplier);
+        }
         public void SetHp(int hp)
         {
             this.hp = hp;

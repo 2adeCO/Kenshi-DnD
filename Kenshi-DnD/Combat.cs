@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Kenshi_DnD
@@ -200,13 +201,13 @@ namespace Kenshi_DnD
             {
                 string itemRecovered = corpse.FreeAllItems();
                 await window.UpdateLogUI(hero.GetName() + " revolvió el cuerpo inconsciente de " + corpse.GetName() +
-                    " y consiguió recuperar: " + itemRecovered == "" ? " Ninguno" : itemRecovered , 0);
+                    " y consiguió recuperar: " + (itemRecovered == "" ? " Ninguno" : itemRecovered), 200);
 
 
             }
             else
             {
-                await window.UpdateLogUI(hero.GetName() + " se tropieza y vuelve a su posición..." ,0);
+                await window.UpdateLogUI(hero.GetName() + " se tropieza y vuelve a su posición..." ,200);
             }
                 await window.UpdateDicesUI(myDice.GetRollHistory(), 1200);
 
@@ -245,9 +246,11 @@ namespace Kenshi_DnD
 
             await window.UpdateLogUI(attacker.GetName() + " golpea y hace " + hits + " de daño a " + defender.GetName(), 400);
 
-            defender.Hurt(hits);
+            if (defender.Hurt(hits)){
+                await window.UpdateLogUI(defender.GetName() + " subió a @214@Nivel " + defender.GetLevel() + "@ @116@a base de golpes...@",400);
+            }
 
-			Debug.WriteLine("toughness/2: " + defender.GetToughness() / 2);
+            Debug.WriteLine("toughness/2: " + defender.GetToughness() / 2);
             Debug.WriteLine("hits/4: " +hits / 4);
 			if (hits > defender.GetToughness() / 2)
 			{
@@ -332,12 +335,21 @@ namespace Kenshi_DnD
                 }
                 if (defender.GetXpDrop() == 0)
                 {
-					await window.UpdateLogUI("No se consiguió nada de experiencia", 300);
-				}
-				await window.UpdateLogUI("¡" + attacker.GetName() + " ha conseguido @214@" + defender.GetXpDrop() + " puntos de experiencia@!", 800);
-                if (attacker.GainXp(defender.GetXpDrop()))
+                    await window.UpdateLogUI("No se consiguió nada de experiencia", 300);
+                }
+                else
                 {
-                    await window.UpdateLogUI("¡Y sube a @218@NIVEL " + attacker.GetLevel()+"@!",800);
+                    await window.UpdateLogUI("¡" + attacker.GetName() + " ha conseguido @214@" + defender.GetXpDrop() + " puntos de experiencia@!", 800);
+                    if (attacker.GainXp(defender.GetXpDrop()))
+                    {
+                        await window.UpdateLogUI("¡Y sube a @218@NIVEL " + attacker.GetLevel() + "@!", 800);
+                    }
+                }
+                if(defender.GetCats() != 0)
+                {
+                    int cats = defender.GetPossibleCats(rnd);
+                    await window.UpdateLogUI("¡" + attacker.GetName() + " consigue @214@" + cats + " cats@!", 800);
+                    myAdventure.GainCats(cats);
                 }
 			}
 

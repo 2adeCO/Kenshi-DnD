@@ -35,7 +35,8 @@ namespace Kenshi_DnD
         int remainingPoints;
         const int DEFAULT_DICE_SIDES = 6;
         const int DEFAULT_DICE_MIN_WIN = 4;
-        const int DEFAULT_POINTS_ON_HERO_MAKER = 7;
+        // The points on the hero maker have to take into account the 4 points that are already assigned to the hero
+        const int DEFAULT_POINTS_ON_HERO_MAKER = 8;
         const string DEFAULT_FACTION_NAME = "El club famelico";
         const string DEFAULT_HERO_NAME = "Beep";
         const string DEFAULT_HERO_TITLE = "El Elegido";
@@ -53,7 +54,7 @@ namespace Kenshi_DnD
             this.rnd = rnd;
             TitleText.Inlines.Clear();
             TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
-            remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4 ;
+            remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4;
             remainingPointsText.Text = remainingPoints.ToString();
 
 
@@ -421,7 +422,6 @@ namespace Kenshi_DnD
                 Region[] regions = SqlGetRegions();
                 Limb[] limbs = SqlGetLimbs();
                 Item[] items = SqlGetItems();
-                Monster[] enemies = SqlGetEnemies();
                 string[] titles = SqlGetTitles();
                 string[] backgrounds = SqlGetBackgrounds();
                 string[] names = SqlGetNames();
@@ -435,8 +435,26 @@ namespace Kenshi_DnD
 
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
                 Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text),
-                    factionName.Text,factionColor.SelectedIndex + 1,factions,regions,enemies,titles,backgrounds,names,items,allRaces,limbs);
-                Debug.WriteLine(myAdventure.GetColor());
+                    factionName.Text,factionColor.SelectedIndex + 1,factions,regions,titles,backgrounds,names,items,allRaces,limbs);
+                
+                Item randomItemAtStart = null;
+                do
+                {
+                    int rng = rnd.Next(0, items.Length);
+
+                    if (items[rng] is MeleeItem)
+                    {
+                        MeleeItem meleeItem = (MeleeItem)items[rng];
+                        if (!meleeItem.BreaksOnUse())
+                        {
+                            meleeItem = (MeleeItem)meleeItem.GetCopy();
+                            meleeItem.SetRarity(Rarity.Rarities.Junk);
+                            randomItemAtStart = meleeItem;
+                        }
+                    }
+                } while (randomItemAtStart == null);
+                myAdventure.GetInventory().AddItem(randomItemAtStart);
+
                 if (!Directory.Exists("./saves"))
                 {
                     Directory.CreateDirectory("./saves");
@@ -461,7 +479,7 @@ namespace Kenshi_DnD
 #pragma warning restore SYSLIB0011 
 
                     fileStream.Close();
-
+                   
 
                     Debug.WriteLine("Adventure saved in: " + adventurePath);
                     CloseCurrentMenu(null, null);
@@ -716,7 +734,7 @@ namespace Kenshi_DnD
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
                     Faction[] factions = xmlFile.Root.Elements("factions")
                         .Select((f,index) => new Faction(
-                            index,
+                            int.Parse(f.Element("id").Value),
                             f.Element("name").Value,
                             f.Element("description").Value,
                             int.Parse(f.Element("baseRelations").Value),

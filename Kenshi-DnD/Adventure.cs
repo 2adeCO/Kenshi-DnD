@@ -29,7 +29,6 @@ namespace Kenshi_DnD
 
         Faction[] allFactions;
         Region[] allRegions;
-        Monster[] allMonsters;
         string[] titles;
         string[] backgrounds;
         string[] names;
@@ -39,7 +38,7 @@ namespace Kenshi_DnD
         const int MAX_HEROES = 12;
         const int MAX_SQUADS = 10;
         const int MAX_SQUAD_LENGTH = 4;
-        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, string factionName, int factionColor, Faction[] allFactions, Region[] allRegions, Monster[] allMonsters,
+        public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, string factionName, int factionColor, Faction[] allFactions, Region[] allRegions,
             string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
             this.id = GenerateId(name, rnd);
@@ -62,7 +61,6 @@ namespace Kenshi_DnD
             Debug.WriteLine(id);
             this.allFactions = allFactions;
             this.allRegions = allRegions;
-            this.allMonsters = allMonsters;
             this.titles = titles;
             this.backgrounds = backgrounds;
             this.names = names;
@@ -353,6 +351,16 @@ namespace Kenshi_DnD
                 }
             }
             return amputees;
+        }
+        public void GainCats(int amount)
+        {
+            if (amount < 0)
+            {
+                Debug.WriteLine("Cannot gain negative cats");
+                return;
+            }
+            cats += amount;
+            Debug.WriteLine("Gained " + amount + " cats. Total: " + cats);
         }
         public Dictionary<string, Hero[]> GetSavedSquads()
         {

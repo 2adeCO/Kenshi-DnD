@@ -51,7 +51,7 @@ namespace Kenshi_DnD
         Competency.StartCompetency startCompetency;
         bool hired;
         //In Kenshi the best way to level up at the start is to get beaten a lot
-        const int PART_DAMAGE_AS_XP = 6;
+        const int PART_DAMAGE_AS_XP = 2;
         public Hero(string name, string title,string backgroundStory,int bruteForce ,int dexterity, int resistance, int agility,
              int level, Race race, Race subrace, Limb[] limbs, Competency.StartCompetency startCompetency)
         {
@@ -452,11 +452,12 @@ namespace Kenshi_DnD
         }
         public bool Hurt(int hurtHp)
         {
-            //
+            
             if(hurtHp < 0)
             {
                 hurtHp = 0;
             }
+            //In kenshi, the best way to level up is to get beaten a lot... In my game, it mostly helps at the start if anything
             bool leveledUp = GainXp(hurtHp / PART_DAMAGE_AS_XP);
             if(GetHp() - hurtHp < 0)
             {

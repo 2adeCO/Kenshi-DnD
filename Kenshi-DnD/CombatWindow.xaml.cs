@@ -836,6 +836,7 @@ namespace Kenshi_DnD
             CurrentCombatInfo.Inlines.AddRange(mainWindow.DecorateText(message));
 
             InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
+            InfoLogScroll.ScrollToEnd();
             if (ms != 0)
             {
                 await Task.Delay(ms);

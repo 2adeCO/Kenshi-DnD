@@ -11,6 +11,7 @@ using System.Xml.Schema;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Threading;
 using System.Xml.Linq;
+using System.Dynamic;
 namespace Kenshi_DnD
 {
     /// <summary>
@@ -26,6 +27,7 @@ public partial class MainWindow : Window
         {
             InitializeComponent();
             LoadCursors();
+            this.Cursor = cursors[0];
             usingXML = false;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
