@@ -30,7 +30,7 @@ namespace Kenshi_DnD
         }
         
         public abstract string AnnounceUse();
-        public override string ToString()
+        public virtual string ItemInfo()
         {
             return
                    description + "\n" +
@@ -46,43 +46,21 @@ namespace Kenshi_DnD
             return rarity;
         }
         public abstract Item GetCopy();
-        
-        public void UnUse()
-        {
-            this.alreadyUsed = false;
-        }
         public void SetAlreadyUsed(bool alreadyUsed)
         {
             this.alreadyUsed = alreadyUsed;
-        }
-        
-        public string GetDescription()
-        {
-            return description;
         }
         public string GetName()
         {
             return name;
         }
-        public void SetName(string name)
-        {
-            this.name = name;
-        }
         public int GetValue()
         {
             return value;
         }
-        public void SetValue(int value)
-        {
-            this.value = value;
-        }
         public int GetResellValue()
         {
             return resellValue;
-        }
-        public void SetResellValue(int resellValue)
-        {
-            this.resellValue = resellValue;
         }
         public StatModifier GetStatToModify()
         {

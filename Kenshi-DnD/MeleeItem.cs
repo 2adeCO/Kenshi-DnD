@@ -91,9 +91,9 @@
         {
             return canRevive;
         }
-        public override string ToString()
+        public override string ItemInfo()
         {
-            return base.ToString() + "\n" +
+            return base.ItemInfo() + "\n" +
                    (canRevive ? "Puede revivir en uso\n" : "") +
                    "De un solo uso: " + (breaksOnUse ? "Sí" : "No") + "\n";
         }

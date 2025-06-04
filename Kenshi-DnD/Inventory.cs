@@ -34,19 +34,6 @@
                 }
             }
         }
-
-        public string ShowInfo(Item item)
-        {
-            if (items.Contains(item))
-            {
-                return item.ToString();
-            }
-            else
-            {
-                return "Item not found in inventory.";
-            }
-        }
-
         //0 is all, 1 is unused, 2 is used
         public Item[] GetConsumables(int returnSelect)
         {

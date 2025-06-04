@@ -27,9 +27,9 @@
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock x:Name="TitleText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,20" Grid.Row="0" Grid.Column="1"></TextBlock>
-            <Button Content="Elige tu propia aventura" HorizontalAlignment="Center" VerticalAlignment="Center" 
-        Padding="20" Click="OpenAdventureMaker" Grid.Row="1" Grid.Column="0" Margin="10"></Button>
-            <Button Content="Cargar aventura" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" Margin="10" Click="OpenSavedAdventures" 
+            <Button Content="Elige tu propia aventura" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Gray" BorderBrush="#80D3D3D3" BorderThickness="4"
+        Padding="15" Click="OpenAdventureMaker" Grid.Row="1" Grid.Column="0" Margin="20"></Button>
+            <Button Content="Cargar aventura" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Gray" BorderBrush="#80D3D3D3" BorderThickness="4" Padding="15" Margin="20" Click="OpenSavedAdventures" 
         Grid.Row="2" Grid.Column="0"></Button>
 
         </Grid>
@@ -42,7 +42,10 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
-           
+            <Button Content="Configurar datos" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Gray" BorderBrush="#80D3D3D3" BorderThickness="4" Padding="15" Margin="20" Click="OpenConfig" 
+Grid.Row="1" Grid.Column="0"></Button>
+            <Button Content="Salir" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="#80FF0000" BorderBrush="#20FF0000" BorderThickness="4" Padding="15" Margin="20" Click="LeaveGame" 
+Grid.Row="2" Grid.Column="0"></Button>
         </Grid>
         <Rectangle x:Name="DarkUI" Fill="Black" Opacity="0.8" Grid.ColumnSpan="3" Visibility="Collapsed" MouseUp="CloseCurrentMenu"></Rectangle>
 

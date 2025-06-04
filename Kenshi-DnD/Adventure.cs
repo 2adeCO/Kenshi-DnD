@@ -7,26 +7,39 @@ namespace Kenshi_DnD
     [Serializable]
     public class Adventure
     {
+        // This Dictionary saves the squads and their names
         public Dictionary<string, Hero[]> savedSquads;
+        // The adventure's id is a string that is generated when the adventure is created
         string id;
+        // The faction name is the player's faction name
         string factionName;
+        // Makes the ID put zeroes at the beginning, so it has a fixed length
         const int MINIMUM_NUMBER_LENGTH = 9;
+        // The player's money, in cats(they are not actual cats, they are named after Second Empire's exiled ruler Cat-Lon)
         int cats;
+        // Is used by the UI to display some things a particular color, see the MainWindow.xaml.cs method GetBrushByNum() for exact color codes
         int color;
+        // The date when the adventure started
         DateTime startDate;
+        // The time played
         TimeSpan hoursPlayed;
-
+        // The custom dice used in the adventure, used to play combat
         Dice myDice;
 
+        // All of the heroes gotten by the player in the adventure
         Hero[] heroes;
+        // The current squad is the one that fights when the player is attacked or attacks
         Hero[] currentSquad;
+        // The name of the current squad, tried to use savedSquads.Keys, but at the end, it was easier to just use a string to avoid complications
         string currentSquadName;
-
+        // The current region the player is in, used to put the player in the correct zone when they exit combat
         Region currentRegion;
-
+        // The player's inventory, will hold all of the items the player has obtained
         PlayerInventory playerInventory;
+        // Keeps track of the rare items the player has already obtained, so they don't appear again in Contraband shop
         Item[] alreadyObtainedItems;
 
+        // All of the factions, regions, titles, backgrounds... used in the game, so they can be accessed from the adventure 
         Faction[] allFactions;
         Region[] allRegions;
         string[] titles;
@@ -35,9 +48,12 @@ namespace Kenshi_DnD
         Item[] allItems;
         Race[] allRaces;
         Limb[] allLimbs;
+
+        // The maximum number of heroes, squads and squad length
         const int MAX_HEROES = 12;
         const int MAX_SQUADS = 10;
         const int MAX_SQUAD_LENGTH = 4;
+        // The only constructor, it initializes the adventure with the given parameters
         public Adventure(string name, Hero hero, Random rnd, Dice myDice, int startingCats, string factionName, int factionColor, Faction[] allFactions, Region[] allRegions,
             string[] titles, string[] backgrounds, string[] names, Item[] allItems, Race[] allRaces, Limb[] allLimbs)
         {
@@ -68,6 +84,7 @@ namespace Kenshi_DnD
             this.allRaces = allRaces;
             this.allLimbs = allLimbs;
         }
+        // Generates a unique ID for the adventure based on the name, a random number, the region and some formatting
         private string GenerateId(string name, Random rnd)
         {
             //Generates a random number
@@ -126,6 +143,7 @@ namespace Kenshi_DnD
             // output: My_First_Adventure2000123456
             return formattedName + continent + zeroes + randomNum;
         }
+        // Getters and setters for the adventure's properties
         public Region GetCurrentRegion()
         {
             return currentRegion;
@@ -154,6 +172,7 @@ namespace Kenshi_DnD
         {
             return myDice;
         }
+        // Used for the player's buying needs, if they have enough money, it will spend the money and return true, otherwise it will return false and print a debug message
         public bool SpendIfHasEnough(int cost)
         {
             if (cost <= cats && cost >= 0)
@@ -164,6 +183,7 @@ namespace Kenshi_DnD
             Debug.WriteLine("Not enough money");
             return false;
         }
+        // Removes an item from the player's inventory and adds its resell value to the player's money
         public void SellItem(Item item)
         {
             int cost = item.GetResellValue();
@@ -171,6 +191,7 @@ namespace Kenshi_DnD
 
             playerInventory.RemoveItem(item);
         }
+        // Buys an item, if the player has enough money, it will add the item to the player's inventory and add it to the alreadyObtainedItems array if it is a rare item
         public void BuyItem(Item item)
         {
             int cost = item.GetValue();
@@ -216,6 +237,7 @@ namespace Kenshi_DnD
                 playerInventory.AddItem(item.GetCopy());
             }
         }
+        // Hires a hero if the limits allow the player to do so
         public void HireHero(Hero hero)
         {
 
@@ -236,6 +258,9 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Unhiring a hero will remove it from the heroes array and from all squads, also giving the player its competency cost back in cats
+        // I am aware that I probably should have used a List<Hero> instead of an array, but I didn't contemplate it at the start of the project
+        // It just works fine for this project
         public void UnhireHero(Hero hero)
         {
             for (int i = 0; i < heroes.Length; i += 1)
@@ -249,9 +274,9 @@ namespace Kenshi_DnD
                     }
                 }
             }
+            // Compacts the heroes array
             int insertIndex = 0;
             Hero[] compactedHeroes = new Hero[heroes.Length];
-
             for (int i = 0; i < heroes.Length; i++)
             {
                 if (heroes[i] != null)
@@ -261,7 +286,6 @@ namespace Kenshi_DnD
                 }
             }
             heroes = compactedHeroes;
-            Debug.WriteLine("Squad count: " + GetSavedSquads().Count);
             List<string> keys = savedSquads.Keys.ToList();
             for (int i = 0; i < keys.Count; i++)
             {
@@ -302,10 +326,12 @@ namespace Kenshi_DnD
                         {
                             if (i == 0) 
                             {
+                                // If the squad that is empty is the current, and the first squad, we set the current squad to the next one
                                 SetCurrentSquad(keys[i + 1]);
                             }
                             else
                             {
+                                // If the squad that is empty is the current, but not the first one, we set the current squad to the first one
                                 SetCurrentSquad(keys[0]);
                             }
                         }
@@ -323,6 +349,7 @@ namespace Kenshi_DnD
 
             }
         }
+        // Returns an array of heroes that are amputees, used to show the player which heroes need a limb replacement
         public Hero[] GetAmputees()
         {
 
@@ -352,6 +379,7 @@ namespace Kenshi_DnD
             }
             return amputees;
         }
+        // Gains a certain amount of cats, used when the player wins a fight or sells an item
         public void GainCats(int amount)
         {
             if (amount < 0)
@@ -362,14 +390,17 @@ namespace Kenshi_DnD
             cats += amount;
             Debug.WriteLine("Gained " + amount + " cats. Total: " + cats);
         }
+        // Returns the saved squads dictionary, for UI purposes
         public Dictionary<string, Hero[]> GetSavedSquads()
         {
             return savedSquads;
         }
+        // Returns the current squad name, for UI purposes
         public string GetCurrentSquadName()
         {
             return currentSquadName;
         }
+        // Returns the current squad without null values, which is the one that is fighting when the player is attacked or attacks
         public Hero[] GetCurrentSquad()
         {
             int count = 0;
@@ -396,6 +427,7 @@ namespace Kenshi_DnD
 
             return heroesToReturn;
         }
+        // Checks if a hero is in the current squad, used to avoid adding the same hero multiple times and UI purposes
         public bool IsInCurrentSquad(Hero hero)
         {
             bool found = false;
@@ -409,6 +441,7 @@ namespace Kenshi_DnD
             }
             return found;
         }
+        // Adds a hero to the current squad, if it is not already in the squad
         public void AddHeroInSquad(Hero hero)
         {
             if (IsInCurrentSquad(hero))
@@ -425,6 +458,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Removes a hero from the current squad, if it is in the squad, and compacts the squad array
         public void RemoveHeroFromSquad(Hero hero)
         {
             if (!IsInCurrentSquad(hero))
@@ -457,17 +491,26 @@ namespace Kenshi_DnD
             savedSquads[currentName] = currentSquad;
 
         }
+        // Checks if the player can hire more heroes, used to avoid hiring more than the maximum allowed
         public bool CanHire()
         {
             return GetHeroesCount() < MAX_HEROES;
         }
+        // Creates a new squad copy with the current squad's heroes, and adds it to the saved squads dictionary, also sets the current squad to the new squad
         public void CreateSquad(string squadName)
         {
+            if(savedSquads.Count >= MAX_SQUADS)
+            {
+                Debug.WriteLine("Cannot create more squads, maximum reached");
+                return;
+            }
+            // Copies the current squad heroes to a new array
             Hero[] newSquad = new Hero[MAX_SQUAD_LENGTH];
             for (int i = 0; i < MAX_SQUAD_LENGTH; i += 1)
             {
                 newSquad[i] = currentSquad[i];
             }
+            // Adds a " copia" to the squad name if it already exists, to avoid overwriting existing squads
             while (savedSquads.ContainsKey(squadName))
             {
                 squadName += " copia";
@@ -477,38 +520,43 @@ namespace Kenshi_DnD
             SetCurrentSquad(squadName);
             Debug.WriteLine("Squad created " + squadName);
         }
+        // Deletes a squad from the saved squads dictionary, if it exists, and sets the current squad to the first squad if the deleted squad was the current one
         public void DeleteSquad(string squadName)
         {
             if (savedSquads.ContainsKey(squadName))
             {
                 Debug.WriteLine("Squad successfully deleted : " + squadName);
                 savedSquads.Remove(squadName);
-
+                SetCurrentSquad(savedSquads.FirstOrDefault().Key); // Sets the current squad to the first squad in the dictionary
             }
             else
             {
                 Debug.WriteLine("Squad not found to delete?");
             }
         }
+        // Sets the current squad to the squad with the given name, if it exists, and updates the current squad name
         public void SetCurrentSquad(string squadName)
         {
             currentSquad = savedSquads[squadName];
             currentSquadName = squadName;
             Debug.WriteLine("Current squad:" + squadName);
         }
+        // Returns the number of squads saved in the adventure, used to avoid creating more squads than the maximum allowed
         public int GetSquadCount()
         {
             return savedSquads.Count;
         }
-
+        // Returns the faction name with the color code, used to display the faction name in the UI
         public string GetFactionName()
         {
             return "@" + color + "@" + factionName + "@";
         }
+        // Returns the faction color, used for UI purposes
         public int GetColor()
         {
             return color;
         }
+        // Gets the number of heroes in the adventure
         public int GetHeroesCount()
         {
             int count = 0;
@@ -523,10 +571,12 @@ namespace Kenshi_DnD
             Debug.WriteLine("Count of heroes: " + count);
             return count;
         }
+        // Returns the heroes array, used to display the heroes in the UI
         public Hero[] GetHeroes()
         {
             return heroes;
         }
+        // Returns some info about the adventure, used for UI purposes
         public DateTime GetStartDate()
         {
             return startDate;
@@ -535,11 +585,12 @@ namespace Kenshi_DnD
         {
             return hoursPlayed;
         }
-
+        // Adds a second for every tick of the DispatcherTimer started in MainWindow.xaml.cs
         public void AddSecondToAdventure()
         {
             hoursPlayed += new TimeSpan(0, 0, 1);
         }
+        // Returns data of the game
         public Item[] GetAllItems()
         {
             return allItems;
@@ -560,13 +611,6 @@ namespace Kenshi_DnD
         {
             return allRegions;
         }
-        public void GainToken()
-        {
-            for(int i = 0; i < allRegions.Length; i += 1)
-            {                
-               allRegions[i].GainToken();
-            }
-        }
         public string[] GetTitles()
         {
             return titles;
@@ -579,6 +623,15 @@ namespace Kenshi_DnD
         {
             return names;
         }
+        //Gives a token to all regions, used when the player has a fight, regions update their items and heroes
+        public void GainToken()
+        {
+            for(int i = 0; i < allRegions.Length; i += 1)
+            {                
+               allRegions[i].GainToken();
+            }
+        }
+        
 
     }
 }

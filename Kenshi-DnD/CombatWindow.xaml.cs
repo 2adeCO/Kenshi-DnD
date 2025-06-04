@@ -1128,7 +1128,7 @@ namespace Kenshi_DnD
             TreeViewItem treeViewItem = new TreeViewItem();
             treeViewItem.Header = border;
             treeViewItem.Tag = item;
-            treeViewItem.ToolTip = mainWindow.HeaderToolTipThemer(item.GetName(), item.ToString());
+            treeViewItem.ToolTip = mainWindow.HeaderToolTipThemer(item.GetName(), item.ItemInfo());
             ToolTipService.SetInitialShowDelay(treeViewItem, 700);
             treeViewItem.Cursor = cursors[3];
             treeViewItem.HorizontalAlignment = HorizontalAlignment.Center;

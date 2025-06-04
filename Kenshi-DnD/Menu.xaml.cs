@@ -22,7 +22,6 @@ namespace Kenshi_DnD
     public partial class Menu : UserControl
     {
         MainWindow mainWindow;
-        Adventure myAdventure;
         Random rnd;
         ContentControl controller;
         Cursor[] cursors;
@@ -79,16 +78,17 @@ namespace Kenshi_DnD
             dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
-            string[] items = XmlGetNames();
-            for(int i = 0; i < items.Length; i += 1)
-            {
-                Debug.WriteLine(items[i]);
-            }
 
             IsAdventureValid(null, null);
         }
-        
-        
+        private void LeaveGame(object sender, EventArgs e)
+        {
+            mainWindow.Close();
+        }
+        private void OpenConfig(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe",Path.GetFullPath("./Resources/config"));
+        }
         public void OpenAdventureMaker(object sender, EventArgs e)
         {
 

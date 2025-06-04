@@ -359,7 +359,7 @@ namespace Kenshi_DnD
                         button.Margin = new Thickness(10, 20, 30, 20);
                         button.MinHeight = 40;
                         button.Padding = new Thickness(5);
-                        button.ToolTip = mainWindow.HeaderToolTipThemer(itemsInShop[i].GetName(), itemsInShop[i].ToString());
+                        button.ToolTip = mainWindow.HeaderToolTipThemer(itemsInShop[i].GetName(), itemsInShop[i].ItemInfo());
                         button.Click += SelectShopItem;
                         button.Background = new SolidColorBrush(Colors.WhiteSmoke);
 
@@ -536,7 +536,7 @@ namespace Kenshi_DnD
                             Padding = new Thickness(5),
                             Background = new SolidColorBrush(Color.FromRgb(50, 50, 50)), 
                             Foreground = Brushes.WhiteSmoke,
-                            ToolTip = mainWindow.HeaderToolTipThemer(itemsInContrabandMarket[i].GetName(), itemsInContrabandMarket[i].ToString())
+                            ToolTip = mainWindow.HeaderToolTipThemer(itemsInContrabandMarket[i].GetName(), itemsInContrabandMarket[i].ItemInfo())
                         };
 
                         TextBlock textBlock = mainWindow.GenerateTextblock(
@@ -644,7 +644,7 @@ namespace Kenshi_DnD
                             Padding = new Thickness(5),
                             Background = new SolidColorBrush(Color.FromRgb(50, 50, 50)), // Oscuro, sucio
                             Foreground = Brushes.WhiteSmoke,
-                            ToolTip = mainWindow.HeaderToolTipThemer(itemsInRangedShop[i].GetName(), itemsInRangedShop[i].ToString())
+                            ToolTip = mainWindow.HeaderToolTipThemer(itemsInRangedShop[i].GetName(), itemsInRangedShop[i].ItemInfo())
                         };
                         // Fills the button with the item name, rarity and value
                         TextBlock textBlock = mainWindow.GenerateTextblock(itemsInRangedShop[i].GetName() + " - " + itemsInRangedShop[i].RarityToString() +
@@ -1024,7 +1024,7 @@ namespace Kenshi_DnD
                 StackPanel stackPanel = new StackPanel { Orientation = Orientation.Vertical };
 
                 TextBlock nameTextBlock = new TextBlock();
-                nameTextBlock.ToolTip = mainWindow.HeaderToolTipThemer(currentItem.GetName(), currentItem.ToString());
+                nameTextBlock.ToolTip = mainWindow.HeaderToolTipThemer(currentItem.GetName(), currentItem.ItemInfo());
 
                 if (selectedItemToSellButton != null && currentItem == selectedItemToSellButton.Tag)
                 {

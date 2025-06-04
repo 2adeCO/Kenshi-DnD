@@ -104,9 +104,9 @@ namespace Kenshi_DnD
             itemCopy.SetRarity(rarity);
             return itemCopy;
         }
-        public override string ToString()
+        public override string ItemInfo()
         {
-            return base.ToString() + "\n" +
+            return base.ItemInfo() + "\n" +
                    "Dificultad: " + difficulty + "\n";
         }
     }
