@@ -15,9 +15,6 @@ using System.Windows.Threading;
 
 namespace Kenshi_DnD
 {
-    /// <summary>
-    /// Lógica de interacción para UserControl.xaml
-    /// </summary>
     public partial class CombatWindow : UserControl
     {
         MainWindow mainWindow;
@@ -36,37 +33,42 @@ namespace Kenshi_DnD
         public CombatWindow(MainWindow mainWindow,ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
         {
             InitializeComponent();
-            //Starts a timer
+            // Starts a timer for the UI
             seconds = 0;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            // Assigns the CombatWindow's parameters to those in the constructor
             this.mainWindow = mainWindow;
             this.controller = controller;
             this.cursors = cursors;
             this.Cursor = cursors[0];
             this.rnd = rnd;
             this.myAdventure = myAdventure;
-
             myInventory = myAdventure.GetInventory();
             this.heroes = myAdventure.GetCurrentSquad();
             this.monsters = monsters;
+            // Instantiates a new combat
             myCombat = new Combat(heroes, monsters, myAdventure,rnd, this);
             GameStateUI.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" +myAdventure.GetCurrentSquadName() + " de @" + myAdventure.GetFactionName()+" contra " 
                 + monsters[0].GetFaction().GetFactionName());
+            // Shows in the UI the fighters
             Heroes.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" + myAdventure.GetCurrentSquadName() + "@");
             Monsters.Content = mainWindow.GenerateTextblock(monsters[0].GetFaction().GetFactionName() +" de " + myAdventure.GetCurrentRegion().GetName());
             currentAttacker = myCombat.GetCurrentAttacker();
 
+            // UI Updates
             FillItemTrees();
             UpdateGameStateUI();
             UpdateFightersGrid();
             UpdateFightersStatsGrid(null,null);
             UpdateNextTurnUI();
-
+            // Monster attacks if is the current attacker
             if (currentAttacker is Monster)
             {
+                // Monster attacks every 600 ms
                 DispatcherTimer timeToAttack = new DispatcherTimer();
                 timeToAttack.Interval = TimeSpan.FromMilliseconds(600);
                 timeToAttack.Tick += MonsterAttackTimer_Tick;
@@ -74,6 +76,7 @@ namespace Kenshi_DnD
             }
 
         }
+        // Advances the combat's turn
         private async void NextTurn(object sender, RoutedEventArgs e)
         {
             if (myCombat.GetGameState() != 0)
@@ -87,9 +90,10 @@ namespace Kenshi_DnD
                 MessageBox.Show("Selecciona un monstruo para atacar");
                 return;
             }
-
+            // Turn is played
             await myCombat.NextTurn(fighterTarget);
 
+            // Target becomes null if target has died
             if(fighterTarget != null)
             {
                 if (!fighterTarget.IsAlive())
@@ -97,19 +101,21 @@ namespace Kenshi_DnD
                     fighterTarget = null;
                 }
             }
-            
+            // Updates the current attacker
             currentAttacker = myCombat.GetCurrentAttacker();
-
+            // Updates UI after the turn
             UpdateFightersStatsGrid(null,null);
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
+            // Updates the game state
             if (myCombat.GetGameState() != 0)
             {
                 UpdateGameStateUI();
                 MessageBox.Show(myCombat.GetGameState() == 1 ? "¡Ganaste el combate!" : "¡Perdiste el combate!");
                 return;
             }
+            // If the next attacker is monster, attacks after 600ms
             if (currentAttacker is Monster)
             {
                 DispatcherTimer timeToAttack = new DispatcherTimer();
@@ -118,6 +124,7 @@ namespace Kenshi_DnD
                 timeToAttack.Start();
             }
         }
+        // Updates the fighters stackpanels, showing their names, health, if they are alive....
         private void UpdateFightersGrid()
         {
 
@@ -210,6 +217,7 @@ namespace Kenshi_DnD
             }
 
         }
+        // Fills the inventories with their items
         private void FillItemTrees()
         {
 
@@ -326,13 +334,12 @@ namespace Kenshi_DnD
             HeroItems.Items.Add(root);
 
         }
+        // Updates the stats bars of current attacker and target, if current attacker is hero
         private void UpdateFightersStatsGrid(object sender , EventArgs e)
         {
             
             double width = HeroStatsGrid.ActualWidth;
 
-            Debug.WriteLine(width);
-            
             HeroStatsGrid.Children.Clear();
             HeroStatsGrid.ColumnDefinitions.Clear();
             HeroStatsGrid.RowDefinitions.Clear();
@@ -630,6 +637,7 @@ namespace Kenshi_DnD
             
 
         }
+        // Generates the structure of the tree views
         private TreeViewItem GenerateTreeView()
         {
             TreeViewItem root = new TreeViewItem { Header = "🎒Inventario", IsExpanded = true, Foreground = Brushes.WhiteSmoke };
@@ -648,6 +656,7 @@ namespace Kenshi_DnD
 
             return root;
         }
+        // Moves the item from the player inventory to the hero inventory and the other way around
         public void UseItem(object sender, RoutedEventArgs e)
         {
             TreeViewItem selectedItem = (TreeViewItem)sender;
@@ -656,7 +665,6 @@ namespace Kenshi_DnD
                 Debug.WriteLine("Selected item: " + item.GetName());
                 if (currentAttacker is Hero)
                 {
-                    Debug.WriteLine("Current attacker is a hero");
                     Hero currentHero = (Hero)currentAttacker;
                     if (IsParentX(selectedItem, HeroItems))
                     {
@@ -665,10 +673,8 @@ namespace Kenshi_DnD
                     }
                     else
                     {
-                        Debug.WriteLine("Trying to use item");
                         if (currentHero.CanUseItem(item))
                         {
-                            Debug.WriteLine("Item added!");
                             AddItemToHero(currentHero, item);
                         }
                     }
@@ -679,6 +685,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Tick for monster to attack after timer interval
         private void MonsterAttackTimer_Tick(object sender, EventArgs e)
         {
             DispatcherTimer timer = (DispatcherTimer)sender;
@@ -691,6 +698,7 @@ namespace Kenshi_DnD
             }
             NextTurn(null, null);
         }
+        // Updates the target of the player
         private void SelectTarget(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -711,6 +719,7 @@ namespace Kenshi_DnD
             UpdateFightersGrid();
             UpdateFightersStatsGrid(null,null);
         }
+        // Updates the timer tick
         private void Timer_Tick(object sender, EventArgs e)
         {
             seconds += 1;
@@ -725,14 +734,17 @@ namespace Kenshi_DnD
             }
             TimerUI.Content = time;
         }
+        // Adds item to hero
         private void AddItemToHero(Hero hero, Item item)
         {
             hero.AddItemToInventory(item);
         }
+        // Removes item from hero
         private void RemoveItemFromHero(Hero hero, Item item)
         {
             hero.RemoveItemFromInventory(item);
         }
+        // Gets next 6 turns to display in UI
         private void UpdateNextTurnUI()
         {
             ITurnable[] nextTurns = myCombat.GetNTurns(6);
@@ -826,6 +838,7 @@ namespace Kenshi_DnD
                 NextTurnGrid.Children.Add(border);
             }
         }
+        // Adds message to log, with no delay
         private void UpdateLogUI(string message)
         {
             CurrentCombatInfo.Inlines.Clear();
@@ -833,6 +846,7 @@ namespace Kenshi_DnD
             InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
             InfoLogScroll.ScrollToEnd();
         }
+        // Adds message to log, with delay
         public async Task UpdateLogUI(string message, int ms)
         {
             CurrentCombatInfo.Inlines.Clear();
@@ -846,18 +860,21 @@ namespace Kenshi_DnD
             }
 
         }
+        // Adds message to DICE UI, with delay
         public async Task UpdateDicesUI(string message, int ms)
         {
             DicesUI.Inlines.Clear();
             DicesUI.Inlines.AddRange(mainWindow.DecorateText(message));
             await Task.Delay(ms);
         }
+        // Adds message to stats UI, with delay
         public async Task UpdateCombatStatsUI(string message, int ms)
         {
             CombatStats.Inlines.Clear();
             CombatStats.Inlines.AddRange(mainWindow.DecorateText(message));
             await Task.Delay(ms);
         }
+        // Check if combat has to end
         private void UpdateGameStateUI()
         {
             int gameState = myCombat.GetGameState();
@@ -906,6 +923,7 @@ namespace Kenshi_DnD
                     }
             }
         }
+        // Removes items from hero inventories
         private void FreeInventoryFromAllHeroes()
         {
             for(int i = 0; i < heroes.Length; i += 1)
@@ -913,6 +931,7 @@ namespace Kenshi_DnD
                 heroes[i].FreeAllItems();
             }
         }
+        // Checks if the parent of a TreeViewItem is a particular TreeView
         private bool IsParentX(TreeViewItem item, TreeView parentToCheck)
         {
             do
@@ -935,6 +954,7 @@ namespace Kenshi_DnD
             } while (item.Parent != null);
             return false;
         }
+        // Returns a stylized stackpanel of a monster
         private StackPanel FighterStackPanel(Monster monster)
         {
             StackPanel stackPanel = new StackPanel();
@@ -993,6 +1013,7 @@ namespace Kenshi_DnD
             
             return stackPanel;
         }
+        // Returns a stylized stackpanel of a hero
         private StackPanel FighterStackPanel(Hero hero)
         {
             StackPanel stackPanel = new StackPanel();
@@ -1045,6 +1066,7 @@ namespace Kenshi_DnD
             }
             return stackPanel;
         }
+        // Returns a border with input button inside
         private Border PutBorderOnCurrentAttacker(Button button)
         {
             Border border = new Border();
@@ -1107,7 +1129,7 @@ namespace Kenshi_DnD
                 
             }
         }
-        //Generates the TreeViewItem for the inventories
+        //Generates the TreeViewItem that represents an item for the inventories
         private TreeViewItem GenerateItem(Item item)
         {
             string name = item.GetName();
