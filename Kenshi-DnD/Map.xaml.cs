@@ -24,15 +24,23 @@ namespace Kenshi_DnD
     /// </summary>
     public partial class Map : UserControl
     {
+        // Mainwindow
         MainWindow mainWindow;
+        // Page controller
         ContentControl controller;
+        // Region that is selected
         Region selectedRegion;
+        // Rectangles that can be clicked to select a region
         Rectangle[] zones;
+        // Current adventure
         Adventure adventure;
+        // Cursors
         Cursor[] cursors;
+        // Random
         Random rnd;
-
+        // Rolls needed to not fight
         const int PEACE_ROLLS_NEEDED = 3;
+        // Constructor
         public Map(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure)
         {
             InitializeComponent();
@@ -43,7 +51,7 @@ namespace Kenshi_DnD
             this.rnd = rnd;
             this.adventure = myAdventure;
 
-
+            // Fills an array of regions, and using the fact we know their position, saves the regions in the rectangle's tags
             Region[] regions = adventure.GetAllRegions();
             zones = new Rectangle[regions.Length];
 
@@ -70,39 +78,46 @@ namespace Kenshi_DnD
             SwampZone.Tag = regions[5];
             zones[5] = SwampZone;
             SwampZone.ToolTip = mainWindow.ToolTipThemer(regions[5].ToString());
-
-
         }
+        // When a zone is selected, it will highlight it, and if it was already highlighted, tries to travel to that zone
         private void SelectZone(object sender, MouseButtonEventArgs e)
         {
-            
-            Debug.WriteLine("Tried to select zone");
+            // Casting of region
             Rectangle rectangle = (Rectangle)sender;
             Region region = (Region)rectangle.Tag;
+            // If the selectedRegion was highlighted, try to travel there
             if (region == selectedRegion)
             {
+                // Sets current region to the selected
                 adventure.SetCurrentRegion(region);
+                // Affects the relations with factions from the region
                 selectedRegion.AffectsRelations(adventure, rnd);
+
                 // Player rolls average relations / 10 (1-10), and if is higher than 3, he avoids the encounter
                 if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10,rnd) >= PEACE_ROLLS_NEEDED)
                 {
+                    // Travel there
                     controller.Content = new Zone(mainWindow, controller, cursors, rnd, adventure, selectedRegion);
                 }
                 else
                 {
+                    // Have combat, if successful, travel to the region, else, go back to Map.xaml
                     controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, 
                         mainWindow.SqlGenerateMonsters(adventure,SelectAggressor(adventure,rnd,selectedRegion),rnd));
                 }
             }
             else
             {
+                // Highlight the rectangle
                 rectangle.Stroke = Brushes.Red;
                 rectangle.StrokeThickness = 5;
                 selectedRegion = region;
+                // Un-highlight all the others
                 UpdateZoneSelected();
             }
 
         }
+        // Un-highlights non selected zones
         private void UpdateZoneSelected()
         {
             for (int i = 0; i < zones.Length; i++)
@@ -114,6 +129,8 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // If player encounters a fight, an agressor is chosen, if relations are lower than 50 and not enough successful rolls are gotten, that faction will fight the player
+        // else, it will fight the most aggresive faction
         private Faction SelectAggressor(Adventure adventure,Random rnd,Region region)
         {
             List<Faction> factions = region.GetFactions();
@@ -138,16 +155,19 @@ namespace Kenshi_DnD
             }
             return mostHostileFaction;
         }
+        // Exits current adventure and stops the timer
         private void ExitGame(object sender, RoutedEventArgs e)
         {
 
-            if(MessageBox.Show("Estás a punto de salir del juego.\nPerderás el progreso no guardado", "Salir del juego", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
+            if(MessageBox.Show("Estás a punto de salir del juego.\nPerderás el progreso no guardado", "Salir del juego", MessageBoxButton.YesNo, MessageBoxImage.Exclamation)
+                == MessageBoxResult.No)
             {
                 return;
             }
             mainWindow.StopPlaying();
             controller.Content = new Menu(mainWindow, controller, cursors, rnd);
         }
+        // Saves current adventure
         private void SaveAdventure(object sender, EventArgs e)
         {
             mainWindow.SaveAdventure(adventure);

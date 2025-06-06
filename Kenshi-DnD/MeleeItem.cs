@@ -1,20 +1,26 @@
 ﻿namespace Kenshi_DnD
 {
     [Serializable]
+    // Item which is melee, which can be consumable or not
     class MeleeItem : Item
     {
+        // If item can revive another player
         protected bool canRevive;
+        // If item is consumible
         protected bool breaksOnUse;
+        // Constructor
         public MeleeItem(string name, string description, int value, int resellValue, int limbsNeeded, bool canRevive, StatModifier statToModify, bool breaksOnUse)
             : base(name, description, value, resellValue, limbsNeeded, statToModify)
         {
             this.canRevive = canRevive;
             this.breaksOnUse = breaksOnUse;
         }
+        // Returns a string that announces use
         public override string AnnounceUse()
         {
             return "¡El héroe usa " + "@" + GetRarityColor() + "@" + name + "@!";
         }
+        // Melee item rarity upgrade affects on bruteforce if not consumible, if consumible affects hp and resistance
         public override void UpgradeRarity(Rarity.Rarities rarity)
         {
             SetRarity(rarity);
@@ -73,7 +79,7 @@
             value = (int)(value * costMultiplier);
             resellValue = (int)(value * 0.5); 
         }
-        
+        // Returns a copy of the item
         public override Item GetCopy()
         {
             StatModifier statCopy = GetStatToModify().GetCopy();
@@ -83,6 +89,7 @@
 
             return itemCopy;
         }
+        // Getters
         public bool BreaksOnUse()
         {
             return breaksOnUse;
@@ -91,6 +98,7 @@
         {
             return canRevive;
         }
+        // Virtual override method that returns info about the item
         public override string ItemInfo()
         {
             return base.ItemInfo() + "\n" +

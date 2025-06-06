@@ -16,22 +16,29 @@ using System.Data;
 
 namespace Kenshi_DnD
 {
-    /// <summary>
-    /// Lógica de interacción para Menu.xaml
-    /// </summary>
+    // Menu of the game, used to create or access adventures, change configuration of Sql connection, or leave the game
     public partial class Menu : UserControl
     {
+        // Window
         MainWindow mainWindow;
+        // Random
         Random rnd;
+        // Page controller
         ContentControl controller;
+        // Cursors
         Cursor[] cursors;
+        // Flag used to avoid an infinite loop of SlidersChanged
         bool changingSliders;
-
+        // Tells if the current adventure being made is not possible
         bool currentAdventureIsValid = false;
 
+        // Gets all races from MySQL or XML, for the purpose of generating the first character at the start
         Race[] allRaces;
 
+        // Points left on the character creation sliders
         int remainingPoints;
+
+        // Const values used to place default values on adventure creation
         const int DEFAULT_DICE_SIDES = 6;
         const int DEFAULT_DICE_MIN_WIN = 4;
         // The points on the hero maker have to take into account the 4 points that are already assigned to the hero
@@ -41,7 +48,8 @@ namespace Kenshi_DnD
         const string DEFAULT_HERO_TITLE = "El Elegido";
         const string DEFAULT_HERO_BACKGROUND = "Una cualquiera... Abusado por las terribles condiciones de estas tierras, se escabulle ganándose la vida como puede," +
             " realizando ilícitas actividades, tratando de ganarse un nombre sin morir en el intento";
-        const int DEFAULT_CATS = 200;
+        const int DEFAULT_CATS = 2000;
+        // Constructor
         public Menu(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd)
         {
             changingSliders = true;
@@ -51,6 +59,7 @@ namespace Kenshi_DnD
             this.cursors = cursors;
             this.controller = controller;
             this.rnd = rnd;
+            // Title text
             TitleText.Inlines.Clear();
             TitleText.Inlines.AddRange(mainWindow.DecorateText("@134@KENSHI_DND@\n@8@Por@ @7@Santiago Cabrero@"));
             remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - 4;
@@ -59,6 +68,7 @@ namespace Kenshi_DnD
 
             adventureName.Text = "Aventura De " + DEFAULT_HERO_NAME;
             factionName.Text = DEFAULT_FACTION_NAME;
+            // Valid colors
             factionColor.ItemsSource = new string[] { "Rojo", "Verde", "Azul", "Morado", "Dorado", "Naranja", "Gris azulado", "Gris", "Negro" };
             factionColor.SelectedItem = "Rojo";
             diceMinWin.Text = DEFAULT_DICE_MIN_WIN.ToString();
@@ -69,29 +79,33 @@ namespace Kenshi_DnD
             characterBackgroundStory.Text = "";
 
             changingSliders = false;
+            // Default character race and subrace
             characterRace.ItemsSource = RacesDictionary.RacesAndSubraces.Keys;
             characterRace.SelectedItem = "Enjambre";
             characterSubrace.ItemsSource = RacesDictionary.RacesAndSubraces["Enjambre"];
             characterSubrace.SelectedItem = "Dron Soldado";
 
+            // Maximum values of sliders
             bruteForceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             dexteritySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             resistanceSlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
             agilitySlider.Maximum = DEFAULT_POINTS_ON_HERO_MAKER - 3;
-
+            // Checks if the adventure is valid
             IsAdventureValid(null, null);
         }
+        // Valid way of closing the game
         private void LeaveGame(object sender, EventArgs e)
         {
             mainWindow.Close();
         }
+        // Opens the game's config folder in file explorer
         private void OpenConfig(object sender, EventArgs e)
         {
             Process.Start("explorer.exe",Path.GetFullPath("./Resources/config"));
         }
+        // Opens the adventure maker
         public void OpenAdventureMaker(object sender, EventArgs e)
         {
-
             if (AdventureMakerBorder.Visibility == Visibility.Visible)
             {
                 AdventureMakerBorder.Visibility = Visibility.Collapsed;
@@ -101,11 +115,13 @@ namespace Kenshi_DnD
             }
             else
             {
+                // Dark UI is the semi transparent background when a menu is opened, it can be clicked to close that menu
                 DarkUI.Visibility = System.Windows.Visibility.Visible;
                 AdventureMakerBorder.Visibility = System.Windows.Visibility.Visible;
                 AdventureMakerMenu.Visibility = System.Windows.Visibility.Visible;
             }
         }
+        // Opens the saved adventures menu
         public void OpenSavedAdventures(object sender, EventArgs e)
         {
             if (AdventureChooserBorder.Visibility == Visibility.Visible)
@@ -117,14 +133,17 @@ namespace Kenshi_DnD
             }
             else
             {
+                // Dark UI is the semi transparent background when a menu is opened, it can be clicked to close that menu
                 DarkUI.Visibility = System.Windows.Visibility.Visible;
                 AdventureChooserBorder.Visibility = System.Windows.Visibility.Visible;
                 AdventureChooserMenu.Visibility = System.Windows.Visibility.Visible;
             }
+            // Loads the paths of the files
             string[] adventureFiles = Directory.GetFiles("./saves", "*.adventure");
 
             AdventureChooserMenu.Children.Clear();
 
+            // Deserialises each adventure, and adds a new grid to a stackpanel representing each adventure
             for(int i = 0; i < adventureFiles.Length; i += 1)
             {
 #pragma warning disable SYSLIB0011
@@ -137,14 +156,16 @@ namespace Kenshi_DnD
             }
 
         }
-       
+       // When an slider is changed, check if it's valid, if not, revert to the last state
         private void SliderChanged(object sender, EventArgs e)
         {
+            // Use of flag to avoid loops
             if (changingSliders) { return; }
             changingSliders = true;
 
+            // All points combined
             int totalPointsUsed = (int)(bruteForceSlider.Value + dexteritySlider.Value + resistanceSlider.Value + agilitySlider.Value);
-
+            // If it isn't valid, revert the slider changed to all the possible points it can actually take
             if (totalPointsUsed > DEFAULT_POINTS_ON_HERO_MAKER)
             {
                 Slider changedSlider = (Slider)sender;
@@ -155,16 +176,20 @@ namespace Kenshi_DnD
                 totalPointsUsed = (int)(bruteForceSlider.Value + dexteritySlider.Value + resistanceSlider.Value + agilitySlider.Value);
 
             }
+            // Updates remaining points
             remainingPoints = DEFAULT_POINTS_ON_HERO_MAKER - totalPointsUsed;
             remainingPointsText.Text = remainingPoints.ToString();
+            // Updates the hero stat grid
             UpdateHeroStatGrid(null, null);
+            // Reverts the flag
             changingSliders = false;
+            // Checks if the adventure is valid
             IsAdventureValid(null,null);
 
         }
 
 
-
+        // Checks if the adventure is valid and doesn't have any empty values
         private void IsAdventureValid(object sender, EventArgs e)
         {
             AboutYourAdventure.Inlines.Clear();
@@ -225,7 +250,7 @@ namespace Kenshi_DnD
                 MakeAdventureButton.Background = Brushes.Red;
             }
         }
-        
+        // Used to play the adventure in the button
         private void PlayAdventure(object sender, EventArgs e) 
         {
             Adventure adventure = (Adventure)((Button)sender).Tag;
@@ -240,6 +265,7 @@ namespace Kenshi_DnD
                 MessageBox.Show("Algo ha ido terriblemente mal.");
             }
         }
+        // Used to delete an adventure, but first gives off a warning
         private void DeleteAdventureWarning(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -259,6 +285,7 @@ namespace Kenshi_DnD
                 MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
             }
         }
+        // Updates the visualization of stats in the create adventure menu
         private void UpdateHeroStatGrid(object sender, EventArgs e)
         {
 
@@ -379,7 +406,7 @@ namespace Kenshi_DnD
             }
         }
     
-    
+        // Changes the subraces in the character subrace combobox
         private void ChangeSubraces(object sender, EventArgs e)
         {
             string race = (string)characterRace.SelectedItem;
@@ -388,7 +415,7 @@ namespace Kenshi_DnD
             UpdateHeroStatGrid(null, null);
         }
         
-        
+        // Gets the selected race and subrace
         private Race GetSelectedRace()
         {
             for (int i = 0; i < allRaces.Length; i += 1)
@@ -412,6 +439,7 @@ namespace Kenshi_DnD
             }
             return null;
         }
+        // Creates an adventure with all the values chosen
         private void MakeAdventure(object sender, EventArgs e)
         {
             if (currentAdventureIsValid)
@@ -436,7 +464,8 @@ namespace Kenshi_DnD
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
                 Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text),
                     factionName.Text,factionColor.SelectedIndex + 1,factions,regions,titles,backgrounds,names,items,allRaces,limbs);
-                
+
+                // Gives a random item at the start to the hero
                 Item randomItemAtStart = null;
                 do
                 {
@@ -454,14 +483,14 @@ namespace Kenshi_DnD
                     }
                 } while (randomItemAtStart == null);
                 myAdventure.GetInventory().AddItem(randomItemAtStart);
-
+                // Creates saves directory if it doesn't exist
                 if (!Directory.Exists("./saves"))
                 {
                     Directory.CreateDirectory("./saves");
                 }
-
+                // Creates new path for the adventure
                 string adventurePath = "./saves/" + myAdventure.GetId() + ".adventure";
-
+                // If it's new, it serializes the adventure in that path
                 if(File.Exists(adventurePath))
                 {
                     return;
@@ -480,8 +509,7 @@ namespace Kenshi_DnD
 
                     fileStream.Close();
                    
-
-                    Debug.WriteLine("Adventure saved in: " + adventurePath);
+                    // Closes the menu
                     CloseCurrentMenu(null, null);
                 }
 
@@ -491,6 +519,7 @@ namespace Kenshi_DnD
                 MessageBox.Show("Aventura inválida, revisa los campos.");
             }
         }
+        // Generates default limbs for the character creator
         private Limb[] GenerateLimbs()
         {
             Limb[] limbs = new Limb[4];
@@ -501,6 +530,7 @@ namespace Kenshi_DnD
             }
             return limbs;
         }
+        // Lets only numbers and letters in a textbox
         private void OnlyNumsAndLetters(object sender, EventArgs e)
         {
             TextBox textBox = (TextBox)sender;
@@ -532,6 +562,7 @@ namespace Kenshi_DnD
             }
             IsAdventureValid(null, null);
         }
+        // Lets only numbers in a textbox
         private void OnlyNums(object sender, EventArgs e)
         {
             TextBox textBox = (TextBox)sender;
@@ -556,6 +587,7 @@ namespace Kenshi_DnD
             }
             IsAdventureValid(null, null);
         }
+        // Lets only letters in a textbox
         private void OnlyText(object sender, EventArgs e)
         {
             TextBox textBox = (TextBox)sender;
@@ -587,6 +619,7 @@ namespace Kenshi_DnD
             }
             IsAdventureValid(null, null);
         }
+        // Closes the opened menu
         private void CloseCurrentMenu(object sender, EventArgs e)
         {
             if (AdventureMakerBorder.Visibility == Visibility.Visible)
@@ -605,6 +638,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Creates a grid with two buttons, that play or erase an adventure
         private Grid CreateAdventureButton(Adventure adventure)
         {
             Grid adventureGrid = new Grid();
@@ -664,7 +698,7 @@ namespace Kenshi_DnD
 
             return adventureGrid;
         }
-        
+        // SQL and XML query to get game data
         private Faction[] SqlGetFactions()
         {
             string connectionString = mainWindow.GetSqlConnectionString();
@@ -784,22 +818,20 @@ namespace Kenshi_DnD
             try
             {
                 connection = new MySqlConnection(connectionString);
-                // Opens the connection
+                
                 connection.Open();
 
-                // Obtener la cantidad de items
+                
                 command = new MySqlCommand("SELECT count(*) FROM items;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 numberOfItems = reader.GetInt32(0);
                 Debug.WriteLine("Number of items: " + numberOfItems);
-                reader.Close(); // Cierra el reader
+                reader.Close(); 
 
-                // Crear el arreglo de items
                 Item[] items = new Item[numberOfItems];
                 int iteration = 0;
 
-                // Obtener MeleeItems
                 command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, mi.canRevive, stats.bruteForce, " +
                     "stats.dexterity, stats.hp, stats.resistance, stats.agility, mi.breaksOnUse " +
                     "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
@@ -815,9 +847,9 @@ namespace Kenshi_DnD
                             reader.GetInt32(9), reader.GetInt32(10)), reader.GetBoolean(11));
                     iteration++;
                 }
-                reader.Close(); // Cierra el reader después de leer MeleeItems
+                reader.Close(); 
 
-                // Obtener RangedItems
+                
                 command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, ri.difficulty, ri.maxAmmo, stats.bruteForce, " +
                     "stats.dexterity, stats.hp, stats.resistance, stats.agility " +
                     "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
@@ -833,9 +865,9 @@ namespace Kenshi_DnD
                             reader.GetInt32(10), reader.GetInt32(11)));
                     iteration++;
                 }
-                reader.Close(); // Cierra el reader después de leer RangedItems
+                reader.Close(); 
 
-                // Cierra la conexión al final
+                
                 connection.Close();
 
                 return items;
@@ -843,8 +875,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetItems(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetItems(); 
             }
             catch (DBNotFoundException ex)
             {
@@ -949,8 +981,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetLimbs(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetLimbs(); 
             }
             return limbs;
         }
@@ -1044,8 +1076,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetRegions(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetRegions(); 
             }
             return regions;
 
@@ -1133,8 +1165,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetRaces(); // En caso de error, retorna null
+                connection.Close();
+                return XmlGetRaces(); 
             }
             return races;
         }
@@ -1165,83 +1197,6 @@ namespace Kenshi_DnD
                                 stats[int.Parse(r.Element("stats_id").Value) -1].GetAgility()
                                 )).ToArray();
                     return races;
-                }
-                else
-                {
-                    throw new XMLNotFoundException();
-                }
-            }
-            catch (XMLNotFoundException xmlError)
-            {
-                MessageBox.Show(xmlError.Message);
-                return null;
-            }
-        }
-        private Monster[] SqlGetEnemies()
-        {
-            string connectionString = mainWindow.GetSqlConnectionString();
-            if (mainWindow.UseXml())
-            {
-                return XmlGetEnemies();
-            }
-
-            MySqlConnection connection = null;
-            MySqlDataReader reader;
-            Faction[] factions = SqlGetFactions();
-            Monster[] enemies;
-
-            try
-            {
-                connection = new MySqlConnection(connectionString);
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("select count(*) from enemies;", connection);
-                reader = command.ExecuteReader();
-                reader.Read();
-                int numOfEnemies = reader.GetInt32(0);
-
-                reader.Close();
-
-                command = new MySqlCommand("SELECT name, health, factionId, strength, resistance,agility, immunity,xp, maxCatDrop, canDropItem " +
-                    "FROM enemies;", connection);
-
-                reader = command.ExecuteReader();
-                enemies = new Monster[numOfEnemies];
-
-                for (int i = 0; i < numOfEnemies; i += 1)
-                {
-                    reader.Read();
-                    enemies[i] = new Monster(reader.GetString(0), reader.GetInt32(1), factions[reader.GetInt32(2) - 1],reader.GetInt32(3),
-                        reader.GetInt32(4),reader.GetInt32(5),reader.GetString(6),reader.GetInt32(7),reader.GetInt32(8),reader.GetBoolean(9)) ;
-                }
-                reader.Close();
-                connection.Close();
-            }
-            catch (MySqlException ex)
-            {
-                Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetEnemies(); // En caso de error, retorna null
-            }
-            return enemies;
-        }
-        private Monster[] XmlGetEnemies()
-        {
-            try
-            {
-                if (File.Exists("./Resources/xml/kenshidata.xml"))
-                {
-                    XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
-
-                    Faction[] factions = XmlGetFactions();
-
-                    Monster[] monsters = xmlFile.Root.Element("enemies").Elements("enemy").Select(m => new Monster(
-                        m.Element("name").Value, int.Parse(m.Element("health").Value), factions[int.Parse(m.Element("factionId").Value) -1],
-                        int.Parse(m.Element("strength").Value), int.Parse(m.Element("resistance").Value),int.Parse(m.Element("agility").Value),
-                        m.Element("immunity").Value, int.Parse(m.Element("maxCatDrop").Value), int.Parse(m.Element("xp").Value), 
-                        bool.Parse(m.Element("canDropItem").Value)
-                        )).ToArray();
-
-                    return monsters;
                 }
                 else
                 {
@@ -1292,8 +1247,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetNames(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetNames(); 
             }
             return names;
         }
@@ -1359,8 +1314,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetTitles(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetTitles(); 
             }
             return titles;
         }
@@ -1425,8 +1380,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); // Cierra la conexión en caso de error
-                return XmlGetNames(); // En caso de error, retorna null
+                connection.Close(); 
+                return XmlGetNames(); 
             }
             return backgrounds;
         }
