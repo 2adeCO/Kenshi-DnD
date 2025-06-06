@@ -4,17 +4,26 @@ using System.Windows.Media.Imaging;
 
 namespace Kenshi_DnD
 {
+    // Class that represents a faction in the game, which can be in different regions, that monsters can be part of, and player can be less or more hostile to
     [Serializable]
     public class Faction
     {
+        // Id of faction
         int factionId;
+        // Name of faction
         string factionName;
+        // Description of faction
         string factionDescription;
+        // Color of faction, to know the exact values, see MainWindow.cs GetBrushByNum()
         int factionColor;
+        // Relations towards the player, in kenshi, factions have relations between themselves, but it would not give any value to this game
         int relations;
+        // List of what makes you lose or gain relations with this exact faction. I added functionality for factions to have multiple hostilities, however I didn't end up using this
         List<Hostilities.Hostility> hostilities;
+        // Decides if you will lose or gain relations if you win against them
         bool respectByFighting;
-
+        
+        // Constructor
         public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting)
         {         
             this.factionId = factionId;
@@ -25,6 +34,7 @@ namespace Kenshi_DnD
             this.respectByFighting = respectByFighting;
               hostilities = new List<Hostilities.Hostility>();
         }
+        // Getters and setters
         public int GetFactionId()
         {
             return factionId;
@@ -33,15 +43,29 @@ namespace Kenshi_DnD
         {
             return "@" + factionColor + "@" + factionName +"@";
         }
-        public void SetFactionDescription(string factionDescription)
+        public string GetFactionDescription()
         {
-            this.factionDescription = factionDescription;
+            return factionDescription;
         }
+
+        public int GetFactionColor()
+        {
+            return this.factionColor;
+        }
+        public int GetRelation()
+        {
+            return relations;
+        }
+        public bool GetRespectByFighting()
+        {
+            return respectByFighting;
+        }
+        // Adds hostility to hostilities
         public void AddHostility(string newHostility)
         {
-            Debug.WriteLine("Adding hostility: " + newHostility);
             hostilities.Add(HostilityParser(newHostility));
         }
+        // Parses the string of the hostility into a Hostilities.Hostility
         private Hostilities.Hostility HostilityParser(string newHostility)
         {
             switch (newHostility)
@@ -74,6 +98,7 @@ namespace Kenshi_DnD
             }
             
         }
+        // Gains or loses relations depending on hostilities
         public void AffectRelations(Adventure myAdventure, Random rnd)
         {
             int relationsLoss = 0;
@@ -179,10 +204,7 @@ namespace Kenshi_DnD
             AddOrSubtractRelation(relationsLoss);
            
         }
-        public bool GetRespectByFighting()
-        {
-            return respectByFighting;
-        }
+        // Adds or subtracts an amount from the relations
         public void AddOrSubtractRelation(int amount)
         {
             relations += amount;
@@ -195,6 +217,7 @@ namespace Kenshi_DnD
                 relations = 0;
             }
         }
+        // Returns a string of all the hostilities descripted
         public string HostilityToString()
         {
             string toReturn = "Hostilidades:";
@@ -238,22 +261,6 @@ namespace Kenshi_DnD
             }
             return toReturn;
         }
-        public string GetFactionDescription()
-        {
-            return factionDescription;
-        }
-       
-        public void SetFactionColor(int factionColor)
-        {
-            this.factionColor = factionColor;
-        }
-        public int GetFactionColor()
-        {
-            return this.factionColor;
-        }
-        public int GetRelation()
-        {
-            return relations;
-        }
+
     }
 }
