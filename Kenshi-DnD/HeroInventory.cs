@@ -1,12 +1,14 @@
 ﻿namespace Kenshi_DnD
 {
+    // Inventory of a hero, used for combat
     [Serializable]
     public class HeroInventory : Inventory
     {
+        // Constructor
         public HeroInventory() : base()
         {
         }
-
+        // Removes all items from hero's inventory
         public string MakeAllItemsDisponible(Hero hero)
         {
             string itemNames = "";
@@ -19,32 +21,7 @@
 
             return itemNames;
         }
-        public StatModifier GetAllStats()
-        {
-            Item[] meleeItems = base.GetMelee(2);
-            Item[] rangedItems = base.GetRanged(2);
-
-            Item[] allNonConsumableItems = new Item[meleeItems.Length + rangedItems.Length];
-
-            StatModifier allStats;
-            int bruteForce = 0;
-            int dexterity = 0;
-            int hp = 0;
-            int resistance = 0;
-            int agility = 0;
-
-            for (int i = 0; i < allNonConsumableItems.Length; i+=1)
-            {
-                bruteForce += allNonConsumableItems[i].GetStatToModify().GetBruteForce();
-                dexterity += allNonConsumableItems[i].GetStatToModify().GetDexterity();
-                hp += allNonConsumableItems[i].GetStatToModify().GetHp();
-                resistance += allNonConsumableItems[i].GetStatToModify().GetResistance();
-                agility += allNonConsumableItems[i].GetStatToModify().GetAgility();
-            }
-            allStats = new StatModifier(bruteForce, dexterity, hp, resistance, agility);
-            return allStats;
-        }
-        // 1 = Brute Force, 2 = Dexterity, 3 = HP, 4 = Resistance, 5 = Agility
+        // Gets the stats of the items in the inventory
         public int GetStat(Stats.Stat opt)
         {
             int stat = 0;
@@ -83,6 +60,7 @@
             }
             return stat;
         }
+        // Returns if said items are in the inventory
         public bool AreRangedItems()
         {
             for (int i = 0; i < items.Count; i+=1)

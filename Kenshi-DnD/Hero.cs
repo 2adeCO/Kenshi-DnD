@@ -10,20 +10,18 @@ namespace Kenshi_DnD
         string name;
         string title;
 
-        //Offensive ints
-        //Brute Force is associated with Sheks, skeletons and Hive Soldiers
-        //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
+        // Inventory of the hero
         HeroInventory personalInventory;
+        // Base stats of hero
         StatModifier heroStats;
+        // Buff stats of hero
         StatModifier buff;
-        //Defensive ints
+
         //Health points
         //Toughness is max health points
         int hp;
         int toughness;
-        //Resistance is defense against Brute Force
-        //Perception is defense against Dexterity
-        //Agility determines how fast the hero interacts with the enemies
+
         //Race is a key component in the world building of this game. The races are: Human, Shek, Skeleton and Hive
         Race race;
         //Race specifies the exact type of race that the character is. The subraces are:
@@ -31,32 +29,37 @@ namespace Kenshi_DnD
         //Hive: Hive Prince, Hive Worker, Hive Soldier
         //The other races don't have subrace
         Race subrace;
-        //Inventory
 
-        //Background story is a semi randomly asigned tale to give the hero a bit of depth. Depending on their circunstances, these will vary.
-        //For example: If a Shek is a rebel, their background could tell how they rejected Esata the Stone Golem(Shek Kingdom's Queen) for her untraditionalist ways.
-        //If a human is a merchant noble, their background could tell how they inherited their father's slave farm.
+        //Background story is a randomly asigned tale to give the hero a bit of depth.
         string backgroundStory;
 
         //Recruitment date is the date when the hero was recruited.
         DateTime recruitmentDate;
+
         //Level determines roughly how strong the hero is. However, this is not a direct correlation, as the hero's ints are built upon leveling up.
         int level;
         //Experience is the amount of experience the hero has. It determines how much the hero has leveled up.
         int experience;
         //XP points to spend in stat upgrades
         int xpPoints;
-        //Limbs can be lost and bought in the kenshi universe.
+
+        //Limbs can be lost and bought in the kenshi universe. They affect stats
         Limb[] limbs;
+        // Level of competency when the hero was generated
         Competency.StartCompetency startCompetency;
+        // For showing the hero as not hired or hired in the bar
         bool hired;
-        //In Kenshi the best way to level up at the start is to get beaten a lot
+
+        //In Kenshi the best way to level up at the start is to get beaten a lot, in this game, it's not the best, but it's an option
         const int PART_DAMAGE_AS_XP = 2;
+        // Base toughness
+        const int BASE_TOUGHNESS = 7;
+        // Constructor that generates a whole hero
         public Hero(string name, string title,string backgroundStory,int bruteForce ,int dexterity, int resistance, int agility,
              int level, Race race, Race subrace, Limb[] limbs, Competency.StartCompetency startCompetency)
         {
             hired = false;
-            toughness = 7;
+            toughness = BASE_TOUGHNESS;
             heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
             this.name = name;
             this.title = title;
@@ -73,6 +76,7 @@ namespace Kenshi_DnD
             buff = new StatModifier(0, 0, 0, 0, 0);
             this.startCompetency = startCompetency;
         }
+        // Constructor of partial hero, only used to represent the starting character's stats 
         public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs) 
         {
             heroStats = new StatModifier(bruteForce,dexterity,0,resistance,agility);
@@ -83,25 +87,7 @@ namespace Kenshi_DnD
             personalInventory = new HeroInventory();
             buff = new StatModifier(0, 0, 0, 0, 0);
         }
-        public Hero(string name, string title, int bruteForce, int agility, int resistance, int dexterity,
-             Race race, Race subrace, Limb[] limbs)
-        {
-            toughness = 7;
-            this.name = name;
-            this.title = title;
-            heroStats = new StatModifier(bruteForce, dexterity, resistance, toughness, agility);
-            SetToughnessAtConstructor(toughness, race, subrace, limbs);
-            this.level = 1;
-            this.xpPoints = 0;
-            this.backgroundStory = "";
-            this.recruitmentDate = DateTime.Now;
-            this.race = race;
-            this.subrace = subrace;
-            this.limbs = limbs;
-            personalInventory = new HeroInventory();
-            buff = new StatModifier(0, 0, 0, 0, 0);
-        }
-        // 1 = Brute Force, 2 = Dexterity, 3 = HP, 4 = Resistance, 5 = Agility
+        // Gets a selected stat
         public int GetStat(Stats.Stat opt)
         {
             int stat = 0;
@@ -163,6 +149,7 @@ namespace Kenshi_DnD
             }
             return stat;
         }
+        // Sets the toughness, taking into account the race, subrace, and limbs
         private void SetToughnessAtConstructor(int toughness, Race race, Race subrace, Limb[] limbs)
         {
             int stat = 0;
@@ -173,12 +160,10 @@ namespace Kenshi_DnD
                     stat += limbs[i].GetHp();
                 }
             }
-            Debug.WriteLine(stat);
-            Debug.WriteLine(race.GetHp());
-            Debug.WriteLine(subrace.GetHp());
             SetToughness(toughness + race.GetHp() + subrace.GetHp() + stat);
             this.hp = this.toughness;   
         }
+        // Gets a statmodifier copy of all their stats
         public StatModifier GetAllStats()
         {
             StatModifier allStats;
@@ -198,17 +183,15 @@ namespace Kenshi_DnD
             return allStats;
 
         }
+        // Get agility is a required method for the Iturnable interface
         public int GetAgility()
         {
             return GetStat(Stats.Stat.Agility);
         }
+        // Getters and setters
         public string GetName()
         {
             return name;
-        }
-        public string GetTitle()
-        {
-            return title;
         }
         public int GetToughness()
         {
@@ -222,10 +205,6 @@ namespace Kenshi_DnD
         {
             return (this.GetHp() > 0);
         }
-        public string GetBackgroundStory()
-        {
-            return backgroundStory;
-        }
         public DateTime GetRecruitmentDate()
         {
             return recruitmentDate;
@@ -234,14 +213,7 @@ namespace Kenshi_DnD
         {
             return level;
         }
-        public int GetExperience()
-        {
-            return experience;
-        }
-        public void SetName(string name)
-        {
-            this.name = name;
-        }
+
         public Race GetRace()
         {
             return race;
@@ -252,17 +224,11 @@ namespace Kenshi_DnD
         }
         public void SetToughness(int toughness)
         {
-            Debug.WriteLine(toughness);
             this.toughness = toughness;
         }
         public void SetHp(int hp)
         {
             this.hp = hp;
-        }
-        
-        public void SetRecruitmentDate(DateTime recruitmentDate)
-        {
-            this.recruitmentDate = recruitmentDate;
         }
         public void Hire()
         {
@@ -276,16 +242,31 @@ namespace Kenshi_DnD
         {
             return personalInventory;
         }
+        public void SetBuff(StatModifier buff)
+        {
+            this.buff = buff;
+        }
+        public StatModifier GetBuff()
+        {
+            return buff;
+        }
+        public bool IsHired()
+        {
+            Debug.WriteLine("Hired? : " + hired);
+            return hired;
+        }
+        public int GetXpPoints()
+        {
+            return xpPoints;
+        }
+        // Adds the item to the inventory and uses needed limbs
         public void AddItemToInventory(Item item)
         {
-            
-            Debug.WriteLine(this.name + " can use " + item.GetName());
             item.SetAlreadyUsed(true);
             UseLimbs(item.GetLimbsNeeded());
             personalInventory.AddItem(item);
-            
-            
         }
+        // Returns if the hero has any missing limbs
         public bool IsAmputee()
         {
             for (int i = 0; i < limbs.Length; i += 1)
@@ -297,6 +278,7 @@ namespace Kenshi_DnD
             }
             return false;
         }
+        // Returns if the hero has enough free limbs to use an item
         public bool CanUseItem(Item item)
         {
             int limbsAvailable = 0;
@@ -318,13 +300,12 @@ namespace Kenshi_DnD
 
             return false;
         }
+        // Frees limbs from being used
         private void FreeLimbs(int num)
         {
             int iterator = 0;
             while (num > 0)
             {
-                Debug.WriteLine("Trying limb " + iterator);
-                Debug.WriteLine("Limbs to free now: " + num);
                 if (limbs[iterator] != null)
                 {
                     if (limbs[iterator].GetBeingUsed())
@@ -333,53 +314,28 @@ namespace Kenshi_DnD
                         limbs[iterator].SetBeingUsed(false);
                         num -= 1;
                     }
-                    else
-                    {
-                        Debug.WriteLine("Limb already free");
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("Limb is missing...");
                 }
                 iterator += 1;
             }
         }
-        public void SetBuff(StatModifier buff)
-        {
-            this.buff = buff;
-        }
-        public StatModifier GetBuff()
-        {
-            return buff;
-        }
+        // Uses a number of limbs
         private void UseLimbs(int num)
         {
             int iterator = 0;
             while (num > 0)
             {
-                Debug.WriteLine("Trying limb " + iterator);
-                Debug.WriteLine("Limbs needed now: " + num);
                 if (limbs[iterator] != null)
                 {
                     if (!limbs[iterator].GetBeingUsed())
                     {
-                        Debug.WriteLine("Limb found");
                         limbs[iterator].SetBeingUsed(true);
                         num -= 1;
                     }
-                    else
-                    {
-                        Debug.WriteLine("Limb already used");
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("Limb is missing...");
                 }
                 iterator += 1;
             }
         }
+        // Returns the martial art stat, counted by their limb's stats
         public int GetMartialArtStat()
         {
             int martialArtPower = 0;
@@ -394,6 +350,7 @@ namespace Kenshi_DnD
             martialArtPower += (GetStat(Stats.Stat.Agility) == 0 ? 0 : GetStat(Stats.Stat.Agility) / 2);
             return martialArtPower;
         }
+        // Gains Xp and levels up if threshold is reached, also returns if the hero has leveled up
         public bool GainXp(int newXp)
         {
             bool leveledUp = false;
@@ -401,18 +358,13 @@ namespace Kenshi_DnD
             while (experience >= (10 * ((level + 1) * (level + 1))))
             {
                 leveledUp = true;
-                Debug.WriteLine("Level up");
                 level += 1;
                 xpPoints += 1;
             }
 
             return leveledUp;
         }
-        public bool IsHired()
-        {
-            Debug.WriteLine("Hired? : " + hired);
-            return hired;
-        }
+        // Returns a string representing the Competency of the hero
         public string CompetencyToString()
         {
             switch (startCompetency)
@@ -435,10 +387,7 @@ namespace Kenshi_DnD
                     }
             }
         }
-        public int GetXpPoints()
-        {
-            return xpPoints;
-        }
+       // Heals the hero
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())
@@ -450,6 +399,7 @@ namespace Kenshi_DnD
                 this.SetHp(GetHp() + healHp);
             }
         }
+        // Hurts the hero
         public bool Hurt(int hurtHp)
         {
             
@@ -469,16 +419,14 @@ namespace Kenshi_DnD
             }
             return leveledUp;
         }
-        public bool IsInInventory(Item item)
-        {
-            return personalInventory.ContainsItem(item);
-        }
+        // Removes item from inventory and frees limbs
         public void RemoveItemFromInventory(Item item)
         {
             item.SetAlreadyUsed(false);
             FreeLimbs(item.GetLimbsNeeded());
             personalInventory.RemoveItem(item);
         }
+        // Returns if said items are in the hero's inventory
         public bool AreConsumableItems()
         {
             return personalInventory.AreConsumableItems();
@@ -491,6 +439,7 @@ namespace Kenshi_DnD
         {
             return personalInventory.AreMeleeItems();
         }
+        // Removes a limb, if the limb is not found, removes first found
         public Limb RemoveLimb(int limbIndex)
         {
             if (limbs[limbIndex] != null)
@@ -516,10 +465,7 @@ namespace Kenshi_DnD
             }
             return null;
         }
-        public Competency.StartCompetency GetCompetency()
-        {
-            return startCompetency;
-        }
+        // Puts a limb in an empty limb space
         public void PutLimb(Limb newLimb)
         {
             for (int i = 0; i < limbs.Length; i += 1)
@@ -531,6 +477,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Gets a random limb
         public Limb GetRandomLimb(Random rnd)
         {
             bool atLeastOne = false;
@@ -559,6 +506,7 @@ namespace Kenshi_DnD
 
             return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0,0):randomLimb;
         }
+        // Removes all items from inventory, and returns the string of which items
         public string FreeAllItems()
         {
             int count = 0;
@@ -575,6 +523,7 @@ namespace Kenshi_DnD
             FreeLimbs(count);
             return personalInventory.MakeAllItemsDisponible(this);
         }
+        // Upgrades a stat
         public void UpgradeStat(Stats.Stat statToUpgrade)
         {
             xpPoints -= 1;
@@ -585,10 +534,12 @@ namespace Kenshi_DnD
                 Heal(1);
             }
         }
+        // Returns if the hero has points to spend
         public bool HasPointsToSpend()
         {
             return xpPoints > 0;
         }
+        // Info of hero
         public string GetNameAndTitle()
         {
             return name + ", " + title;
@@ -611,6 +562,7 @@ namespace Kenshi_DnD
                 + "\n-------------------\n" + 
                 "Me uniré a tu aventura por " +  GetCompetencyCost();
         }
+        // Returns the cost of the hero depending on its competency
         public int GetCompetencyCost()
         {
           

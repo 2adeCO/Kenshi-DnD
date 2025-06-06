@@ -14,31 +14,39 @@ using System.Xml.Linq;
 using System.Dynamic;
 namespace Kenshi_DnD
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    // Only window in the program
 public partial class MainWindow : Window
     {
+        // Array of cursors used in the program
         Cursor[] cursors;
+        // New random created when the window initializes
         Random rnd;
+        // Timer used to add seconds to adventure's hoursPlayed
         DispatcherTimer timer;
+        // Tells the program if it should use XML instead of MySql
         bool usingXML;
+        const string SQL_CONFIG_PATH = "./Resources/config/sqlconfig.txt";
+        // Constructor
         public MainWindow()
         {
             InitializeComponent();
+            // Loads cursors
             LoadCursors();
+            // Makes the window's default cursor the first one
             this.Cursor = cursors[0];
             usingXML = false;
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             rnd = new Random();
-
+            // Sets PageController to Menu UserControl
             PageController.Content = new Menu(this,PageController, cursors, rnd);
         }
+        // Adds a second to the adventure
         private void AddSecondsToAdventureTime(Adventure adventure)
         {
             adventure.AddSecondToAdventure();
         }
+        // Starts the timer
         public void StartPlaying(Adventure adventure)
         {
             timer.Start();
@@ -47,6 +55,7 @@ public partial class MainWindow : Window
                 AddSecondsToAdventureTime(adventure);
             };
         }
+        // Stops the timer
         public void StopPlaying()
         {
             timer.Stop();
@@ -55,15 +64,14 @@ public partial class MainWindow : Window
                 AddSecondsToAdventureTime(null);
             };
         }
+        // Loads cursors in the array
         public void LoadCursors()
         {
-            Debug.WriteLine(Directory.GetCurrentDirectory());
             string[] cursorCurFiles = Directory.GetFiles("./Resources/cursors", "*.cur");
             string[] cursorAniFiles = Directory.GetFiles("./Resources/cursors", "*.ani");
             int arrayNum = cursorCurFiles.Length + cursorAniFiles.Length;
             string[] cursorFiles = new string[arrayNum];
 
-            Debug.WriteLine($"Loading {arrayNum} cursors...");
             for (int i = 0; i < cursorCurFiles.Length; i+=1)
             {
                 cursorFiles[i] = cursorCurFiles[i];
@@ -81,6 +89,7 @@ public partial class MainWindow : Window
                 cursors[i] = new Cursor(cursorFiles[i]);
             }
         }
+        // Decorates the text by parsing strings into inlines with colors and text size changed
         public List<Inline> DecorateText(string message)
         {
             string txt = "";
@@ -93,25 +102,25 @@ public partial class MainWindow : Window
 
             for (int i = 0; i < message.Length; i+=1)
             {
-                //If it's normal text, just write it normally
+                // If it's normal text, just write it normally
                 if (!foundDecoration && ! startDecoration)
                 {
-                    //If the special character is found, then save the bool
+                    // If the special character is found, then save the bool
                     if (message[i] == '@')
                     {
                         foundDecoration = true;
                     }
                     else
                     {
-                        //Write it
+                        // Write it
                         txt += message[i];
                     }
                 }
                 else
                 {
-                    //Because the decoration has been found, see what to do next
+                    // Because the decoration has been found, see what to do next
 
-                    //If just found the decoration, then read it
+                    // If just found the decoration, then read it
                     if (!startDecoration)
                     {
                         foundDecoration = false;
@@ -135,7 +144,7 @@ public partial class MainWindow : Window
                     }
                     else
                     {
-                        //If the decoration is known, then, start it until the special character is found again
+                        // If the decoration is known, then, start it until the special character is found again
                         if (message[i] != '@')
                         { 
                             txt += message[i];
@@ -162,12 +171,13 @@ public partial class MainWindow : Window
                     
                 }    
             }
-            //If some text at the end of the loop and not special, these lines of code will save them
+            // If some text at the end of the loop and not special, these lines of code will save them
             inlineRun = new Run();
             inlineRun.Text = txt;
             inlines.Add(inlineRun);
             return inlines;
         }
+        // Returns a brush used by the program to color text and UI by parsing a num
         public SolidColorBrush GetBrushByNum(int num)
         {
             switch (num)
@@ -211,6 +221,7 @@ public partial class MainWindow : Window
                     }
             }
         }
+        // Generates a standard tooltip throughout the program, with a header
         public ToolTip HeaderToolTipThemer(string header, string content)
         {
             StackPanel stackPanel = new StackPanel();
@@ -233,6 +244,8 @@ public partial class MainWindow : Window
             return toolTip;
 
         }
+        // Generates a standard tooltip throughout the program, with a header
+
         public ToolTip ToolTipThemer(string content)
         {
             TextBlock textBlock = new TextBlock();
@@ -245,14 +258,14 @@ public partial class MainWindow : Window
             toolTip.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
             return toolTip;
         }
+        // Searches the config file for a valid SQL connection string
         public string GetSqlConnectionString()
         {
             try
             {
-                if (Path.Exists("./Resources/config/sqlconfig.txt"))
+                if (Path.Exists(SQL_CONFIG_PATH))
                 {
-                    string[] lines = File.ReadAllLines("./Resources/config/sqlconfig.txt");
-                    StreamReader sr = new StreamReader("./Resources/config/sqlconfig.txt");
+                    StreamReader sr = new StreamReader(SQL_CONFIG_PATH);
                     string mySqlConnectionString = sr.ReadLine();
                     while (mySqlConnectionString[0] == '#' && !String.IsNullOrEmpty(mySqlConnectionString))
                     {
@@ -261,28 +274,30 @@ public partial class MainWindow : Window
                     sr.Close();
                     if (String.IsNullOrEmpty(mySqlConnectionString))
                     {
+                        // Throws a exception
                         throw new DBNotFoundException();
                     }
                     return mySqlConnectionString;
                 }
                 else
                 {
+                    // Throws a exception
                     throw new DBNotFoundException();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
                 usingXML = true;
                 return "";
             }
-            
-            
         }
+        // Returns if the program should use XML
         public bool UseXml()
         {
             return usingXML;
         }
+        // Saves the adventure
         public void SaveAdventure(Adventure adventure)
         {
 
@@ -294,6 +309,7 @@ public partial class MainWindow : Window
             fileStream.Close();
             MessageBox.Show("Partida guardada exitosamente");
         }
+        // Generates random monsters that are in a faction, using SQL
         public Monster[] SqlGenerateMonsters(Adventure adventure, Faction faction, Random rnd)
         {
 
@@ -353,6 +369,7 @@ public partial class MainWindow : Window
             }
             
         }
+        // Generates random monsters that are in a faction, using XML
         public Monster[] XmlGenerateMonsters(Adventure adventure, Faction faction, Random rnd)
         {
 
@@ -381,6 +398,7 @@ public partial class MainWindow : Window
                 }
                 else
                 {
+                    // Throws an exception
                     throw new XMLNotFoundException();
                 }
             }
@@ -390,6 +408,7 @@ public partial class MainWindow : Window
                 return null;
             }
         }
+        // Returns a textblock with the text formatted
         public TextBlock GenerateTextblock(string content)
         {
             TextBlock textBlock = new TextBlock();

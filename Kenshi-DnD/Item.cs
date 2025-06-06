@@ -5,18 +5,26 @@ using System.Windows.Documents;
 
 namespace Kenshi_DnD
 {
+    // Abstract class that acts as a base for the rest of items
     [Serializable]
     public abstract class Item
     {
+        // Name of item
         protected string name;
+        // Description of item
         protected string description;
+        // Value and resell value of item
         protected int value;
         protected int resellValue;
+        // Weight/limbs needed by a hero to use in combat
         protected int limbsNeeded;
+        // Rarity of the item, that modifies its stats
         protected Rarity.Rarities rarity;
+        // Tells if the item is being used or not
         protected bool alreadyUsed;
+        // Stats of the item
         protected StatModifier statToModify;
-
+        // Base constructor
         public Item(string name,string description, int value, int resellValue, int limbsNeeded, StatModifier statToModify)
         {
             this.name = name;
@@ -28,8 +36,9 @@ namespace Kenshi_DnD
             this.statToModify = statToModify;
             this.rarity = Rarity.Rarities.Junk;
         }
-        
+        // Abstract method that returns a string announcing the use of the item
         public abstract string AnnounceUse();
+        // Virtual method that returns info about the object
         public virtual string ItemInfo()
         {
             return
@@ -40,12 +49,15 @@ namespace Kenshi_DnD
                    "Rareza: " + RarityToString() + "\n" +
                    statToModify.ToString();
         }
+        // Abstract method which upgrades the stats of the items
         public abstract void UpgradeRarity(Rarity.Rarities rarity);
+        // Abstract method that returns a copy of this item
+        public abstract Item GetCopy();
+        // Getters and setters
         public Rarity.Rarities GetRarity()
         {
             return rarity;
         }
-        public abstract Item GetCopy();
         public void SetAlreadyUsed(bool alreadyUsed)
         {
             this.alreadyUsed = alreadyUsed;
@@ -74,6 +86,45 @@ namespace Kenshi_DnD
         {
             return alreadyUsed;
         }
+        public void SetRarity(Rarity.Rarities rarity)
+        {
+            this.rarity = rarity;
+        }
+        public int GetRarityColor()
+        {
+            switch (rarity)
+            {
+                case Rarity.Rarities.Junk:
+                    {
+                        return 8;
+                    }
+                case Rarity.Rarities.RustCovered:
+                    {
+                        return 7;
+                    }
+                case Rarity.Rarities.Catun:
+                    {
+                        return 6;
+                    }
+                case Rarity.Rarities.Mk:
+                    {
+                        return 2;
+                    }
+                case Rarity.Rarities.Edgewalker:
+                    {
+                        return 3;
+                    }
+                case Rarity.Rarities.Meitou:
+                    {
+                        return 5;
+                    }
+                default:
+                    {
+                        return 9;
+                    }
+            }
+        }
+        // Returns a string representing the item's rarity
         public string RarityToString()
         {
             //Kenshi's actual weapon tiers go like this:
@@ -116,43 +167,6 @@ namespace Kenshi_DnD
 
             }
         }
-        public void SetRarity(Rarity.Rarities rarity)
-        {
-            this.rarity = rarity;
-        }
-        public int GetRarityColor()
-        {
-            switch (rarity)
-            {
-                case Rarity.Rarities.Junk:
-                    {
-                        return 8;
-                    }
-                case Rarity.Rarities.RustCovered:
-                    {
-                        return 7;
-                    }
-                case Rarity.Rarities.Catun:
-                    {
-                        return 6;
-                    }
-                case Rarity.Rarities.Mk:
-                    {
-                        return 2;
-                    }
-                case Rarity.Rarities.Edgewalker:
-                    {
-                        return 3;
-                    }
-                case Rarity.Rarities.Meitou:
-                    {
-                        return 5;
-                    }
-                default:
-                    {
-                        return 9;
-                    }
-            }
+       
         }
     }
-}

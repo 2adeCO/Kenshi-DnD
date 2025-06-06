@@ -1,28 +1,22 @@
 ﻿namespace Kenshi_DnD
 {
+    // Class that holds items in a list, and returns them without returning the list
     [Serializable]
     public class Inventory
     {
+        // List of items
         protected List<Item> items;
+        // Constructor
         public Inventory()
         {
             items = new List<Item>();
         }
+        // Adds an item
         public void AddItem(Item item)
         {
             items.Add(item);
         }
-        public bool ContainsItem(Item item)
-        {
-            for (int i = 0; i < items.Count; i+=1)
-            {
-                if (items[i].Equals(item))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        // Removes an item
         public void RemoveItem(Item item)
         {
             for (int i = 0; i < items.Count; i+=1)
@@ -34,6 +28,7 @@
                 }
             }
         }
+        // Returns said items in an array, and has options to select if you want all, unused or used items
         //0 is all, 1 is unused, 2 is used
         public Item[] GetConsumables(int returnSelect)
         {
@@ -311,6 +306,7 @@
             }
             return itemsToReturn;
         }
+        // Returns if an item is considered consumible
         private bool IsItemConsumible(Item item)
         {
             if (item is MeleeItem)

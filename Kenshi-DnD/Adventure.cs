@@ -527,7 +527,6 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("Squad successfully deleted : " + squadName);
                 savedSquads.Remove(squadName);
-                SetCurrentSquad(savedSquads.FirstOrDefault().Key); // Sets the current squad to the first squad in the dictionary
             }
             else
             {
@@ -539,7 +538,6 @@ namespace Kenshi_DnD
         {
             currentSquad = savedSquads[squadName];
             currentSquadName = squadName;
-            Debug.WriteLine("Current squad:" + squadName);
         }
         // Returns the number of squads saved in the adventure, used to avoid creating more squads than the maximum allowed
         public int GetSquadCount()

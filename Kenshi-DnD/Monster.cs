@@ -2,19 +2,29 @@
 
 namespace Kenshi_DnD
 {
+    // Class that represents an enemy, with their faction, immunities, stats...
     [Serializable]
     public class Monster : ITurnable
     {
+        // Name
         string name;
+        // Faction
         Faction faction;
+        // Stats
         int resistance;
         int strength;
         int hp;
         int agility;
+        // Max cats that they can drop
         int cats;
+        // Ammount of XP they give
         int xpDrop;
+        // Possibility to drop an item
         bool canDropItem;
-        Immunities.Immunity immunity; 
+        // Immunity towards player's damage
+        Immunities.Immunity immunity;
+
+        // Constructor without immunity parsing
         public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, Immunities.Immunity immunity, int cats, int xpDrop, bool canDropItem)
         {
             this.name = name;
@@ -28,6 +38,7 @@ namespace Kenshi_DnD
             this.xpDrop = xpDrop;
             this.canDropItem = canDropItem;
         }
+        // Constructor with immunity parsing
         public Monster(string name, int hp, Faction faction, int strength, int resistance, int agility, string immunity, int cats, int xpDrop, bool canDropItem)
         {
             this.name = name;
@@ -41,42 +52,60 @@ namespace Kenshi_DnD
             this.xpDrop = xpDrop;
             this.canDropItem = canDropItem;
         }
+        // Parsing of immunity
         private Immunities.Immunity ImmunityParser(string immunity)
         {
             switch (immunity)
             {
-                case "ResistantToMelee": return Immunities.Immunity.ResistantToMelee;
-                case "ImmuneToMelee": return Immunities.Immunity.ImmuneToMelee;
-                case "ImmuneToMeleeAndResistantToRanged": return Immunities.Immunity.ImmuneToMeleeAndResistantToRanged;
-                case "ResistantToRanged": return Immunities.Immunity.ResistantToRanged;
-                case "ImmuneToRanged": return Immunities.Immunity.ImmuneToRanged;
-                case "ImmuneToRangedAndResistantToMelee": return Immunities.Immunity.ImmuneToRangedAndResistantToMelee;
-                case "ResistantToBoth": return Immunities.Immunity.ResistantToBoth;
+                case "ResistantToMelee":
+                    {
+                        return Immunities.Immunity.ResistantToMelee;
+                    }
+                case "ImmuneToMelee":
+                    {
+                        return Immunities.Immunity.ImmuneToMelee;
+                    }
+                case "ImmuneToMeleeAndResistantToRanged":
+                    {
+                        return Immunities.Immunity.ImmuneToMeleeAndResistantToRanged;
+                    }
+                case "ResistantToRanged":
+                    {
+                        return Immunities.Immunity.ResistantToRanged;
+                    }
+                case "ImmuneToRanged":
+                    {
+                        return Immunities.Immunity.ImmuneToRanged;
+                    }
+
+                case "ImmuneToRangedAndResistantToMelee":
+                    {
+                        return Immunities.Immunity.ImmuneToRangedAndResistantToMelee;
+                    }
+                case "ResistantToBoth":
+                    {
+                        return Immunities.Immunity.ResistantToBoth;
+                    }
                 default:
-                    Debug.WriteLine("No immunity");
+                    { 
                     return Immunities.Immunity.None;
+                    } 
             }
         }
+        // Returns a copy of the monster
         public Monster GetCopy()
         {
             return new Monster(name, hp, faction, strength, resistance, agility, immunity, cats, xpDrop, canDropItem);
         }
+        // Getters and setters
         public string GetName()
         {
             return "@"+ faction.GetFactionColor() + "@" + name +"@";
         }
         
-        public void SetName(string name)
-        {
-            this.name = name;
-        }
         public Faction GetFaction()
         {
             return faction;
-        }
-        public void SetFaction(Faction faction)
-        {
-            this.faction = faction;
         }
         public bool CanDropItem()
         {
@@ -90,22 +119,40 @@ namespace Kenshi_DnD
         {
             return resistance;
         }
-        public void SetResistance(int resistance)
-        {
-            this.resistance = resistance;
-        }
         public int GetStrength()
         {
             return strength;
-        }
-        public void SetStrength(int strength)
-        {
-            this.strength = strength;
         }
         public int GetHp()
         {
             return hp;
         }
+
+        public void SetHp(int hp)
+        {
+            this.hp = hp;
+        }
+        public int GetAgility()
+        {
+            return agility;
+        }
+        public void SetAgility(int agility)
+        {
+            this.agility = agility;
+        }
+        public int GetCats()
+        {
+            return cats;
+        }
+        public int GetXpDrop()
+        {
+            return xpDrop;
+        }
+        public Immunities.Immunity GetImmunity()
+        {
+            return immunity;
+        }
+        // Returns an ammount of all possible cats
         public int GetPossibleCats(Random rnd)
         {
             float catsMultiplier = 1.0f;
@@ -136,46 +183,11 @@ namespace Kenshi_DnD
             }
             return (int)(cats * catsMultiplier);
         }
-        public void SetHp(int hp)
-        {
-            this.hp = hp;
-        }
-        public int GetAgility()
-        {
-            return agility;
-        }
-        public void SetAgility(int agility)
-        {
-            this.agility = agility;
-        }
-        public int GetCats()
-        {
-            return cats;
-        }
-        public void SetCats(int cats)
-        {
-            this.cats = cats;
-        }
-        public int GetXpDrop()
-        {
-            return xpDrop;
-        }
-        public void SetXpDrop(int xpDrop)
-        {
-            this.xpDrop = xpDrop;
-        }
-        public Immunities.Immunity GetImmunity()
-        {
-            return immunity;
-        }
-        public bool GetDropPosibility()
-        {
-            return canDropItem;
-        }
+        // Info of the monster
         public override string ToString()
         {
             return
-                
+
                 (hp != 0 ? "Puntos de vida: " + hp + "\n" : "Cadáver\n") +
                 "Fuerza bruta: " + strength + "\n" +
                 "Resistencia: " + resistance + "\n" +
@@ -184,7 +196,7 @@ namespace Kenshi_DnD
                 "Experiencia: " + xpDrop + "\n" +
                 "Inmunidad: " + GetImmunityDescription() + "\n";
         }
-
+        // Returns a string representing the immunity
         public string GetImmunityDescription()
         {
             switch (immunity)

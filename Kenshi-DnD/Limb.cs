@@ -1,12 +1,18 @@
 ﻿namespace Kenshi_DnD
 {
+    // Class that represents a limb of a hero, which modifies their stats and is used for holding items
     [Serializable]
     public class Limb : StatModifier
     {
+        // Name of limb
         string name;
+        // Value of limb when bought
         int value;
+        // Rarity of limb, used to upgrade base stats
         Rarity.Rarities rarity;
+        // Tells if the item is being used
         bool beingUsed;
+        // Constructor
         public Limb(string name, int value, int bruteForce, int dexterity, int hp, int resistance, int agility)
             : base(bruteForce, dexterity, hp, resistance, agility)
         {
@@ -14,6 +20,7 @@
             this.value = value;
             this.beingUsed = false;
         }
+        // Getters and setters
         public string GetName()
         {
             return name;
@@ -90,6 +97,7 @@
             return new Limb(name, value, bruteForce, dexterity, hp, resistance, agility);
 
         }
+        // Returns a string that represents the rarity
         public string RarityToString()
         {
             //Kenshi's actual weapon tiers go like this:
@@ -132,6 +140,7 @@
 
             }
         }
+        // Returns an int that represents a color in MainWindow.cs GetBrushByNum
         public int GetRarityColor()
         {
             switch (rarity)
