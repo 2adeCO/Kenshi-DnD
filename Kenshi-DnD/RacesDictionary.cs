@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
+    // Has each race's subraces in a string, used to apply correct subraces to random heroes
     class RacesDictionary
     {
         public static Dictionary<string, List<string>> RacesAndSubraces = new Dictionary<string, List<string>>

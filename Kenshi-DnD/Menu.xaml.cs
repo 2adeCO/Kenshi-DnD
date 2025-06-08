@@ -663,16 +663,13 @@ namespace Kenshi_DnD
             adventureGrid.Background = Brushes.LightGray;
             adventureGrid.Height = 120;
 
-            Debug.WriteLine(adventure.GetId());
-
-            TextBlock textBlock = new TextBlock();
-            textBlock.Inlines.AddRange(mainWindow.DecorateText("Aventura: " + adventure.GetId() + "\n" +
-                "Horas jugadas: " + adventure.GetTimePlayed() + "\n" +
-                "Dado: " + adventure.GetDice().ToString() + "\n" +
-                "Cats: " + adventure.GetCats() + "$"));
 
             Button button = new Button();
-            button.Content = textBlock;
+            button.Content = mainWindow.GenerateTextblock("Aventura: " + adventure.GetId() + "\n" +
+                "Horas jugadas: " + adventure.GetTimePlayed() + "\n" +
+                "Fecha de empiece: " + adventure.GetStartDate() + "\n" +
+                "Dado: " + adventure.GetDice().ToString() + "\n" +
+                "Cats: " + adventure.GetCats() + "$"));
             button.HorizontalAlignment = HorizontalAlignment.Stretch;
             button.Background = linearBrush;
             button.Tag = adventure;

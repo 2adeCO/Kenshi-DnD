@@ -3,12 +3,17 @@ using System.Xml.Linq;
 
 namespace Kenshi_DnD
 {
+    // Item which is ranged
     [Serializable]
     class RangedItem : Item
     {
+        // Difficulty when the item is shot
         int difficulty;
+        // Max ammo capacity of the item
         int maxAmmo;
+        // Current ammo
         int ammo;
+        // Constructor
         public RangedItem(string name, string description, int value, int resellValue, int limbsNeeded, int difficulty, int ammo, StatModifier statToModify)
             : base(name, description, value, resellValue, limbsNeeded, statToModify)
         {
@@ -16,10 +21,12 @@ namespace Kenshi_DnD
             this.ammo = ammo;
             this.difficulty = difficulty;
         }
+        // Abstract override that returns a string that announces the use of the item
         public override string AnnounceUse()
         {
             return "¡El héroe coge distancia... y usa " + "@" + GetRarityColor() + "@" + name + "@" + "!";
         }
+        // Getters and setters
         public int GetDifficulty()
         {
             return difficulty;
@@ -40,10 +47,12 @@ namespace Kenshi_DnD
         {
             this.ammo = maxAmmo; 
         }
+        // Loses one ammo
         public void ShootAmmo()
         {
             this.ammo -= 1;
         }
+        // Ranged item rarity upgrade affects on dexterity
         public override void UpgradeRarity(Rarity.Rarities rarity)
         {
             SetRarity(rarity);
@@ -96,6 +105,7 @@ namespace Kenshi_DnD
             resellValue = (int)(value * 0.5);
 
         }
+        // Returns copy of the item
         public override Item GetCopy()
         {
             StatModifier statCopy = statToModify.GetCopy();
@@ -104,6 +114,7 @@ namespace Kenshi_DnD
             itemCopy.SetRarity(rarity);
             return itemCopy;
         }
+        // Virtual override that returns info about the item
         public override string ItemInfo()
         {
             return base.ItemInfo() + "\n" +

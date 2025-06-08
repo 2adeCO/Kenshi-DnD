@@ -7,31 +7,37 @@ using System.Threading.Tasks;
 
 namespace Kenshi_DnD
 {
+    // Class that has info about regions, what they offer, and what they have
     [Serializable]
     public class Region
     {
+        // Name
         string name;
+        // Description
         string description;
+        // Which commerces they have
         bool hasBar;
         bool hasShop;
         bool hasLimbHospital;
         bool hasContrabandMarket;
         bool hasRangedShop;
-
+        // Tells if the player has access to the ranged shop or if can buy items
         bool hasAccessToRangedShop;
         bool canBuyRangedItems;
+        // If true, updates the shops when the zone is entered
         bool updateToken;
 
-
+        // Contents of the commerces
         Hero[] heroesInBar;
         Item[] shop;
         Limb[] limbHospital;
         Item[] contrabandMarket;
         Item[] rangedShop;
         List<Faction> factions;
+        // Default const value
         const int DEFAULT_LIMB_HOSPITAL_SIZE = 2;
         const int DEFAULT_SHOP_SIZE = 3;
-
+        // Constructor
         public Region(string name, string description, bool hasBar, bool hasShop, bool hasLimbHospital, bool hasContrabandMarket, bool hasRangedShop)
         {
             this.name = name;
@@ -45,6 +51,7 @@ namespace Kenshi_DnD
             this.hasRangedShop = hasRangedShop;
             hasAccessToRangedShop = false;
         }
+        // Affects all the relations of all factions in the zone
         public void AffectsRelations(Adventure myAdventure,Random rnd)
         {
             for (int i = 0; i < factions.Count; i += 1)
@@ -52,6 +59,7 @@ namespace Kenshi_DnD
                 factions[i].AffectRelations(myAdventure,rnd);
             }
         }
+        // Improves or worsens relations with the factions in the region
         public void ImproveRelations(int amount, Zone myZone)
         {
             for (int i = 0; i < factions.Count; i += 1)
@@ -60,6 +68,7 @@ namespace Kenshi_DnD
                 factions[i].AddOrSubtractRelation(amount);
             }
         }
+        // Getters and setters
         public bool CanBuyRangedItems()
         {
             return canBuyRangedItems;
@@ -76,26 +85,7 @@ namespace Kenshi_DnD
         {
             this.hasAccessToRangedShop = hasAccessToRangedShop;
         }
-        public bool ConsumeToken()
-        {
-            if (updateToken)
-            {
-                updateToken = false;
-                return true;
-            }
-            return false;
-        }
-        public void GainToken()
-        {
-            if (!updateToken)
-            {
-                updateToken = true;
-            }
-        }
-        public void AddFaction(Faction faction)
-        {
-            factions.Add(faction);
-        }
+
         public string GetName()
         {
             return name;
@@ -113,7 +103,30 @@ namespace Kenshi_DnD
         public bool HasLimbHospital() { return hasLimbHospital; }
         public bool HasContrabandMarket() { return hasContrabandMarket; }
         public bool HasRangedShop() { return hasRangedShop; }
-
+        // Adds a faction
+        public void AddFaction(Faction faction)
+        {
+            factions.Add(faction);
+        }
+        // Sets the token to false if is true and returns true, else return false
+        public bool ConsumeToken()
+        {
+            if (updateToken)
+            {
+                updateToken = false;
+                return true;
+            }
+            return false;
+        }
+        // Sets the token to true if is null
+        public void GainToken()
+        {
+            if (!updateToken)
+            {
+                updateToken = true;
+            }
+        }
+        // Updates the bar contents
         public void GoToBar(Adventure myAdventure, Random rnd)
         {
             //This makes 20 the max number of possible heroes, as max relations is 100
@@ -126,6 +139,7 @@ namespace Kenshi_DnD
                 for (int i = 0; i < numberOfHeroes; i++)
                 {
                     int experience = rnd.Next(0, 10);
+                    // Generates a hero with a variable ammount of points
                     switch (experience)
                     {
                         case < 5:
@@ -144,8 +158,6 @@ namespace Kenshi_DnD
                                 break;
                             }
                     }
-                    Debug.WriteLine(heroesInBar[i].GetNameAndTitle());
-
                 }
                 this.heroesInBar = heroesInBar;
             }
@@ -155,6 +167,7 @@ namespace Kenshi_DnD
             }
 
         }
+        // Updates the hospital contents
         public void GoToHospital(Adventure myAdventure, Random rnd)
         {
             limbHospital = new Limb[DEFAULT_LIMB_HOSPITAL_SIZE];
@@ -211,7 +224,6 @@ namespace Kenshi_DnD
                         }
                 }
                 Limb limb = allLimbs[rnd.Next(0, allLimbs.Length)].GetCopy();
-                Debug.WriteLine(limb.GetName());
                 limb.SetRarity(rarity);
                 limbHospital[i] = limb;
             }
@@ -220,6 +232,7 @@ namespace Kenshi_DnD
         {
             return limbHospital;
         }
+        // Calculates the cost of sleeping in bar, 10 cats per hurt hero, if no one is hurt, then 10 cats
         public int GetSleepCost(Adventure myAdventure)
         {
             Hero[] heroes = myAdventure.GetHeroes();
@@ -241,6 +254,7 @@ namespace Kenshi_DnD
 
             return cost;
         }
+        // Each hero recovers 10 hp
         public void SleepInBar(Adventure myAdventure, int cost, Zone myZone)
         {
             if (!myAdventure.SpendIfHasEnough(cost))
@@ -260,20 +274,13 @@ namespace Kenshi_DnD
                     }
                 }
             }
-
-            Debug.WriteLine("Slept in bar, cost: " + cost);
-            for( int i = 0; i < myAdventure.GetAllRegions().Length; i += 1)
-            {
-                myAdventure.GetAllRegions()[i].GainToken();
-                myAdventure.GetAllRegions()[i].hasAccessToRangedShop = false;
-                myAdventure.GetAllRegions()[i].canBuyRangedItems = true;
-            }
             
         }
         public Hero[] GetHeroesInBar()
         {
             return heroesInBar;
         }
+        // Updates the items in the shop
         public void GoToShop(Adventure myAdventure, Random rnd)
         {
             Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
@@ -332,9 +339,9 @@ namespace Kenshi_DnD
         }
         public Item[] GetShop()
         {
-            Debug.WriteLine("Shop returned !");
             return shop;
         }
+        // Updates the items in the contraband shop
         public void GoToContrabandMarket(Adventure myAdventure, Random rnd)
         {
             Item[] itemsInContraband = new Item[DEFAULT_SHOP_SIZE];
@@ -379,10 +386,10 @@ namespace Kenshi_DnD
 
                 itemsInContraband[i] = itemInContraband.GetCopy();
                 itemsInContraband[i].UpgradeRarity(rarity);
-                Debug.WriteLine(itemsInContraband[i].GetName());
             }
             this.contrabandMarket = itemsInContraband;
         }
+        // Updates items in ranged shop
         public void GoToRangedShop(Adventure myAdventure, Random rnd)
         {
             Item[] itemsInShop = new Item[DEFAULT_SHOP_SIZE];
@@ -450,7 +457,7 @@ namespace Kenshi_DnD
             Debug.WriteLine("Contraband market returned !");
             return contrabandMarket;
         }
-      
+      // Tells if an item has already been obtained
         private bool HasAlreadyBeenObtained(Adventure myAdventure,Item item)
         {
             Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
@@ -469,6 +476,7 @@ namespace Kenshi_DnD
             }
             return false;
         }
+        // Gets the average relations minus animals
         public int GetRelations()
         {
             int relations = 0;
@@ -485,11 +493,10 @@ namespace Kenshi_DnD
                     hasAnimals = true;
                 }
             }
-            Debug.WriteLine(relations / (factions.Count -
-                (hasAnimals ? 1 : 0)));
             return relations / (factions.Count - 
                 (hasAnimals ? 1 : 0));
         }
+        // Generates a random hero with random stats, race, subrace, name, title, background....
         private Hero GenerateRandomHero(Adventure myAdventure,Random rnd,Competency.StartCompetency competency)
         {
             int points = 3;
@@ -576,6 +583,7 @@ namespace Kenshi_DnD
             Hero hero = new Hero(name, title, background, bruteForce, dexterity, resistance, agility, level, race, subrace, GenerateLimbs(), competency);
             return hero;
         }
+        // Generates default limbs
         private Limb[] GenerateLimbs()
         {
             Limb[] limbs = new Limb[4];
@@ -586,6 +594,7 @@ namespace Kenshi_DnD
             }
             return limbs;
         }
+        // Override of the method to string, returns the commerces of the region, all relations and hostilities of the factions
         public override string ToString()
         {
             string factionInfo = "";
@@ -597,7 +606,8 @@ namespace Kenshi_DnD
             }
 
 
-            return description + "\n" +
+            return name + "\n" +
+                description + "\n" +
                    ((hasBar) ? ("Bar\n") : ("")) +
                    ((hasShop) ? ("Tienda general\n") : ("")) +
                    ((hasLimbHospital) ? ("Mecánico de extremidades\n") : ("")) +

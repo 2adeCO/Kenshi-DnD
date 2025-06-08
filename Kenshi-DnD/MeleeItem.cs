@@ -1,7 +1,7 @@
 ﻿namespace Kenshi_DnD
 {
-    [Serializable]
     // Item which is melee, which can be consumable or not
+    [Serializable]
     class MeleeItem : Item
     {
         // If item can revive another player
