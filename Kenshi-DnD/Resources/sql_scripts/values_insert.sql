@@ -48,23 +48,23 @@ INSERT INTO regions(name, description, hasBar, hasShop, hasLimbHospital, hasCont
  (7,5);
  
  insert into region_faction(regionId,factionId) values
- -- Norte de la isla: Esclavistas, canibales
+ -- North of the island: Slavers, cannibals
  (1,4),
  (1,8),
- -- Nación sagrada: Nación sagrada, esclavistas,
+ -- Holy nation: Holy nation, slavers
  (2,1),
  (2,8),
- -- Ciudades unidas: Ciudades unidas, esclavistas, reino animal
+ -- United cities: United cities, slavers, animal kingdom
  (3,2),
  (3,6),
  (3,8),
- -- Rio del enjambre del oeste: Enjambre del oeste, reino animal
+ -- Western hive river: Western hive, animal kingdom
  (4,5),
  (4,6),
- -- Reino Shek: Reino shek, bandidos famélicos
+ -- Shek kingdom: Shek kingdom, starving bandits
  (5,3),
  (5,7),
- -- Pantano: Reino animal, bandidos famélicos
+ -- Pantano: Animal kingdom, starving bandits
  (6,6),
  (6,7);
  
@@ -313,48 +313,48 @@ INSERT INTO limbs (name,value, stats_id) VALUES
 
 
 INSERT INTO enemies (factionId, name, health, strength, resistance, agility, immunity, xp, maxCatDrop, canDropItem) VALUES
--- Reino Animal (6)
+-- Animal kingdom (6)
 (6, 'Cabra', 3, 4, 1, 4, 'None', 25, 0, false),
 (6, 'Garral Joven', 6, 5, 3, 8, 'ResistantToMelee', 75, 0, false),
 (6, 'Bicho de las Dunas', 5, 4, 3, 6, 'ResistantToBoth', 100, 0, false),
 (6, 'Perro huesudo', 4, 3, 2, 6, 'None', 60, 0, false),
 (6, 'Garral', 6, 6, 4, 7, 'ImmuneToMelee', 150, 0, false),
 
--- Caníbales (4)
+-- Cannibals (4)
 (4, 'Caníbal Desnutrido', 3, 2, 2, 5, 'None', 50, 50, true),
 (4, 'Caníbal Cazador', 4, 3, 2, 6, 'None', 75, 75, true),
 (4, 'Chamán Caníbal', 5, 2, 3, 4, 'ResistantToRanged', 120, 100, true),
 (4, 'Jefe Caníbal', 6, 5, 4, 5, 'ResistantToBoth', 250, 200, true),
 (4, 'Caníbal Loco', 4, 4, 2, 6, 'None', 90, 80, true),
 
--- Bandidos Famélicos (7)
+-- Starving bandits (7)
 (7, 'Bandido Famélico', 2, 2, 2, 5, 'None', 40, 30, true),
 (7, 'Bandido Famélico Fuerte', 3, 3, 2, 5, 'None', 60, 50, true),
 (7, 'Líder Bandido Famélico', 3, 3, 3, 5, 'None', 80, 75, true),
 
--- La Nación Sagrada (1)
+-- Holy nation (1)
 (1, 'Recluta de Okran', 4, 3, 3, 4, 'None', 300, 300, true),
 (1, 'Fanático de Okran', 4, 4, 3, 5, 'None', 400, 400, true),
 (1, 'Paladín Sagrado', 6, 6, 4, 4, 'ResistantToBoth', 1000, 1000, true),
 (1, 'Inquisidor', 8, 7, 5, 3, 'ImmuneToRanged', 2000, 2000, true),
 
--- Ciudades Unidas (2)
+-- United cities (2)
 (2, 'Soldado de las Ciudades Unidas', 5, 5, 4, 5, 'ResistantToMelee', 800, 800, true),
 (2, 'Guardia de Seguridad', 6, 6, 4, 4, 'ImmuneToMeleeAndResistantToRanged', 1000, 1200, true),
 (2, 'Oficial de Patrulla', 6, 6, 4, 4, 'ResistantToBoth', 950, 1000, true),
 
--- Reino Shek (3)
+-- Shek kingdom (3)
 (3, 'Guerrero Shek', 5, 6, 5, 5, 'ResistantToBoth', 800, 1000, true),
 (3, 'Veterano Shek', 6, 6, 5, 5, 'ResistantToBoth', 1000, 1200, true),
 (3, 'Campeón Shek', 6, 7, 6, 4, 'ImmuneToMelee', 1500, 1500, true),
 
--- Enjambre del Oeste (5)
+-- Western hive (5)
 (5, 'Errante del Enjambre', 3, 3, 3, 6, 'None', 200, 100, true),
 (5, 'Guerrero del Enjambre', 4, 5, 4, 7, 'ResistantToRanged', 400, 300, true),
 (5, 'Príncipe del Enjambre', 5, 4, 4, 6, 'None', 500, 400, true),
 (5, 'Artillero del Enjambre', 3, 3, 3, 5, 'None', 350, 250, true),
 
--- Esclavistas (8)
+-- Slavers (8)
 (8, 'Cazador Esclavista', 4, 4, 3, 6, 'None', 600, 500, true),
 (8, 'Mercader Esclavista', 3, 3, 2, 4, 'None', 300, 400, true),
 (8, 'Capataz Esclavista', 5, 5, 3, 5, 'ImmuneToRanged', 1000, 800, true),
