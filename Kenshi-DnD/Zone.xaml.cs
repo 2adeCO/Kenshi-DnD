@@ -1,44 +1,49 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Kenshi_DnD
 {
-    /// <summary>
-    /// Lógica de interacción para Zone.xaml
-    /// </summary>
-    [Serializable]
+    // User control that represents a zone and its functionalities. - Santiago Cabrero
     public partial class Zone : UserControl
     {
+        // Mainwindow
         MainWindow mainWindow;
+        // Page controller
         ContentControl controller;
+        // All cursors
         Cursor[] cursors;
+        // Random 
         Random rnd;
+        // Current adventure
         Adventure myAdventure;
+        // Region it's representing
         Region region;
-
+        // Combobox that holds factions of the region to fight, if the player chooses to
         ComboBox factionToFight;
-
+        // Heroes in this bar
         Hero[] heroesInBar;
+        // Selected hero
         Button selectedHeroButton;
 
+        // Items in this shop
         Item[] itemsInShop;
+        // Selected item to buy
         Button selectedShopItemButton;
-
+        // Selected item to sell on shop
         Button selectedItemToSellButton;
-
+        // Items in contraban market
         Item[] itemsInContrabandMarket;
-
+        // Items in ranged shop
         Item[] itemsInRangedShop;
-
+        // Limbs in limb hospital
         Limb[] limbsInHospital;
 
-
+        // Prices
         const int CONTRABAND_MARKET_ACCESS_PRICE = 1000;
         const int RANGED_SHOP_ACCESS_PRICE = 500;
+        // Contructor
         public Zone(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Region currentRegion)
         {
             InitializeComponent();
@@ -48,23 +53,30 @@ namespace Kenshi_DnD
             this.rnd = rnd;
             this.myAdventure = myAdventure;
             this.region = currentRegion;
+            // Updates the cats on the screen
             UpdateCats();
+            // Updates the player's faction name
             PlayerFaction.Inlines.AddRange(mainWindow.DecorateText(myAdventure.GetFactionName()));
+            // Makes the player grid background the faction's color
             PlayerGrid.Background = mainWindow.GetBrushByNum(myAdventure.GetColor());
+            // Puts the squad in a combobox
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys.ToList();
+            // Selects the current one
             SquadAlignmentsCombobox.SelectedItem = myAdventure.GetCurrentSquadName();
-            Debug.WriteLine("Selected item: " + (string)SquadAlignmentsCombobox.SelectedItem);
+            // Updates player and inventory grids
             UpdatePlayerGrid();
             UpdateInventoryGrid();
-
+            // Creates the actions, for example, go to bar and go to ranged shop
             CreateActions();
-
+            // Shows the price of sleeping at the bar
             SleepButton.Content = mainWindow.GenerateTextblock("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@");
 
 
         }
+        // Creates the actions the player can do here
         private void CreateActions()
         {
+            // Colors the region's name depending on relations with the residents
             int relations = region.GetRelations();
             switch (relations)
             {
@@ -89,6 +101,7 @@ namespace Kenshi_DnD
             ZoneName.Inlines.AddRange(mainWindow.DecorateText("@" + relations + "@" + region.GetName() + "@"));
             ZoneName.ToolTip = mainWindow.ToolTipThemer(region.GetDescription());
 
+            // If true, will reload shops
             bool reloadShops = region.ConsumeToken();
 
             if (region.HasBar())
@@ -205,15 +218,14 @@ namespace Kenshi_DnD
             buttonFight.Click += LookForAFight;
             stackPanel.Children.Add(buttonFight);
 
-
+            // Adds the factions of the region
             ComboBox comboBox = new ComboBox();
             comboBox.Margin = new Thickness(4, 0, 4, 0);
             comboBox.Height = 30;
             for (int i = 0; i < region.GetFactions().Count; i += 1)
             {
-                TextBlock textBlock = new TextBlock();
+                TextBlock textBlock = mainWindow.GenerateTextblock(region.GetFactions()[i].GetFactionName());
                 textBlock.Tag = region.GetFactions()[i];
-                textBlock.Inlines.AddRange(mainWindow.DecorateText(region.GetFactions()[i].GetFactionName()));
                 comboBox.Items.Add(textBlock);
             }
             comboBox.SelectedIndex = 0;
@@ -222,6 +234,7 @@ namespace Kenshi_DnD
             ActionsPanel.Children.Add(stackPanel);
             comboBox.SelectionChanged += LookFaction;
         }
+        // Buttons that enter a shop and update the log
         private void GoToBarButton(object sender, EventArgs e)
         {
             UpdateLog("Entras en el bar local");
@@ -254,11 +267,13 @@ namespace Kenshi_DnD
             }
             GoToRangedShop(sender, e);
         }
+        // Tells the info of the faction when the selection of the factionToFight combobox is changed
         private void LookFaction(object sender, EventArgs e)
         {
             Faction faction = (Faction)((TextBlock)factionToFight.SelectedItem).Tag;
             UpdateLog(faction.GetFactionDescription());
         }
+        // Enters a fight with the selected faction
         private void LookForAFight(object sender, EventArgs e)
         {
             UpdateLog("Buscas bronca por la zona..");
@@ -267,11 +282,13 @@ namespace Kenshi_DnD
             faction.AddOrSubtractRelation(-20);
             controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, myAdventure,mainWindow.SqlGenerateMonsters(myAdventure,faction,rnd));
         }
+        // Adds texts to the log
         public void UpdateLog(string message)
         {
             InfoLog.Inlines.AddRange(mainWindow.DecorateText(message + "\n"));
             InfoLogScroll.ScrollToEnd();
         }
+        // Creates the bar view
         private void GoToBar(object sender, EventArgs e)
         {
             CloseCurrentGrid(null, null);
@@ -330,7 +347,7 @@ namespace Kenshi_DnD
             }
 
         }
-
+        // Creates the shop view
         private void GoToShop(object sender, EventArgs e)
         {
             CloseCurrentGrid(null, null);
@@ -386,6 +403,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Sells the selected item
         private void SellItem(object sender, EventArgs e) 
         { 
             if(selectedItemToSellButton == null)
@@ -404,7 +422,7 @@ namespace Kenshi_DnD
             UpdateCats();
             UpdateInventoryGrid();
         }
-
+        // Selects an item to sell
         private void SelectSellItem(object sender, EventArgs e)
         {
             selectedItemToSellButton = (Button)sender;
@@ -414,6 +432,7 @@ namespace Kenshi_DnD
             UpdateLog("Ponderas la posibilidad de vender " + selectedItem.GetName() + " por @2@" + selectedItem.GetResellValue() + "$@");
             UpdateInventoryGrid();
         }
+        // Creates the hospital view
         private void GoToLimbHospital(object sender, EventArgs e)
         {
             CloseCurrentGrid(null,null);
@@ -447,7 +466,6 @@ namespace Kenshi_DnD
             {
                 for (int i = 0; i < limbsInHospital.Length; i++)
                 {
-                    Debug.WriteLine("Limb: " + limbsInHospital[i].GetName());
                     if (limbsInHospital[i] != null)
                     {
                         RowDefinition row = new RowDefinition();
@@ -472,6 +490,7 @@ namespace Kenshi_DnD
                 }
             }
         }
+        // Selects a limb
         private void SelectLimb(object sender,EventArgs e)
         {
             if (selectedShopItemButton != null)
@@ -490,6 +509,7 @@ namespace Kenshi_DnD
             selectedShopItemButton.BorderThickness = new Thickness(3);
             selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334455"));
         }
+        // Puts the limb on the selected amputee
         private void PutLimb(object sender, EventArgs e)
         {
             ComboBoxItem comboItem = (ComboBoxItem)HeroComboBox.SelectedItem;
@@ -509,6 +529,7 @@ namespace Kenshi_DnD
             GoToLimbHospital(null,null);
             UpdatePlayerGrid();
         }
+        // Creates a view of the contraband market
         private void GoToContrabandMarket(object sender, EventArgs e)
         {
             CloseCurrentGrid(null, null);
@@ -556,6 +577,7 @@ namespace Kenshi_DnD
 
             }
         }
+        // Fills the ammo of all the ranged items
         private void FillAmmo(object sender, EventArgs e)
         {
             if (!myAdventure.SpendIfHasEnough((int)FillAmmoButton.Tag))
@@ -570,6 +592,7 @@ namespace Kenshi_DnD
             myAdventure.GetInventory().FillAmmo();
             FillAmmoButton.Visibility = Visibility.Collapsed;
         }
+        // Creates a view of ranged shop
         private void GoToRangedShop(object sender, EventArgs e)
         {
             // Closes all other grids
@@ -642,7 +665,7 @@ namespace Kenshi_DnD
                             Margin = new Thickness(10, 20, 30, 20),
                             MinHeight = 40,
                             Padding = new Thickness(5),
-                            Background = new SolidColorBrush(Color.FromRgb(50, 50, 50)), // Oscuro, sucio
+                            Background = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
                             Foreground = Brushes.WhiteSmoke,
                             ToolTip = mainWindow.HeaderToolTipThemer(itemsInRangedShop[i].GetName(), itemsInRangedShop[i].ItemInfo())
                         };
@@ -661,8 +684,6 @@ namespace Kenshi_DnD
                         Grid.SetRow(button, i);
                         RangedShopItems.Children.Add(button);
 
-                        Debug.WriteLine("Button added");
-
                     }
                 }
 
@@ -670,6 +691,7 @@ namespace Kenshi_DnD
             }
 
         }
+        // Selects a ranged item
         private void SelectRangedItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton != null)
@@ -691,7 +713,7 @@ namespace Kenshi_DnD
             selectedShopItemButton.BorderThickness = new Thickness(3);
             selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334455"));
         }
-
+        // Buy the selected ranged item
         private void BuyRangedItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton == null)
@@ -736,9 +758,8 @@ namespace Kenshi_DnD
             region.SetCanBuyRangedItems(false);
             region.GoToRangedShop(myAdventure, rnd);
             GoToRangedShop(null,null);
-            Debug.WriteLine("Ranged item bought");
         }
-
+        // Buys the access to the ranged shop
         private void AccessRangedShop(object sender, EventArgs e)
         {
             // If the player has enough money, access the ranged shop
@@ -766,7 +787,7 @@ namespace Kenshi_DnD
             // Generate the item buttons in the shop
             GoToRangedShop(null, null);
         }
-
+        // Selects a contraband item
         private void SelectContrabandItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton != null)
@@ -788,7 +809,7 @@ namespace Kenshi_DnD
             selectedShopItemButton.BorderThickness = new Thickness(3);
             selectedShopItemButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B3B2A")); 
         }
-
+        // Buys a contraband item
         private void BuyContrabandItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton == null)
@@ -832,8 +853,8 @@ namespace Kenshi_DnD
             AccessContrabandMarketButton.Content = mainWindow.GenerateTextblock("@912@Ahora vete.@\n@111@A no ser de que tengas más cats(" + CONTRABAND_MARKET_ACCESS_PRICE + ") de sobra@.");
             UpdateLog("El 'mercader' te señala la salida");
 
-            Debug.WriteLine("Contraband item bought");
         }
+        // Buys acess to contraband market
         private void AccessContrabandMarket(object sender, EventArgs e)
         {
             if (!myAdventure.SpendIfHasEnough(CONTRABAND_MARKET_ACCESS_PRICE))
@@ -852,6 +873,7 @@ namespace Kenshi_DnD
             itemsInContrabandMarket = region.GetContrabandMarket();
             GoToContrabandMarket(null, null);
         }
+        // Selects a shop item
         private void SelectShopItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton != null)
@@ -871,6 +893,7 @@ namespace Kenshi_DnD
             selectedShopItemButton.BorderThickness = new Thickness(3);
             selectedShopItemButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
         }
+        // Buys the selected shop item
         private void BuyShopItem(object sender, EventArgs e)
         {
             if (selectedShopItemButton == null)
@@ -907,7 +930,6 @@ namespace Kenshi_DnD
 
             if (ShopItems.Children.Count == 0)
             {
-                Debug.WriteLine("Shop is empty");
                 ShopItems.RowDefinitions.Clear();
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(1, GridUnitType.Star);
@@ -919,10 +941,8 @@ namespace Kenshi_DnD
                 Grid.SetRow(textBlock, 0);
                 ShopItems.Children.Add(textBlock);
             }
-
-
-            Debug.WriteLine("Item bought");
         }
+        // Selects a hero to hire
         private void SelectHero(object sender, EventArgs e)
         {
 
@@ -949,6 +969,7 @@ namespace Kenshi_DnD
             selectedHeroButton.Background = new SolidColorBrush((Color)(ColorConverter.ConvertFromString("#D2B48C")));
 
         }
+        // Hires selected hero
         private void HireHero(object sender, EventArgs e)
         {
             if (selectedHeroButton == null)
@@ -982,8 +1003,8 @@ namespace Kenshi_DnD
             selectedHeroButton = null;
 
             UpdateLog("¡" +selectedHero.GetNameAndTitle() + " se unió a la aventura!");
-            Debug.WriteLine("Hired");
         }
+        // Sleeps in bar
         private void SleepInBar(object sender, EventArgs e)
         {
             // Checks if the player has enough money to sleep in the bar
@@ -1000,8 +1021,8 @@ namespace Kenshi_DnD
             SleepButton.Content = mainWindow.GenerateTextblock("Descansar en el bar\n@2@" + region.GetSleepCost(myAdventure) + "$@");
             UpdatePlayerGrid();
 
-            Debug.WriteLine("Slept in bar");
         }
+        // Updates the inventory grid
         private void UpdateInventoryGrid()
         {
             InventoryItems.Children.Clear();
@@ -1014,7 +1035,7 @@ namespace Kenshi_DnD
             AddItemsToInventoryGrid(meleeItems);
             AddItemsToInventoryGrid(rangedItems);
         }
-
+        // Adds the items to the inventory
         private void AddItemsToInventoryGrid(Item[] items)
         {
             for (int i = 0; i < items.Length; i++)
@@ -1068,7 +1089,7 @@ namespace Kenshi_DnD
                 linearBrush.GradientStops.Add(new GradientStop(mainWindow.GetBrushByNum(currentItem.GetRarityColor()).Color, 1));
 
                 button.Background = linearBrush;
-
+                // If item is clicked, select for selling
                 if (region.HasShop())
                 {
                     button.Click += SelectSellItem;
@@ -1098,7 +1119,7 @@ namespace Kenshi_DnD
                 InventoryItems.Children.Add(border);
             }
         }
-
+        // Opens the inventory
         private void OpenInventory(object sender, EventArgs e)
         {
             if (InventoryScroll.Visibility == Visibility.Visible)
@@ -1111,6 +1132,7 @@ namespace Kenshi_DnD
             InventoryButton.Content = "Cerrar inventario";
             UpdateInventoryGrid();
         }
+        // Updates the inventory grid
         private void UpdatePlayerGrid()
         {
             PlayerSquad.Children.Clear();
@@ -1198,6 +1220,7 @@ namespace Kenshi_DnD
                 PlayerSquad.Children.Add(border);
             }
         }
+        // Upgrades the selected stat
         private void LevelHero(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -1209,6 +1232,7 @@ namespace Kenshi_DnD
             hero.UpgradeStat(statToUpgrade);
             UpdatePlayerGrid();
         }
+        // Opens the squad editor
         private void OpenSquadEditor(object sender, EventArgs e)
         {
             if (SquadEditor.Visibility == Visibility.Visible)
@@ -1221,6 +1245,7 @@ namespace Kenshi_DnD
             SquadEditorButton.Content = "Cerrar editor";
             UpdateSquadEditor(sender, e);
         }
+        // Updates the squad editor
         private void UpdateSquadEditor(object sender, EventArgs e)
         {
             SquadEditorItems.Children.Clear();
@@ -1235,8 +1260,6 @@ namespace Kenshi_DnD
             {
                 if (heroes[index] != null)
                 {
-                    Debug.WriteLine("col created");
-
                     ColumnDefinition col = new ColumnDefinition();
                     col.Width = new GridLength(1, GridUnitType.Star);
 
@@ -1260,7 +1283,7 @@ namespace Kenshi_DnD
                         button.Background = new SolidColorBrush(Colors.WhiteSmoke);
                     }
                     button.Click += AddOrRemoveFromSquad;
-                    button.MouseRightButtonUp += UnhireHero;
+                    button.MouseRightButtonUp += FireHero;
                     button.BorderBrush = new SolidColorBrush(Colors.Black);
                     button.BorderThickness = new Thickness(1);
                     button.Tag = heroes[index];
@@ -1289,7 +1312,7 @@ namespace Kenshi_DnD
                             button2.Background = new SolidColorBrush(Colors.WhiteSmoke);
                         }
                         button2.Click += AddOrRemoveFromSquad;
-                        button2.MouseRightButtonUp += UnhireHero;
+                        button2.MouseRightButtonUp += FireHero;
                         button2.BorderBrush = new SolidColorBrush(Colors.Black);
                         button2.BorderThickness = new Thickness(1);
                         button2.Tag = heroes[index];
@@ -1310,7 +1333,8 @@ namespace Kenshi_DnD
 
             }
         }
-        private void UnhireHero(object sender, EventArgs e)
+        // Fires a hero
+        private void FireHero(object sender, EventArgs e)
         {
             Button button = (Button)sender;
             Hero hero = (Hero)button.Tag;
@@ -1334,6 +1358,7 @@ namespace Kenshi_DnD
             }
 
         }
+        // Removes or adds a hero from the current squad
         private void AddOrRemoveFromSquad(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -1362,6 +1387,7 @@ namespace Kenshi_DnD
             UpdateSquadEditor(null, null);
             UpdatePlayerGrid();
         }
+        // Creates a new squad, as a copy of the current one 
         private void CreateSquad(object sender, EventArgs e)
         {
 
@@ -1378,11 +1404,11 @@ namespace Kenshi_DnD
 
             SquadAlignmentsCombobox.ItemsSource = null;
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
-            Debug.WriteLine("selected item : " + myAdventure.GetCurrentSquadName());
             SquadAlignmentsCombobox.SelectedItem = squadName;
             UpdatePlayerGrid();
             UpdateSquadEditor(null, null);
         }
+        // Deletes current squad
         private void DeleteSquad(object sender, EventArgs e)
         {
             if (myAdventure.GetSquadCount() == 1)
@@ -1401,6 +1427,7 @@ namespace Kenshi_DnD
             UpdatePlayerGrid();
             UpdateSquadEditor(null, null);
         }
+        // Changes the current squad
         private void ChangeSquad(object sender, EventArgs e)
         {
             if (SquadAlignmentsCombobox.ItemsSource != null)
@@ -1412,15 +1439,18 @@ namespace Kenshi_DnD
                 UpdateSquadEditor(null, null);
             }
         }
+        // Exits the region
         private void GoToMap(object sender, EventArgs e)
         {
             controller.Content = new Map(mainWindow, controller, cursors, rnd, myAdventure);
         }
+        // Updates the cats number on the screen
         private void UpdateCats()
         {
             PlayerCats.Inlines.Clear();
             PlayerCats.Inlines.AddRange(mainWindow.DecorateText("@218@" + myAdventure.GetCats() + "$@"));
         }
+        // Closes the opened grid
         private void CloseCurrentGrid(object sender, EventArgs e)
         {
             ShopGrid.Visibility = Visibility.Collapsed;
@@ -1429,9 +1459,9 @@ namespace Kenshi_DnD
             RangedShopGrid.Visibility = Visibility.Collapsed;
             ContrabandMarketGrid.Visibility = Visibility.Collapsed;
         }
+        // Only lets number or letters on a textbox
         private void OnlyNumsAndLetters(object sender, EventArgs e)
         {
-            Debug.WriteLine("Text changed");
             TextBox textBox = (TextBox)sender;
             int caretIndex = -1;
             string text = textBox.Text;
@@ -1469,6 +1499,7 @@ namespace Kenshi_DnD
 
             UpdateTextbox(result);
         }
+        // Updates the squad name of the current squad
         private void UpdateTextbox(string result)
         {
             string squadKey = (string)SquadAlignmentsCombobox.SelectedItem;
@@ -1476,10 +1507,7 @@ namespace Kenshi_DnD
             Hero[] squadToChangeName = myAdventure.GetSavedSquads()[squadKey];
             myAdventure.DeleteSquad(squadKey);
             myAdventure.CreateSquad(result);
-            for (int i = 0; i < myAdventure.GetSquadCount(); i += 1)
-            {
-                Debug.WriteLine(myAdventure.GetSavedSquads().ElementAt(i));
-            }
+            
             SquadAlignmentsCombobox.ItemsSource = null;
             SquadAlignmentsCombobox.ItemsSource = myAdventure.GetSavedSquads().Keys;
             SquadAlignmentsCombobox.SelectedItem = result;

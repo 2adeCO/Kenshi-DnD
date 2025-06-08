@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
-    // Has each race's subraces in a string, used to apply correct subraces to random heroes
+    // Has each race's subraces in a string, used to apply correct subraces to random heroes. - Santiago Cabrero
     class RacesDictionary
     {
         public static Dictionary<string, List<string>> RacesAndSubraces = new Dictionary<string, List<string>>

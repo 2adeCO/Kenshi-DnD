@@ -1,20 +1,12 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Automation;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace Kenshi_DnD
 {
+    // User control that lets the player fight and display info about the combat - Santiago Cabrero
     public partial class CombatWindow : UserControl
     {
         MainWindow mainWindow;
@@ -662,13 +654,11 @@ namespace Kenshi_DnD
             TreeViewItem selectedItem = (TreeViewItem)sender;
             if (selectedItem != null && selectedItem.Tag is Item item)
             {
-                Debug.WriteLine("Selected item: " + item.GetName());
                 if (currentAttacker is Hero)
                 {
                     Hero currentHero = (Hero)currentAttacker;
                     if (IsParentX(selectedItem, HeroItems))
                     {
-                        Debug.WriteLine("Trying to remove item");
                         RemoveItemFromHero(currentHero, item);
                     }
                     else

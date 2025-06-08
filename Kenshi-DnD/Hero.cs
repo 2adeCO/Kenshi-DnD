@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Security.RightsManagement;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
+    // Class that represents a hero that the player can hire and fight with. - Santiago Cabrero
     [Serializable]
     public class Hero : ITurnable
     {
@@ -252,7 +250,6 @@ namespace Kenshi_DnD
         }
         public bool IsHired()
         {
-            Debug.WriteLine("Hired? : " + hired);
             return hired;
         }
         public int GetXpPoints()
@@ -310,7 +307,6 @@ namespace Kenshi_DnD
                 {
                     if (limbs[iterator].GetBeingUsed())
                     {
-                        Debug.WriteLine("Limb found");
                         limbs[iterator].SetBeingUsed(false);
                         num -= 1;
                     }
@@ -486,7 +482,6 @@ namespace Kenshi_DnD
             {
                 if (limbs[i] != null)
                 {
-                    Debug.WriteLine("Has Limb: " + limbs[i].GetName());
                     atLeastOne = true;
                 }
             }
@@ -496,7 +491,6 @@ namespace Kenshi_DnD
                 do
                 {
                     int randomIndex = rnd.Next(0, limbs.Length);
-                    Debug.WriteLine("Random limb index of "+ limbs.Length + " : "+ randomIndex);
                     if (limbs[randomIndex]!= null)
                     {
                         randomLimb = limbs[randomIndex];

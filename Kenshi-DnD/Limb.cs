@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    // Class that represents a limb of a hero, which modifies their stats and is used for holding items
+    // Class that represents a limb of a hero, which modifies their stats and is used for holding items. - Santiago Cabrero
     [Serializable]
     public class Limb : StatModifier
     {

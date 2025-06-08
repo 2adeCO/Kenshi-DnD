@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    // Item which is melee, which can be consumable or not
+    // Item which is melee, which can be consumable or not. - Santiago Cabrero
     [Serializable]
     class MeleeItem : Item
     {

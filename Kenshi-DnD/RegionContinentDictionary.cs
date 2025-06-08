@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
+    // Dictionary used to generate the ID of the adventure by the CultureInfo of the system. - Santiago Cabrero
     public class RegionContinentDictionary
     {
         public static Dictionary<string, string> zonesToContinents = new Dictionary<string, string>
         {
-             // América del Norte
+             // North America
             { "US", "1" },
             { "CA", "1" },
             { "MX", "1" },
@@ -21,7 +16,7 @@ namespace Kenshi_DnD
             { "JM", "1" },
             { "HT", "1" },
 
-            // América del Sur
+            // South America
             { "BR", "4" },
             { "AR", "4" },
             { "CO", "4" },
@@ -34,7 +29,7 @@ namespace Kenshi_DnD
             { "BO", "4" },
             { "GY", "4" },
 
-            // Europa
+            // Europe
             { "FR", "0" },
             { "DE", "0" },
             { "ES", "0" },
@@ -70,7 +65,7 @@ namespace Kenshi_DnD
             { "PH", "2" },
             { "MY", "2" },
             { "VN", "2" },
-            // Oceanía
+            // Oceania
             { "AU", "2" },
             { "NZ", "2" },
             { "PG", "2" },
@@ -79,7 +74,7 @@ namespace Kenshi_DnD
             { "VU", "2" },
             { "KI", "2" },
 
-            // África
+            // Africa
             { "ZA", "3" },
             { "NG", "3" },
             { "KE", "3" },

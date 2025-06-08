@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
+    // These are used by enemies to cut in half or block hero's damage. - Santiago Cabrero
     public class Immunities
     {
-        // These are used by enemies to cut in half or block hero's damage
         public enum Immunity
         {
             None,

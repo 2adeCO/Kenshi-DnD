@@ -4,19 +4,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Text.Json;
-using System.Linq;
 using System.Xml.Linq;
-using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace Kenshi_DnD
 {
-    // Menu of the game, used to create or access adventures, change configuration of Sql connection, or leave the game
+    // Menu of the game, used to create or access adventures, change configuration of Sql connection, or leave the game. - Santiago Cabrero
     public partial class Menu : UserControl
     {
         // Window
@@ -226,7 +221,6 @@ namespace Kenshi_DnD
 
             if (currentAdventureIsValid)
             {
-                Debug.WriteLine((factionColor.SelectedIndex + 1));
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu facción se llama @" + 
                     (factionColor.SelectedIndex + 1) + "@" + factionName.Text + "@\n"));
 
@@ -238,7 +232,7 @@ namespace Kenshi_DnD
 
                 
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Recuerda, es un mundo hostil al que te enfrentas. " +
-                    "Puedes recibir golpes que te dejen paralítico, morirte de hambre, ser secuestrado... \n" +
+                    "Puedes recibir golpes que te dejen paralítico, ser rechazado por pobre, o por tus creencias... \n" +
                     "Elige bien a tus compañeros y mejor a tus enemigos" +
                     "\nProcede con cuidado en el mundo de Kenshi_DnD..."));
                 MakeAdventureButton.IsEnabled = true;
@@ -292,8 +286,6 @@ namespace Kenshi_DnD
             Hero hero = new Hero((int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,
                     GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs());
             double width = statsGrid.ActualWidth;
-
-            Debug.WriteLine(width);
 
             statsGrid.Children.Clear();
             statsGrid.ColumnDefinitions.Clear();
@@ -477,7 +469,7 @@ namespace Kenshi_DnD
                         if (!meleeItem.BreaksOnUse())
                         {
                             meleeItem = (MeleeItem)meleeItem.GetCopy();
-                            meleeItem.SetRarity(Rarity.Rarities.Junk);
+                            meleeItem.UpgradeRarity(Rarity.Rarities.Junk);
                             randomItemAtStart = meleeItem;
                         }
                     }
@@ -669,7 +661,7 @@ namespace Kenshi_DnD
                 "Horas jugadas: " + adventure.GetTimePlayed() + "\n" +
                 "Fecha de empiece: " + adventure.GetStartDate() + "\n" +
                 "Dado: " + adventure.GetDice().ToString() + "\n" +
-                "Cats: " + adventure.GetCats() + "$"));
+                "Cats: " + adventure.GetCats() + "$");
             button.HorizontalAlignment = HorizontalAlignment.Stretch;
             button.Background = linearBrush;
             button.Tag = adventure;
@@ -718,7 +710,6 @@ namespace Kenshi_DnD
                 reader = command.ExecuteReader();
                 reader.Read();
                 numberOfFactions = reader.GetInt32(0);
-                Debug.WriteLine("Number of factions: " + numberOfFactions);
                 reader.Close();
             
             
@@ -795,6 +786,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
             
@@ -823,7 +815,6 @@ namespace Kenshi_DnD
                 reader = command.ExecuteReader();
                 reader.Read();
                 numberOfItems = reader.GetInt32(0);
-                Debug.WriteLine("Number of items: " + numberOfItems);
                 reader.Close(); 
 
                 Item[] items = new Item[numberOfItems];
@@ -932,6 +923,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }
@@ -970,7 +962,6 @@ namespace Kenshi_DnD
                     reader.Read();
                     limbs[i] = new Limb(reader.GetString(0),reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4),
                         reader.GetInt32(5), reader.GetInt32(6));
-                    Debug.WriteLine(reader.GetString(0));
                 }
                 reader.Close();
                 connection.Close();
@@ -1015,6 +1006,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }
@@ -1050,8 +1042,6 @@ namespace Kenshi_DnD
                 for (int i = 0; i < numOfRegions; i += 1)
                 {
                     reader.Read();
-                    Debug.WriteLine(reader.GetString(1), reader.GetString(2),
-                        reader.GetBoolean(3), reader.GetBoolean(4), reader.GetBoolean(5), reader.GetBoolean(6), reader.GetBoolean(7));
                     regions[i] = new Region(reader.GetString(1), reader.GetString(2),
                         reader.GetBoolean(3),reader.GetBoolean(4),reader.GetBoolean(5),reader.GetBoolean(6),reader.GetBoolean(7));
                 }
@@ -1118,6 +1108,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }
@@ -1202,7 +1193,8 @@ namespace Kenshi_DnD
             }
             catch (XMLNotFoundException xmlError)
             {
-                MessageBox.Show(xmlError.Message);
+                MessageBox.Show(xmlError.Message); 
+                mainWindow.Close();
                 return null;
             }
         }
@@ -1257,8 +1249,6 @@ namespace Kenshi_DnD
                 {
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
 
-                    Faction[] factions = XmlGetFactions();
-
                     string[] names = xmlFile.Root.Elements("names").Select(n => n.Element("name").Value).ToArray();
 
                     return names;
@@ -1271,6 +1261,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }
@@ -1324,8 +1315,6 @@ namespace Kenshi_DnD
                 {
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
 
-                    Faction[] factions = XmlGetFactions();
-
                     string[] titles = xmlFile.Root.Elements("titles").Select(n => n.Element("title").Value).ToArray();
 
                     return titles;
@@ -1338,6 +1327,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }
@@ -1378,7 +1368,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close(); 
-                return XmlGetNames(); 
+                return XmlGetBackgrounds(); 
             }
             return backgrounds;
         }
@@ -1389,8 +1379,6 @@ namespace Kenshi_DnD
                 if (File.Exists("./Resources/xml/kenshidata.xml"))
                 {
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
-
-                    Faction[] factions = XmlGetFactions();
 
                     string[] backgrounds = xmlFile.Root.Elements("backgrounds").Select(n => n.Element("background").Value).ToArray();
 
@@ -1404,6 +1392,7 @@ namespace Kenshi_DnD
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                mainWindow.Close();
                 return null;
             }
         }

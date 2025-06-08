@@ -1,12 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Kenshi_DnD
 {
-    // Class that manages the combat between heroes and monsters
+    // Class that manages the combat between heroes and monsters. - Santiago Cabrero
     class Combat
     {
         // CombatWindow is the UI that shows the combat information
@@ -46,15 +42,14 @@ namespace Kenshi_DnD
             everyTurn = new List<Turn>();
             for (int i = 0; i < heroes.Length; i+=1)
             {
-                Debug.WriteLine("hero added to combat");
                 everyTurn.Add(new Turn(heroes[i]));
             }
             for (int i = 0; i < enemies.Length; i+=1)
             {
-                Debug.WriteLine("enemy added to combat");
                 everyTurn.Add(new Turn(enemies[i]));
             }
             turnOrder = new List<ITurnable>();
+            // Decides next 24 turns
             DecideNextNTurns(24);
             this.window = window;
         }
@@ -848,7 +843,6 @@ namespace Kenshi_DnD
             {
                 if (heroes[i].IsAlive())
                 {
-                    Debug.WriteLine("Victim counted " + i);
                     count+=1;
                 }
             }
@@ -863,7 +857,6 @@ namespace Kenshi_DnD
             {
                 if (heroes[i].IsAlive())
                 {
-                    Debug.WriteLine("People alive:" + i);
                     heroesToAttack[count] = heroes[i];
                     count += 1;
                 }
@@ -965,7 +958,7 @@ namespace Kenshi_DnD
             //Returns a copy of the item with its rarity
             itemToDrop = myAdventure.GetAllItems()[rnd.Next(0, myAdventure.GetAllItems().Length)];
             itemToDrop = itemToDrop.GetCopy();
-            itemToDrop.SetRarity(rarity);
+            itemToDrop.UpgradeRarity(rarity);
             return itemToDrop;
         }
         // Bubble sorts by agility 

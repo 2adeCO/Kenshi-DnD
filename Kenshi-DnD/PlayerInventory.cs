@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    // Class that saves all the player's items
+    // Class that saves all the player's items. - Santiago Cabrero
     [Serializable]
     public class PlayerInventory : Inventory
     {

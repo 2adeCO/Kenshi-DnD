@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Kenshi_DnD
 {
-    // Class that has info about regions, what they offer, and what they have
+    // Class that has info about regions, what they offer, and what they have. - Santiago Cabrero
     [Serializable]
     public class Region
     {
@@ -333,7 +328,6 @@ namespace Kenshi_DnD
 
                 itemsInShop[i] = itemInShop.GetCopy();
                 itemsInShop[i].UpgradeRarity(rarity);
-                Debug.WriteLine(itemsInShop[i].GetName());
             }
             this.shop = itemsInShop;
         }
@@ -442,19 +436,16 @@ namespace Kenshi_DnD
 
                 itemsInShop[i] = itemInShop.GetCopy();
                 itemsInShop[i].UpgradeRarity(rarity);
-                Debug.WriteLine(itemsInShop[i].GetName());
             }
             this.rangedShop = itemsInShop;
         }
         public Item[] GetRangedShop()
         {
-            Debug.WriteLine("Ranged shop returned !");
             return rangedShop;
         }
 
         public Item[] GetContrabandMarket()
         {
-            Debug.WriteLine("Contraband market returned !");
             return contrabandMarket;
         }
       // Tells if an item has already been obtained
@@ -485,7 +476,6 @@ namespace Kenshi_DnD
             {
                 if (factions[i].GetFactionName() != "@2@Reino Animal@")
                 {
-                    Debug.WriteLine(factions[i].GetFactionName() + " " + factions[i].GetRelation());
                     relations += factions[i].GetRelation();
                 }
                 else

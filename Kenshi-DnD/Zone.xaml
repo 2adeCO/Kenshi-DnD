@@ -182,13 +182,9 @@
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#4B2E2B" Offset="0.0"/>
-                            <!-- Madera oscura -->
                             <GradientStop Color="#8B5E3C" Offset="0.3"/>
-                            <!-- Cobre/ámbar -->
                             <GradientStop Color="#B38B59" Offset="0.6"/>
-                            <!-- Luz de vela -->
                             <GradientStop Color="#3C2F2F" Offset="1.0"/>
-                            <!-- Sombra ahumada -->
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid x:Name="BarActions" Grid.Column="0" >
@@ -228,13 +224,9 @@
                     <ScrollViewer.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#D2B48C" Offset="0.0"/>
-                            <!-- Madera clara / cuero gastado -->
                             <GradientStop Color="#EED8AE" Offset="0.3"/>
-                            <!-- Luz cálida de lámpara -->
                             <GradientStop Color="#F5E6C4" Offset="0.6"/>
-                            <!-- Reflejo dorado / polvo en el aire -->
                             <GradientStop Color="#C2A279" Offset="1.0"/>
-                            <!-- Sombra suave en madera clara -->
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
                     <Grid x:Name="BarItems" VerticalAlignment="Center">
@@ -311,26 +303,19 @@ Click="CloseCurrentGrid"/>
                 </ScrollViewer>
             </Grid>
 
-
-            <!-- Tienda -->
+            <!--Shop-->
             <Grid x:Name="ShopGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <!-- Para botones -->
                     <ColumnDefinition Width="*"/>
-                    <!-- Para el ScrollViewer -->
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#3E3E3E" Offset="0.0"/>
-                            <!-- Metal desgastado -->
                             <GradientStop Color="#6F5F4F" Offset="0.3"/>
-                            <!-- Cuero envejecido -->
                             <GradientStop Color="#A0835B" Offset="0.6"/>
-                            <!-- Arena del desierto -->
                             <GradientStop Color="#2B2B2B" Offset="1.0"/>
-                            <!-- Sombra de lona -->
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid x:Name="ShopActions" Grid.Column="0">
@@ -371,13 +356,9 @@ Click="CloseCurrentGrid"/>
                     <ScrollViewer.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#8B7D6B" Offset="0.0"/>
-                            <!-- Arena y cuero -->
                             <GradientStop Color="#BFAE9F" Offset="0.3"/>
-                            <!-- Sol filtrado por tela -->
                             <GradientStop Color="#D6C7B2" Offset="0.6"/>
-                            <!-- Luz ambiental del desierto -->
                             <GradientStop Color="#9C8972" Offset="1.0"/>
-                            <!-- Polvo y desgaste -->
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
                     <Grid x:Name="ShopItems" VerticalAlignment="Center">
@@ -385,27 +366,20 @@ Click="CloseCurrentGrid"/>
                     </Grid>
                 </ScrollViewer>
             </Grid>
-
-            <!-- Mercado de contrabando -->
+            <!--Contraband shop-->
             <Grid x:Name="ContrabandMarketGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <!-- Para botones -->
                     <ColumnDefinition Width="*"/>
-                    <!-- Para el ScrollViewer -->
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0" BorderBrush="#222" BorderThickness="1,0,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#1C1C1C" Offset="0.0"/>
-                            <!-- Sombra profunda -->
                             <GradientStop Color="#2E2E2E" Offset="0.3"/>
-                            <!-- Metal oxidado -->
                             <GradientStop Color="#3F3B36" Offset="0.6"/>
-                            <!-- Paredes sucias -->
                             <GradientStop Color="#151515" Offset="1.0"/>
-                            <!-- Rincón oculto -->
                         </LinearGradientBrush>
                     </Border.Background>
 
@@ -462,24 +436,19 @@ Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                 </ScrollViewer>
             </Grid>
 
-
-            <!-- Galería de tiro-->
+            <!--Ranged shop-->
             <Grid x:Name="RangedShopGrid" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Panel de acciones -->
                 <Border Grid.Column="0" BorderBrush="#334" BorderThickness="2,0,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#1A1E24" Offset="0.0"/>
-                            <!-- Oscuro militar -->
                             <GradientStop Color="#2E343F" Offset="0.4"/>
-                            <!-- Gris táctico -->
                             <GradientStop Color="#3F4C5C" Offset="0.8"/>
-                            <!-- Metal templado -->
                             <GradientStop Color="#1A1E24" Offset="1.0"/>
                         </LinearGradientBrush>
                     </Border.Background>
@@ -522,7 +491,6 @@ Grid.Row="3" HorizontalAlignment="Stretch" Margin="20,20,50,20"/>
                     </Grid>
                 </Border>
 
-                <!-- Panel de objetos -->
                 <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ScrollViewer.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">

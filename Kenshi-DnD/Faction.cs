@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace Kenshi_DnD
 {
-    // Class that represents a faction in the game, which can be in different regions, that monsters can be part of, and player can be less or more hostile to
+    // Class that represents a faction in the game, which can be in different regions, that monsters can be part of, and player can be less or more hostile to. - Santiago Cabrero
     [Serializable]
     public class Faction
     {

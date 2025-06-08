@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    // Inventory of a hero, used for combat
+    // Inventory of a hero, used for combat. - Santiago Cabrero
     [Serializable]
     public class HeroInventory : Inventory
     {

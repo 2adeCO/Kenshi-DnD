@@ -1,6 +1,7 @@
 ﻿namespace Kenshi_DnD
 {
-    // Class that represents different types of people in kenshi, such as humans, shek, skeletons or hives. The class of a hero applies buff and/or debuffs to the stats of the hero
+    // Class that represents different types of people in kenshi, such as humans, shek, skeletons or hives.
+    // The class of a hero applies buff and/or debuffs to the stats of the hero. - Santiago Cabrero
     [Serializable]
     public class Race : StatModifier
     {

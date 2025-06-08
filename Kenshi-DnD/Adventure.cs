@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using System.Windows.Input;
+﻿using System.Globalization;
 
 namespace Kenshi_DnD
 {
+    // Class that saves the player's progress. - Santiago Cabrero
     [Serializable]
     public class Adventure
     {
@@ -74,7 +73,6 @@ namespace Kenshi_DnD
             currentSquadName = "Mi primera squad";
             playerInventory = new PlayerInventory();
             alreadyObtainedItems = new Item[allItems.Length * 2];
-            Debug.WriteLine(id);
             this.allFactions = allFactions;
             this.allRegions = allRegions;
             this.titles = titles;
@@ -95,7 +93,6 @@ namespace Kenshi_DnD
             int numberCount = 1;
             //The zeroes we add
             string zeroes = "";
-            Debug.WriteLine(randomNum);
 
             //Formats the name, replacing spaces with underscores
             string formattedName = "";
@@ -172,7 +169,7 @@ namespace Kenshi_DnD
         {
             return myDice;
         }
-        // Used for the player's buying needs, if they have enough money, it will spend the money and return true, otherwise it will return false and print a debug message
+        // Used for the player's buying needs, if they have enough money, it will spend the money and return true, otherwise it will return false
         public bool SpendIfHasEnough(int cost)
         {
             if (cost <= cats && cost >= 0)
@@ -180,7 +177,6 @@ namespace Kenshi_DnD
                 this.cats -= cost;
                 return true;
             }
-            Debug.WriteLine("Not enough money");
             return false;
         }
         // Removes an item from the player's inventory and adds its resell value to the player's money
@@ -218,7 +214,7 @@ namespace Kenshi_DnD
                         }
                     }
                 }
-                playerInventory.AddItem(item.GetCopy());
+                playerInventory.AddItem(item);
 
             }
             else
@@ -234,7 +230,7 @@ namespace Kenshi_DnD
                         }
                     }
                 }
-                playerInventory.AddItem(item.GetCopy());
+                playerInventory.AddItem(item);
             }
         }
         // Hires a hero if the limits allow the player to do so
@@ -243,7 +239,6 @@ namespace Kenshi_DnD
 
             if ( GetHeroesCount() >= MAX_HEROES || hero.IsHired())
             {
-                Debug.WriteLine("too much heroes or is already hired");
                 return;
             }
 
@@ -251,7 +246,6 @@ namespace Kenshi_DnD
             {
                 if (heroes[i] == null)
                 {
-                    Debug.WriteLine("Hired in adventure");
                     hero.Hire();
                     heroes[i] = hero;
                     break;
@@ -307,7 +301,6 @@ namespace Kenshi_DnD
                 // If removed, compacts the array
                 if (removed)
                 {
-                    Debug.WriteLine("Removed a hero that was in a squad");
                     bool empty = true;
                     insertIndex = 0;
                     Hero[] compactedSquad = new Hero[squad.Length];
@@ -335,13 +328,11 @@ namespace Kenshi_DnD
                                 SetCurrentSquad(keys[0]);
                             }
                         }
-                        Debug.WriteLine("Squad is empty: " + keys[i]);
                         
                         DeleteSquad(keys[i]);
                     }
                     else
                     {
-                        Debug.WriteLine("Updating value");
                         savedSquads[keys[i]] = compactedSquad;
                     }
                 }
@@ -384,11 +375,9 @@ namespace Kenshi_DnD
         {
             if (amount < 0)
             {
-                Debug.WriteLine("Cannot gain negative cats");
                 return;
             }
             cats += amount;
-            Debug.WriteLine("Gained " + amount + " cats. Total: " + cats);
         }
         // Returns the saved squads dictionary, for UI purposes
         public Dictionary<string, Hero[]> GetSavedSquads()
@@ -453,7 +442,6 @@ namespace Kenshi_DnD
                 if (currentSquad[i] == null)
                 {
                     currentSquad[i] = hero;
-                    Debug.WriteLine("Added");
                     break;
                 }
             }
@@ -470,7 +458,6 @@ namespace Kenshi_DnD
                 if (currentSquad[i] == hero)
                 {
                     currentSquad[i] = null;
-                    Debug.WriteLine("Removed");
                     break;
                 }
             }
@@ -501,7 +488,6 @@ namespace Kenshi_DnD
         {
             if(savedSquads.Count >= MAX_SQUADS)
             {
-                Debug.WriteLine("Cannot create more squads, maximum reached");
                 return;
             }
             // Copies the current squad heroes to a new array
@@ -518,19 +504,13 @@ namespace Kenshi_DnD
 
             savedSquads.Add(squadName, newSquad);
             SetCurrentSquad(squadName);
-            Debug.WriteLine("Squad created " + squadName);
         }
         // Deletes a squad from the saved squads dictionary, if it exists, and sets the current squad to the first squad if the deleted squad was the current one
         public void DeleteSquad(string squadName)
         {
             if (savedSquads.ContainsKey(squadName))
             {
-                Debug.WriteLine("Squad successfully deleted : " + squadName);
                 savedSquads.Remove(squadName);
-            }
-            else
-            {
-                Debug.WriteLine("Squad not found to delete?");
             }
         }
         // Sets the current squad to the squad with the given name, if it exists, and updates the current squad name
@@ -566,7 +546,6 @@ namespace Kenshi_DnD
                     count += 1;
                 }
             }
-            Debug.WriteLine("Count of heroes: " + count);
             return count;
         }
         // Returns the heroes array, used to display the heroes in the UI

@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
-    // Class that has the functionality of a custom dice and can be thrown to see what the results are, plus giving the info of the last roll
+    // Class that has the functionality of a custom dice and can be thrown to see what the results are, plus giving the info of the last roll. - Santiago Cabrero
     [Serializable]
     public class Dice
     {
@@ -55,7 +53,6 @@ namespace Kenshi_DnD
             // Returns if no win can occur
             if (numOfRolls <= 0)
             {
-                Debug.WriteLine("<0 number of rolls");
                 return 0;
             }
             // Counts all the success of the rolls

@@ -7,15 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml.Schema;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Threading;
 using System.Xml.Linq;
-using System.Dynamic;
+
 namespace Kenshi_DnD
 {
-    // Only window in the program
-public partial class MainWindow : Window
+    // Only window in the program - Santiago Cabrero
+    public partial class MainWindow : Window
     {
         // Array of cursors used in the program
         Cursor[] cursors;
@@ -85,7 +84,6 @@ public partial class MainWindow : Window
             cursors = new Cursor[arrayNum];
             for (int i = 0; i < arrayNum; i+=1)
             {
-                Debug.WriteLine($"Loading cursor: {cursorFiles[i]}");
                 cursors[i] = new Cursor(cursorFiles[i]);
             }
         }
@@ -405,6 +403,7 @@ public partial class MainWindow : Window
             catch (XMLNotFoundException xmlError)
             {
                 MessageBox.Show(xmlError.Message);
+                this.Close();
                 return null;
             }
         }

@@ -1,27 +1,25 @@
 ﻿namespace Kenshi_DnD
 {
+    // Class that modifies the stats of the hero, be it their own stats, their items, race... - Santiago Cabrero
     [Serializable]
     public class StatModifier
     {
-        //All of these are buffs and debuffs to the ints of the hero
         //Offensive ints
-        //Brute Force is associated with Sheks, skeletons and Hive Soldiers
-        //Dexterity is associated with Humans(All types), Hive Princes and Hive Workers 
+        //Brute Force is skill used when using a melee item
+        //Dexterity is skill used when using a ranged item
         int bruteForce;
         int dexterity;
 
         //Defensive ints
         //Health points
-        //Toughness is max health points
         int hp;
-
-        //Resistance is defense against Brute Force
+        // Defense against attacks
         int resistance;
 
         //Agility determines how fast the hero interacts with the enemies
         int agility;
 
-
+        // Constructor
         public StatModifier(int bruteForce, int dexterity, int hp, int resistance, int agility)
         {
             this.bruteForce = bruteForce;
@@ -30,6 +28,7 @@
             this.resistance = resistance;
             this.agility = agility;
         }
+        // Getters 
         public int GetBruteForce()
         {
             return bruteForce;
@@ -51,10 +50,7 @@
         {
             return agility;
         }
-        public virtual StatModifier GetCopy()
-        {
-            return new StatModifier(bruteForce,dexterity,hp,resistance,agility);
-        }
+        // Upgrades a stat
         public void UpgradeStat(Stats.Stat stat, int upgrade)
         {
             switch (stat)
@@ -86,6 +82,12 @@
                     }
             }
         }
+        // Returns a copy of the Stats
+        public virtual StatModifier GetCopy()
+        {
+            return new StatModifier(bruteForce, dexterity, hp, resistance, agility);
+        }
+        // Overrides ToString to show the stats and their values
         public override string ToString()
         {
             return

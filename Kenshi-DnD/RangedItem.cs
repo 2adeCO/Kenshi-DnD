@@ -1,9 +1,6 @@
-﻿using System.Windows.Markup;
-using System.Xml.Linq;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
-    // Item which is ranged
+    // Item which is ranged. - Santiago Cabrero
     [Serializable]
     class RangedItem : Item
     {

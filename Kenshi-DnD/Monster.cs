@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
-    // Class that represents an enemy, with their faction, immunities, stats...
+    // Class that represents an enemy, with their faction, immunities, stats... - Santiago Cabrero
     [Serializable]
     public class Monster : ITurnable
     {

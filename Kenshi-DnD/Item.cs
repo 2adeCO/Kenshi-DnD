@@ -1,11 +1,6 @@
-﻿using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Controls;
-using System.Windows.Documents;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
-    // Abstract class that acts as a base for the rest of items
+    // Abstract class that acts as a base for the rest of items. - Santiago Cabrero
     [Serializable]
     public abstract class Item
     {

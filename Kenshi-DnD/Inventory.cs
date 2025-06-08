@@ -1,6 +1,6 @@
 ﻿namespace Kenshi_DnD
 {
-    // Class that holds items in a list, and returns them without returning the list
+    // Class that holds items in a list, and returns them without returning the list. - Santiago Cabrero
     [Serializable]
     public class Inventory
     {

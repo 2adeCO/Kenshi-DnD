@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kenshi_DnD
+﻿namespace Kenshi_DnD
 {
+
+    // Enum used for upgrading the rarity of an item and its base stats. - Santiago Cabrero
     //Kenshi's actual weapon tiers go like this:
     //Rusted Junk, Rusting Blade, Mid-Grade Salvage, Old Re-Fitted Blade, Re-fitted Blade,
     //Catun No. 1, Catun No. 2, Catun No. 3,
