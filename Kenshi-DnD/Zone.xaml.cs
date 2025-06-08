@@ -57,6 +57,7 @@ namespace Kenshi_DnD
             UpdateCats();
             // Updates the player's faction name
             PlayerFaction.Inlines.AddRange(mainWindow.DecorateText(myAdventure.GetFactionName()));
+            PlayerFaction.ToolTip = mainWindow.ToolTipThemer("Fundación de la facción: " + myAdventure.GetStartDate().ToString());
             // Makes the player grid background the faction's color
             PlayerGrid.Background = mainWindow.GetBrushByNum(myAdventure.GetColor());
             // Puts the squad in a combobox

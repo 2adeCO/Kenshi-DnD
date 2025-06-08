@@ -231,6 +231,7 @@
         public void Hire()
         {
             hired = true;
+            recruitmentDate = DateTime.Now;
         }
         public Limb[] GetLimbs()
         {
@@ -541,6 +542,7 @@
         public override string ToString()
         {
             return
+                $"{((hired == true) ? ("Contratado el " +recruitmentDate.ToString() + "\n") : (""))}" +
                 $"Nivel: {level}\n" +
                 $"Experiencia: {experience}\n" +
                 $"Raza: {race.GetName()}\n" +

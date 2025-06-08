@@ -439,8 +439,7 @@ namespace Kenshi_DnD
         {
             if (currentAdventureIsValid)
             {
-
-
+                // Gets all the data of the game
                 Faction[] factions = SqlGetFactions();
                 Region[] regions = SqlGetRegions();
                 Limb[] limbs = SqlGetLimbs();
@@ -449,13 +448,10 @@ namespace Kenshi_DnD
                 string[] backgrounds = SqlGetBackgrounds();
                 string[] names = SqlGetNames();
 
-
-
-
                 Hero hero = new Hero(characterName.Text, characterTitle.Text, characterBackgroundStory.Text,
                     (int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value, 1,
                     GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs(), Competency.StartCompetency.Apprentice);
-
+                hero.Hire();
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
                 Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text),
                     factionName.Text, factionColor.SelectedIndex + 1, factions, regions, titles, backgrounds, names, items, allRaces, limbs);
