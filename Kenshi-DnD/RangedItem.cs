@@ -42,7 +42,7 @@
         }
         public void FillAmmo()
         {
-            this.ammo = maxAmmo; 
+            this.ammo = maxAmmo;
         }
         // Loses one ammo
         public void ShootAmmo()
@@ -90,7 +90,7 @@
                 case Rarity.Rarities.Meitou:
                     {
                         costMultiplier = 2.0;
-                            buff = 5;
+                        buff = 5;
                         break;
                     }
             }
@@ -107,7 +107,7 @@
         {
             StatModifier statCopy = statToModify.GetCopy();
 
-            Item itemCopy = new RangedItem(name,description,value,resellValue,limbsNeeded,difficulty,maxAmmo, statCopy);
+            Item itemCopy = new RangedItem(name, description, value, resellValue, limbsNeeded, difficulty, maxAmmo, statCopy);
             itemCopy.SetRarity(rarity);
             return itemCopy;
         }

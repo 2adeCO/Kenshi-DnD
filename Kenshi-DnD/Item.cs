@@ -20,7 +20,7 @@
         // Stats of the item
         protected StatModifier statToModify;
         // Base constructor
-        public Item(string name,string description, int value, int resellValue, int limbsNeeded, StatModifier statToModify)
+        public Item(string name, string description, int value, int resellValue, int limbsNeeded, StatModifier statToModify)
         {
             this.name = name;
             this.description = description;
@@ -162,6 +162,6 @@
 
             }
         }
-       
-        }
+
     }
+}

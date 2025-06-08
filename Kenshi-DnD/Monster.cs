@@ -85,9 +85,9 @@
                         return Immunities.Immunity.ResistantToBoth;
                     }
                 default:
-                    { 
-                    return Immunities.Immunity.None;
-                    } 
+                    {
+                        return Immunities.Immunity.None;
+                    }
             }
         }
         // Returns a copy of the monster
@@ -98,9 +98,9 @@
         // Getters and setters
         public string GetName()
         {
-            return "@"+ faction.GetFactionColor() + "@" + name +"@";
+            return "@" + faction.GetFactionColor() + "@" + name + "@";
         }
-        
+
         public Faction GetFaction()
         {
             return faction;

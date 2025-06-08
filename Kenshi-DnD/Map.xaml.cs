@@ -1,13 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -88,7 +79,7 @@ namespace Kenshi_DnD
                 selectedRegion.AffectsRelations(adventure, rnd);
 
                 // Player rolls average relations / 10 (1-10), and if is higher than 3, he avoids the encounter
-                if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10,rnd) >= PEACE_ROLLS_NEEDED)
+                if (adventure.GetDice().PlayDice(selectedRegion.GetRelations() / 10, rnd) >= PEACE_ROLLS_NEEDED)
                 {
                     // Travel there
                     controller.Content = new Zone(mainWindow, controller, cursors, rnd, adventure, selectedRegion);
@@ -96,8 +87,8 @@ namespace Kenshi_DnD
                 else
                 {
                     // Have combat, if successful, travel to the region, else, go back to Map.xaml
-                    controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure, 
-                        mainWindow.SqlGenerateMonsters(adventure,SelectAggressor(adventure,rnd,selectedRegion),rnd));
+                    controller.Content = new CombatWindow(mainWindow, controller, cursors, rnd, adventure,
+                        mainWindow.SqlGenerateMonsters(adventure, SelectAggressor(adventure, rnd, selectedRegion), rnd));
                 }
             }
             else
@@ -125,7 +116,7 @@ namespace Kenshi_DnD
         }
         // If player encounters a fight, an agressor is chosen, if relations are lower than 50 and not enough successful rolls are gotten, that faction will fight the player
         // else, it will fight the most aggresive faction
-        private Faction SelectAggressor(Adventure adventure,Random rnd,Region region)
+        private Faction SelectAggressor(Adventure adventure, Random rnd, Region region)
         {
             List<Faction> factions = region.GetFactions();
 
@@ -153,7 +144,7 @@ namespace Kenshi_DnD
         private void ExitGame(object sender, RoutedEventArgs e)
         {
 
-            if(MessageBox.Show("Estás a punto de salir del juego.\nPerderás el progreso no guardado", "Salir del juego", MessageBoxButton.YesNo, MessageBoxImage.Exclamation)
+            if (MessageBox.Show("Estás a punto de salir del juego.\nPerderás el progreso no guardado", "Salir del juego", MessageBoxButton.YesNo, MessageBoxImage.Exclamation)
                 == MessageBoxResult.No)
             {
                 return;

@@ -52,11 +52,11 @@ create table region_faction(
 drop table if exists stats;
 create table stats(
 	id int auto_increment primary key,
-    bruteForce int default 0,
-    dexterity int default 0,
-    hp int default 0,
-    resistance int default 0,
-    agility int default 0
+    bruteForce int default 0 not null,
+    dexterity int default 0 not null,
+    hp int default 0 not null,
+    resistance int default 0 not null,
+    agility int default 0 not null
 
 );
 drop table if exists races;
@@ -72,9 +72,9 @@ CREATE TABLE items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description varchar(200) default '',
-    value int,
-    resellValue int,
-    type enum('melee','ranged') ,
+    value int not null,
+    resellValue int not null,
+    type enum('melee','ranged') not null ,
     weight int not null,
     stats_id int Unique not null,
     
@@ -92,8 +92,8 @@ create table rangedItems(
 drop table if exists meleeItems;
 create table meleeItems(
 	item_id int primary key,
-    breaksOnUse bool default false,
-    canRevive bool default false,
+    breaksOnUse bool default false not null,
+    canRevive bool default false not null,
         
     foreign key (item_id) references items(id)
 );
@@ -116,10 +116,10 @@ CREATE TABLE enemies (
     resistance INT not null,
     agility int not null,
     immunity enum('None', 'ResistantToRanged','ImmuneToRanged','ImmuneToRangedAndResistantToMelee',
-    'ResistantToMelee','ImmuneToMelee','ImmuneToMeleeAndResistantToRanged','ResistantToBoth'),
+    'ResistantToMelee','ImmuneToMelee','ImmuneToMeleeAndResistantToRanged','ResistantToBoth') not null,
 	xp int not null,
     maxCatDrop int not null,
-    canDropItem bool default false,
+    canDropItem bool default false not null,
     
     FOREIGN KEY (factionId) REFERENCES factions(id)
 );

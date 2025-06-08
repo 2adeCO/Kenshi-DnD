@@ -43,7 +43,7 @@
             return false;
         }
         // A play of the dice, will return how many rolls were successful
-        public int PlayDice(int numOfRolls,Random random)
+        public int PlayDice(int numOfRolls, Random random)
         {
             // Resets the string values
             winHistory = 0;
@@ -56,7 +56,7 @@
                 return 0;
             }
             // Counts all the success of the rolls
-            for (int i = 0; i < numOfRolls; i+=1)
+            for (int i = 0; i < numOfRolls; i += 1)
             {
                 if (IsSuccess(Roll(random)))
                 {
@@ -81,7 +81,7 @@
         // Returns a string of the play
         public string GetRollHistory()
         {
-            return "@917@Dados:@ " + ((lastPlay == "") ? ("No se consiguieron dados"): (lastPlay +"\n\n"+
+            return "@917@Dados:@ " + ((lastPlay == "") ? ("No se consiguieron dados") : (lastPlay + "\n\n" +
                 "@917@Veces ganadas:@ " + winHistory));
         }
         // Returns a string that represents the dice

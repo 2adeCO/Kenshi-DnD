@@ -38,7 +38,7 @@ namespace Kenshi_DnD
             this.name = name;
             this.description = description;
             factions = new List<Faction>();
-            updateToken = true ;
+            updateToken = true;
             this.hasBar = hasBar;
             this.hasShop = hasShop;
             this.hasLimbHospital = hasLimbHospital;
@@ -47,11 +47,11 @@ namespace Kenshi_DnD
             hasAccessToRangedShop = false;
         }
         // Affects all the relations of all factions in the zone
-        public void AffectsRelations(Adventure myAdventure,Random rnd)
+        public void AffectsRelations(Adventure myAdventure, Random rnd)
         {
             for (int i = 0; i < factions.Count; i += 1)
             {
-                factions[i].AffectRelations(myAdventure,rnd);
+                factions[i].AffectRelations(myAdventure, rnd);
             }
         }
         // Improves or worsens relations with the factions in the region
@@ -59,7 +59,7 @@ namespace Kenshi_DnD
         {
             for (int i = 0; i < factions.Count; i += 1)
             {
-                myZone.UpdateLog("¡La relación con " + factions[i].GetFactionName() + " mejoró " +  amount + "!");
+                myZone.UpdateLog("¡La relación con " + factions[i].GetFactionName() + " mejoró " + amount + "!");
                 factions[i].AddOrSubtractRelation(amount);
             }
         }
@@ -130,7 +130,7 @@ namespace Kenshi_DnD
             if (numberOfHeroes > 0)
             {
                 Hero[] heroesInBar = new Hero[numberOfHeroes];
-                
+
                 for (int i = 0; i < numberOfHeroes; i++)
                 {
                     int experience = rnd.Next(0, 10);
@@ -180,32 +180,32 @@ namespace Kenshi_DnD
                 //Meitou: 1 in 20
                 switch (rarityDecider)
                 {
-                    case <5: 
+                    case < 5:
                         {
                             rarity = Rarity.Rarities.Junk;
                             break;
                         }
-                    case <10:
+                    case < 10:
                         {
                             rarity = Rarity.Rarities.RustCovered;
                             break;
                         }
-                    case <14:
+                    case < 14:
                         {
                             rarity = Rarity.Rarities.Catun;
                             break;
                         }
-                    case <17:
+                    case < 17:
                         {
                             rarity = Rarity.Rarities.Mk;
                             break;
                         }
-                    case <19:
+                    case < 19:
                         {
                             rarity = Rarity.Rarities.Edgewalker;
                             break;
                         }
-                    case <20:
+                    case < 20:
                         {
                             rarity = Rarity.Rarities.Meitou;
                             break;
@@ -269,7 +269,7 @@ namespace Kenshi_DnD
                     }
                 }
             }
-            
+
         }
         public Hero[] GetHeroesInBar()
         {
@@ -283,13 +283,13 @@ namespace Kenshi_DnD
             for (int i = 0; i < DEFAULT_SHOP_SIZE; i++)
             {
                 Item itemInShop = null;
-                int rarityDecider = rnd.Next(0,4);
+                int rarityDecider = rnd.Next(0, 4);
                 Rarity.Rarities rarity;
                 switch (rarityDecider)
                 {
                     case 0:
                         {
-                            rarity= Rarity.Rarities.Junk;
+                            rarity = Rarity.Rarities.Junk;
                             break;
                         }
                     case 1:
@@ -348,7 +348,7 @@ namespace Kenshi_DnD
                 switch (rarityDecider)
                 {
 
-                    case <3:
+                    case < 3:
                         {
                             rarity = Rarity.Rarities.Edgewalker;
                             break;
@@ -371,7 +371,7 @@ namespace Kenshi_DnD
                     int itemIndex = rnd.Next(0, allItems.Length);
                     Item item = allItems[itemIndex].GetCopy();
                     item.SetRarity(rarity);
-                    if (!HasAlreadyBeenObtained(myAdventure,item))
+                    if (!HasAlreadyBeenObtained(myAdventure, item))
                     {
                         itemInContraband = allItems[itemIndex];
                     }
@@ -448,13 +448,13 @@ namespace Kenshi_DnD
         {
             return contrabandMarket;
         }
-      // Tells if an item has already been obtained
-        private bool HasAlreadyBeenObtained(Adventure myAdventure,Item item)
+        // Tells if an item has already been obtained
+        private bool HasAlreadyBeenObtained(Adventure myAdventure, Item item)
         {
             Item[] obtainedItems = myAdventure.GetAlreadyObtainedItems();
             for (int i = 0; i < obtainedItems.Length; i++)
             {
-                if(obtainedItems[i] != null)
+                if (obtainedItems[i] != null)
                 {
                     if (obtainedItems[i].GetName() == item.GetName())
                     {
@@ -472,7 +472,7 @@ namespace Kenshi_DnD
         {
             int relations = 0;
             bool hasAnimals = false;
-            for(int i = 0; i< factions.Count; i += 1)
+            for (int i = 0; i < factions.Count; i += 1)
             {
                 if (factions[i].GetFactionName() != "@2@Reino Animal@")
                 {
@@ -483,11 +483,11 @@ namespace Kenshi_DnD
                     hasAnimals = true;
                 }
             }
-            return relations / (factions.Count - 
+            return relations / (factions.Count -
                 (hasAnimals ? 1 : 0));
         }
         // Generates a random hero with random stats, race, subrace, name, title, background....
-        private Hero GenerateRandomHero(Adventure myAdventure,Random rnd,Competency.StartCompetency competency)
+        private Hero GenerateRandomHero(Adventure myAdventure, Random rnd, Competency.StartCompetency competency)
         {
             int points = 3;
             int level = 0;
@@ -516,7 +516,7 @@ namespace Kenshi_DnD
             int dexterity = 0;
             int resistance = 0;
             int agility = 0;
-            for(int i = 0; i < points; i += 1)
+            for (int i = 0; i < points; i += 1)
             {
                 int option = rnd.Next(0, 4);
 
@@ -580,7 +580,7 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < limbs.Length; i += 1)
             {
-                limbs[i] = new Limb("Extremidad normal", 0,0, 0, 0, 0, 0);
+                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0, 0);
             }
             return limbs;
         }
@@ -604,8 +604,8 @@ namespace Kenshi_DnD
                    ((hasRangedShop) ? ("Club de tiro privado\n") : ("")) +
                    ((hasContrabandMarket) ? ("Mercado de contrabando\n") : ("")) +
                    factionInfo;
-                   
+
         }
     }
-        
+
 }

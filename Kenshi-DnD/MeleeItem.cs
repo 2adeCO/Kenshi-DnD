@@ -30,38 +30,38 @@
             switch (rarity)
             {
                 case Rarity.Rarities.Junk:
-                    { 
-                        costMultiplier = 1.0;  
+                    {
+                        costMultiplier = 1.0;
                         buff = 0;
                         break;
                     }
                 case Rarity.Rarities.RustCovered:
                     {
-                        costMultiplier = 1.10; 
+                        costMultiplier = 1.10;
                         buff = 1;
                         break;
                     }
                 case Rarity.Rarities.Catun:
                     {
-                        costMultiplier = 1.25; 
+                        costMultiplier = 1.25;
                         buff = 2;
                         break;
                     }
                 case Rarity.Rarities.Mk:
                     {
-                        costMultiplier = 1.50; 
+                        costMultiplier = 1.50;
                         buff = 3;
                         break;
                     }
                 case Rarity.Rarities.Edgewalker:
                     {
-                        costMultiplier = 1.75; 
+                        costMultiplier = 1.75;
                         buff = 4;
                         break;
                     }
                 case Rarity.Rarities.Meitou:
                     {
-                        costMultiplier = 2.0;   
+                        costMultiplier = 2.0;
                         buff = 5;
                         break;
                     }
@@ -77,7 +77,7 @@
             }
 
             value = (int)(value * costMultiplier);
-            resellValue = (int)(value * 0.5); 
+            resellValue = (int)(value * 0.5);
         }
         // Returns a copy of the item
         public override Item GetCopy()

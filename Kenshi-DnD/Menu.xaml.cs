@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+﻿using MySql.Data.MySqlClient;
+using System.Data;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Media;
 using System.Xml.Linq;
-using MySql.Data.MySqlClient;
-using System.Data;
 
 namespace Kenshi_DnD
 {
@@ -96,7 +96,7 @@ namespace Kenshi_DnD
         // Opens the game's config folder in file explorer
         private void OpenConfig(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe",Path.GetFullPath("./Resources/config"));
+            Process.Start("explorer.exe", Path.GetFullPath("./Resources/config"));
         }
         // Opens the adventure maker
         public void OpenAdventureMaker(object sender, EventArgs e)
@@ -139,7 +139,7 @@ namespace Kenshi_DnD
             AdventureChooserMenu.Children.Clear();
 
             // Deserialises each adventure, and adds a new grid to a stackpanel representing each adventure
-            for(int i = 0; i < adventureFiles.Length; i += 1)
+            for (int i = 0; i < adventureFiles.Length; i += 1)
             {
 #pragma warning disable SYSLIB0011
                 FileStream fileStream = new FileStream(adventureFiles[i], FileMode.Open);
@@ -151,7 +151,7 @@ namespace Kenshi_DnD
             }
 
         }
-       // When an slider is changed, check if it's valid, if not, revert to the last state
+        // When an slider is changed, check if it's valid, if not, revert to the last state
         private void SliderChanged(object sender, EventArgs e)
         {
             // Use of flag to avoid loops
@@ -179,7 +179,7 @@ namespace Kenshi_DnD
             // Reverts the flag
             changingSliders = false;
             // Checks if the adventure is valid
-            IsAdventureValid(null,null);
+            IsAdventureValid(null, null);
 
         }
 
@@ -189,30 +189,32 @@ namespace Kenshi_DnD
         {
             AboutYourAdventure.Inlines.Clear();
             currentAdventureIsValid = true;
-            if (string.IsNullOrWhiteSpace(adventureName.Text)) 
-            {  currentAdventureIsValid = false; }
+            if (string.IsNullOrWhiteSpace(adventureName.Text))
+            { currentAdventureIsValid = false; }
             else
             {
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu aventura se nombrará " + adventureName.Text + "\n"));
             }
-            if (!int.TryParse(diceSides.Text, out int diceSidesInt)) 
+            if (!int.TryParse(diceSides.Text, out int diceSidesInt))
             { currentAdventureIsValid = false; }
             if (!int.TryParse(diceMinWin.Text, out int diceMinWinInt)) { currentAdventureIsValid = false; }
 
             if (string.IsNullOrWhiteSpace(characterName.Text)) { currentAdventureIsValid = false; }
             if (string.IsNullOrWhiteSpace(factionName.Text)) { currentAdventureIsValid = false; }
-            
-            
 
 
-            if(diceMinWinInt > diceSidesInt) { currentAdventureIsValid = false; } else
+
+
+            if (diceMinWinInt > diceSidesInt) { currentAdventureIsValid = false; }
+            else
             {
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Jugarás con un dado que tiene "
                     + diceSidesInt + " caras, cada vez que saques al menos (" + diceMinWinInt + ")" +
                     ", tendrás un éxito.\n"));
             }
 
-            if (!int.TryParse(startingCats.Text, out int startingCatsInt)) { currentAdventureIsValid = false; } else
+            if (!int.TryParse(startingCats.Text, out int startingCatsInt)) { currentAdventureIsValid = false; }
+            else
             {
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu aventura empezará con " + startingCatsInt + " cats. " +
                     (startingCatsInt > 2000 ? "Eso es una fortuna...\n" : (startingCatsInt > 500 ? "" : "Buena suerte...\n"))));
@@ -221,16 +223,16 @@ namespace Kenshi_DnD
 
             if (currentAdventureIsValid)
             {
-                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu facción se llama @" + 
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu facción se llama @" +
                     (factionColor.SelectedIndex + 1) + "@" + factionName.Text + "@\n"));
 
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Tu héroe es " + characterName.Text + ", " +
                     (characterTitle.Text == "" ? " " : characterTitle.Text + ", ") + "un " + characterRace.SelectedItem + "\n"));
 
-                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Su historia es: " + (characterBackgroundStory.Text == "" ? 
+                AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Su historia es: " + (characterBackgroundStory.Text == "" ?
                   DEFAULT_HERO_BACKGROUND : characterBackgroundStory.Text) + "\n\n"));
 
-                
+
                 AboutYourAdventure.Inlines.AddRange(mainWindow.DecorateText("Recuerda, es un mundo hostil al que te enfrentas. " +
                     "Puedes recibir golpes que te dejen paralítico, ser rechazado por pobre, o por tus creencias... \n" +
                     "Elige bien a tus compañeros y mejor a tus enemigos" +
@@ -245,14 +247,14 @@ namespace Kenshi_DnD
             }
         }
         // Used to play the adventure in the button
-        private void PlayAdventure(object sender, EventArgs e) 
+        private void PlayAdventure(object sender, EventArgs e)
         {
             Adventure adventure = (Adventure)((Button)sender).Tag;
 
             if (adventure != null)
             {
                 mainWindow.StartPlaying(adventure);
-                controller.Content = new Map(mainWindow, controller,cursors, rnd, adventure);
+                controller.Content = new Map(mainWindow, controller, cursors, rnd, adventure);
             }
             else
             {
@@ -274,7 +276,8 @@ namespace Kenshi_DnD
                     AdventureChooserMenu.Children.Remove((Grid)button.Parent);
                     MessageBox.Show("Aventura eliminada.");
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("No se ha encontrado la aventura " + adventure.GetId() + ", no se puede eliminar.");
             }
@@ -338,7 +341,7 @@ namespace Kenshi_DnD
                 rectangle.Stroke = Brushes.Black;
                 switch (i)
                 {
-                case 0:
+                    case 0:
                         {
                             rectangle.Width = proportion * hp < 0 ? 0 : proportion * hp;
                             rectangle.Fill = Brushes.DarkRed;
@@ -348,47 +351,47 @@ namespace Kenshi_DnD
                             ToolTipService.SetInitialShowDelay(textBlock, 100);
                             break;
                         }
-                case 1:
-                    {
-                        rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
-                        rectangle.Fill = Brushes.SaddleBrown;
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@FBT@: " + bruteForce));
-                        textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
-                            "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
-                        ToolTipService.SetInitialShowDelay(textBlock, 100);
-                        break;
-                    }
-                case 2:
-                    {
-                        rectangle.Width = proportion * dexterity < 0 ? 0 : proportion * dexterity;
-                        rectangle.Fill = Brushes.SteelBlue;
+                    case 1:
+                        {
+                            rectangle.Width = proportion * bruteForce < 0 ? 0 : proportion * bruteForce;
+                            rectangle.Fill = Brushes.SaddleBrown;
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@FBT@: " + bruteForce));
+                            textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Fuerza Bruta: " + bruteForce,
+                                "La fuerza bruta es usada para ataques físicos, y para definir el nivel de artes marciales.");
+                            ToolTipService.SetInitialShowDelay(textBlock, 100);
+                            break;
+                        }
+                    case 2:
+                        {
+                            rectangle.Width = proportion * dexterity < 0 ? 0 : proportion * dexterity;
+                            rectangle.Fill = Brushes.SteelBlue;
 
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@DST@: " + dexterity));
-                        textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Destreza: " + dexterity,
-                            "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@DST@: " + dexterity));
+                            textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Destreza: " + dexterity,
+                                "La destreza es usada para apuntar en ataques a distancia, y para definir el nivel de artes marciales.");
 
-                        break;
-                    }
-                case 3:
-                    {
-                        rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
-                        rectangle.Fill = Brushes.Olive;
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@RES@: " + resistance));
-                        textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Resistencia " + resistance,
-                            "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
-                            "para cada posibilidad de defenderse un punto de ataque.");
-                        break;
-                    }
-                case 4:
-                    {
-                        rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
-                        rectangle.Fill = Brushes.Gold;
-                        textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@AG@: " + agility));
-                        textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Agilidad: " + agility,
-                            "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
-                            "\nTambién para saquear a tus compañeros...");
-                        break;
-                    }
+                            break;
+                        }
+                    case 3:
+                        {
+                            rectangle.Width = proportion * resistance < 0 ? 0 : proportion * resistance;
+                            rectangle.Fill = Brushes.Olive;
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@RES@: " + resistance));
+                            textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Resistencia " + resistance,
+                                "La resistencia es usada para defenderse de los ataques enemigos, se necesita tener dos puntos por \nencima de la fuerza del atacante " +
+                                "para cada posibilidad de defenderse un punto de ataque.");
+                            break;
+                        }
+                    case 4:
+                        {
+                            rectangle.Width = proportion * agility < 0 ? 0 : proportion * agility;
+                            rectangle.Fill = Brushes.Gold;
+                            textBlock.Inlines.AddRange(mainWindow.DecorateText("@9@AG@: " + agility));
+                            textBlock.ToolTip = mainWindow.HeaderToolTipThemer("Agilidad: " + agility,
+                                "La agilidad es usada para atacar más seguido que tus enemigos, determinar el número de ataques en \nartes marciales." +
+                                "\nTambién para saquear a tus compañeros...");
+                            break;
+                        }
                 }
                 Grid.SetRow(rectangle, i);
                 Grid.SetRow(textBlock, i);
@@ -397,7 +400,7 @@ namespace Kenshi_DnD
                 statsGrid.Children.Add(textBlock);
             }
         }
-    
+
         // Changes the subraces in the character subrace combobox
         private void ChangeSubraces(object sender, EventArgs e)
         {
@@ -406,7 +409,7 @@ namespace Kenshi_DnD
             characterSubrace.SelectedIndex = 0;
             UpdateHeroStatGrid(null, null);
         }
-        
+
         // Gets the selected race and subrace
         private Race GetSelectedRace()
         {
@@ -449,13 +452,13 @@ namespace Kenshi_DnD
 
 
 
-                Hero hero = new Hero(characterName.Text,characterTitle.Text,characterBackgroundStory.Text,
-                    (int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value,1,
-                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs(),Competency.StartCompetency.Apprentice);
+                Hero hero = new Hero(characterName.Text, characterTitle.Text, characterBackgroundStory.Text,
+                    (int)bruteForceSlider.Value, (int)dexteritySlider.Value, (int)resistanceSlider.Value, (int)agilitySlider.Value, 1,
+                    GetSelectedRace(), GetSeletedSubrace(), GenerateLimbs(), Competency.StartCompetency.Apprentice);
 
                 Dice myDice = new Dice(int.Parse(diceSides.Text), int.Parse(diceMinWin.Text));
                 Adventure myAdventure = new Adventure(adventureName.Text, hero, rnd, myDice, int.Parse(startingCats.Text),
-                    factionName.Text,factionColor.SelectedIndex + 1,factions,regions,titles,backgrounds,names,items,allRaces,limbs);
+                    factionName.Text, factionColor.SelectedIndex + 1, factions, regions, titles, backgrounds, names, items, allRaces, limbs);
 
                 // Gives a random item at the start to the hero
                 Item randomItemAtStart = null;
@@ -483,7 +486,7 @@ namespace Kenshi_DnD
                 // Creates new path for the adventure
                 string adventurePath = "./saves/" + myAdventure.GetId() + ".adventure";
                 // If it's new, it serializes the adventure in that path
-                if(File.Exists(adventurePath))
+                if (File.Exists(adventurePath))
                 {
                     return;
                 }
@@ -491,8 +494,8 @@ namespace Kenshi_DnD
                 {
 
                     FileStream fileStream = new FileStream(adventurePath, FileMode.CreateNew);
-                    
-#pragma warning disable SYSLIB0011 
+
+#pragma warning disable SYSLIB0011
 
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(fileStream, myAdventure);
@@ -500,7 +503,7 @@ namespace Kenshi_DnD
 #pragma warning restore SYSLIB0011 
 
                     fileStream.Close();
-                   
+
                     // Closes the menu
                     CloseCurrentMenu(null, null);
                 }
@@ -518,7 +521,7 @@ namespace Kenshi_DnD
 
             for (int i = 0; i < limbs.Length; i += 1)
             {
-                limbs[i] = new Limb("Extremidad normal", 0,0, 0, 0, 0, 0);
+                limbs[i] = new Limb("Extremidad normal", 0, 0, 0, 0, 0, 0);
             }
             return limbs;
         }
@@ -643,7 +646,7 @@ namespace Kenshi_DnD
             adventureGrid.ColumnDefinitions.Add(columnDefinition);
 
             LinearGradientBrush linearBrush = new LinearGradientBrush();
-            linearBrush.StartPoint = new Point(0, 0); 
+            linearBrush.StartPoint = new Point(0, 0);
             linearBrush.EndPoint = new Point(1, 0);
 
             linearBrush.GradientStops.Add(new GradientStop(Colors.AntiqueWhite, 0.0));
@@ -691,7 +694,7 @@ namespace Kenshi_DnD
         private Faction[] SqlGetFactions()
         {
             string connectionString = mainWindow.GetSqlConnectionString();
-            if(mainWindow.UseXml())
+            if (mainWindow.UseXml())
             {
                 return XmlGetFactions();
             }
@@ -702,25 +705,25 @@ namespace Kenshi_DnD
             {
                 connection = new MySqlConnection(connectionString);
                 MySqlCommand command = new MySqlCommand("SELECT count(*) FROM factions;", connection);
-                 MySqlDataReader reader;
+                MySqlDataReader reader;
                 int numberOfFactions = 0;
 
-            
+
                 connection.Open();
                 reader = command.ExecuteReader();
                 reader.Read();
                 numberOfFactions = reader.GetInt32(0);
                 reader.Close();
-            
-            
+
+
                 factions = new Faction[numberOfFactions];
                 command = new MySqlCommand("SELECT * from factions;", connection);
                 reader = command.ExecuteReader();
 
-                for(int i = 0; i < numberOfFactions; i += 1)
+                for (int i = 0; i < numberOfFactions; i += 1)
                 {
                     reader.Read();
-                    factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),reader.GetInt32(3), reader.GetInt32(4),reader.GetBoolean(5));                    
+                    factions[i] = new Faction(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetBoolean(5));
                 }
                 reader.Close();
                 for (int i = 0; i < numberOfFactions; i += 1)
@@ -744,7 +747,7 @@ namespace Kenshi_DnD
                 connection.Close();
                 return XmlGetFactions();
             }
-            
+
             return factions;
         }
         private Faction[] XmlGetFactions()
@@ -755,7 +758,7 @@ namespace Kenshi_DnD
                 {
                     XDocument xmlFile = XDocument.Load("./Resources/xml/kenshidata.xml");
                     Faction[] factions = xmlFile.Root.Elements("factions")
-                        .Select((f,index) => new Faction(
+                        .Select((f, index) => new Faction(
                             int.Parse(f.Element("id").Value),
                             f.Element("name").Value,
                             f.Element("description").Value,
@@ -766,10 +769,10 @@ namespace Kenshi_DnD
 
                     XElement[] fh = xmlFile.Root.Elements("faction_hostility").ToArray();
 
-                    for(int i = 0; i < fh.Length; i += 1)
+                    for (int i = 0; i < fh.Length; i += 1)
                     {
                         int factionId = int.Parse(fh[i].Element("idFaction").Value);
-                        string hostility = xmlFile.Root.Elements("hostilities").Where(h=> int.Parse(h.Element("id").Value) == 
+                        string hostility = xmlFile.Root.Elements("hostilities").Where(h => int.Parse(h.Element("id").Value) ==
                         int.Parse(fh[i].Element("idHostility").Value)).Select(h => h.Element("hostility").Value).FirstOrDefault();
 
                         factions[factionId - 1].AddHostility(hostility);
@@ -789,7 +792,7 @@ namespace Kenshi_DnD
                 mainWindow.Close();
                 return null;
             }
-            
+
         }
         private Item[] SqlGetItems()
         {
@@ -807,15 +810,15 @@ namespace Kenshi_DnD
             try
             {
                 connection = new MySqlConnection(connectionString);
-                
+
                 connection.Open();
 
-                
+
                 command = new MySqlCommand("SELECT count(*) FROM items;", connection);
                 reader = command.ExecuteReader();
                 reader.Read();
                 numberOfItems = reader.GetInt32(0);
-                reader.Close(); 
+                reader.Close();
 
                 Item[] items = new Item[numberOfItems];
                 int iteration = 0;
@@ -835,9 +838,9 @@ namespace Kenshi_DnD
                             reader.GetInt32(9), reader.GetInt32(10)), reader.GetBoolean(11));
                     iteration++;
                 }
-                reader.Close(); 
+                reader.Close();
 
-                
+
                 command = new MySqlCommand("SELECT i.name, i.description, i.value, i.resellValue, i.weight, ri.difficulty, ri.maxAmmo, stats.bruteForce, " +
                     "stats.dexterity, stats.hp, stats.resistance, stats.agility " +
                     "FROM items i INNER JOIN stats ON i.stats_id = stats.id " +
@@ -853,9 +856,9 @@ namespace Kenshi_DnD
                             reader.GetInt32(10), reader.GetInt32(11)));
                     iteration++;
                 }
-                reader.Close(); 
+                reader.Close();
 
-                
+
                 connection.Close();
 
                 return items;
@@ -863,8 +866,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetItems(); 
+                connection.Close();
+                return XmlGetItems();
             }
             catch (DBNotFoundException ex)
             {
@@ -943,7 +946,7 @@ namespace Kenshi_DnD
             try
             {
                 connection = new MySqlConnection(connectionString);
-                 MySqlCommand command = new MySqlCommand("select count(*) from limbs;",connection);
+                MySqlCommand command = new MySqlCommand("select count(*) from limbs;", connection);
                 connection.Open();
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -957,10 +960,10 @@ namespace Kenshi_DnD
                 reader = command.ExecuteReader();
                 limbs = new Limb[numOfLimbs];
 
-                for(int i = 0; i < numOfLimbs; i += 1)
+                for (int i = 0; i < numOfLimbs; i += 1)
                 {
                     reader.Read();
-                    limbs[i] = new Limb(reader.GetString(0),reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4),
+                    limbs[i] = new Limb(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4),
                         reader.GetInt32(5), reader.GetInt32(6));
                 }
                 reader.Close();
@@ -969,8 +972,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetLimbs(); 
+                connection.Close();
+                return XmlGetLimbs();
             }
             return limbs;
         }
@@ -1027,7 +1030,7 @@ namespace Kenshi_DnD
 
                 connection = new MySqlConnection(connectionString);
                 MySqlCommand command = new MySqlCommand("select count(*) from regions;", connection);
-                
+
                 connection.Open();
 
                 reader = command.ExecuteReader();
@@ -1043,7 +1046,7 @@ namespace Kenshi_DnD
                 {
                     reader.Read();
                     regions[i] = new Region(reader.GetString(1), reader.GetString(2),
-                        reader.GetBoolean(3),reader.GetBoolean(4),reader.GetBoolean(5),reader.GetBoolean(6),reader.GetBoolean(7));
+                        reader.GetBoolean(3), reader.GetBoolean(4), reader.GetBoolean(5), reader.GetBoolean(6), reader.GetBoolean(7));
                 }
                 reader.Close();
 
@@ -1052,8 +1055,8 @@ namespace Kenshi_DnD
                 reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    int regionId = reader.GetInt32(0) -1;
-                    int factionId = reader.GetInt32(1) -1;
+                    int regionId = reader.GetInt32(0) - 1;
+                    int factionId = reader.GetInt32(1) - 1;
 
                     regions[regionId].AddFaction(factions[factionId]);
                 }
@@ -1063,8 +1066,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetRegions(); 
+                connection.Close();
+                return XmlGetRegions();
             }
             return regions;
 
@@ -1089,15 +1092,15 @@ namespace Kenshi_DnD
 
 
                     XElement[] rf = xmlFile.Root.Elements("region_faction").ToArray();
-                    for (int i  = 0; i < rf.Length; i += 1)
+                    for (int i = 0; i < rf.Length; i += 1)
                     {
-                        
+
                         int regionId = int.Parse(rf[i].Element("regionId").Value);
                         int factionId = int.Parse(rf[i].Element("factionId").Value);
 
-                        regions[regionId -1].AddFaction(factions[factionId -1]);
+                        regions[regionId - 1].AddFaction(factions[factionId - 1]);
                     }
-                    
+
                     return regions;
                 }
                 else
@@ -1154,7 +1157,7 @@ namespace Kenshi_DnD
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
                 connection.Close();
-                return XmlGetRaces(); 
+                return XmlGetRaces();
             }
             return races;
         }
@@ -1178,11 +1181,11 @@ namespace Kenshi_DnD
                         .Select(r =>
                             new Race(
                                 r.Element("name").Value,
-                                stats[int.Parse(r.Element("stats_id").Value) -1].GetBruteForce(),
-                                stats[int.Parse(r.Element("stats_id").Value) -1].GetDexterity(),
-                                stats[int.Parse(r.Element("stats_id").Value) -1].GetHp(),
-                                stats[int.Parse(r.Element("stats_id").Value) -1].GetResistance(),
-                                stats[int.Parse(r.Element("stats_id").Value) -1].GetAgility()
+                                stats[int.Parse(r.Element("stats_id").Value) - 1].GetBruteForce(),
+                                stats[int.Parse(r.Element("stats_id").Value) - 1].GetDexterity(),
+                                stats[int.Parse(r.Element("stats_id").Value) - 1].GetHp(),
+                                stats[int.Parse(r.Element("stats_id").Value) - 1].GetResistance(),
+                                stats[int.Parse(r.Element("stats_id").Value) - 1].GetAgility()
                                 )).ToArray();
                     return races;
                 }
@@ -1193,7 +1196,7 @@ namespace Kenshi_DnD
             }
             catch (XMLNotFoundException xmlError)
             {
-                MessageBox.Show(xmlError.Message); 
+                MessageBox.Show(xmlError.Message);
                 mainWindow.Close();
                 return null;
             }
@@ -1230,14 +1233,14 @@ namespace Kenshi_DnD
                     reader.Read();
                     names[i] = reader.GetString(0);
                 }
-                    reader.Close();
+                reader.Close();
                 connection.Close();
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetNames(); 
+                connection.Close();
+                return XmlGetNames();
             }
             return names;
         }
@@ -1302,8 +1305,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetTitles(); 
+                connection.Close();
+                return XmlGetTitles();
             }
             return titles;
         }
@@ -1367,8 +1370,8 @@ namespace Kenshi_DnD
             catch (MySqlException ex)
             {
                 Debug.WriteLine("MySQL error: " + ex.Message);
-                connection.Close(); 
-                return XmlGetBackgrounds(); 
+                connection.Close();
+                return XmlGetBackgrounds();
             }
             return backgrounds;
         }

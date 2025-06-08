@@ -53,7 +53,7 @@
         // Base toughness
         const int BASE_TOUGHNESS = 7;
         // Constructor that generates a whole hero
-        public Hero(string name, string title,string backgroundStory,int bruteForce ,int dexterity, int resistance, int agility,
+        public Hero(string name, string title, string backgroundStory, int bruteForce, int dexterity, int resistance, int agility,
              int level, Race race, Race subrace, Limb[] limbs, Competency.StartCompetency startCompetency)
         {
             hired = false;
@@ -75,10 +75,10 @@
             this.startCompetency = startCompetency;
         }
         // Constructor of partial hero, only used to represent the starting character's stats 
-        public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs) 
+        public Hero(int bruteForce, int dexterity, int resistance, int agility, Race race, Race subrace, Limb[] limbs)
         {
-            heroStats = new StatModifier(bruteForce,dexterity,0,resistance,agility);
-            SetToughnessAtConstructor(7,race, subrace, limbs);
+            heroStats = new StatModifier(bruteForce, dexterity, 0, resistance, agility);
+            SetToughnessAtConstructor(7, race, subrace, limbs);
             this.race = race;
             this.subrace = subrace;
             this.limbs = limbs;
@@ -93,7 +93,7 @@
             {
                 case Stats.Stat.BruteForce:
                     {
-                        for (int i = 0; i < limbs.Length; i+=1)
+                        for (int i = 0; i < limbs.Length; i += 1)
                         {
                             if (limbs[i] != null)
                             {
@@ -105,7 +105,7 @@
                     }
                 case Stats.Stat.Dexterity:
                     {
-                        for (int i = 0; i < limbs.Length; i+=1)
+                        for (int i = 0; i < limbs.Length; i += 1)
                         {
                             if (limbs[i] != null)
                             {
@@ -122,7 +122,7 @@
                     }
                 case Stats.Stat.Resistance:
                     {
-                        for (int i = 0; i < limbs.Length; i+=1)
+                        for (int i = 0; i < limbs.Length; i += 1)
                         {
                             if (limbs[i] != null)
                             {
@@ -134,7 +134,7 @@
                     }
                 case Stats.Stat.Agility:
                     {
-                        for (int i = 0; i < limbs.Length; i+=1)
+                        for (int i = 0; i < limbs.Length; i += 1)
                         {
                             if (limbs[i] != null)
                             {
@@ -151,7 +151,7 @@
         private void SetToughnessAtConstructor(int toughness, Race race, Race subrace, Limb[] limbs)
         {
             int stat = 0;
-            for (int i = 0; i < limbs.Length; i+=1)
+            for (int i = 0; i < limbs.Length; i += 1)
             {
                 if (limbs[i] != null)
                 {
@@ -159,7 +159,7 @@
                 }
             }
             SetToughness(toughness + race.GetHp() + subrace.GetHp() + stat);
-            this.hp = this.toughness;   
+            this.hp = this.toughness;
         }
         // Gets a statmodifier copy of all their stats
         public StatModifier GetAllStats()
@@ -283,12 +283,12 @@
             {
                 if (GetLimbs()[i] != null)
                 {
-					if (!GetLimbs()[i].GetBeingUsed())
-					{
-						limbsAvailable += 1;
-					}
-				}
-                
+                    if (!GetLimbs()[i].GetBeingUsed())
+                    {
+                        limbsAvailable += 1;
+                    }
+                }
+
             }
             if (limbsAvailable >= item.GetLimbsNeeded())
             {
@@ -335,11 +335,11 @@
         public int GetMartialArtStat()
         {
             int martialArtPower = 0;
-            for (int i = 0; i < limbs.Length; i+=1)
+            for (int i = 0; i < limbs.Length; i += 1)
             {
                 if (limbs[i] != null)
                 {
-                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) + 
+                    martialArtPower += (limbs[i].GetDexterity() + limbs[i].GetBruteForce()) +
                         (limbs[i].GetAgility() == 0 ? 0 : limbs[i].GetAgility() / 2);
                 }
             }
@@ -383,7 +383,7 @@
                     }
             }
         }
-       // Heals the hero
+        // Heals the hero
         public void Heal(int healHp)
         {
             if (GetHp() + healHp > GetToughness())
@@ -398,14 +398,14 @@
         // Hurts the hero
         public bool Hurt(int hurtHp)
         {
-            
-            if(hurtHp < 0)
+
+            if (hurtHp < 0)
             {
                 hurtHp = 0;
             }
             //In kenshi, the best way to level up is to get beaten a lot... In my game, it mostly helps at the start if anything
             bool leveledUp = GainXp(hurtHp / PART_DAMAGE_AS_XP);
-            if(GetHp() - hurtHp < 0)
+            if (GetHp() - hurtHp < 0)
             {
                 this.SetHp(0);
             }
@@ -442,7 +442,7 @@
             {
                 Limb limbToReturn = limbs[limbIndex];
 
-				limbs[limbIndex] = null;
+                limbs[limbIndex] = null;
                 return limbToReturn;
             }
             else
@@ -453,7 +453,7 @@
                     {
                         Limb limbToReturn = limbs[i];
 
-						limbs[i] = null;
+                        limbs[i] = null;
                         return limbToReturn;
                     }
 
@@ -486,27 +486,27 @@
                 }
             }
             Limb randomLimb = null;
-			if (atLeastOne)
+            if (atLeastOne)
             {
                 do
                 {
                     int randomIndex = rnd.Next(0, limbs.Length);
-                    if (limbs[randomIndex]!= null)
+                    if (limbs[randomIndex] != null)
                     {
                         randomLimb = limbs[randomIndex];
                     }
                 } while (randomLimb == null);
             }
 
-            return randomLimb == null? new Limb("No tiene miembros..",0,0,0,0,0,0):randomLimb;
+            return randomLimb == null ? new Limb("No tiene miembros..", 0, 0, 0, 0, 0, 0) : randomLimb;
         }
         // Removes all items from inventory, and returns the string of which items
         public string FreeAllItems()
         {
             int count = 0;
-            for(int i = 0; i < limbs.Length; i += 1)
+            for (int i = 0; i < limbs.Length; i += 1)
             {
-                if(limbs[i] != null)
+                if (limbs[i] != null)
                 {
                     if (limbs[i].GetBeingUsed())
                     {
@@ -522,7 +522,7 @@
         {
             xpPoints -= 1;
             heroStats.UpgradeStat(statToUpgrade, 1);
-            if(statToUpgrade == Stats.Stat.HP)
+            if (statToUpgrade == Stats.Stat.HP)
             {
                 toughness += 1;
                 Heal(1);
@@ -545,21 +545,21 @@
                 $"Experiencia: {experience}\n" +
                 $"Raza: {race.GetName()}\n" +
                 $"{(subrace.GetName() != "Puro" ? $"Subraza: {subrace.GetName()}\n" : "")}"
-                + ((IsAmputee() ) ? ("Le faltan miembros... Acude al mecánico de extremidades...\n") : (""))
+                + ((IsAmputee()) ? ("Le faltan miembros... Acude al mecánico de extremidades...\n") : (""))
                 + GetAllStats().ToString();
         }
         public string Meet()
         {
-            return $"{backgroundStory}" 
-                + "\n-------------------\n" + 
-                ToString() 
-                + "\n-------------------\n" + 
-                "Me uniré a tu aventura por " +  GetCompetencyCost();
+            return $"{backgroundStory}"
+                + "\n-------------------\n" +
+                ToString()
+                + "\n-------------------\n" +
+                "Me uniré a tu aventura por " + GetCompetencyCost();
         }
         // Returns the cost of the hero depending on its competency
         public int GetCompetencyCost()
         {
-          
+
             int cost = 0;
 
             switch (startCompetency)

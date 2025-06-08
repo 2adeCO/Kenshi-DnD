@@ -1,13 +1,13 @@
 ﻿
+using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using System.IO;
-using MySql.Data.MySqlClient;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Threading;
 using System.Xml.Linq;
 
@@ -38,7 +38,7 @@ namespace Kenshi_DnD
             timer.Interval = TimeSpan.FromSeconds(1);
             rnd = new Random();
             // Sets PageController to Menu UserControl
-            PageController.Content = new Menu(this,PageController, cursors, rnd);
+            PageController.Content = new Menu(this, PageController, cursors, rnd);
         }
         // Adds a second to the adventure
         private void AddSecondsToAdventureTime(Adventure adventure)
@@ -71,18 +71,18 @@ namespace Kenshi_DnD
             int arrayNum = cursorCurFiles.Length + cursorAniFiles.Length;
             string[] cursorFiles = new string[arrayNum];
 
-            for (int i = 0; i < cursorCurFiles.Length; i+=1)
+            for (int i = 0; i < cursorCurFiles.Length; i += 1)
             {
                 cursorFiles[i] = cursorCurFiles[i];
             }
-            for (int i = 0; i < cursorAniFiles.Length; i+=1)
+            for (int i = 0; i < cursorAniFiles.Length; i += 1)
             {
                 cursorFiles[i + cursorCurFiles.Length] = cursorAniFiles[i];
             }
 
 
             cursors = new Cursor[arrayNum];
-            for (int i = 0; i < arrayNum; i+=1)
+            for (int i = 0; i < arrayNum; i += 1)
             {
                 cursors[i] = new Cursor(cursorFiles[i]);
             }
@@ -98,10 +98,10 @@ namespace Kenshi_DnD
             int size = 0;
             int color = 0;
 
-            for (int i = 0; i < message.Length; i+=1)
+            for (int i = 0; i < message.Length; i += 1)
             {
                 // If it's normal text, just write it normally
-                if (!foundDecoration && ! startDecoration)
+                if (!foundDecoration && !startDecoration)
                 {
                     // If the special character is found, then save the bool
                     if (message[i] == '@')
@@ -144,7 +144,7 @@ namespace Kenshi_DnD
                     {
                         // If the decoration is known, then, start it until the special character is found again
                         if (message[i] != '@')
-                        { 
+                        {
                             txt += message[i];
                         }
                         else
@@ -155,7 +155,7 @@ namespace Kenshi_DnD
                             inlineRun.Text = txt;
                             inlineRun.FontWeight = FontWeights.Bold;
                             inlineRun.Foreground = GetBrushByNum(color);
-                            if(size != 0)
+                            if (size != 0)
                             {
                                 inlineRun.FontSize = size;
                             }
@@ -166,8 +166,8 @@ namespace Kenshi_DnD
                             size = 0;
                         }
                     }
-                    
-                }    
+
+                }
             }
             // If some text at the end of the loop and not special, these lines of code will save them
             inlineRun = new Run();
@@ -360,12 +360,12 @@ namespace Kenshi_DnD
                 }
                 return monstersToReturn;
             }
-            catch(MySqlException ex)
+            catch (MySqlException ex)
             {
                 connection.Close();
                 return XmlGenerateMonsters(adventure, faction, rnd);
             }
-            
+
         }
         // Generates random monsters that are in a faction, using XML
         public Monster[] XmlGenerateMonsters(Adventure adventure, Faction faction, Random rnd)

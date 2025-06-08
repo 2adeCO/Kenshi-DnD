@@ -22,7 +22,7 @@ namespace Kenshi_DnD
         Monster[] monsters;
         Random rnd;
         ITurnable currentAttacker;
-        public CombatWindow(MainWindow mainWindow,ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
+        public CombatWindow(MainWindow mainWindow, ContentControl controller, Cursor[] cursors, Random rnd, Adventure myAdventure, Monster[] monsters)
         {
             InitializeComponent();
             // Starts a timer for the UI
@@ -43,19 +43,19 @@ namespace Kenshi_DnD
             this.heroes = myAdventure.GetCurrentSquad();
             this.monsters = monsters;
             // Instantiates a new combat
-            myCombat = new Combat(heroes, monsters, myAdventure,rnd, this);
-            GameStateUI.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" +myAdventure.GetCurrentSquadName() + " de @" + myAdventure.GetFactionName()+" contra " 
+            myCombat = new Combat(heroes, monsters, myAdventure, rnd, this);
+            GameStateUI.Content = mainWindow.GenerateTextblock("@" + myAdventure.GetColor() + "@" + myAdventure.GetCurrentSquadName() + " de @" + myAdventure.GetFactionName() + " contra "
                 + monsters[0].GetFaction().GetFactionName());
             // Shows in the UI the fighters
-            Heroes.Content = mainWindow.GenerateTextblock("@"+myAdventure.GetColor()+"@" + myAdventure.GetCurrentSquadName() + "@");
-            Monsters.Content = mainWindow.GenerateTextblock(monsters[0].GetFaction().GetFactionName() +" de " + myAdventure.GetCurrentRegion().GetName());
+            Heroes.Content = mainWindow.GenerateTextblock("@" + myAdventure.GetColor() + "@" + myAdventure.GetCurrentSquadName() + "@");
+            Monsters.Content = mainWindow.GenerateTextblock(monsters[0].GetFaction().GetFactionName() + " de " + myAdventure.GetCurrentRegion().GetName());
             currentAttacker = myCombat.GetCurrentAttacker();
 
             // UI Updates
             FillItemTrees();
             UpdateGameStateUI();
             UpdateFightersGrid();
-            UpdateFightersStatsGrid(null,null);
+            UpdateFightersStatsGrid(null, null);
             UpdateNextTurnUI();
             // Monster attacks if is the current attacker
             if (currentAttacker is Monster)
@@ -86,7 +86,7 @@ namespace Kenshi_DnD
             await myCombat.NextTurn(fighterTarget);
 
             // Target becomes null if target has died
-            if(fighterTarget != null)
+            if (fighterTarget != null)
             {
                 if (!fighterTarget.IsAlive())
                 {
@@ -96,7 +96,7 @@ namespace Kenshi_DnD
             // Updates the current attacker
             currentAttacker = myCombat.GetCurrentAttacker();
             // Updates UI after the turn
-            UpdateFightersStatsGrid(null,null);
+            UpdateFightersStatsGrid(null, null);
             UpdateFightersGrid();
             UpdateNextTurnUI();
             FillItemTrees();
@@ -128,40 +128,40 @@ namespace Kenshi_DnD
             AllMonsters.ColumnDefinitions.Clear();
 
 
-            for (int i = 0; i < 1; i+=1)
+            for (int i = 0; i < 1; i += 1)
             {
                 ColumnDefinition column = new ColumnDefinition();
                 column.Width = new GridLength(1, GridUnitType.Star);
                 AllHeroes.ColumnDefinitions.Add(column);
             }
-            for (int i = 0; i < heroes.Length; i+=1)
+            for (int i = 0; i < heroes.Length; i += 1)
             {
                 RowDefinition row = new RowDefinition();
                 row.Height = GridLength.Auto;
                 AllHeroes.RowDefinitions.Add(row);
             }
 
-            for (int i = 0; i < 1; i+=1)
+            for (int i = 0; i < 1; i += 1)
             {
                 ColumnDefinition column = new ColumnDefinition();
                 column.Width = new GridLength(1, GridUnitType.Star);
                 AllMonsters.ColumnDefinitions.Add(column);
             }
-            for (int i = 0; i < monsters.Length; i+=1)
+            for (int i = 0; i < monsters.Length; i += 1)
             {
                 RowDefinition row = new RowDefinition();
                 row.Height = GridLength.Auto;
                 AllMonsters.RowDefinitions.Add(row);
             }
 
-            for (int i = 0; i < heroes.Length; i+=1)
+            for (int i = 0; i < heroes.Length; i += 1)
             {
                 Button button = new Button();
                 //Put content with the hero name and a progress bar with its hp
                 button.Content = FighterStackPanel(heroes[i]);
                 button.MouseEnter += ChangeCursorWhenHover;
-                button.Tag = heroes[i];             
-                
+                button.Tag = heroes[i];
+
 
                 button.HorizontalAlignment = HorizontalAlignment.Left;
                 button.Click += SelectTarget;
@@ -179,14 +179,14 @@ namespace Kenshi_DnD
                     AllHeroes.Children.Add(button);
                 }
             }
-            for (int i = 0; i < monsters.Length; i+=1)
+            for (int i = 0; i < monsters.Length; i += 1)
             {
                 Button button = new Button();
 
                 button.Content = FighterStackPanel(monsters[i]);
                 button.MouseEnter += ChangeCursorWhenHover;
                 button.HorizontalAlignment = HorizontalAlignment.Right;
-               
+
                 if (monsters[i].IsAlive())
                 {
                     button.Tag = monsters[i];
@@ -232,7 +232,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < rangedArray.Length; i+=1)
+                for (int i = 0; i < rangedArray.Length; i += 1)
                 {
                     ranged.Items.Add(GenerateItem(rangedArray[i]));
                 }
@@ -243,7 +243,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < meleeArray.Length; i+=1)
+                for (int i = 0; i < meleeArray.Length; i += 1)
                 {
                     notConsumable.Items.Add(GenerateItem(meleeArray[i]));
                 }
@@ -255,7 +255,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < consumableArray.Length; i+=1)
+                for (int i = 0; i < consumableArray.Length; i += 1)
                 {
                     consumable.Items.Add(GenerateItem(consumableArray[i]));
                 }
@@ -267,7 +267,7 @@ namespace Kenshi_DnD
 
             UnselectedItems.Items.Add(root);
 
-            
+
             if (currentAttacker is Monster)
             {
                 return;
@@ -291,7 +291,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < rangedArray.Length; i+=1)
+                for (int i = 0; i < rangedArray.Length; i += 1)
                 {
                     ranged.Items.Add(GenerateItem(rangedArray[i]));
                 }
@@ -302,7 +302,7 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < meleeArray.Length; i+=1)
+                for (int i = 0; i < meleeArray.Length; i += 1)
                 {
                     notConsumable.Items.Add(GenerateItem(meleeArray[i]));
                 }
@@ -314,12 +314,12 @@ namespace Kenshi_DnD
             }
             else
             {
-                for (int i = 0; i < consumableArray.Length; i+=1)
+                for (int i = 0; i < consumableArray.Length; i += 1)
                 {
                     consumable.Items.Add(GenerateItem(consumableArray[i]));
                 }
             }
-            if(meleeArray.Length == 0 && consumableArray.Length == 0)
+            if (meleeArray.Length == 0 && consumableArray.Length == 0)
             {
                 melee.Visibility = Visibility.Collapsed;
             }
@@ -327,9 +327,9 @@ namespace Kenshi_DnD
 
         }
         // Updates the stats bars of current attacker and target, if current attacker is hero
-        private void UpdateFightersStatsGrid(object sender , EventArgs e)
+        private void UpdateFightersStatsGrid(object sender, EventArgs e)
         {
-            
+
             double width = HeroStatsGrid.ActualWidth;
 
             HeroStatsGrid.Children.Clear();
@@ -537,7 +537,7 @@ namespace Kenshi_DnD
                     Monster monster = (Monster)fighterTarget;
                     bruteForce = monster.GetStrength();
                     biggestNum = bruteForce;
-                    
+
                     resistance = monster.GetResistance();
                     if (biggestNum < resistance)
                     {
@@ -625,8 +625,8 @@ namespace Kenshi_DnD
                     }
                 }
             }
-            
-            
+
+
 
         }
         // Generates the structure of the tree views
@@ -668,7 +668,7 @@ namespace Kenshi_DnD
                             AddItemToHero(currentHero, item);
                         }
                     }
-                    UpdateFightersStatsGrid(null,null);
+                    UpdateFightersStatsGrid(null, null);
                     FillItemTrees();
                     UpdateFightersGrid();
                     UpdateNextTurnUI();
@@ -707,7 +707,7 @@ namespace Kenshi_DnD
                 UpdateLogUI(currentAttacker.GetName() + " mira a " + fighterTarget.GetName());
             }
             UpdateFightersGrid();
-            UpdateFightersStatsGrid(null,null);
+            UpdateFightersStatsGrid(null, null);
         }
         // Updates the timer tick
         private void Timer_Tick(object sender, EventArgs e)
@@ -742,21 +742,21 @@ namespace Kenshi_DnD
             NextTurnGrid.Children.Clear();
             NextTurnGrid.ColumnDefinitions.Clear();
             NextTurnGrid.RowDefinitions.Clear();
-            
-            for(int i = 0; i < 3; i += 1)
+
+            for (int i = 0; i < 3; i += 1)
             {
                 ColumnDefinition columnDefinition = new ColumnDefinition();
                 columnDefinition.Width = GridLength.Auto;
                 NextTurnGrid.ColumnDefinitions.Add(columnDefinition);
             }
-            for(int i = 0; i < 2;  i += 1)
+            for (int i = 0; i < 2; i += 1)
             {
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = GridLength.Auto;
                 NextTurnGrid.RowDefinitions.Add(rowDefinition);
             }
 
-            for(int i = 0; i < 3; i += 1)
+            for (int i = 0; i < 3; i += 1)
             {
                 Border border = new Border();
                 border.Background = Brushes.Snow;
@@ -772,7 +772,7 @@ namespace Kenshi_DnD
                 {
                     Hero hero = (Hero)nextTurns[i];
 
-                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+1}.@   " + hero.GetNameAndTitle()));
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i + 1}.@   " + hero.GetNameAndTitle()));
                     border.BorderBrush = Brushes.AntiqueWhite;
                     border.Child = textBlock;
 
@@ -782,7 +782,7 @@ namespace Kenshi_DnD
                     Monster monster = (Monster)nextTurns[i];
 
 
-                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+1}.@  " + nextTurns[i].GetName()));
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i + 1}.@  " + nextTurns[i].GetName()));
                     border.BorderBrush = mainWindow.GetBrushByNum(monster.GetFaction().GetFactionColor());
                     border.Child = textBlock;
                 }
@@ -797,7 +797,7 @@ namespace Kenshi_DnD
                 border.Background = Brushes.Snow;
                 border.BorderThickness = new Thickness(2);
                 border.CornerRadius = new CornerRadius(5);
-                border.Padding = new Thickness(10,0,10,0);
+                border.Padding = new Thickness(10, 0, 10, 0);
                 border.Margin = new Thickness(1, 3, 1, 3);
 
 
@@ -805,21 +805,21 @@ namespace Kenshi_DnD
                 textBlock.FontSize = 12;
 
 
-                if (nextTurns[i+3] is Hero)
+                if (nextTurns[i + 3] is Hero)
                 {
-                    Hero hero = (Hero)nextTurns[i+3];
+                    Hero hero = (Hero)nextTurns[i + 3];
 
-                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+4}.@   " + hero.GetNameAndTitle()));
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i + 4}.@   " + hero.GetNameAndTitle()));
                     border.BorderBrush = Brushes.AntiqueWhite;
                     border.Child = textBlock;
 
                 }
                 else
                 {
-                    Monster monster = (Monster)nextTurns[i+3];
+                    Monster monster = (Monster)nextTurns[i + 3];
 
 
-                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i+4}.@   " + nextTurns[i +3].GetName()));
+                    textBlock.Inlines.AddRange(mainWindow.DecorateText($"@916@{i + 4}.@   " + nextTurns[i + 3].GetName()));
                     border.BorderBrush = mainWindow.GetBrushByNum(monster.GetFaction().GetFactionColor());
                     border.Child = textBlock;
                 }
@@ -890,7 +890,7 @@ namespace Kenshi_DnD
                         {
                             faction.AddOrSubtractRelation(-20);
                         }
-                            mainWindow.PageController.Content = new Zone(mainWindow, controller, cursors, rnd, myAdventure, myAdventure.GetCurrentRegion());
+                        mainWindow.PageController.Content = new Zone(mainWindow, controller, cursors, rnd, myAdventure, myAdventure.GetCurrentRegion());
                         break;
                     }
                 case -1:
@@ -916,7 +916,7 @@ namespace Kenshi_DnD
         // Removes items from hero inventories
         private void FreeInventoryFromAllHeroes()
         {
-            for(int i = 0; i < heroes.Length; i += 1)
+            for (int i = 0; i < heroes.Length; i += 1)
             {
                 heroes[i].FreeAllItems();
             }
@@ -952,7 +952,7 @@ namespace Kenshi_DnD
             TextBlock textBlock = new TextBlock();
             textBlock.Inlines.AddRange(mainWindow.DecorateText(monster == fighterTarget ?
                 "🎯 " + monster.GetName() : monster.GetName()));
-            textBlock.ToolTip = mainWindow.HeaderToolTipThemer(monster.GetName(),monster.ToString());
+            textBlock.ToolTip = mainWindow.HeaderToolTipThemer(monster.GetName(), monster.ToString());
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             textBlock.Padding = new Thickness(2);
             stackPanel.Children.Add(textBlock);
@@ -969,7 +969,7 @@ namespace Kenshi_DnD
             ToolTipService.SetInitialShowDelay(textBlock, 100);
             Grid.SetColumn(textBlock, 1);
             grid.Children.Add(textBlock);
-           
+
             if (!monster.IsAlive())
             {
                 textBlock = new TextBlock();
@@ -1000,7 +1000,7 @@ namespace Kenshi_DnD
                 }
             }
             stackPanel.Children.Add(grid);
-            
+
             return stackPanel;
         }
         // Returns a stylized stackpanel of a hero
@@ -1014,7 +1014,7 @@ namespace Kenshi_DnD
             ToolTipService.SetInitialShowDelay(label, 100);
             stackPanel.Children.Add(label);
 
-            if(hero == fighterTarget)
+            if (hero == fighterTarget)
             {
                 label.Content = "🎯 " + hero.GetName();
                 LinearGradientBrush linearBrush = new LinearGradientBrush();
@@ -1069,13 +1069,13 @@ namespace Kenshi_DnD
             linearColorBrush.StartPoint = new System.Windows.Point(0, 0);
             linearColorBrush.EndPoint = new System.Windows.Point(1, 0);
             linearColorBrush.GradientStops.Add(new GradientStop(Colors.White, 0.0));
-            linearColorBrush.GradientStops.Add(new GradientStop(Colors.WhiteSmoke,1.0));
+            linearColorBrush.GradientStops.Add(new GradientStop(Colors.WhiteSmoke, 1.0));
             button.Background = linearColorBrush;
 
             border.Child = button;
             return border;
         }
-        
+
         //The use of this method is to change the cursor when hovering over a button
         //I do not like it, but it's the only way to prevent the cursor from changing when the button is being clicked
         //that isn't too complex
@@ -1098,7 +1098,7 @@ namespace Kenshi_DnD
                 }
                 else
                 {
-                    if(button.Tag is Hero)
+                    if (button.Tag is Hero)
                     {
                         if (hero.GetInventory().AreConsumableItems())
                         {
@@ -1113,27 +1113,27 @@ namespace Kenshi_DnD
                             }
                         }
                     }
-                    
+
                 }
-                
-                
+
+
             }
         }
         //Generates the TreeViewItem that represents an item for the inventories
         private TreeViewItem GenerateItem(Item item)
         {
             string name = item.GetName();
-            if(item is RangedItem)
+            if (item is RangedItem)
             {
                 RangedItem rangedItem = (RangedItem)item;
-                name += $" [{rangedItem.GetAmmoAndMaxAmmo()}]"; 
+                name += $" [{rangedItem.GetAmmoAndMaxAmmo()}]";
             }
             Border border = new Border();
             border.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#e3e4c9"));
             border.BorderThickness = new Thickness(2);
             border.CornerRadius = new CornerRadius(5);
-            border.Child = new TextBlock() { Text = name, FontSize = 14};
-            border.Padding = new Thickness(10,0,10,0);
+            border.Child = new TextBlock() { Text = name, FontSize = 14 };
+            border.Padding = new Thickness(10, 0, 10, 0);
             border.Background = new SolidColorBrush(Colors.WhiteSmoke);
 
 

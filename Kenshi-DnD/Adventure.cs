@@ -237,7 +237,7 @@ namespace Kenshi_DnD
         public void HireHero(Hero hero)
         {
 
-            if ( GetHeroesCount() >= MAX_HEROES || hero.IsHired())
+            if (GetHeroesCount() >= MAX_HEROES || hero.IsHired())
             {
                 return;
             }
@@ -317,7 +317,7 @@ namespace Kenshi_DnD
                     {
                         if (savedSquads[keys[i]] == currentSquad)
                         {
-                            if (i == 0) 
+                            if (i == 0)
                             {
                                 // If the squad that is empty is the current, and the first squad, we set the current squad to the next one
                                 SetCurrentSquad(keys[i + 1]);
@@ -328,7 +328,7 @@ namespace Kenshi_DnD
                                 SetCurrentSquad(keys[0]);
                             }
                         }
-                        
+
                         DeleteSquad(keys[i]);
                     }
                     else
@@ -486,7 +486,7 @@ namespace Kenshi_DnD
         // Creates a new squad copy with the current squad's heroes, and adds it to the saved squads dictionary, also sets the current squad to the new squad
         public void CreateSquad(string squadName)
         {
-            if(savedSquads.Count >= MAX_SQUADS)
+            if (savedSquads.Count >= MAX_SQUADS)
             {
                 return;
             }
@@ -603,12 +603,12 @@ namespace Kenshi_DnD
         //Gives a token to all regions, used when the player has a fight, regions update their items and heroes
         public void GainToken()
         {
-            for(int i = 0; i < allRegions.Length; i += 1)
-            {                
-               allRegions[i].GainToken();
+            for (int i = 0; i < allRegions.Length; i += 1)
+            {
+                allRegions[i].GainToken();
             }
         }
-        
+
 
     }
 }

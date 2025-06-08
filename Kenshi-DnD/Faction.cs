@@ -20,17 +20,17 @@ namespace Kenshi_DnD
         List<Hostilities.Hostility> hostilities;
         // Decides if you will lose or gain relations if you win against them
         bool respectByFighting;
-        
+
         // Constructor
         public Faction(int factionId, string factionName, string factionDescription, int relations, int factionColor, bool respectByFighting)
-        {         
+        {
             this.factionId = factionId;
             this.factionName = factionName;
             this.factionDescription = factionDescription;
             this.relations = relations;
             this.factionColor = factionColor;
             this.respectByFighting = respectByFighting;
-              hostilities = new List<Hostilities.Hostility>();
+            hostilities = new List<Hostilities.Hostility>();
         }
         // Getters and setters
         public int GetFactionId()
@@ -39,7 +39,7 @@ namespace Kenshi_DnD
         }
         public string GetFactionName()
         {
-            return "@" + factionColor + "@" + factionName +"@";
+            return "@" + factionColor + "@" + factionName + "@";
         }
         public string GetFactionDescription()
         {
@@ -94,7 +94,7 @@ namespace Kenshi_DnD
                         return Hostilities.Hostility.Survival;
                     }
             }
-            
+
         }
         // Gains or loses relations depending on hostilities
         public void AffectRelations(Adventure myAdventure, Random rnd)
@@ -109,11 +109,11 @@ namespace Kenshi_DnD
                             Hero[] heroes = myAdventure.GetHeroes();
                             for (int j = 0; j < myAdventure.GetHeroesCount(); j += 1)
                             {
-                                if(heroes[j].GetSubrace().GetName() != "Greenlander")
+                                if (heroes[j].GetSubrace().GetName() != "Greenlander")
                                 {
                                     relationsLoss -= 5;
                                 }
-                                for(int k = 0; k < heroes[j].GetLimbs().Length; k += 1)
+                                for (int k = 0; k < heroes[j].GetLimbs().Length; k += 1)
                                 {
                                     if (heroes[j].GetLimbs()[k].GetName() != "Extremidad normal")
                                     {
@@ -121,7 +121,7 @@ namespace Kenshi_DnD
                                     }
                                 }
                             }
-                            if(relationsLoss == 0)
+                            if (relationsLoss == 0)
                             {
                                 AddOrSubtractRelation(10);
                             }
@@ -130,7 +130,7 @@ namespace Kenshi_DnD
                         }
                     case Hostilities.Hostility.CorruptOligarchy:
                         {
-                            if(myAdventure.GetCats() / myAdventure.GetHeroesCount() < 200)
+                            if (myAdventure.GetCats() / myAdventure.GetHeroesCount() < 200)
                             {
                                 relationsLoss += 5;
                             }
@@ -150,7 +150,7 @@ namespace Kenshi_DnD
                                     relationsLoss -= 5;
                                 }
                             }
-                            if(relationsLoss == 0)
+                            if (relationsLoss == 0)
                             {
                                 AddOrSubtractRelation(5);
                             }
@@ -166,7 +166,7 @@ namespace Kenshi_DnD
                                     relationsLoss -= 10;
                                 }
                             }
-                            if(relationsLoss == 0)
+                            if (relationsLoss == 0)
                             {
                                 AddOrSubtractRelation(5);
                             }
@@ -198,9 +198,9 @@ namespace Kenshi_DnD
                         }
                 }
             }
-            
+
             AddOrSubtractRelation(relationsLoss);
-           
+
         }
         // Adds or subtracts an amount from the relations
         public void AddOrSubtractRelation(int amount)
@@ -210,7 +210,7 @@ namespace Kenshi_DnD
             {
                 relations = 100;
             }
-            if(relations < 0)
+            if (relations < 0)
             {
                 relations = 0;
             }
@@ -226,7 +226,7 @@ namespace Kenshi_DnD
                 {
                     case Hostilities.Hostility.OkranReligion:
                         {
-                            toReturn+= "\n  Atacará a los no Greenlander y a gente con extremidades robóticas.";
+                            toReturn += "\n  Atacará a los no Greenlander y a gente con extremidades robóticas.";
                             break;
                         }
                     case Hostilities.Hostility.CorruptOligarchy:

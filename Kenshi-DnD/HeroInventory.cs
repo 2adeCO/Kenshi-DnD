@@ -12,12 +12,12 @@
         public string MakeAllItemsDisponible(Hero hero)
         {
             string itemNames = "";
-            for (int i = 0; i < items.Count; i+=1)
+            for (int i = 0; i < items.Count; i += 1)
             {
                 itemNames += items[i].GetName() + (i == items.Count - 1 ? "" : ", ");
                 items[i].SetAlreadyUsed(false);
             }
-            items.RemoveRange(0,items.Count);
+            items.RemoveRange(0, items.Count);
 
             return itemNames;
         }
@@ -28,31 +28,31 @@
             switch (opt)
             {
                 case Stats.Stat.BruteForce:
-                    for (int i = 0; i < items.Count; i+=1)
+                    for (int i = 0; i < items.Count; i += 1)
                     {
                         stat += items[i].GetStatToModify().GetBruteForce();
                     }
                     break;
                 case Stats.Stat.Dexterity:
-                    for (int i = 0; i < items.Count; i+=1)
+                    for (int i = 0; i < items.Count; i += 1)
                     {
                         stat += items[i].GetStatToModify().GetDexterity();
                     }
                     break;
                 case Stats.Stat.HP:
-                    for (int i = 0; i < items.Count; i+=1)
+                    for (int i = 0; i < items.Count; i += 1)
                     {
                         stat += items[i].GetStatToModify().GetHp();
                     }
                     break;
                 case Stats.Stat.Resistance:
-                    for (int i = 0; i < items.Count; i+=1)
+                    for (int i = 0; i < items.Count; i += 1)
                     {
                         stat += items[i].GetStatToModify().GetResistance();
                     }
                     break;
                 case Stats.Stat.Agility:
-                    for (int i = 0; i < items.Count; i+=1)
+                    for (int i = 0; i < items.Count; i += 1)
                     {
                         stat += items[i].GetStatToModify().GetAgility();
                     }
@@ -63,7 +63,7 @@
         // Returns if said items are in the inventory
         public bool AreRangedItems()
         {
-            for (int i = 0; i < items.Count; i+=1)
+            for (int i = 0; i < items.Count; i += 1)
             {
                 if (items[i] is RangedItem)
                 {
@@ -74,7 +74,7 @@
         }
         public bool AreMeleeItems()
         {
-            for (int i = 0; i < items.Count; i+=1)
+            for (int i = 0; i < items.Count; i += 1)
             {
                 if (items[i] is MeleeItem)
                 {
@@ -89,7 +89,7 @@
         }
         public bool AreConsumableItems()
         {
-            for (int i = 0; i < items.Count; i+=1)
+            for (int i = 0; i < items.Count; i += 1)
             {
                 if (items[i] is MeleeItem)
                 {
