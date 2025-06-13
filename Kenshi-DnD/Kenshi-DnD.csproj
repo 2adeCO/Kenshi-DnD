@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\img\kenshi_dnd_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,6 +55,7 @@
     <Content Include="Resources\cursors\CursorLicenseInfo.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\img\kenshi_dnd_logo.ico" />
     <Content Include="saves\saves.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
