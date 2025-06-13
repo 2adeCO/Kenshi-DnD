@@ -133,8 +133,17 @@ namespace Kenshi_DnD
                 AdventureChooserBorder.Visibility = System.Windows.Visibility.Visible;
                 AdventureChooserMenu.Visibility = System.Windows.Visibility.Visible;
             }
+
+            string appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "Kenshi_DnD");
+            // Creates saves directory if it doesn't exist
+            if (!Directory.Exists(appDataPath))
+            {
+                Directory.CreateDirectory(appDataPath);
+            }
             // Loads the paths of the files
-            string[] adventureFiles = Directory.GetFiles("./saves", "*.adventure");
+            string[] adventureFiles = Directory.GetFiles(appDataPath, "*.adventure");
 
             AdventureChooserMenu.Children.Clear();
 
@@ -474,13 +483,18 @@ namespace Kenshi_DnD
                     }
                 } while (randomItemAtStart == null);
                 myAdventure.GetInventory().AddItem(randomItemAtStart);
+
+
+                string appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "Kenshi_DnD");
                 // Creates saves directory if it doesn't exist
-                if (!Directory.Exists("./saves"))
+                if (!Directory.Exists(appDataPath))
                 {
-                    Directory.CreateDirectory("./saves");
+                    Directory.CreateDirectory(appDataPath);
                 }
                 // Creates new path for the adventure
-                string adventurePath = "./saves/" + myAdventure.GetId() + ".adventure";
+                string adventurePath = appDataPath + "/" + myAdventure.GetId() + ".adventure";
                 // If it's new, it serializes the adventure in that path
                 if (File.Exists(adventurePath))
                 {

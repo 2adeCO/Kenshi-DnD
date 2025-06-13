@@ -298,9 +298,11 @@ namespace Kenshi_DnD
         // Saves the adventure
         public void SaveAdventure(Adventure adventure)
         {
-
+            string appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "Kenshi_DnD");
 #pragma warning disable SYSLIB0011
-            FileStream fileStream = new FileStream("./saves/" + adventure.GetId() + ".adventure", FileMode.Create);
+            FileStream fileStream = new FileStream(appDataPath + "/" + adventure.GetId() + ".adventure", FileMode.Create);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(fileStream, adventure);
 #pragma warning restore SYSLIB0011

@@ -27,7 +27,6 @@
     <None Remove="Resources\img\bonepeople.jpg" />
     <None Remove="Resources\img\map.jpg" />
     <None Remove="Resources\xml\kenshidata.xml" />
-    <None Remove="saves\saves.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,9 +55,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\img\kenshi_dnd_logo.ico" />
-    <Content Include="saves\saves.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
 	  
   </ItemGroup>
 
